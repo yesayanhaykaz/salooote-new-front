@@ -330,42 +330,42 @@ export default function VendorPage() {
     <div className="min-h-screen bg-surface-50">
 
       {/* ── Cover ── */}
-      {/* Outer wrapper has NO overflow-hidden so avatar can hang below */}
-      <div className="relative h-[240px] md:h-[280px]">
-        {/* Image layer — overflow-hidden lives here */}
-        <div className="absolute inset-0 overflow-hidden">
-          <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
-        </div>
+      <div className="bg-white pt-5 pb-0">
+        <div className="max-w-container mx-auto px-6 md:px-8">
+          {/* Contained cover image — rounded, NOT full width */}
+          <div className="relative h-[220px] md:h-[260px] rounded-2xl overflow-hidden">
+            <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/40" />
 
-        {/* Back button */}
-        <div className="absolute top-4 left-5 z-10">
-          <Link href="/products" className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium no-underline hover:bg-white transition-all">
-            <ArrowLeft size={15} /> Back
-          </Link>
-        </div>
+            {/* Back */}
+            <div className="absolute top-4 left-4 z-10">
+              <Link href="/products" className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium no-underline hover:bg-white transition-all">
+                <ArrowLeft size={15} /> Back
+              </Link>
+            </div>
 
-        {/* Action buttons */}
-        <div className="absolute top-4 right-5 z-10 flex gap-2">
-          <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
-            <Heart size={14} className="text-accent-400" /> Save
-          </button>
-          <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
-            <Share2 size={14} /> Share
-          </button>
-        </div>
+            {/* Save / Share */}
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
+              <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
+                <Heart size={14} className="text-accent-400" /> Save
+              </button>
+              <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
+                <Share2 size={14} /> Share
+              </button>
+            </div>
 
-        {/* Avatar — translate-y-1/2 at bottom:0 makes it straddle the cover edge */}
-        <div className="absolute bottom-0 left-6 md:left-8 translate-y-1/2 w-[88px] h-[88px] rounded-2xl bg-white border-4 border-white overflow-hidden z-20 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
-          <div className="w-full h-full bg-gradient-to-br from-brand-100 to-brand-50 flex items-center justify-center">
-            <span className="text-xl font-bold italic text-brand-700">Salo</span>
+            {/* Avatar — straddles the bottom edge of the cover */}
+            <div className="absolute bottom-0 left-6 translate-y-1/2 w-[84px] h-[84px] rounded-2xl bg-white border-[3px] border-white overflow-hidden z-20 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
+              <div className="w-full h-full bg-gradient-to-br from-brand-100 to-brand-50 flex items-center justify-center">
+                <span className="text-xl font-bold italic text-brand-700">Salo</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── Profile card ── */}
       <div className="bg-white border-b border-surface-200">
-        {/* pt-14 (56px) > half avatar height (44px) — clears the overlap */}
         <div className="max-w-container mx-auto px-6 md:px-8 pt-14 pb-0">
           <div className="flex items-start justify-between gap-6 flex-wrap mb-5">
 

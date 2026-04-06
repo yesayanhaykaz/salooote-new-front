@@ -188,33 +188,34 @@ export default function VendorServicePage() {
     <div className="min-h-screen bg-surface-50">
 
       {/* ── Cover ── */}
-      {/* No overflow-hidden on outer wrapper — lets avatar straddle the edge */}
-      <div className="relative h-[240px] md:h-[300px]">
-        {/* Image layer with its own overflow-hidden */}
-        <div className="absolute inset-0 overflow-hidden">
-          <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/60" />
-        </div>
+      <div className="bg-white pt-5 pb-0">
+        <div className="max-w-container mx-auto px-6 md:px-8">
+          {/* Contained cover — rounded, NOT full width */}
+          <div className="relative h-[220px] md:h-[260px] rounded-2xl overflow-hidden">
+            <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/50" />
 
-        <div className="absolute top-4 left-5 z-10">
-          <Link href="/products" className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium no-underline hover:bg-white transition-all">
-            <ArrowLeft size={15} /> Back
-          </Link>
-        </div>
+            <div className="absolute top-4 left-4 z-10">
+              <Link href="/products" className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium no-underline hover:bg-white transition-all">
+                <ArrowLeft size={15} /> Back
+              </Link>
+            </div>
 
-        <div className="absolute top-4 right-5 z-10 flex gap-2">
-          <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
-            <Heart size={14} className="text-accent-400" /> Save
-          </button>
-          <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
-            <Share2 size={14} /> Share
-          </button>
-        </div>
+            <div className="absolute top-4 right-4 z-10 flex gap-2">
+              <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
+                <Heart size={14} className="text-accent-400" /> Save
+              </button>
+              <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
+                <Share2 size={14} /> Share
+              </button>
+            </div>
 
-        {/* Avatar — bottom:0 + translate-y-1/2 straddles the cover edge cleanly */}
-        <div className="absolute bottom-0 left-6 md:left-8 translate-y-1/2 w-[88px] h-[88px] rounded-2xl bg-white border-4 border-white overflow-hidden z-20 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
-          <div className="w-full h-full bg-gradient-to-br from-surface-800 to-surface-900 flex items-center justify-center">
-            <Camera size={28} className="text-white/70" />
+            {/* Avatar — straddles bottom edge */}
+            <div className="absolute bottom-0 left-6 translate-y-1/2 w-[84px] h-[84px] rounded-2xl bg-white border-[3px] border-white overflow-hidden z-20 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
+              <div className="w-full h-full bg-gradient-to-br from-surface-800 to-surface-900 flex items-center justify-center">
+                <Camera size={28} className="text-white/70" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
