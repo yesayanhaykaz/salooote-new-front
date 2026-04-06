@@ -190,10 +190,13 @@ export default function VendorServicePage() {
       {/* ── Cover ── */}
       <div className="bg-white pt-5 pb-0">
         <div className="max-w-container mx-auto px-6 md:px-8">
-          {/* Contained cover — rounded, NOT full width */}
-          <div className="relative h-[220px] md:h-[260px] rounded-2xl overflow-hidden">
-            <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/50" />
+          {/* Outer wrapper — relative, NO overflow-hidden so avatar can peek below */}
+          <div className="relative h-[220px] md:h-[260px]">
+            {/* Inner image — has overflow-hidden to clip the photo */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden">
+              <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/50" />
+            </div>
 
             <div className="absolute top-4 left-4 z-10">
               <Link href="/products" className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium no-underline hover:bg-white transition-all">
@@ -210,9 +213,9 @@ export default function VendorServicePage() {
               </button>
             </div>
 
-            {/* Avatar — straddles bottom edge */}
-            <div className="absolute bottom-0 left-6 translate-y-1/2 w-[84px] h-[84px] rounded-2xl bg-white border-[3px] border-white overflow-hidden z-20 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
-              <div className="w-full h-full bg-gradient-to-br from-surface-800 to-surface-900 flex items-center justify-center">
+            {/* Avatar — straddles the bottom edge, overflow-hidden only on avatar itself */}
+            <div className="absolute bottom-0 left-6 translate-y-1/2 z-20 w-[84px] h-[84px] rounded-2xl bg-white border-[3px] border-white flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
+              <div className="w-full h-full rounded-xl overflow-hidden bg-gradient-to-br from-surface-800 to-surface-900 flex items-center justify-center">
                 <Camera size={28} className="text-white/70" />
               </div>
             </div>
