@@ -33,49 +33,53 @@ export default function HomePage() {
     <div className="bg-white">
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden" style={{ minHeight: "88vh", display: "flex", alignItems: "center" }}>
+      <section className="relative overflow-hidden flex items-center" style={{ minHeight: "90svh" }}>
         <div className="absolute inset-0">
-          <Image src="/images/hero-dj.jpg" alt="Dream Event" fill className="object-cover" priority />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/60 to-black/20" />
+          <Image src="/images/hero-dj.jpg" alt="Dream Event" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/20" />
+          {/* Extra bottom fade on mobile for readability */}
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/60 to-transparent md:hidden" />
         </div>
 
-        <div className="relative z-10 max-w-container mx-auto px-6 md:px-8 py-24 w-full">
-          <div className="max-w-[560px]">
+        <div className="relative z-10 max-w-container mx-auto px-5 md:px-8 py-20 md:py-24 w-full">
+          <div className="max-w-full md:max-w-[560px]">
 
             {/* Label */}
-            <div className="opacity-0 animate-fade-up mb-6">
-              <span className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 text-xs font-semibold text-white/80 uppercase tracking-widest">
-                <Sparkles size={12} className="text-brand-300" />
+            <div className="opacity-0 animate-fade-up mb-5">
+              <span className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-[11px] font-semibold text-white/80 uppercase tracking-widest backdrop-blur-sm">
+                <Sparkles size={11} className="text-brand-300" />
                 Plan. Book. Celebrate.
               </span>
             </div>
 
-            <h1 className="font-bold text-white leading-tight mb-6 opacity-0 animate-fade-up stagger-1"
-                style={{ fontSize: "clamp(40px, 6vw, 64px)", lineHeight: 1.08 }}>
+            <h1 className="font-bold text-white leading-tight mb-5 opacity-0 animate-fade-up stagger-1"
+                style={{ fontSize: "clamp(36px, 5.5vw, 64px)", lineHeight: 1.1 }}>
               Plan your dream<br />
               <span className="text-brand-300 italic">events,</span> easily.
             </h1>
 
-            <p className="text-white/60 text-lg leading-relaxed mb-10 max-w-[420px] opacity-0 animate-fade-up stagger-2 font-light">
-              Explore vendors, book services, and plan your event your way — all in one place.
+            <p className="text-white/60 leading-relaxed mb-8 opacity-0 animate-fade-up stagger-2 font-light"
+               style={{ fontSize: "clamp(15px, 1.8vw, 18px)", maxWidth: "400px" }}>
+              Explore vendors, book services, and plan your event — all in one place.
             </p>
 
-            <div className="flex flex-wrap gap-4 opacity-0 animate-fade-up stagger-3">
-              <button className="btn-primary bg-brand-600 text-white border-none rounded-xl px-7 py-3.5 text-sm font-semibold cursor-pointer flex items-center gap-2.5">
+            {/* CTA buttons — stack on mobile */}
+            <div className="flex flex-col sm:flex-row gap-3 opacity-0 animate-fade-up stagger-3">
+              <button className="btn-primary bg-brand-600 text-white border-none rounded-xl px-7 py-3.5 text-sm font-semibold cursor-pointer flex items-center justify-center gap-2.5 w-full sm:w-auto">
                 <Calendar size={16} /> Plan an Event
               </button>
-              <Link href="/products">
-                <button className="bg-white/10 text-white border border-white/20 rounded-xl px-7 py-3.5 text-sm font-semibold cursor-pointer flex items-center gap-2.5 hover:bg-white/18 transition-all backdrop-blur-sm">
+              <Link href="/products" className="w-full sm:w-auto">
+                <button className="bg-white/12 text-white border border-white/25 rounded-xl px-7 py-3.5 text-sm font-semibold cursor-pointer flex items-center justify-center gap-2.5 hover:bg-white/20 transition-all backdrop-blur-sm w-full">
                   Browse Products <ArrowRight size={16} />
                 </button>
               </Link>
             </div>
 
             {/* Stats */}
-            <div className="flex items-center gap-8 mt-10 opacity-0 animate-fade-up stagger-4">
+            <div className="flex items-center gap-6 md:gap-8 mt-8 opacity-0 animate-fade-up stagger-4">
               {[{ n: "15K+", l: "Events" }, { n: "850+", l: "Vendors" }, { n: "4.9★", l: "Rating" }].map((s, i) => (
                 <div key={i}>
-                  <p className="text-white font-bold text-xl leading-none">{s.n}</p>
+                  <p className="text-white font-bold text-lg md:text-xl leading-none">{s.n}</p>
                   <p className="text-white/40 text-xs mt-1">{s.l}</p>
                 </div>
               ))}
@@ -83,7 +87,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Chat widget */}
+        {/* Chat widget — desktop only */}
         <div className="absolute bottom-8 right-10 glass rounded-2xl p-5 max-w-[240px] z-10 hidden lg:block opacity-0 animate-fade-up stagger-5">
           <div className="flex items-start gap-3 mb-4">
             <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center flex-shrink-0">
@@ -129,21 +133,22 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="flex gap-4 justify-start flex-wrap">
+        {/* horizontal scroll on mobile, wrap on desktop */}
+        <div className="flex gap-3 md:gap-4 overflow-x-auto md:flex-wrap pb-2 hide-scrollbar -mx-5 px-5 md:mx-0 md:px-0">
           {CATEGORIES.map((cat, i) => {
             const Icon = catIcons[cat.icon] || Gift;
             const imgSrc = catImages[cat.name];
             return (
-              <Link key={i} href="/category" className="no-underline">
-                <div className="category-card group w-[140px] md:w-[156px] cursor-pointer">
-                  <div className="h-[180px] md:h-[192px] rounded-2xl overflow-hidden relative border border-surface-200">
+              <Link key={i} href="/category" className="no-underline flex-shrink-0">
+                <div className="category-card group w-[130px] md:w-[152px] cursor-pointer">
+                  <div className="h-[172px] md:h-[192px] rounded-2xl overflow-hidden relative border border-surface-200">
                     {imgSrc
                       ? <Image src={imgSrc} alt={cat.name} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
                       : <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient}`} />
                     }
                     <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/5 to-transparent" />
-                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-10 h-10 rounded-xl bg-white/90 flex items-center justify-center">
-                      <Icon size={18} className="text-brand-600" strokeWidth={1.5} />
+                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-9 h-9 rounded-xl bg-white/90 flex items-center justify-center">
+                      <Icon size={16} className="text-brand-600" strokeWidth={1.5} />
                     </div>
                     <div className="absolute bottom-3 left-0 right-0 text-center">
                       <span className="text-sm font-semibold text-white">{cat.name}</span>
@@ -256,31 +261,36 @@ export default function HomePage() {
 
       {/* ── AI Planner Banner ── */}
       <section className="max-w-container mx-auto px-6 md:px-8 pb-24">
-        <div className="rounded-2xl overflow-hidden relative min-h-[280px] flex items-center"
-             style={{ background: "linear-gradient(135deg, #0f0720 0%, #1e0a4a 50%, #0f0720 100%)" }}>
-          <div className="absolute inset-0 opacity-25" style={{ background: "radial-gradient(ellipse at 60% 50%, rgba(124,58,237,0.8), transparent 65%)" }} />
+        <div className="rounded-2xl overflow-hidden relative min-h-[260px] flex items-center bg-brand-600">
+          {/* Subtle image overlay */}
           <div className="absolute right-0 top-0 bottom-0 w-1/2 overflow-hidden hidden md:block">
-            <Image src="/images/hero-dj.jpg" alt="AI Planner" fill className="object-cover opacity-10" />
+            <Image src="/images/wedding-ceremony.jpg" alt="AI Planner" fill className="object-cover opacity-15" />
+            <div className="absolute inset-0 bg-gradient-to-l from-transparent to-brand-600" />
           </div>
+          {/* Subtle dot grid */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "28px 28px"
+          }} />
 
-          <div className="relative z-10 p-10 md:p-16 max-w-[520px]">
+          <div className="relative z-10 p-8 md:p-14 max-w-[520px]">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 rounded-lg bg-brand-500/25 flex items-center justify-center">
-                <Sparkles size={12} className="text-brand-300" />
+              <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center">
+                <Sparkles size={12} className="text-white" />
               </div>
-              <span className="text-brand-300 text-xs font-semibold uppercase tracking-widest">AI-Powered</span>
+              <span className="text-white/70 text-xs font-semibold uppercase tracking-widest">AI-Powered</span>
             </div>
-            <h2 className="font-bold text-white leading-tight mb-4" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>
-              Take out the guess-work with our <span className="italic text-brand-300">event planner.</span>
+            <h2 className="font-bold text-white leading-tight mb-4" style={{ fontSize: "clamp(26px, 3.2vw, 38px)" }}>
+              Take the guess-work out<br />of <span className="italic opacity-80">event planning.</span>
             </h2>
-            <p className="text-white/50 text-sm leading-relaxed mb-8 max-w-[380px]">
+            <p className="text-white/60 text-sm leading-relaxed mb-7 max-w-[360px]">
               Smart planning — pick the right vendors, stay on budget, bring your event to life.
             </p>
-            <div className="flex gap-4 flex-wrap">
-              <button className="btn-primary bg-brand-600 text-white border-none rounded-xl px-6 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2">
-                <Play size={13} fill="white" /> Start Planning
+            <div className="flex gap-3 flex-wrap">
+              <button className="bg-white text-brand-600 border-none rounded-xl px-6 py-3 text-sm font-bold cursor-pointer flex items-center gap-2 hover:bg-brand-50 transition-colors">
+                <Play size={13} fill="currentColor" /> Start Planning
               </button>
-              <button className="bg-white/8 text-white border border-white/15 rounded-xl px-6 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 hover:bg-white/14 transition-all">
+              <button className="bg-white/10 text-white border border-white/20 rounded-xl px-6 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 hover:bg-white/20 transition-all">
                 Watch Demo <ArrowRight size={14} />
               </button>
             </div>

@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <body className="font-body bg-surface-50">
         <CartProvider>
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen pb-16 md:pb-0">{children}</main>
           <Footer />
         </CartProvider>
       </body>

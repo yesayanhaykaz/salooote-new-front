@@ -37,16 +37,16 @@ export default function ProductCard({ product }) {
             <div className={`h-full bg-gradient-to-br ${product.gradient || "from-brand-50 to-brand-100"}`} />
           )}
 
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/8 transition-all duration-300" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/6 transition-all duration-300" />
 
           {/* Badges */}
           {product.tag && (
-            <span className="absolute top-3 left-3 bg-brand-600 text-white text-xs px-2.5 py-1 rounded-full font-semibold z-10">
+            <span className="absolute top-3 left-3 bg-brand-600 text-white text-[11px] px-2.5 py-1 rounded-full font-semibold z-10">
               {product.tag}
             </span>
           )}
           {discount && !product.tag && (
-            <span className="absolute top-3 left-3 bg-accent-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold z-10">
+            <span className="absolute top-3 left-3 bg-sage-600 text-white text-[11px] px-2.5 py-1 rounded-full font-semibold z-10">
               -{discount}%
             </span>
           )}
@@ -54,16 +54,16 @@ export default function ProductCard({ product }) {
           {/* Wishlist */}
           <button
             onClick={(e) => e.preventDefault()}
-            className="absolute top-3 right-3 bg-white border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-105 transition-all z-10 group/heart"
+            className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-105 transition-all z-10 group/heart shadow-sm"
           >
-            <Heart size={14} className="text-surface-400 group-hover/heart:text-accent-500 transition-colors" />
+            <Heart size={14} className="text-surface-400 group-hover/heart:text-brand-500 group-hover/heart:fill-brand-100 transition-all" />
           </button>
 
           {/* Quick view — appears on hover */}
           <div className="quick-view-btn absolute bottom-3 left-3 right-3 z-10">
             <button
               onClick={(e) => e.preventDefault()}
-              className="w-full bg-white text-surface-800 border-none rounded-xl py-2 text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5 hover:bg-brand-600 hover:text-white transition-all"
+              className="w-full bg-white/95 backdrop-blur-sm text-surface-800 border-none rounded-xl py-2 text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5 hover:bg-brand-600 hover:text-white transition-all shadow-sm"
             >
               <Eye size={12} /> Quick View
             </button>
@@ -72,7 +72,7 @@ export default function ProductCard({ product }) {
 
         {/* Info */}
         <div className="p-4">
-          <p className="text-xs text-surface-400 mb-1 truncate">{product.vendor}</p>
+          <p className="text-[11px] text-surface-400 mb-1 truncate font-medium">{product.vendor}</p>
           <p className="text-sm font-semibold text-surface-800 mb-3 line-clamp-2 group-hover:text-brand-600 transition-colors leading-snug min-h-[40px]">
             {product.name}
           </p>
@@ -89,15 +89,15 @@ export default function ProductCard({ product }) {
                 }
               />
             ))}
-            <span className="text-xs text-surface-400 ml-1">{product.rating}</span>
+            <span className="text-[11px] text-surface-400 ml-1">{product.rating}</span>
           </div>
 
           {/* Price + Cart */}
           <div className="flex items-center justify-between">
-            <div className="flex items-end gap-2">
+            <div className="flex items-end gap-1.5">
               <span className="text-base font-bold text-surface-900">${product.price.toFixed(2)}</span>
               {product.originalPrice && (
-                <span className="text-xs text-surface-400 line-through">${product.originalPrice.toFixed(2)}</span>
+                <span className="text-xs text-surface-400 line-through mb-0.5">${product.originalPrice.toFixed(2)}</span>
               )}
             </div>
             <button
