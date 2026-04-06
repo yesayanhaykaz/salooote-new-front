@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   Star, MapPin, Phone, MessageCircle, CheckCircle2,
   Heart, Share2, ArrowLeft, X, ThumbsUp, Package,
-  Calendar, Clock, ChevronRight, Camera, Grid3x3,
+  Calendar, Clock, ChevronRight, Camera, LayoutGrid,
   Play, Award
 } from "lucide-react";
 import { REVIEWS } from "@/lib/data";
@@ -188,17 +188,21 @@ export default function VendorServicePage() {
     <div className="min-h-screen bg-surface-50">
 
       {/* ── Cover ── */}
-      <div className="relative h-[240px] md:h-[300px] overflow-hidden">
-        <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/60" />
+      {/* No overflow-hidden on outer wrapper — lets avatar straddle the edge */}
+      <div className="relative h-[240px] md:h-[300px]">
+        {/* Image layer with its own overflow-hidden */}
+        <div className="absolute inset-0 overflow-hidden">
+          <Image src={vendor.cover} alt="Cover" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/60" />
+        </div>
 
-        <div className="absolute top-4 left-5">
+        <div className="absolute top-4 left-5 z-10">
           <Link href="/products" className="flex items-center gap-1.5 bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium no-underline hover:bg-white transition-all">
             <ArrowLeft size={15} /> Back
           </Link>
         </div>
 
-        <div className="absolute top-4 right-5 flex gap-2">
+        <div className="absolute top-4 right-5 z-10 flex gap-2">
           <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
             <Heart size={14} className="text-accent-400" /> Save
           </button>
@@ -207,8 +211,8 @@ export default function VendorServicePage() {
           </button>
         </div>
 
-        {/* Avatar */}
-        <div className="absolute bottom-[-44px] left-6 md:left-8 w-[88px] h-[88px] rounded-2xl bg-white border-4 border-white overflow-hidden z-10 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.12)" }}>
+        {/* Avatar — bottom:0 + translate-y-1/2 straddles the cover edge cleanly */}
+        <div className="absolute bottom-0 left-6 md:left-8 translate-y-1/2 w-[88px] h-[88px] rounded-2xl bg-white border-4 border-white overflow-hidden z-20 flex items-center justify-center" style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.14)" }}>
           <div className="w-full h-full bg-gradient-to-br from-surface-800 to-surface-900 flex items-center justify-center">
             <Camera size={28} className="text-white/70" />
           </div>
@@ -217,7 +221,8 @@ export default function VendorServicePage() {
 
       {/* ── Profile ── */}
       <div className="bg-white border-b border-surface-200">
-        <div className="max-w-container mx-auto px-6 md:px-8 pt-16 pb-0">
+        {/* pt-14 (56px) clears the 44px avatar overhang */}
+        <div className="max-w-container mx-auto px-6 md:px-8 pt-14 pb-0">
           <div className="flex items-start justify-between gap-6 flex-wrap mb-5">
 
             <div className="flex-1 min-w-[260px]">
@@ -301,7 +306,7 @@ export default function VendorServicePage() {
               </div>
               <div className="flex items-center gap-2">
                 <button className="flex items-center gap-1.5 border border-surface-200 rounded-xl px-4 py-2 text-sm font-medium text-surface-600 bg-white cursor-pointer hover:border-surface-300 transition-colors">
-                  <Grid3x3 size={14} /> All
+                  <LayoutGrid size={14} /> All
                 </button>
               </div>
             </div>
