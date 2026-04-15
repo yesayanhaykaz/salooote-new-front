@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -37,9 +38,14 @@ export default function Header({ lang = "en" }) {
 
           {/* Logo */}
           <Link href={`/${lang}`} className="no-underline flex-shrink-0 mr-2">
-            <span className="text-[20px] md:text-[22px] font-bold text-surface-900 tracking-tight leading-none">
-              Salooote
-            </span>
+            <Image
+              src="/images/logo.png"
+              alt="Salooote"
+              width={120}
+              height={36}
+              className="h-8 w-auto object-contain"
+              priority
+            />
           </Link>
 
           {/* Search — desktop */}
@@ -158,7 +164,7 @@ export default function Header({ lang = "en" }) {
 
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-surface-100">
-              <span className="text-lg font-bold text-surface-900">Menu</span>
+              <Image src="/images/logo.png" alt="Salooote" width={100} height={30} className="h-7 w-auto object-contain" />
               <button
                 onClick={() => setMenuOpen(false)}
                 className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-surface-100 transition-colors border-none bg-transparent cursor-pointer"
