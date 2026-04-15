@@ -2,12 +2,37 @@
 import Link from "next/link";
 import { Facebook, Instagram, Twitter, Youtube, Apple, Play, ArrowRight, Shield } from "lucide-react";
 
-const columns = [
-  { title: "Products",  links: ["Cakes", "Catering", "Balloons", "Flowers", "DJ & Music", "Venues"] },
-  { title: "Support",   links: ["Track Order", "Help Center", "FAQs", "Return Policy", "Contact Us"] },
-  { title: "Company",   links: ["Our Story", "Reviews", "Careers", "Press"] },
-  { title: "Partners",  links: ["Partner Policy", "Apply Now", "Vendor Resources"] },
-];
+function getColumns(lang) {
+  return [
+    { title: "Products", links: [
+      { label: "Cakes", href: `/${lang}/category` },
+      { label: "Catering", href: `/${lang}/category` },
+      { label: "Balloons", href: `/${lang}/category` },
+      { label: "Flowers", href: `/${lang}/category` },
+      { label: "DJ & Music", href: `/${lang}/category` },
+      { label: "Venues", href: `/${lang}/category` },
+    ]},
+    { title: "Support", links: [
+      { label: "Track Order", href: `/${lang}/track-order` },
+      { label: "Help Center", href: `/${lang}/help` },
+      { label: "FAQs", href: `/${lang}/faq` },
+      { label: "Return Policy", href: `/${lang}/returns` },
+      { label: "Contact Us", href: `/${lang}/contact` },
+    ]},
+    { title: "Company", links: [
+      { label: "Our Story", href: `/${lang}/about` },
+      { label: "Reviews", href: `/${lang}/reviews` },
+      { label: "Careers", href: `/${lang}/careers` },
+      { label: "Press", href: `/${lang}/press` },
+      { label: "Blog", href: `/${lang}/blog` },
+    ]},
+    { title: "Partners", links: [
+      { label: "Partner Policy", href: `/${lang}/partner-policy` },
+      { label: "Apply Now", href: `/${lang}/apply` },
+      { label: "Vendor Resources", href: `/${lang}/vendor-resources` },
+    ]},
+  ];
+}
 
 const socials = [
   { icon: Facebook,  label: "Facebook" },
@@ -16,7 +41,9 @@ const socials = [
   { icon: Youtube,   label: "YouTube" },
 ];
 
-export default function Footer() {
+export default function Footer({ lang = "en" }) {
+  const columns = getColumns(lang);
+
   return (
     <footer className="bg-surface-900 text-white">
       <div className="max-w-container mx-auto px-6 md:px-8 pt-16 pb-0">
@@ -26,7 +53,7 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="max-w-[240px]">
-            <p className="text-xl font-bold mb-4">Salooote</p>
+            <Link href={`/${lang}`} className="text-xl font-bold mb-4 block no-underline text-white">Salooote</Link>
             <p className="text-surface-400 text-sm leading-relaxed mb-6">
               Your one-stop destination for seamless event planning — cakes, catering, flowers, and more.
             </p>
@@ -45,10 +72,10 @@ export default function Footer() {
             <div key={i}>
               <p className="font-semibold text-sm mb-4 text-white">{col.title}</p>
               {col.links.map((link, j) => (
-                <a key={j} href="#"
+                <Link key={j} href={link.href}
                    className="block text-surface-400 no-underline text-sm leading-[2] hover:text-white transition-colors">
-                  {link}
-                </a>
+                  {link.label}
+                </Link>
               ))}
             </div>
           ))}
@@ -97,9 +124,9 @@ export default function Footer() {
         <div className="flex justify-between items-center py-5 flex-wrap gap-4">
           <p className="text-xs text-surface-500">&copy; {new Date().getFullYear()} Salooote, Inc. All rights reserved.</p>
           <div className="flex items-center gap-4 text-xs text-surface-500">
-            <a href="#" className="hover:text-surface-300 transition-colors no-underline text-surface-500">Privacy Policy</a>
+            <Link href={`/${lang}/privacy`} className="hover:text-surface-300 transition-colors no-underline text-surface-500">Privacy Policy</Link>
             <span className="text-surface-700">·</span>
-            <a href="#" className="hover:text-surface-300 transition-colors no-underline text-surface-500">Terms of Service</a>
+            <Link href={`/${lang}/terms`} className="hover:text-surface-300 transition-colors no-underline text-surface-500">Terms of Service</Link>
           </div>
           <div className="flex gap-2 items-center">
             {["Visa", "Mastercard", "Amex", "PayPal"].map((card, i) => (
