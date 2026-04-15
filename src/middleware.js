@@ -40,11 +40,19 @@ export function middleware(request) {
 
   // Redirect to locale path
   const locale = getLocale(request);
-  const url = new URL(`/${locale}${pathname}`, request.url);
-  // Preserve search params
-  url.search = request.nextUrl.search;
 
-  const response = NextResponse.redirect(url);
+  // When behind a reverse proxy (nginx etc.), request.url contains the
+  // internal address (localhost:3001). Use forwarded headers to get the
+  // real public-facing origin instead.
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto");
+  const host = forwardedHost || request.headers.get("host") || request.nextUrl.host;
+  const proto = forwardedProto || (request.nextUrl.protocol.replace(":", "")) || "https";
+
+  const redirectUrl = new URL(`/${locale}${pathname}`, `${proto}://${host}`);
+  redirectUrl.search = request.nextUrl.search;
+
+  const response = NextResponse.redirect(redirectUrl);
   response.cookies.set("NEXT_LOCALE", locale, {
     path: "/",
     maxAge: 60 * 60 * 24 * 365,
