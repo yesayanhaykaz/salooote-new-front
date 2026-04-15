@@ -40,8 +40,9 @@ export function middleware(request) {
 
   // Redirect to locale path
   const locale = getLocale(request);
-  const url = request.nextUrl.clone();
-  url.pathname = `/${locale}${pathname}`;
+  const url = new URL(`/${locale}${pathname}`, request.url);
+  // Preserve search params
+  url.search = request.nextUrl.search;
 
   const response = NextResponse.redirect(url);
   response.cookies.set("NEXT_LOCALE", locale, {
