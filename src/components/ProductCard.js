@@ -1,6 +1,8 @@
 "use client";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Heart, ShoppingCart, Star, Eye } from "lucide-react";
 
 const productImages = {
@@ -20,10 +22,42 @@ export default function ProductCard({ product }) {
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : null;
 
-  return (
-    <Link href="/product" className="no-underline group">
-      <div className="product-card bg-white rounded-xl border border-surface-200 overflow-hidden">
+  const ref = useRef(null);
+  const [wished, setWished] = useState(false);
 
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["6deg", "-6deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-6deg", "6deg"]);
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <Link href="/product" className="no-underline group" style={{ perspective: "900px" }}>
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        whileHover={{ scale: 1.03, boxShadow: "0 24px 48px -12px rgba(225,29,92,0.22), 0 8px 16px rgba(0,0,0,0.08)" }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        className="bg-white rounded-xl border border-surface-200 overflow-hidden cursor-pointer will-change-transform"
+      >
         {/* Image */}
         <div className="h-48 relative overflow-hidden bg-surface-100">
           {imgSrc ? (
@@ -31,43 +65,56 @@ export default function ProductCard({ product }) {
               src={imgSrc}
               alt={product.name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-cover transition-transform duration-500 group-hover:scale-108"
             />
           ) : (
             <div className={`h-full bg-gradient-to-br ${product.gradient || "from-brand-50 to-brand-100"}`} />
           )}
 
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/6 transition-all duration-300" />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-300" />
 
           {/* Badges */}
           {product.tag && (
-            <span className="absolute top-3 left-3 bg-brand-600 text-white text-[11px] px-2.5 py-1 rounded-full font-semibold z-10">
+            <motion.span
+              initial={{ opacity: 0, scale: 0.8, x: -4 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              className="absolute top-3 left-3 bg-brand-600 text-white text-[11px] px-2.5 py-1 rounded-full font-semibold z-10 shadow-sm"
+            >
               {product.tag}
-            </span>
+            </motion.span>
           )}
           {discount && !product.tag && (
-            <span className="absolute top-3 left-3 bg-sage-600 text-white text-[11px] px-2.5 py-1 rounded-full font-semibold z-10">
+            <span className="absolute top-3 left-3 bg-green-600 text-white text-[11px] px-2.5 py-1 rounded-full font-semibold z-10">
               -{discount}%
             </span>
           )}
 
           {/* Wishlist */}
-          <button
-            onClick={(e) => e.preventDefault()}
-            className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:scale-105 transition-all z-10 group/heart shadow-sm"
+          <motion.button
+            onClick={(e) => { e.preventDefault(); setWished(!wished); }}
+            whileTap={{ scale: 0.85 }}
+            whileHover={{ scale: 1.15 }}
+            className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-10 shadow-sm"
           >
-            <Heart size={14} className="text-surface-400 group-hover/heart:text-brand-500 group-hover/heart:fill-brand-100 transition-all" />
-          </button>
+            <Heart
+              size={14}
+              className={`transition-all duration-200 ${wished ? "text-brand-500 fill-brand-500" : "text-surface-400"}`}
+            />
+          </motion.button>
 
-          {/* Quick view — appears on hover */}
-          <div className="quick-view-btn absolute bottom-3 left-3 right-3 z-10">
+          {/* Quick view */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            whileHover={{ opacity: 1, y: 0 }}
+            className="absolute bottom-3 left-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
             <button
               onClick={(e) => e.preventDefault()}
               className="w-full bg-white/95 backdrop-blur-sm text-surface-800 border-none rounded-xl py-2 text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5 hover:bg-brand-600 hover:text-white transition-all shadow-sm"
             >
               <Eye size={12} /> Quick View
             </button>
-          </div>
+          </motion.div>
         </div>
 
         {/* Info */}
@@ -100,15 +147,17 @@ export default function ProductCard({ product }) {
                 <span className="text-xs text-surface-400 line-through mb-0.5">${product.originalPrice.toFixed(2)}</span>
               )}
             </div>
-            <button
+            <motion.button
               onClick={(e) => e.preventDefault()}
-              className="bg-brand-600 text-white border-none rounded-xl w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-brand-700 transition-colors flex-shrink-0"
+              whileTap={{ scale: 0.88 }}
+              whileHover={{ scale: 1.1, backgroundColor: "#be1850" }}
+              className="bg-brand-600 text-white border-none rounded-xl w-8 h-8 flex items-center justify-center cursor-pointer flex-shrink-0"
             >
               <ShoppingCart size={14} />
-            </button>
+            </motion.button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
   );
 }
