@@ -2,27 +2,31 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/lib/cart-context";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {
   Search, Heart, ShoppingBag, Menu, X,
   Cake, UtensilsCrossed, Flower2, PartyPopper,
   Gift, Music, Sparkles, MapPin, Home, User, ChevronRight
 } from "lucide-react";
 
-const NAV_CATEGORIES = [
-  { label: "Cakes",      href: "/category", icon: Cake },
-  { label: "Catering",   href: "/category", icon: UtensilsCrossed },
-  { label: "Flowers",    href: "/category", icon: Flower2 },
-  { label: "Party",      href: "/category", icon: PartyPopper },
-  { label: "Gifts",      href: "/category", icon: Gift },
-  { label: "DJ & Music", href: "/category", icon: Music },
-  { label: "Venues",     href: "/category", icon: MapPin },
-  { label: "Premium",    href: "/products", icon: Sparkles },
-];
+function getNavCategories(lang) {
+  return [
+    { label: "Cakes",      href: `/${lang}/category`, icon: Cake },
+    { label: "Catering",   href: `/${lang}/category`, icon: UtensilsCrossed },
+    { label: "Flowers",    href: `/${lang}/category`, icon: Flower2 },
+    { label: "Party",      href: `/${lang}/category`, icon: PartyPopper },
+    { label: "Gifts",      href: `/${lang}/category`, icon: Gift },
+    { label: "DJ & Music", href: `/${lang}/category`, icon: Music },
+    { label: "Venues",     href: `/${lang}/category`, icon: MapPin },
+    { label: "Premium",    href: `/${lang}/products`, icon: Sparkles },
+  ];
+}
 
-export default function Header() {
+export default function Header({ lang = "en" }) {
   const { cartCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const NAV_CATEGORIES = getNavCategories(lang);
 
   return (
     <>
@@ -32,7 +36,7 @@ export default function Header() {
         <div className="max-w-container mx-auto px-4 md:px-8 h-14 md:h-16 flex items-center gap-3">
 
           {/* Logo */}
-          <Link href="/" className="no-underline flex-shrink-0 mr-2">
+          <Link href={`/${lang}`} className="no-underline flex-shrink-0 mr-2">
             <span className="text-[20px] md:text-[22px] font-bold text-surface-900 tracking-tight leading-none">
               Salooote
             </span>
@@ -67,7 +71,7 @@ export default function Header() {
             </button>
 
             {/* Cart */}
-            <Link href="/cart" className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-surface-100 transition-colors relative">
+            <Link href={`/${lang}/cart`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-surface-100 transition-colors relative">
               <ShoppingBag size={17} className="text-surface-600" />
               {cartCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 bg-brand-600 text-white text-[10px] min-w-[16px] h-[16px] rounded-full flex items-center justify-center font-bold leading-none">
@@ -78,13 +82,18 @@ export default function Header() {
 
             <div className="w-px h-5 bg-surface-200 mx-1.5 hidden md:block" />
 
+            {/* Language Switcher — desktop */}
+            <div className="hidden md:block">
+              <LanguageSwitcher currentLang={lang} />
+            </div>
+
             {/* Auth — desktop */}
-            <Link href="/login" className="no-underline hidden md:block">
+            <Link href={`/${lang}/login`} className="no-underline hidden md:block">
               <span className="text-surface-600 text-sm font-medium px-3 py-2 rounded-xl hover:bg-surface-100 transition-colors">
                 Log in
               </span>
             </Link>
-            <Link href="/signup" className="no-underline hidden md:block">
+            <Link href={`/${lang}/signup`} className="no-underline hidden md:block">
               <button className="bg-brand-600 text-white border-none rounded-xl px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
                 Sign up
               </button>
@@ -158,14 +167,20 @@ export default function Header() {
               </button>
             </div>
 
+            {/* Language Switcher — mobile drawer */}
+            <div className="px-5 py-3 border-b border-surface-100 flex items-center justify-between">
+              <span className="text-sm text-surface-500 font-medium">Language</span>
+              <LanguageSwitcher currentLang={lang} />
+            </div>
+
             {/* Auth */}
             <div className="px-5 py-4 border-b border-surface-100 flex gap-2">
-              <Link href="/login" className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
+              <Link href={`/${lang}/login`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
                 <button className="w-full py-2.5 rounded-xl border border-surface-200 text-surface-700 font-semibold text-sm bg-transparent cursor-pointer hover:bg-surface-50 transition-colors">
                   Log in
                 </button>
               </Link>
-              <Link href="/signup" className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
+              <Link href={`/${lang}/signup`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
                 <button className="w-full py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-sm border-none cursor-pointer hover:bg-brand-700 transition-colors">
                   Sign up
                 </button>
@@ -211,11 +226,11 @@ export default function Header() {
       {/* ── Mobile bottom navigation ── */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-surface-200 z-50 flex md:hidden mobile-bottom-nav">
         {[
-          { icon: Home,        label: "Home",    href: "/" },
-          { icon: Search,      label: "Browse",  href: "/products" },
+          { icon: Home,        label: "Home",    href: `/${lang}` },
+          { icon: Search,      label: "Browse",  href: `/${lang}/products` },
           { icon: Heart,       label: "Saved",   href: "#" },
-          { icon: ShoppingBag, label: "Cart",    href: "/cart", badge: cartCount },
-          { icon: User,        label: "Account", href: "/login" },
+          { icon: ShoppingBag, label: "Cart",    href: `/${lang}/cart`, badge: cartCount },
+          { icon: User,        label: "Account", href: `/${lang}/login` },
         ].map(({ icon: Icon, label, href, badge }, i) => (
           <Link
             key={i}
