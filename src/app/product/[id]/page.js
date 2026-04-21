@@ -55,8 +55,6 @@ export default function ProductDetailPage({ productId, lang = "en" }) {
       .finally(() => setLoading(false));
   }, [productId, lang]);
 
-  const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : null;
-
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -74,6 +72,8 @@ export default function ProductDetailPage({ productId, lang = "en" }) {
       </div>
     );
   }
+
+  const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : null;
 
   return (
     <div className="min-h-screen bg-white">
