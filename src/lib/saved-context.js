@@ -65,8 +65,13 @@ export function SavedProvider({ children }) {
   );
 }
 
+const SAVED_DEFAULTS = {
+  isSaved: () => false, saveItem: async () => false,
+  unsaveItem: async () => false, toggleSave: async () => false,
+  savedMap: {}, hydrated: false,
+};
+
 export function useSaved() {
   const ctx = useContext(SavedContext);
-  if (!ctx) throw new Error("useSaved must be used within SavedProvider");
-  return ctx;
+  return ctx || SAVED_DEFAULTS;
 }

@@ -66,8 +66,13 @@ export function CartProvider({ children }) {
   );
 }
 
+const CART_DEFAULTS = {
+  cartItems: [], addToCart: () => {}, removeFromCart: () => {},
+  updateQuantity: () => {}, clearCart: () => {},
+  cartTotal: 0, cartCount: 0, itemsByVendor: {}, hydrated: false,
+};
+
 export function useCart() {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used within CartProvider");
-  return ctx;
+  return ctx || CART_DEFAULTS;
 }
