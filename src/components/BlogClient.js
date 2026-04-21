@@ -46,7 +46,7 @@ function FeaturedPost({ post, lang }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:bg-gradient-to-r md:from-transparent md:to-black/10" />
             <div className="absolute top-4 left-4">
               <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-brand-600 text-white shadow">
-                ★ Featured
+                Featured
               </span>
             </div>
           </div>

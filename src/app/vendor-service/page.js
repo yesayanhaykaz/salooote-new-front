@@ -403,7 +403,7 @@ export default function VendorServicePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
               {[
                 { label: "Projects",      value: vendor.projects, icon: Camera },
-                { label: "Avg Rating",    value: `${vendor.rating}★`, icon: Star },
+                { label: "Avg Rating",    value: `${vendor.rating}/5`, icon: Star },
                 { label: "Member Since",  value: vendor.since,    icon: Calendar },
                 { label: "Response",      value: vendor.responseTime, icon: Clock },
               ].map(({ label, value, icon: Icon }, i) => (

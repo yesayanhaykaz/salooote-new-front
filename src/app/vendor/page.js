@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { SAMPLE_PRODUCTS, REVIEWS } from "@/lib/data";
+import { REVIEWS } from "@/lib/data";
+import { productsAPI } from "@/lib/api";
 import {
   Star, MapPin, Phone, MessageCircle, CheckCircle2,
   Heart, Share2, ArrowLeft, X, ThumbsUp, Package,
@@ -320,11 +321,32 @@ export default function VendorPage() {
   const [priceIdx, setPriceIdx]         = useState(0);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedTypes, setSelectedTypes]   = useState([]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    productsAPI.list({ status: "active", limit: 12 })
+      .then(res => {
+        const raw = res?.data || [];
+        setProducts(raw.map(p => ({
+          id: p.id,
+          name: p.name,
+          slug: p.slug || "",
+          vendor_slug: "",
+          price: parseFloat(p.price) || 0,
+          originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
+          rating: parseFloat(p.rating) || 0,
+          reviews: p.review_count || 0,
+          vendor: p.vendor_name || "Vendor",
+          image: p.thumbnail_url || p.images?.[0]?.url || null,
+          tags: p.tags || [],
+          gradient: "from-brand-50 to-brand-100",
+        })));
+      })
+      .catch(() => {});
+  }, []);
 
   const toggleColor = (c) => setSelectedColors(prev => prev.includes(c) ? prev.filter(x => x !== c) : [...prev, c]);
   const toggleType  = (t) => setSelectedTypes(prev  => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
-
-  const products = [...SAMPLE_PRODUCTS, ...SAMPLE_PRODUCTS].slice(0, 12).map((p, i) => ({ ...p, id: i + 1 }));
 
   return (
     <div className="min-h-screen bg-surface-50">
@@ -576,7 +598,7 @@ export default function VendorPage() {
               <div className="flex gap-8 mt-6">
                 {[
                   { label: "Total Sales",    value: vendor.sales,              icon: Package },
-                  { label: "Avg Rating",     value: `${vendor.rating}★`,       icon: Star },
+                  { label: "Avg Rating",     value: `${vendor.rating}/5`,      icon: Star },
                   { label: "Member Since",   value: vendor.since,              icon: Calendar },
                   { label: "Response Time",  value: "< 30 min",               icon: Clock },
                 ].map(({ label, value, icon: Icon }, i) => (

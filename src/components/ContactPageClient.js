@@ -105,7 +105,7 @@ export default function ContactPageClient() {
                 })}
               </div>
               <div className="bg-surface-100 rounded-2xl h-48 flex items-center justify-center mb-6">
-                <span className="text-surface-500 text-sm">📍 Yerevan, Armenia</span>
+                <span className="text-surface-500 text-sm">Yerevan, Armenia</span>
               </div>
               <div>
                 <p className="text-sm font-medium text-surface-700 mb-3">Follow us</p>

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SAMPLE_PRODUCTS, REVIEWS } from "@/lib/data";
+import { REVIEWS } from "@/lib/data";
 import {
   Star, Filter, ArrowLeft, LayoutGrid, List, ChevronDown,
   Search, MapPin, CheckCircle2, MessageCircle, ShoppingCart,
@@ -26,10 +26,7 @@ const vendor = {
   cover: "/images/wedding-cake.jpg",
 };
 
-const allProducts = [
-  ...SAMPLE_PRODUCTS,
-  ...SAMPLE_PRODUCTS.map((p, i) => ({ ...p, id: p.id + 8, name: p.name + " — Premium" })),
-].slice(0, 16).map((p, i) => ({ ...p, id: i + 1 }));
+const allProducts = [];
 
 export default function VendorCatalogPage() {
   const [view, setView] = useState("grid");
@@ -252,7 +249,7 @@ export default function VendorCatalogPage() {
 
             {filtered.length === 0 && (
               <div className="text-center py-24">
-                <p className="text-surface-300 text-5xl mb-4">🔍</p>
+                <Search size={40} className="text-surface-300 mx-auto mb-4" />
                 <p className="text-surface-500 font-medium">No products match your filters</p>
                 <button
                   onClick={() => { setPriceRange("Any price"); setSelectedRatings([]); setSearch(""); }}

@@ -1,10 +1,11 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
-import { SAMPLE_PRODUCTS, CATEGORIES, EVENT_TYPES, PRODUCT_SECTIONS } from "@/lib/data";
+import { SAMPLE_PRODUCTS as FALLBACK_PRODUCTS, CATEGORIES as FALLBACK_CATEGORIES, EVENT_TYPES, PRODUCT_SECTIONS } from "@/lib/data";
+import { productsAPI, categoriesAPI } from "@/lib/api";
 import {
   Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, Heart,
   Search, SlidersHorizontal, ChevronRight, X, Star,
@@ -39,20 +40,64 @@ export default function ProductsPageClient({ dict, lang }) {
   const [minRating, setMinRating] = useState(0);
   const [maxPrice, setMaxPrice] = useState(300);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [rawProducts, setRawProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const params = { locale: lang, limit: 50 };
+    if (selectedCat) params.category = selectedCat;
+    if (search) params.search = search;
+
+    productsAPI.list(params).then(res => {
+      {
+        setRawProducts((res?.data || []).map(p => ({
+          id: p.id,
+          name: p.name,
+          slug: p.slug || "",
+          vendor_slug: p.vendor_slug || "",
+          price: parseFloat(p.price) || 0,
+          originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
+          rating: parseFloat(p.rating) || 0,
+          reviews: p.review_count || 0,
+          vendor: p.vendor_name || "",
+          image: p.thumbnail_url || p.images?.[0]?.url || null,
+          tags: p.tags || [],
+          category: p.category_name || "",
+          status: p.status,
+          gradient: "from-brand-50 to-brand-100",
+        })));
+      }
+    }).catch(() => {});
+
+    categoriesAPI.list(lang).then(res => {
+      const gradients = [
+        "from-pink-400 via-rose-400 to-red-400",
+        "from-orange-400 via-amber-400 to-yellow-300",
+        "from-rose-400 via-pink-400 to-fuchsia-400",
+        "from-blue-400 via-cyan-400 to-sky-300",
+        "from-violet-500 via-purple-400 to-indigo-400",
+        "from-green-400 via-emerald-400 to-teal-400",
+      ];
+      setCategories((res?.data || []).map((c, i) => ({
+        name: c.name,
+        slug: c.slug,
+        icon: "Gift",
+        gradient: gradients[i % gradients.length],
+        count: c.product_count || 0,
+      })));
+    }).catch(() => {});
+  }, [lang, selectedCat]);
 
   const allProducts = useMemo(() => {
-    const base = [...SAMPLE_PRODUCTS, ...SAMPLE_PRODUCTS].map((p, i) => ({
-      ...p,
-      id: i + 1,
-    }));
-    return base;
-  }, []);
+    return rawProducts.map((p, i) => ({ ...p, id: typeof p.id === "string" ? p.id : i + 1 }));
+  }, [rawProducts]);
 
   const filtered = useMemo(() => {
     return allProducts.filter((p) => {
       const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.vendor.toLowerCase().includes(search.toLowerCase());
       const matchRating = p.rating >= minRating;
-      const matchPrice = p.price <= maxPrice;
+      const numPrice = typeof p.price === "string" ? parseFloat(p.price.replace(/[^0-9.]/g, "")) : p.price;
+      const matchPrice = numPrice <= maxPrice;
       return matchSearch && matchRating && matchPrice;
     });
   }, [allProducts, search, minRating, maxPrice]);
@@ -184,7 +229,7 @@ export default function ProductsPageClient({ dict, lang }) {
                   >
                     All
                   </motion.button>
-                  {CATEGORIES.map((cat) => (
+                  {categories.map((cat) => (
                     <motion.button
                       key={cat.slug}
                       onClick={() => setSelectedCat(selectedCat === cat.slug ? null : cat.slug)}
@@ -252,11 +297,11 @@ export default function ProductsPageClient({ dict, lang }) {
             </Link>
           </div>
           <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
-            {CATEGORIES.map((cat, i) => {
+            {categories.map((cat, i) => {
               const Icon = catIcons[cat.icon] || Gift;
               const imgSrc = catImages[cat.name];
               return (
-                <Link key={i} href={`/${lang}/category`} className="no-underline flex-shrink-0">
+                <Link key={i} href={`/${lang}/category/${cat.slug}`} className="no-underline flex-shrink-0">
                   <motion.div
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.97 }}
@@ -309,7 +354,7 @@ export default function ProductsPageClient({ dict, lang }) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.04, duration: 0.3 }}
                   >
-                    <ProductCard product={p} />
+                    <ProductCard product={p} lang={lang} />
                   </motion.div>
                 ))}
               </motion.div>
@@ -325,7 +370,7 @@ export default function ProductsPageClient({ dict, lang }) {
         {!search && minRating === 0 && maxPrice >= 300 && PRODUCT_SECTIONS.map((section, si) => {
           const Icon = catIcons[section.icon] || Gift;
           const imgs = sectionImages[section.title] || [];
-          const sectionProducts = SAMPLE_PRODUCTS.slice(0, 5).map((p, i) => ({
+          const sectionProducts = rawProducts.slice(0, 5).map((p, i) => ({
             ...p, id: si * 10 + i + 1, image: imgs[i] || null,
           }));
           return (
@@ -352,7 +397,7 @@ export default function ProductsPageClient({ dict, lang }) {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.06, duration: 0.4 }}
                   >
-                    <ProductCard product={p} />
+                    <ProductCard product={p} lang={lang} />
                   </motion.div>
                 ))}
               </div>
@@ -365,7 +410,7 @@ export default function ProductsPageClient({ dict, lang }) {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.06, duration: 0.4 }}
                   >
-                    <ProductCard product={{ ...p, id: p.id + 5 }} />
+                    <ProductCard product={{ ...p, id: p.id + 5 }} lang={lang} />
                   </motion.div>
                 ))}
               </div>

@@ -116,7 +116,7 @@ export default function ReviewsPage() {
                     onClick={() => setActiveFilter(`${stars} Stars`)}
                     className={`w-full flex items-center gap-2 group cursor-pointer bg-transparent border-none p-0 rounded-lg hover:bg-surface-50 transition-colors px-1 py-0.5 ${activeFilter === `${stars} Stars` ? "ring-1 ring-brand-200 bg-brand-50 rounded-lg" : ""}`}
                   >
-                    <span className="text-[12px] text-surface-500 w-10 text-right flex-shrink-0">{stars}★</span>
+                    <span className="text-[12px] text-surface-500 w-10 text-right flex-shrink-0">{stars}</span>
                     <div className="flex-1 h-2 bg-surface-100 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-warm-400 rounded-full transition-all"

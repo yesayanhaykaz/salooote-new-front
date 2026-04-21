@@ -121,7 +121,7 @@ function NewsletterBox() {
       </p>
       {submitted ? (
         <div className="flex items-center gap-2 bg-white/15 rounded-xl px-4 py-3 text-sm font-medium">
-          <span>✓</span>
+          <span>Done!</span>
           <span>You're subscribed! Thanks for joining.</span>
         </div>
       ) : (

@@ -31,12 +31,11 @@ export default function CountUp({ end, suffix = "", prefix = "", duration = 1800
 
   const displayEnd = String(end);
   const hasK = displayEnd.includes("K");
-  const hasStar = displayEnd.includes("★");
-  const displayCount = hasStar ? count : hasK ? `${count}K` : count;
+  const displayCount = hasK ? `${count}K` : count;
 
   return (
     <span ref={ref} className={className}>
-      {prefix}{displayCount}{hasStar ? "★" : ""}{!hasStar && suffix}
+      {prefix}{displayCount}{suffix}
     </span>
   );
 }

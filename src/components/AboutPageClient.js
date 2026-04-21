@@ -6,7 +6,7 @@ const stats = [
   { label: "Events", end: "15K+" },
   { label: "Vendors", end: "850+" },
   { label: "Cities", end: "50+" },
-  { label: "Rating", end: "4.9★" },
+  { label: "Rating", end: "4.9" },
 ];
 
 const timeline = [

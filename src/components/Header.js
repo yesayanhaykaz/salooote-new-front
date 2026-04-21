@@ -17,15 +17,7 @@ const ICON_MAP = {
   Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, MapPin, Sparkles,
 };
 
-const FALLBACK_NAV = [
-  { label: "Cakes",      slug: "cakes",       icon: Cake },
-  { label: "Catering",   slug: "catering",    icon: UtensilsCrossed },
-  { label: "Flowers",    slug: "flowers",     icon: Flower2 },
-  { label: "Party",      slug: "party",       icon: PartyPopper },
-  { label: "Gifts",      slug: "gifts",       icon: Gift },
-  { label: "DJ & Music", slug: "dj-music",    icon: Music },
-  { label: "Venues",     slug: "venues",      icon: MapPin },
-];
+const FALLBACK_NAV = [];
 
 export default function Header({ lang = "en" }) {
   const router = useRouter();
@@ -58,13 +50,11 @@ export default function Header({ lang = "en" }) {
   useEffect(() => {
     categoriesAPI.list(lang)
       .then(res => {
-        if (res?.data?.length) {
-          setNavCategories(res.data.slice(0, 8).map(c => ({
-            label: c.name,
-            slug: c.slug,
-            icon: ICON_MAP[c.icon] || Gift,
-          })));
-        }
+        setNavCategories((res?.data || []).slice(0, 8).map(c => ({
+          label: c.name,
+          slug: c.slug,
+          icon: ICON_MAP[c.icon] || Gift,
+        })));
       })
       .catch(() => {});
   }, [lang]);

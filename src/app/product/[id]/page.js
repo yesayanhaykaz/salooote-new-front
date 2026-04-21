@@ -3,35 +3,20 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { SAMPLE_PRODUCTS, REVIEWS } from "@/lib/data";
+import { REVIEWS } from "@/lib/data";
 import { productsAPI, isLoggedIn } from "@/lib/api";
 import { Star, Heart, ShoppingCart, Share2, ChevronRight, MessageCircle, Shield, Truck, RotateCcw, CheckCircle2, Plus, Minus, Zap, Check } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { useCart } from "@/lib/cart-context";
 import { useSaved } from "@/lib/saved-context";
 
-const FALLBACK = {
-  id: 1,
-  name: "Premium Wedding Cake — Three Tier Floral",
-  vendor: "Royal Bakes",
-  vendor_slug: "",
-  price: 250,
-  originalPrice: 320,
-  rating: 4.9,
-  reviewCount: 128,
-  tag: "POPULAR",
-  description: "A stunning three-tier wedding cake adorned with fresh florals and elegant details. Handcrafted by our master pastry chefs using only the finest ingredients.",
-  images: ["/images/wedding-cake.jpg", "/images/wedding-cake2.jpg", "/images/cupcakes.jpg"],
-  tags: ["3 Tier", "Custom", "Fresh Flowers"],
-};
-
 export default function ProductDetailPage({ productId, lang = "en" }) {
   const router = useRouter();
   const { addToCart } = useCart();
   const { isSaved, toggleSave } = useSaved();
-  const [product, setProduct] = useState(FALLBACK);
+  const [product, setProduct] = useState(null);
   const [savingHeart, setSavingHeart] = useState(false);
-  const [loading, setLoading] = useState(!!productId);
+  const [loading, setLoading] = useState(true);
   const [qty, setQty]         = useState(1);
   const [activeImg, setActiveImg] = useState(0);
   const [tab, setTab]         = useState("description");
@@ -76,6 +61,16 @@ export default function ProductDetailPage({ productId, lang = "en" }) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <p className="text-sm text-surface-400">Loading product…</p>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center gap-4 text-center px-4">
+        <p className="text-xl font-bold text-surface-700">Product not found</p>
+        <p className="text-sm text-surface-400">This product may have been removed or doesn't exist.</p>
+        <Link href={`/${lang}/products`} className="text-brand-600 font-semibold no-underline hover:underline">Browse all products</Link>
       </div>
     );
   }
@@ -338,15 +333,7 @@ export default function ProductDetailPage({ productId, lang = "en" }) {
           )}
         </div>
 
-        {/* Related */}
-        <div className="mt-20">
-          <h2 className="text-2xl font-bold text-surface-900 mb-6">You might also like</h2>
-          <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
-            {SAMPLE_PRODUCTS.slice(0, 5).map((p, i) => (
-              <div key={i} className="min-w-[210px] flex-shrink-0"><ProductCard product={p} lang={lang} /></div>
-            ))}
-          </div>
-        </div>
+        {/* Related — removed static sample products, will be populated from API later */}
       </div>
     </div>
   );

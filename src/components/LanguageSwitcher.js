@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 import { LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from "@/lib/getDictionary";
 
 export default function LanguageSwitcher({ currentLang }) {
@@ -66,7 +66,7 @@ export default function LanguageSwitcher({ currentLang }) {
                   <span>{LOCALE_FLAGS[locale]}</span>
                   <span>{LOCALE_NAMES[locale]}</span>
                   {locale === currentLang && (
-                    <span className="ml-auto text-brand-500">✓</span>
+                    <Check size={14} className="ml-auto text-brand-500" />
                   )}
                 </button>
               ))}
