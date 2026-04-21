@@ -1,20 +1,36 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
+import { authAPI, saveTokens, saveUser } from "@/lib/api";
 
 export default function LoginPageClient({ dict, lang }) {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
-    setTimeout(() => setLoading(false), 1500);
+    try {
+      const res = await authAPI.login(email, password);
+      saveTokens(res.data.access_token, res.data.refresh_token);
+      saveUser(res.data.user);
+      const role = res.data.user?.role;
+      if (role === "admin")  { router.push("/admin");  return; }
+      if (role === "vendor") { router.push("/vendor"); return; }
+      router.push(`/${lang}/account`);
+    } catch (err) {
+      setError(err.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,20 +52,6 @@ export default function LoginPageClient({ dict, lang }) {
 
       <div className="relative w-full max-w-[440px]">
 
-        {/* Logo */}
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Link href={`/${lang}`} className="inline-flex items-center gap-2 no-underline">
-            <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center">
-              <Sparkles size={16} className="text-white" />
-            </div>
-            <span className="text-xl font-bold text-surface-900">Salooote<span className="text-brand-600">.am</span></span>
-          </Link>
-        </motion.div>
 
         {/* Card */}
         <motion.div
@@ -96,6 +98,14 @@ export default function LoginPageClient({ dict, lang }) {
             <span className="text-xs text-surface-400 font-medium">{dict.auth.orContinueWith}</span>
             <div className="flex-1 h-px bg-surface-200" />
           </div>
+
+          {/* Error */}
+          {error && (
+            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm mb-4">
+              <AlertCircle size={15} className="flex-shrink-0" />
+              {error}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">

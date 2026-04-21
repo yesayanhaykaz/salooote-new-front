@@ -1,4 +1,5 @@
 import { CartProvider } from "@/lib/cart-context";
+import { SavedProvider } from "@/lib/saved-context";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -71,12 +72,14 @@ export default async function LangLayout({ children, params }) {
     <>
       <DictionaryProvider dict={dict} lang={lang}>
         <CartProvider>
+        <SavedProvider>
           <ScrollProgress />
           <Header lang={lang} dict={dict} />
           <main className="min-h-screen pb-16 md:pb-0">{children}</main>
           <Footer lang={lang} dict={dict} />
           <OrganizationJsonLd />
           <WebsiteJsonLd lang={lang} />
+        </SavedProvider>
         </CartProvider>
       </DictionaryProvider>
     </>

@@ -1,33 +1,90 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { categoriesAPI, getUser, clearAuth, isLoggedIn } from "@/lib/api";
 import {
   Search, Heart, ShoppingBag, Menu, X,
   Cake, UtensilsCrossed, Flower2, PartyPopper,
-  Gift, Music, Sparkles, MapPin, Home, User, ChevronRight
+  Gift, Music, Sparkles, MapPin, Home, User, ChevronRight,
+  LogOut, Package, Bookmark, Settings,
 } from "lucide-react";
 
-function getNavCategories(lang) {
-  return [
-    { label: "Cakes",      href: `/${lang}/category`, icon: Cake },
-    { label: "Catering",   href: `/${lang}/category`, icon: UtensilsCrossed },
-    { label: "Flowers",    href: `/${lang}/category`, icon: Flower2 },
-    { label: "Party",      href: `/${lang}/category`, icon: PartyPopper },
-    { label: "Gifts",      href: `/${lang}/category`, icon: Gift },
-    { label: "DJ & Music", href: `/${lang}/category`, icon: Music },
-    { label: "Venues",     href: `/${lang}/category`, icon: MapPin },
-    { label: "Premium",    href: `/${lang}/products`, icon: Sparkles },
-  ];
-}
+const ICON_MAP = {
+  Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, MapPin, Sparkles,
+};
+
+const FALLBACK_NAV = [
+  { label: "Cakes",      slug: "cakes",       icon: Cake },
+  { label: "Catering",   slug: "catering",    icon: UtensilsCrossed },
+  { label: "Flowers",    slug: "flowers",     icon: Flower2 },
+  { label: "Party",      slug: "party",       icon: PartyPopper },
+  { label: "Gifts",      slug: "gifts",       icon: Gift },
+  { label: "DJ & Music", slug: "dj-music",    icon: Music },
+  { label: "Venues",     slug: "venues",      icon: MapPin },
+];
 
 export default function Header({ lang = "en" }) {
+  const router = useRouter();
   const { cartCount } = useCart();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const NAV_CATEGORIES = getNavCategories(lang);
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const [searchOpen, setSearchOpen]     = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [navCategories, setNavCategories] = useState(FALLBACK_NAV);
+  const [user, setUser]                 = useState(null);
+  const [loggedIn, setLoggedIn]         = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Read auth state client-side only
+  useEffect(() => {
+    setLoggedIn(isLoggedIn());
+    setUser(getUser());
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  useEffect(() => {
+    categoriesAPI.list(lang)
+      .then(res => {
+        if (res?.data?.length) {
+          setNavCategories(res.data.slice(0, 8).map(c => ({
+            label: c.name,
+            slug: c.slug,
+            icon: ICON_MAP[c.icon] || Gift,
+          })));
+        }
+      })
+      .catch(() => {});
+  }, [lang]);
+
+  const handleLogout = () => {
+    clearAuth();
+    setLoggedIn(false);
+    setUser(null);
+    setDropdownOpen(false);
+    setMenuOpen(false);
+    router.push(`/${lang}/login`);
+  };
+
+  // User initials avatar
+  const initials = user
+    ? ((user.first_name?.[0] || "") + (user.last_name?.[0] || "")).toUpperCase() || user.email?.[0]?.toUpperCase() || "U"
+    : "U";
+  const displayName = user
+    ? [user.first_name, user.last_name].filter(Boolean).join(" ") || user.email
+    : "";
 
   return (
     <>
@@ -93,17 +150,83 @@ export default function Header({ lang = "en" }) {
               <LanguageSwitcher currentLang={lang} />
             </div>
 
-            {/* Auth — desktop */}
-            <Link href={`/${lang}/login`} className="no-underline hidden md:block">
-              <span className="text-surface-600 text-sm font-medium px-3 py-2 rounded-xl hover:bg-surface-100 transition-colors">
-                Log in
-              </span>
-            </Link>
-            <Link href={`/${lang}/signup`} className="no-underline hidden md:block">
-              <button className="bg-brand-600 text-white border-none rounded-xl px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
-                Sign up
-              </button>
-            </Link>
+            {/* ── Auth section — desktop ── */}
+            {loggedIn ? (
+              /* User avatar + dropdown */
+              <div className="relative hidden md:block" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(v => !v)}
+                  className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-xl hover:bg-surface-100 transition-colors cursor-pointer border-none bg-transparent"
+                >
+                  <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    {user?.avatar_url
+                      ? <img src={user.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover" />
+                      : initials
+                    }
+                  </div>
+                  <span className="text-sm font-medium text-surface-700 max-w-[100px] truncate">
+                    {user?.first_name || "Account"}
+                  </span>
+                  <ChevronRight
+                    size={13}
+                    className={`text-surface-400 transition-transform ${dropdownOpen ? "rotate-90" : ""}`}
+                  />
+                </button>
+
+                {/* Dropdown */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl border border-surface-200 shadow-lg py-2 z-50">
+                    {/* User info */}
+                    <div className="px-4 py-3 border-b border-surface-100">
+                      <p className="text-sm font-semibold text-surface-900 truncate">{displayName}</p>
+                      <p className="text-xs text-surface-400 truncate">{user?.email}</p>
+                    </div>
+
+                    {/* Menu items */}
+                    {[
+                      { icon: User,     label: "My Profile",    href: `/${lang}/account` },
+                      { icon: Package,  label: "My Orders",     href: `/${lang}/account/orders` },
+                      { icon: Bookmark, label: "Saved Items",   href: `/${lang}/account/saved` },
+                      { icon: Settings, label: "Settings",      href: `/${lang}/account/settings` },
+                    ].map(({ icon: Icon, label, href }) => (
+                      <Link
+                        key={href}
+                        href={href}
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-surface-700 hover:bg-surface-50 hover:text-brand-600 no-underline transition-colors"
+                      >
+                        <Icon size={15} className="text-surface-400" />
+                        {label}
+                      </Link>
+                    ))}
+
+                    <div className="border-t border-surface-100 mt-1 pt-1">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 w-full text-left border-none bg-transparent cursor-pointer transition-colors"
+                      >
+                        <LogOut size={15} />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Login / Sign up buttons */
+              <div className="hidden md:flex items-center gap-1">
+                <Link href={`/${lang}/login`} className="no-underline">
+                  <span className="text-surface-600 text-sm font-medium px-3 py-2 rounded-xl hover:bg-surface-100 transition-colors">
+                    Log in
+                  </span>
+                </Link>
+                <Link href={`/${lang}/signup`} className="no-underline">
+                  <button className="bg-brand-600 text-white border-none rounded-xl px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
+                    Sign up
+                  </button>
+                </Link>
+              </div>
+            )}
 
             {/* Hamburger — mobile only */}
             <button
@@ -136,12 +259,12 @@ export default function Header({ lang = "en" }) {
         {/* ── Category pills nav ── */}
         <div className="border-t border-surface-100 bg-white">
           <div className="max-w-container mx-auto px-4 md:px-8 flex items-center gap-0.5 overflow-x-auto hide-scrollbar py-2">
-            {NAV_CATEGORIES.map((item, i) => {
+            {navCategories.map((item, i) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={i}
-                  href={item.href}
+                  href={`/${lang}/category/${item.slug}`}
                   className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
                 >
                   <Icon size={12} strokeWidth={2} />
@@ -149,6 +272,13 @@ export default function Header({ lang = "en" }) {
                 </Link>
               );
             })}
+            <Link
+              href={`/${lang}/products`}
+              className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
+            >
+              <Sparkles size={12} strokeWidth={2} />
+              All Products
+            </Link>
           </div>
         </div>
       </header>
@@ -179,29 +309,68 @@ export default function Header({ lang = "en" }) {
               <LanguageSwitcher currentLang={lang} />
             </div>
 
-            {/* Auth */}
-            <div className="px-5 py-4 border-b border-surface-100 flex gap-2">
-              <Link href={`/${lang}/login`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
-                <button className="w-full py-2.5 rounded-xl border border-surface-200 text-surface-700 font-semibold text-sm bg-transparent cursor-pointer hover:bg-surface-50 transition-colors">
-                  Log in
+            {/* Auth — mobile */}
+            {loggedIn ? (
+              <div className="px-5 py-4 border-b border-surface-100">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-brand-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                    {user?.avatar_url
+                      ? <img src={user.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover" />
+                      : initials
+                    }
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-surface-900 truncate">{displayName}</p>
+                    <p className="text-xs text-surface-400 truncate">{user?.email}</p>
+                  </div>
+                </div>
+                {[
+                  { icon: User,     label: "My Profile",  href: `/${lang}/account` },
+                  { icon: Package,  label: "My Orders",   href: `/${lang}/account/orders` },
+                  { icon: Bookmark, label: "Saved Items", href: `/${lang}/account/saved` },
+                ].map(({ icon: Icon, label, href }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-3 py-2 text-sm text-surface-700 hover:text-brand-600 no-underline transition-colors"
+                  >
+                    <Icon size={15} className="text-surface-400" />
+                    {label}
+                  </Link>
+                ))}
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 mt-2 text-sm text-red-500 border-none bg-transparent cursor-pointer p-0 hover:text-red-600 transition-colors"
+                >
+                  <LogOut size={15} />
+                  Sign Out
                 </button>
-              </Link>
-              <Link href={`/${lang}/signup`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
-                <button className="w-full py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-sm border-none cursor-pointer hover:bg-brand-700 transition-colors">
-                  Sign up
-                </button>
-              </Link>
-            </div>
+              </div>
+            ) : (
+              <div className="px-5 py-4 border-b border-surface-100 flex gap-2">
+                <Link href={`/${lang}/login`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
+                  <button className="w-full py-2.5 rounded-xl border border-surface-200 text-surface-700 font-semibold text-sm bg-transparent cursor-pointer hover:bg-surface-50 transition-colors">
+                    Log in
+                  </button>
+                </Link>
+                <Link href={`/${lang}/signup`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
+                  <button className="w-full py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-sm border-none cursor-pointer hover:bg-brand-700 transition-colors">
+                    Sign up
+                  </button>
+                </Link>
+              </div>
+            )}
 
             {/* Categories */}
             <div className="px-5 pt-4 pb-2">
               <p className="text-xs font-semibold text-surface-400 uppercase tracking-widest mb-3">Browse</p>
-              {NAV_CATEGORIES.map((item, i) => {
+              {navCategories.map((item, i) => {
                 const Icon = item.icon;
                 return (
                   <Link
                     key={i}
-                    href={item.href}
+                    href={`/${lang}/category/${item.slug}`}
                     className="flex items-center justify-between py-3 border-b border-surface-50 text-surface-700 no-underline text-sm font-medium hover:text-brand-600 transition-colors group"
                     onClick={() => setMenuOpen(false)}
                   >
@@ -234,9 +403,10 @@ export default function Header({ lang = "en" }) {
         {[
           { icon: Home,        label: "Home",    href: `/${lang}` },
           { icon: Search,      label: "Browse",  href: `/${lang}/products` },
-          { icon: Heart,       label: "Saved",   href: "#" },
+          { icon: Heart,       label: "Saved",   href: loggedIn ? `/${lang}/account/saved` : `/${lang}/login` },
           { icon: ShoppingBag, label: "Cart",    href: `/${lang}/cart`, badge: cartCount },
-          { icon: User,        label: "Account", href: `/${lang}/login` },
+          { icon: User,        label: loggedIn ? (user?.first_name || "Account") : "Account",
+            href: loggedIn ? `/${lang}/account` : `/${lang}/login` },
         ].map(({ icon: Icon, label, href, badge }, i) => (
           <Link
             key={i}
@@ -244,7 +414,13 @@ export default function Header({ lang = "en" }) {
             className="flex-1 flex flex-col items-center justify-center py-2 gap-0.5 no-underline text-surface-400 hover:text-brand-600 transition-colors"
           >
             <div className="relative">
-              <Icon size={20} strokeWidth={1.8} />
+              {i === 4 && loggedIn ? (
+                <div className="w-5 h-5 rounded-full bg-brand-600 flex items-center justify-center text-white text-[9px] font-bold">
+                  {initials[0]}
+                </div>
+              ) : (
+                <Icon size={20} strokeWidth={1.8} />
+              )}
               {badge > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
                   {badge}

@@ -1,17 +1,21 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import { authAPI, saveTokens, saveUser } from "@/lib/api";
 
 export default function SignupPageClient({ dict, lang }) {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => { setForm({ ...form, [e.target.name]: e.target.value }); setError(""); };
 
   const passwordStrength = (() => {
     const p = form.password;
@@ -27,11 +31,39 @@ export default function SignupPageClient({ dict, lang }) {
   const strengthColors = ["bg-surface-200", "bg-red-400", "bg-amber-400", "bg-yellow-400", "bg-green-500"];
   const strengthLabels = ["", "Weak", "Fair", "Good", "Strong"];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!agreed) return;
+    setError("");
+
+    // Split full name into first/last
+    const nameParts = form.name.trim().split(/\s+/);
+    const first_name = nameParts[0] || "";
+    const last_name  = nameParts.slice(1).join(" ") || first_name; // fallback: repeat if single word
+
+    if (!first_name) { setError("Please enter your full name."); return; }
+    if (form.password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (form.password !== form.confirm) { setError("Passwords do not match."); return; }
+
     setLoading(true);
-    setTimeout(() => setLoading(false), 1500);
+    try {
+      const res = await authAPI.register({
+        first_name,
+        last_name,
+        email: form.email.trim(),
+        password: form.password,
+      });
+      const data = res?.data || res;
+      if (data?.access_token) {
+        saveTokens(data.access_token, data.refresh_token);
+        if (data.user) saveUser(data.user);
+      }
+      router.push(`/${lang}/account`);
+    } catch (err) {
+      setError(err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -53,20 +85,6 @@ export default function SignupPageClient({ dict, lang }) {
 
       <div className="relative w-full max-w-[480px]">
 
-        {/* Logo */}
-        <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Link href={`/${lang}`} className="inline-flex items-center gap-2 no-underline">
-            <div className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center">
-              <Sparkles size={16} className="text-white" />
-            </div>
-            <span className="text-xl font-bold text-surface-900">Salooote<span className="text-brand-600">.am</span></span>
-          </Link>
-        </motion.div>
 
         {/* Card */}
         <motion.div
@@ -113,6 +131,14 @@ export default function SignupPageClient({ dict, lang }) {
             <span className="text-xs text-surface-400 font-medium">{dict.auth.orContinueWith}</span>
             <div className="flex-1 h-px bg-surface-200" />
           </div>
+
+          {/* Error */}
+          {error && (
+            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm mb-4">
+              <AlertCircle size={15} className="flex-shrink-0" />
+              {error}
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">

@@ -2,8 +2,12 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Heart, ShoppingCart, Star, Eye } from "lucide-react";
+import { Heart, ShoppingCart, Star, Eye, Check } from "lucide-react";
+import { useCart } from "@/lib/cart-context";
+import { useSaved } from "@/lib/saved-context";
+import { isLoggedIn } from "@/lib/api";
 
 const productImages = {
   1: "/images/wedding-cake.jpg",
@@ -16,14 +20,19 @@ const productImages = {
   8: "/images/party-hats.jpg",
 };
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, lang = "en" }) {
+  const { addToCart } = useCart();
+  const { isSaved, toggleSave } = useSaved();
+  const router = useRouter();
   const imgSrc = product.image || productImages[product.id] || null;
   const discount = product.originalPrice
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : null;
 
-  const ref = useRef(null);
-  const [wished, setWished] = useState(false);
+  const ref  = useRef(null);
+  const saved = isSaved(product.id);
+  const [savingHeart, setSavingHeart] = useState(false);
+  const [added,       setAdded]       = useState(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -46,8 +55,12 @@ export default function ProductCard({ product }) {
     y.set(0);
   };
 
+  const productHref = product.vendor_slug && product.slug
+    ? `/${lang}/${product.vendor_slug}/${product.slug}`
+    : `/${lang}/product/${product.id}`;
+
   return (
-    <Link href="/product" className="no-underline group" style={{ perspective: "900px" }}>
+    <Link href={productHref} className="no-underline group" style={{ perspective: "900px" }}>
       <motion.div
         ref={ref}
         onMouseMove={handleMouseMove}
@@ -91,14 +104,21 @@ export default function ProductCard({ product }) {
 
           {/* Wishlist */}
           <motion.button
-            onClick={(e) => { e.preventDefault(); setWished(!wished); }}
+            onClick={async (e) => {
+              e.preventDefault();
+              if (!isLoggedIn()) { router.push(`/${lang}/login`); return; }
+              if (savingHeart) return;
+              setSavingHeart(true);
+              await toggleSave("product", product.id);
+              setSavingHeart(false);
+            }}
             whileTap={{ scale: 0.85 }}
             whileHover={{ scale: 1.15 }}
             className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm border-none rounded-full w-8 h-8 flex items-center justify-center cursor-pointer z-10 shadow-sm"
           >
             <Heart
               size={14}
-              className={`transition-all duration-200 ${wished ? "text-brand-500 fill-brand-500" : "text-surface-400"}`}
+              className={`transition-all duration-200 ${saved ? "text-brand-500 fill-brand-500" : "text-surface-400"} ${savingHeart ? "opacity-50" : ""}`}
             />
           </motion.button>
 
@@ -142,18 +162,37 @@ export default function ProductCard({ product }) {
           {/* Price + Cart */}
           <div className="flex items-center justify-between">
             <div className="flex items-end gap-1.5">
-              <span className="text-base font-bold text-surface-900">${product.price.toFixed(2)}</span>
+              <span className="text-base font-bold text-surface-900">
+                {product.price != null
+                  ? `${Number(product.price).toLocaleString()} ֏`
+                  : "—"}
+              </span>
               {product.originalPrice && (
-                <span className="text-xs text-surface-400 line-through mb-0.5">${product.originalPrice.toFixed(2)}</span>
+                <span className="text-xs text-surface-400 line-through mb-0.5">
+                  {Number(product.originalPrice).toLocaleString()} ֏
+                </span>
               )}
             </div>
             <motion.button
-              onClick={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.preventDefault();
+                addToCart({
+                  product_id:  product.id,
+                  vendor_id:   product.vendor_id,
+                  vendor_name: product.vendor || product.vendor_name || "",
+                  name:        product.name,
+                  price:       Number(product.price),
+                  image:       product.image || null,
+                  qty:         1,
+                });
+                setAdded(true);
+                setTimeout(() => setAdded(false), 1800);
+              }}
               whileTap={{ scale: 0.88 }}
-              whileHover={{ scale: 1.1, backgroundColor: "#be1850" }}
-              className="bg-brand-600 text-white border-none rounded-xl w-8 h-8 flex items-center justify-center cursor-pointer flex-shrink-0"
+              whileHover={{ scale: 1.1, backgroundColor: added ? "#16a34a" : "#be1850" }}
+              className={`text-white border-none rounded-xl w-8 h-8 flex items-center justify-center cursor-pointer flex-shrink-0 transition-colors ${added ? "bg-green-500" : "bg-brand-600"}`}
             >
-              <ShoppingCart size={14} />
+              {added ? <Check size={14} /> : <ShoppingCart size={14} />}
             </motion.button>
           </div>
         </div>
