@@ -3,14 +3,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { vendorsAPI, productsAPI } from "@/lib/api";
+import { vendorsAPI, productsAPI, categoriesAPI } from "@/lib/api";
 import {
   Star, MapPin, Phone, MessageCircle,
   Heart, Share2, ArrowLeft, X, Package,
-  Calendar, Clock, Globe, Instagram, Facebook
+  Calendar, Clock, Globe, Instagram, Facebook, Images
 } from "lucide-react";
 
-const PRODUCT_CATS = ["All", "Cakes", "Flowers", "Balloons", "Decor", "Gifts"];
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
 function parseHours(raw) {
@@ -41,41 +40,69 @@ function parseHours(raw) {
 }
 
 export default function VendorProfileClient({ lang = "en", slug }) {
-  const [vendorData, setVendorData] = useState(null);
-  const [products, setProducts]     = useState([]);
-  const [loading, setLoading]       = useState(true);
-  const [mainTab, setMainTab]       = useState("products");
-  const [productCat, setProductCat] = useState("All");
-  const [gallery, setGallery]       = useState(null);
+  const [vendorData, setVendorData]   = useState(null);
+  const [products, setProducts]       = useState([]);
+  const [vendorCats, setVendorCats]   = useState([]); // vendor's assigned categories
+  const [loading, setLoading]         = useState(true);
+  const [mainTab, setMainTab]         = useState("products");
+  const [activeCat, setActiveCat]     = useState("all");
+  const [lightbox, setLightbox]       = useState(null);
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
 
-    vendorsAPI.getBySlug(slug).catch(() => null).then(vRes => {
-      if (vRes?.data) {
-        setVendorData(vRes.data);
-        return productsAPI.list({ vendor_id: vRes.data.id, limit: 50, locale: lang }).catch(() => null).then(pRes => {
-          const raw = pRes?.data || [];
-          setProducts(raw.map(p => ({
-            id: p.id,
-            name: p.name,
-            slug: p.slug || "",
-            vendor_id: vRes.data.id || "",
-            vendor_slug: vRes.data.slug || "",
-            price: parseFloat(p.price) || 0,
-            originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
-            rating: parseFloat(p.rating) || 0,
-            reviews: p.review_count || 0,
-            vendor: vRes.data.business_name || "",
-            vendor_name: vRes.data.business_name || "",
-            image: p.thumbnail_url || p.images?.[0]?.url || null,
-            tags: p.tags || [],
-            gradient: "from-brand-50 to-brand-100",
-          })));
-        });
-      }
+    vendorsAPI.getBySlug(slug).catch(() => null).then(async vRes => {
+      if (!vRes?.data) return;
+      const vendor = vRes.data;
+      setVendorData(vendor);
+
+      // Fetch products + vendor categories in parallel
+      const [pRes, cRes] = await Promise.all([
+        productsAPI.list({ vendor_id: vendor.id, limit: 50, locale: lang }).catch(() => null),
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/${vendor.id}/categories`).then(r => r.json()).catch(() => null),
+      ]);
+
+      const raw = pRes?.data || [];
+      setProducts(raw.map(p => ({
+        id: p.id,
+        name: p.name,
+        slug: p.slug || "",
+        vendor_id: vendor.id,
+        vendor_slug: vendor.slug || "",
+        price: parseFloat(p.price) || 0,
+        originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
+        rating: parseFloat(p.rating) || 0,
+        reviews: p.review_count || 0,
+        vendor: vendor.business_name || "",
+        vendor_name: vendor.business_name || "",
+        image: p.thumbnail_url || p.images?.[0]?.url || null,
+        tags: p.tags || [],
+        gradient: "from-brand-50 to-brand-100",
+      })));
+
+      // Only show categories the vendor is registered in (no product-level filtering needed)
+      const cats = cRes?.data || cRes || [];
+      setVendorCats(Array.isArray(cats) ? cats : []);
     }).finally(() => setLoading(false));
   }, [slug, lang]);
+
+  // Gallery images
+  const galleryImages = (() => {
+    if (!vendorData?.gallery_images) return [];
+    try {
+      const g = typeof vendorData.gallery_images === "string"
+        ? JSON.parse(vendorData.gallery_images)
+        : vendorData.gallery_images;
+      return Array.isArray(g) ? g : [];
+    } catch { return []; }
+  })();
+
+  // Tabs: products (if any) + gallery (if any)
+  const mainTabs = [
+    products.length > 0 && "products",
+    galleryImages.length > 0 && "gallery",
+    "info",
+  ].filter(Boolean);
 
   const parsedHours = vendorData ? parseHours(vendorData.working_hours) : { hours: [], isOpen: false, openUntil: "" };
 
@@ -257,13 +284,15 @@ export default function VendorProfileClient({ lang = "en", slug }) {
 
           {/* Tabs */}
           <div className="flex items-center gap-1 border-b border-surface-100 -mx-8 px-8">
-            {["products", "info"].map(tab => (
+            {mainTabs.map(tab => (
               <button
                 key={tab}
                 onClick={() => setMainTab(tab)}
                 className={`px-4 py-3 text-sm font-semibold border-none bg-transparent cursor-pointer capitalize border-b-2 transition-colors ${mainTab === tab ? "border-brand-600 text-brand-600" : "border-transparent text-surface-500 hover:text-surface-900"}`}
               >
-                {tab === "products" ? `Products (${products.length})` : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === "products" ? `Products (${products.length})`
+                  : tab === "gallery" ? `Gallery (${galleryImages.length})`
+                  : "Info"}
               </button>
             ))}
           </div>
@@ -275,17 +304,26 @@ export default function VendorProfileClient({ lang = "en", slug }) {
 
         {mainTab === "products" && (
           <>
-            <div className="flex items-center gap-2 mb-6 flex-wrap">
-              {PRODUCT_CATS.map(cat => (
+            {/* Category filter tabs — only shown when vendor has multiple categories */}
+            {vendorCats.length > 1 && (
+              <div className="flex items-center gap-2 mb-6 flex-wrap">
                 <button
-                  key={cat}
-                  onClick={() => setProductCat(cat)}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all cursor-pointer ${productCat === cat ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
+                  onClick={() => setActiveCat("all")}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all cursor-pointer ${activeCat === "all" ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
                 >
-                  {cat}
+                  All
                 </button>
-              ))}
-            </div>
+                {vendorCats.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCat(cat.id)}
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all cursor-pointer ${activeCat === cat.id ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            )}
             {products.length === 0 ? (
               <p className="text-sm text-surface-400 text-center py-16">No products yet.</p>
             ) : (
@@ -294,6 +332,24 @@ export default function VendorProfileClient({ lang = "en", slug }) {
               </div>
             )}
           </>
+        )}
+
+        {mainTab === "gallery" && (
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+            {galleryImages.map((img, i) => {
+              const src = img?.url || img?.image_url || (typeof img === "string" ? img : null);
+              if (!src) return null;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setLightbox(src)}
+                  className="relative aspect-square rounded-2xl overflow-hidden border-none cursor-pointer group bg-surface-100"
+                >
+                  <Image src={src} alt="" fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                </button>
+              );
+            })}
+          </div>
         )}
 
         {mainTab === "info" && (
@@ -319,14 +375,14 @@ export default function VendorProfileClient({ lang = "en", slug }) {
         )}
       </div>
 
-      {/* Gallery lightbox */}
-      {gallery && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setGallery(null)}>
+      {/* Lightbox */}
+      {lightbox && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
           <button className="absolute top-4 right-4 bg-white/20 border-none text-white cursor-pointer rounded-full w-10 h-10 flex items-center justify-center hover:bg-white/30 transition-colors">
             <X size={18} />
           </button>
-          <div className="relative w-full max-w-[800px] h-[500px]">
-            <Image src={gallery} alt="" fill className="object-contain" />
+          <div className="relative w-full max-w-[860px] h-[560px]">
+            <Image src={lightbox} alt="" fill className="object-contain" />
           </div>
         </div>
       )}
