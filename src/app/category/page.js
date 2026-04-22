@@ -145,6 +145,7 @@ export default function CategoryPage({ lang = "en", slug }) {
 
   // Step 2: fetch products when categoryID or sort changes
   const fetchProducts = useCallback(() => {
+    if (slug && !categoryID) return; // wait for slug→ID resolution
     if (!slug && !categoryID) {
       setLoading(false);
       return;
@@ -187,12 +188,13 @@ export default function CategoryPage({ lang = "en", slug }) {
 
   // Step 3: fetch vendors for this category
   useEffect(() => {
+    if (slug && !categoryID) return; // wait for slug→ID resolution
     const params = { limit: 20 };
     if (categoryID) params.category_id = categoryID;
     vendorsAPI.list(params).then(res => {
       setVendors(res?.data || []);
     }).catch(() => setVendors([]));
-  }, [categoryID]);
+  }, [categoryID, slug]);
 
   const toggleTag = (t) =>
     setSelectedTags(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);

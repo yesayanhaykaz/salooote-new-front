@@ -561,9 +561,11 @@ function TrustBar({ dict }) {
 ════════════════════════════════════════════ */
 function CategoryPortraitCard({ cat, index, lang }) {
   const grad = PORTRAIT_GRADIENTS[index % PORTRAIT_GRADIENTS.length];
-  const bgStyle = cat.color
-    ? { background: `linear-gradient(160deg, ${cat.color}dd, ${cat.color}88)` }
-    : { background: `linear-gradient(160deg, ${grad[0]}, ${grad[1]})` };
+  const bgStyle = cat.image_url
+    ? {}
+    : cat.color
+      ? { background: `linear-gradient(160deg, ${cat.color}dd, ${cat.color}88)` }
+      : { background: `linear-gradient(160deg, ${grad[0]}, ${grad[1]})` };
 
   return (
     <motion.div
@@ -580,12 +582,25 @@ function CategoryPortraitCard({ cat, index, lang }) {
           className="relative w-[152px] h-[220px] rounded-2xl overflow-hidden cursor-pointer select-none"
           style={bgStyle}
         >
-          <div className="absolute inset-0 pointer-events-none"
-            style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 60%, transparent 100%)" }}
-          />
-          <div className="absolute inset-0 pointer-events-none opacity-20"
-            style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)", backgroundSize: "18px 18px" }}
-          />
+          {/* Background image when available */}
+          {cat.image_url && (
+            <>
+              <Image src={cat.image_url} alt={cat.name} fill className="object-cover" />
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(160deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.55) 100%)" }}
+              />
+            </>
+          )}
+          {!cat.image_url && (
+            <>
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.04) 60%, transparent 100%)" }}
+              />
+              <div className="absolute inset-0 pointer-events-none opacity-20"
+                style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px)", backgroundSize: "18px 18px" }}
+              />
+            </>
+          )}
           <div className="absolute top-0 left-0 right-0 flex flex-col items-center pt-8">
             <div className="w-14 h-14 rounded-2xl bg-white/25 backdrop-blur-sm flex items-center justify-center">
               {(() => {
@@ -1371,8 +1386,9 @@ export default function HomePageClient({ dict, lang }) {
         ];
         setApiCategories((res?.data || []).map((c, i) => ({
           name: c.name, slug: c.slug,
-          iconName: catIcons[c.emoji] ? c.emoji : null,
+          iconName: catIcons[c.icon] ? c.icon : null,
           color: c.color || null,
+          image_url: c.image_url || null,
           gradient: gradients[i % gradients.length],
           count: c.product_count || 0,
         })));
