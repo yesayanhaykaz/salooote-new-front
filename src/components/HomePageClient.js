@@ -444,6 +444,88 @@ function StatementSection({ dict }) {
 /* ════════════════════════════════════════════
    TRUST BAR
 ════════════════════════════════════════════ */
+/* ════════════════════════════════════════════
+   PARTNERS LOGO BAR
+════════════════════════════════════════════ */
+const PARTNER_LOGOS = [
+  { name: "LOGO",       w: 90,  svg: <svg viewBox="0 0 90 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="4" width="24" height="24" rx="4" fill="#c8c8c8"/><rect x="6" y="10" width="12" height="12" rx="2" fill="#fff"/><text x="30" y="23" fontFamily="system-ui" fontWeight="700" fontSize="18" fill="#c8c8c8">OGO</text></svg> },
+  { name: "IPSUM",      w: 110, svg: <svg viewBox="0 0 110 32" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="0" y="24" fontFamily="system-ui" fontWeight="900" fontSize="22" fill="#c8c8c8" letterSpacing="2">IPSUM</text></svg> },
+  { name: "logoipsum1", w: 120, svg: <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="6" width="20" height="20" rx="4" stroke="#c8c8c8" strokeWidth="2.5"/><path d="M5 16h10M10 11v10" stroke="#c8c8c8" strokeWidth="2" strokeLinecap="round"/><text x="26" y="23" fontFamily="system-ui" fontWeight="600" fontSize="15" fill="#c8c8c8">logoipsum</text></svg> },
+  { name: "logoipsum2", w: 130, svg: <svg viewBox="0 0 130 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="16" r="6" stroke="#c8c8c8" strokeWidth="2"/><circle cx="10" cy="16" r="2.5" fill="#c8c8c8"/><path d="M10 4v4M10 24v4M4 16H0M20 16h4" stroke="#c8c8c8" strokeWidth="1.8" strokeLinecap="round"/><text x="28" y="23" fontFamily="system-ui" fontWeight="600" fontSize="15" fill="#c8c8c8">logoipsum</text></svg> },
+  { name: "logoipsum3", w: 48,  svg: <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 4l4.5 7.8L37 8l-1.5 9.5L45 20l-7 5 2 9.5-8.5-4L24 36l-7.5 5.5L18 32l-7-5 9.5-2.5L19 15l8.5 4.2L24 4z" fill="#c8c8c8"/></svg> },
+  { name: "logoipsum4", w: 120, svg: <svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="14" height="14" rx="2" fill="#c8c8c8"/><circle cx="20" cy="15" r="7" fill="#c8c8c8"/><rect x="30" y="8" width="6" height="6" rx="1" fill="#c8c8c8"/><rect x="30" y="18" width="6" height="4" rx="1" fill="#c8c8c8"/><text x="42" y="23" fontFamily="system-ui" fontWeight="600" fontSize="15" fill="#c8c8c8">logoipsum</text></svg> },
+  { name: "logoipsum5", w: 90,  svg: <svg viewBox="0 0 90 32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 16 Q8 6 16 16 Q24 26 32 16" stroke="#c8c8c8" strokeWidth="3" fill="none" strokeLinecap="round"/><path d="M32 16 Q40 6 48 16 Q56 26 64 16" stroke="#c8c8c8" strokeWidth="3" fill="none" strokeLinecap="round"/></svg> },
+];
+
+function PartnersBar({ lang }) {
+  const [tab, setTab] = useState("partners");
+  return (
+    <section className="bg-white py-10">
+      <div className="max-w-container mx-auto px-6 md:px-8">
+        {/* Tab row */}
+        <div className="flex items-center gap-6 mb-6 justify-center">
+          <button
+            onClick={() => setTab("partners")}
+            style={{
+              background: "none", border: "none", cursor: "pointer", padding: "2px 0",
+              fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: tab === "partners" ? "#e11d5c" : "#94a3b8",
+              borderBottom: tab === "partners" ? "2px solid #e11d5c" : "2px solid transparent",
+              paddingBottom: 4, transition: "color 0.2s",
+            }}
+          >
+            Our Partners
+          </button>
+          <Link href={`/${lang}/apply`} className="no-underline">
+            <span
+              onClick={() => setTab("become")}
+              style={{
+                fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: tab === "become" ? "#e11d5c" : "#0f172a",
+                borderBottom: tab === "become" ? "2px solid #e11d5c" : "2px solid transparent",
+                paddingBottom: 4, cursor: "pointer", transition: "color 0.2s",
+              }}
+            >
+              Become a Partner
+            </span>
+          </Link>
+        </div>
+
+        {/* Logo container */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          style={{
+            background: "#f8f8f8",
+            borderRadius: 20,
+            padding: "36px 48px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 32,
+            flexWrap: "wrap",
+          }}
+        >
+          {PARTNER_LOGOS.map((logo, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ opacity: 0.6 }}
+              style={{ opacity: 1, transition: "opacity 0.2s", flexShrink: 0, display: "flex", alignItems: "center" }}
+            >
+              <div style={{ width: logo.w, height: 32, display: "flex", alignItems: "center" }}>
+                {logo.svg}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 function TrustBar({ dict }) {
   return (
     <ScrollReveal variant="fadeIn">
@@ -1305,6 +1387,9 @@ export default function HomePageClient({ dict, lang }) {
       {/* 2. Trust bar */}
       <TrustBar dict={dict} />
 
+      {/* 3. Partners */}
+      <PartnersBar lang={lang} />
+
       {/* 4. Categories carousel */}
       <CategoriesCarousel categories={apiCategories} lang={lang} dict={dict} />
 
@@ -1426,8 +1511,6 @@ export default function HomePageClient({ dict, lang }) {
       <FeaturedProducts dict={dict} lang={lang} apiProducts={apiProducts} />
 
 
-      {/* 8. How it works */}
-      <HowItWorksSection lang={lang} />
 
 
       {/* 10. Destinations */}
