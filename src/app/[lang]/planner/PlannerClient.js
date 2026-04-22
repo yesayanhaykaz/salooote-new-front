@@ -726,8 +726,9 @@ export default function PlannerClient({lang}) {
     setMessages(prev=>[...prev,userMsg]);
     setLoading(true);
     try{
-      const res=await fetch("/api/planner/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[...messages,userMsg],eventState})});
-      const data=await res.json();
+      const res=await fetch(`${process.env.NEXT_PUBLIC_API_URL}/planner/chat`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:[...messages,userMsg].map(m=>({role:m.role,content:m.text})),event_state:eventState})});
+      const json=await res.json();
+      const data=json.data||json; // backend wraps in { success, data }
       if(data.error){pushBot(`${data.error}`);return;}
       const {state:newState,searches}=applyActions(data.actions||[],eventState);
       setEventState(newState);
