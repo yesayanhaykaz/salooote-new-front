@@ -318,7 +318,7 @@ function HeroSection({ dict, lang }) {
               style={{ display: "flex", gap: 12, alignItems: "center" }}
             >
               <HeroPrimaryBtn href={`/${lang}/products`}>Browse Vendors</HeroPrimaryBtn>
-              <HeroGhostBtn href={`/${lang}/events/wedding`}>Plan an Event</HeroGhostBtn>
+              <HeroGhostBtn href={`/${lang}/planner`}>Plan an Event</HeroGhostBtn>
             </motion.div>
 
             {/* Minimal stat row */}
