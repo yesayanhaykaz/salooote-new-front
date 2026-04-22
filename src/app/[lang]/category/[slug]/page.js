@@ -2,11 +2,27 @@ import { getDictionary } from "@/lib/getDictionary";
 import CategoryClient from "@/app/category/page";
 
 export async function generateStaticParams() {
+  const slugs = [
+    "cakes-desserts",
+    "catering-food",
+    "flowers-decor",
+    "photography-videography",
+    "music-entertainment",
+    "venues-halls",
+    "beauty-makeup",
+    "gifts-souvenirs",
+    "kids-entertainment",
+    "invitation-printing",
+    "transportation",
+    "planning-coordination",
+    "lighting-equipment",
+    "clothing-accessories",
+    // legacy slugs (keep so old links don't 404)
+    "cakes", "catering", "flowers", "party", "gifts",
+    "dj-music", "venues", "photography", "decoration",
+  ];
   return [{ lang: "en" }, { lang: "hy" }, { lang: "ru" }].flatMap(l =>
-    ["cakes", "catering", "flowers", "party", "gifts", "dj-music", "venues", "photography", "decoration"].map(slug => ({
-      lang: l.lang,
-      slug,
-    }))
+    slugs.map(slug => ({ lang: l.lang, slug }))
   );
 }
 
