@@ -7,7 +7,7 @@ import { vendorsAPI, productsAPI } from "@/lib/api";
 import {
   Star, MapPin, Phone, MessageCircle,
   Heart, Share2, ArrowLeft, X, Package,
-  Calendar, Clock
+  Calendar, Clock, Globe, Instagram, Facebook
 } from "lucide-react";
 
 const PRODUCT_CATS = ["All", "Cakes", "Flowers", "Balloons", "Decor", "Gifts"];
@@ -95,6 +95,9 @@ export default function VendorProfileClient({ lang = "en", slug }) {
     cover: vendorData.banner_url || "/images/party-balloons2.jpg",
     logo: vendorData.logo_url || null,
     bio: vendorData.description || "",
+    facebook: vendorData.facebook_url || "",
+    instagram: vendorData.instagram_url || "",
+    website: vendorData.website || "",
   } : {
     name: slug ? slug.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase()) : "Vendor",
     category: "Events",
@@ -111,6 +114,9 @@ export default function VendorProfileClient({ lang = "en", slug }) {
     cover: "/images/party-balloons2.jpg",
     logo: null,
     bio: "",
+    facebook: "",
+    instagram: "",
+    website: "",
   };
 
   if (loading) {
@@ -225,6 +231,25 @@ export default function VendorProfileClient({ lang = "en", slug }) {
                 <Phone size={14} className="text-surface-400" />{p}
               </a>
             ))}
+            {(v.facebook || v.instagram || v.website) && (
+              <div className="flex items-center gap-3">
+                {v.website && (
+                  <a href={v.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-surface-600 hover:text-brand-600 no-underline">
+                    <Globe size={14} /> Website
+                  </a>
+                )}
+                {v.instagram && (
+                  <a href={`https://instagram.com/${v.instagram.replace(/^@/, '').replace(/.*instagram\.com\//, '')}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-surface-600 hover:text-brand-600 no-underline">
+                    <Instagram size={14} /> Instagram
+                  </a>
+                )}
+                {v.facebook && (
+                  <a href={v.facebook} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-surface-600 hover:text-brand-600 no-underline">
+                    <Facebook size={14} /> Facebook
+                  </a>
+                )}
+              </div>
+            )}
             <button className="ml-auto flex items-center gap-2 bg-brand-600 text-white border-none rounded-xl px-5 py-2.5 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
               <MessageCircle size={15} /> Message Vendor
             </button>

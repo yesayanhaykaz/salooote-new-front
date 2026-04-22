@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { userAPI } from "@/lib/api";
-import { Package, ChevronDown, ChevronUp, ShoppingBag } from "lucide-react";
+import { Package, ChevronDown, ChevronUp, ShoppingBag, Star } from "lucide-react";
 
 const STATUS_FILTERS = ["All", "Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
 
@@ -29,10 +29,15 @@ function formatDate(iso) {
 }
 
 export default function AccountOrdersPage() {
-  const [orders,       setOrders]      = useState([]);
-  const [loading,      setLoading]     = useState(true);
-  const [activeFilter, setFilter]      = useState("All");
-  const [expandedId,   setExpandedId]  = useState(null);
+  const [orders,           setOrders]          = useState([]);
+  const [loading,          setLoading]         = useState(true);
+  const [activeFilter,     setFilter]          = useState("All");
+  const [expandedId,       setExpandedId]      = useState(null);
+  const [reviewOrder,      setReviewOrder]     = useState(null);
+  const [reviewRating,     setReviewRating]    = useState(5);
+  const [reviewText,       setReviewText]      = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewDone,       setReviewDone]      = useState({});
 
   useEffect(() => {
     userAPI.orders({ limit: 50 })
@@ -88,6 +93,65 @@ export default function AccountOrdersPage() {
         </div>
       )}
 
+      {reviewOrder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
+            <h3 className="text-lg font-bold text-surface-900 mb-1">Write a Review</h3>
+            <p className="text-sm text-surface-400 mb-4">Order #{reviewOrder.id?.slice(-8).toUpperCase()}</p>
+
+            {/* Star rating */}
+            <div className="flex gap-2 mb-4">
+              {[1,2,3,4,5].map(r => (
+                <button key={r} onClick={() => setReviewRating(r)} className="border-none bg-transparent cursor-pointer">
+                  <Star size={24} className={r <= reviewRating ? "fill-amber-400 text-amber-400" : "text-surface-200 fill-surface-200"} />
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              value={reviewText}
+              onChange={e => setReviewText(e.target.value)}
+              placeholder="Share your experience..."
+              rows={4}
+              className="w-full border border-surface-200 rounded-xl p-3 text-sm resize-none outline-none focus:border-brand-400 mb-4"
+            />
+
+            <div className="flex gap-3">
+              <button onClick={() => setReviewOrder(null)} className="flex-1 border border-surface-200 rounded-xl py-2.5 text-sm font-semibold text-surface-600 bg-white cursor-pointer">
+                Cancel
+              </button>
+              <button
+                disabled={submittingReview || !reviewText.trim()}
+                onClick={async () => {
+                  setSubmittingReview(true);
+                  try {
+                    const token = localStorage.getItem("access_token");
+                    await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1"}/user/reviews`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                      body: JSON.stringify({
+                        vendor_id: reviewOrder.vendor_id,
+                        order_id: reviewOrder.id,
+                        rating: reviewRating,
+                        comment: reviewText,
+                      }),
+                    });
+                    setReviewDone(prev => ({ ...prev, [reviewOrder.id]: true }));
+                    setReviewOrder(null);
+                    setReviewText("");
+                    setReviewRating(5);
+                  } catch {}
+                  setSubmittingReview(false);
+                }}
+                className="flex-1 bg-brand-600 text-white border-none rounded-xl py-2.5 text-sm font-semibold cursor-pointer disabled:opacity-50"
+              >
+                {submittingReview ? "Submitting..." : "Submit Review"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {!loading && filtered.length > 0 && (
         <div className="space-y-3">
           {filtered.map(order => {
@@ -128,14 +192,24 @@ export default function AccountOrdersPage() {
                     </div>
                   </div>
 
-                  {items.length > 0 && (
-                    <div className="mt-4 pt-4 border-t border-surface-50">
-                      <button onClick={() => setExpandedId(prev => prev === order.id ? null : order.id)}
-                        className="flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 cursor-pointer border-none bg-transparent"
-                      >
-                        {expanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                        {expanded ? "Hide items" : `Show ${items.length} items`}
-                      </button>
+                  {(items.length > 0 || (order.status === "completed" || order.status === "delivered")) && (
+                    <div className="mt-4 pt-4 border-t border-surface-50 flex items-center gap-3">
+                      {items.length > 0 && (
+                        <button onClick={() => setExpandedId(prev => prev === order.id ? null : order.id)}
+                          className="flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 cursor-pointer border-none bg-transparent"
+                        >
+                          {expanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                          {expanded ? "Hide items" : `Show ${items.length} items`}
+                        </button>
+                      )}
+                      {(order.status === "completed" || order.status === "delivered") && !reviewDone[order.id] && (
+                        <button
+                          onClick={() => setReviewOrder(order)}
+                          className="mt-2 ml-auto flex items-center gap-1.5 text-xs font-semibold text-amber-600 hover:text-amber-700 cursor-pointer border border-amber-200 bg-amber-50 rounded-lg px-3 py-1.5 transition-colors"
+                        >
+                          <Star size={12} className="fill-amber-400 text-amber-400" /> Write a Review
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
