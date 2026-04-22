@@ -61,208 +61,203 @@ function Orb({ className, delay = 0 }) {
 }
 
 /* ════════════════════════════════════════════
-   HERO — cinematic, full-screen, parallax
+   HERO — split layout with scrolling mosaic
 ════════════════════════════════════════════ */
+const COL1 = [
+  { src: "/images/wedding-cake.jpg",    h: "short" },
+  { src: "/images/flowers-roses.jpg",   h: "mid"   },
+  { src: "/images/wedding-ceremony.jpg",h: "tall"  },
+  { src: "/images/balloons-blue.jpg",   h: "short" },
+  { src: "/images/catering-setup.jpg",  h: "mid"   },
+];
+const COL2 = [
+  { src: null, label: "Event vendors near Yerevan", h: "label" },
+  { src: "/images/party-balloons.jpg",  h: "mid"   },
+  { src: "/images/wedding-dance.jpg",   h: "tall"  },
+  { src: null, confetti: true,          h: "short" },
+  { src: "/images/hero-dj.jpg",         h: "mid"   },
+];
+const COL3 = [
+  { src: "/images/wedding-arch-beach.jpg", h: "tall"  },
+  { src: "/images/cupcakes.jpg",           h: "mid"   },
+  { src: "/images/vendor-woman.jpg",       h: "short" },
+  { src: "/images/catering-buffet.jpg",    h: "mid"   },
+];
+
+const cardH = { short: "190px", mid: "280px", tall: "470px", label: "104px" };
+
+function MosaicCard({ card }) {
+  if (card.label) {
+    return (
+      <div style={{ minHeight: cardH.label, borderRadius: 28, background: "#ffc93f", color: "#671687", fontWeight: 900, display: "flex", alignItems: "center", padding: "22px", fontSize: "1.1rem", lineHeight: 1.3 }}>
+        {card.label}
+      </div>
+    );
+  }
+  if (card.confetti) {
+    return (
+      <div style={{ minHeight: cardH.short, borderRadius: 28, background: "linear-gradient(180deg,#ffd72d,#ffca17)", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 10% 18%, #fff 0 3px, transparent 4px), radial-gradient(circle at 28% 32%, #ff7bb4 0 4px, transparent 5px), radial-gradient(circle at 54% 22%, #8e3cff 0 3px, transparent 4px), radial-gradient(circle at 72% 44%, #fff 0 4px, transparent 5px), radial-gradient(circle at 82% 18%, #ff8d38 0 4px, transparent 5px), radial-gradient(circle at 38% 68%, #fff 0 3px, transparent 4px)", opacity: 0.75 }} />
+      </div>
+    );
+  }
+  return (
+    <div style={{ minHeight: cardH[card.h] || 190, borderRadius: 28, overflow: "hidden", background: "#fff", boxShadow: "0 10px 18px rgba(36,22,29,0.06)" }}>
+      <Image src={card.src} alt="" fill={false} width={400} height={parseInt(cardH[card.h]) || 190} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+    </div>
+  );
+}
+
 function HeroSection({ dict, lang }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const imgY    = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
-  const textY   = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchVal,  setSearchVal]  = useState("");
+  const router = useRef(null);
+
+  const CATS = [
+    { icon: "🎈", name: "Decor & balloons", desc: "Balloon styling, themed backdrops, welcome zones, garlands and custom setups." },
+    { icon: "🎂", name: "Cakes & desserts",  desc: "Birthday cakes, wedding cakes, dessert tables, cupcakes and cookies." },
+    { icon: "📸", name: "Photo & video",      desc: "Photographers, videographers, reels creators and wedding storytelling." },
+    { icon: "🎁", name: "Event services",     desc: "Gifts, flowers, rentals, entertainment, hosts and celebration extras." },
+  ];
 
   return (
-    <section ref={ref} className="relative overflow-hidden flex items-center" style={{ minHeight: "100svh" }}>
-      {/* Parallax image */}
-      <motion.div className="absolute inset-0" style={{ y: imgY }}>
-        <Image
-          src="/images/hero-dj.jpg"
-          alt="Dream Event"
-          fill
-          className="object-cover object-center scale-105"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-black/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-      </motion.div>
+    <section style={{ paddingTop: 28, background: "#f6f3f6" }}>
+      <style>{`
+        @keyframes mosaic-down { from { transform: translateY(-28%); } to { transform: translateY(0%); } }
+        @keyframes mosaic-up   { from { transform: translateY(0%);  } to { transform: translateY(-28%); } }
+        .mosaic-track-down { animation: mosaic-down 22s linear infinite; }
+        .mosaic-track-up   { animation: mosaic-up   22s linear infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .mosaic-track-down, .mosaic-track-up { animation: none !important; }
+        }
+      `}</style>
 
-      {/* Grain overlay for cinematic texture */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: "repeat",
-          backgroundSize: "128px 128px",
-        }}
-      />
+      {/* ── Hero shell ── */}
+      <div className="mx-auto" style={{ maxWidth: 1460, display: "grid", gridTemplateColumns: "1.04fr 1fr", minHeight: 860, borderRadius: "0 0 34px 34px", overflow: "hidden" }}>
 
-      {/* Ambient orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <Orb className="w-[600px] h-[600px] bg-brand-600/15 -top-40 -left-40" delay={0} />
-        <Orb className="w-[400px] h-[400px] bg-brand-400/10 top-1/3 right-0" delay={2.5} />
-      </div>
+        {/* LEFT — pink gradient */}
+        <div style={{ position: "relative", padding: "74px 64px 56px", background: "linear-gradient(135deg, #ff73b6 0%, #ec3b90 55%, #d92a7d 100%)", color: "#fff", overflow: "hidden", isolation: "isolate", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          {/* burst shapes */}
+          {[
+            { w: 280, h: 260, l: -20, t: 0,   r: "rotate(-18deg)" },
+            { w: 240, h: 300, r: -10, t: 12,  r2: "rotate(28deg)"  },
+            { w: 360, h: 200, l: -40, b: 70,  r2: "rotate(-74deg)" },
+            { w: 260, h: 220, r2: -10, b: 36, r3: "rotate(98deg)"  },
+          ].map((b, i) => (
+            <span key={i} style={{ position: "absolute", background: "rgba(255,255,255,.12)", clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)", transformOrigin: "center bottom", width: b.w, height: b.h, left: b.l, right: b.r, top: b.t, bottom: b.b, transform: b.r || b.r2 || b.r3, pointerEvents: "none" }} />
+          ))}
 
-      <motion.div
-        className="relative z-10 max-w-container mx-auto px-5 md:px-8 py-20 md:py-28 w-full"
-        style={{ y: textY, opacity }}
-      >
-        <div className="max-w-full md:max-w-[640px]">
-
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mb-6"
-          >
-            <span className="inline-flex items-center gap-2 bg-white/8 border border-white/15 rounded-full px-4 py-1.5 text-[11px] font-semibold text-white/70 uppercase tracking-widest backdrop-blur-sm">
-              <motion.span
-                animate={{ rotate: [0, 15, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-              >
-                <Sparkles size={11} className="text-brand-300" />
-              </motion.span>
-              {dict.hero.badge}
-            </span>
-          </motion.div>
-
-          {/* Headline */}
-          <motion.h1
-            className="font-black text-white leading-[1.04] mb-6 tracking-tight"
-            style={{ fontSize: "clamp(42px, 6vw, 80px)" }}
-            initial={{ opacity: 0, y: 36 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            {dict.hero.title1}
-            <br />
-            <motion.span
-              initial={{ opacity: 0, x: -24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.65, delay: 0.35 }}
-              style={{
-                background: "linear-gradient(90deg, #fda4c4 0%, #f9a8d4 40%, #c4b5fd 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                fontStyle: "italic",
-              }}
+          {/* Copy */}
+          <div style={{ position: "relative", zIndex: 2, maxWidth: 580 }}>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              style={{ margin: "0 0 20px", fontSize: "clamp(3.2rem, 5.5vw, 5.8rem)", lineHeight: 0.92, letterSpacing: "-0.07em", fontWeight: 900 }}
             >
-              {dict.hero.titleAccent}
-            </motion.span>
-            {" "}{dict.hero.title2}
-          </motion.h1>
+              {dict.hero.title1} {dict.hero.titleAccent} {dict.hero.title2}
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              style={{ margin: "0 0 36px", fontSize: "1.12rem", lineHeight: 1.7, color: "rgba(255,255,255,.88)", maxWidth: "30ch" }}
+            >
+              {dict.hero.subtitle}
+            </motion.p>
+          </div>
 
-          {/* Subtext */}
-          <motion.p
-            className="text-white/50 leading-relaxed mb-9 font-light"
-            style={{ fontSize: "clamp(15px, 1.8vw, 19px)", maxWidth: "440px" }}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-          >
-            {dict.hero.subtitle}
-          </motion.p>
-
-          {/* CTA buttons */}
+          {/* Search bar */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-3 mb-10"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <MagneticButton>
-              <motion.button
-                whileHover={{ scale: 1.04, boxShadow: "0 16px 40px -4px rgba(225,29,92,0.55)" }}
-                whileTap={{ scale: 0.96 }}
-                className="btn-primary bg-brand-600 text-white border-none rounded-xl px-8 py-4 text-sm font-bold cursor-pointer flex items-center justify-center gap-2.5 w-full sm:w-auto"
-              >
-                <Calendar size={16} /> {dict.hero.ctaPrimary}
-              </motion.button>
-            </MagneticButton>
-            <Link href={`/${lang}/products`} className="w-full sm:w-auto">
-              <motion.button
-                whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.15)" }}
-                whileTap={{ scale: 0.97 }}
-                className="bg-white/8 text-white border border-white/20 rounded-xl px-8 py-4 text-sm font-semibold cursor-pointer flex items-center justify-center gap-2.5 backdrop-blur-sm w-full"
-              >
-                {dict.hero.ctaSecondary} <ArrowRight size={16} />
-              </motion.button>
-            </Link>
-          </motion.div>
-
-          {/* Stats row */}
-          <motion.div
-            className="flex items-center gap-8 pt-6 border-t border-white/10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.52 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            style={{ position: "relative", zIndex: 4, maxWidth: 640 }}
+          >
+            <div
+              onClick={() => setSearchOpen(true)}
+              style={{ width: "100%", minHeight: 82, borderRadius: 22, background: "rgba(255,255,255,.98)", border: "1px solid rgba(255,255,255,.55)", display: "flex", alignItems: "center", gap: 14, padding: "0 24px", color: "#958896", fontSize: "1.1rem", boxShadow: "0 16px 28px rgba(49,13,29,0.12)", cursor: "text" }}
+            >
+              <Search size={22} style={{ color: "#b1458f", flexShrink: 0 }} />
+              <input
+                value={searchVal}
+                onChange={e => setSearchVal(e.target.value)}
+                onFocus={() => setSearchOpen(true)}
+                placeholder={dict.hero.subtitle ? "Find event services, vendors, or categories…" : "Search…"}
+                style={{ border: "none", outline: "none", background: "transparent", width: "100%", fontSize: "1rem", color: "#38152a", fontFamily: "inherit" }}
+              />
+            </div>
+
+            {/* Dropdown panel */}
+            <AnimatePresence>
+              {searchOpen && (
+                <>
+                  <div style={{ position: "fixed", inset: 0, zIndex: 3 }} onClick={() => setSearchOpen(false)} />
+                  <motion.div
+                    initial={{ opacity: 0, y: 14, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ position: "absolute", left: 0, top: "calc(100% + 8px)", width: "100%", background: "rgba(255,255,255,.98)", border: "1px solid rgba(236,215,227,.95)", borderRadius: 24, padding: "24px 28px 20px", boxShadow: "0 30px 55px rgba(46,14,29,.16)", zIndex: 50, color: "#38152a" }}
+                  >
+                    <p style={{ fontSize: "1.6rem", fontWeight: 900, letterSpacing: "-0.05em", marginBottom: 18, color: "#5a136f" }}>Browse categories</p>
+                    <div style={{ display: "grid", gap: 14 }}>
+                      {CATS.map((cat, i) => (
+                        <Link key={i} href={`/${lang}/products?search=${encodeURIComponent(cat.name)}`} onClick={() => setSearchOpen(false)} className="no-underline" style={{ display: "grid", gridTemplateColumns: "96px 1fr", gap: 16, alignItems: "center", borderRadius: 18, padding: "2px 0", transition: "transform .2s", cursor: "pointer" }}
+                          onMouseEnter={e => e.currentTarget.style.transform = "translateX(4px)"}
+                          onMouseLeave={e => e.currentTarget.style.transform = ""}
+                        >
+                          <div style={{ minHeight: 96, borderRadius: 18, background: "#f7eef8", display: "grid", placeItems: "center", fontSize: "1.9rem" }}>{cat.icon}</div>
+                          <div>
+                            <p style={{ margin: "0 0 5px", fontSize: "1.15rem", fontWeight: 700, color: "#5a136f", letterSpacing: "-0.03em" }}>{cat.name}</p>
+                            <p style={{ margin: 0, color: "#7d7480", lineHeight: 1.45, fontSize: "0.92rem" }}>{cat.desc}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.55 }}
+            style={{ position: "relative", zIndex: 2, display: "flex", gap: 32, marginTop: 28, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,.22)" }}
           >
             {[
-              { n: "15", suffix: "K+", l: dict.hero.stat1Label },
-              { n: "850", suffix: "+", l: dict.hero.stat2Label },
-              { n: "4.9", suffix: "/5", l: dict.hero.stat3Label },
+              { n: "15K+", l: dict.hero.stat1Label },
+              { n: "850+", l: dict.hero.stat2Label },
+              { n: "4.9/5", l: dict.hero.stat3Label },
             ].map((s, i) => (
               <div key={i}>
-                <p className="text-white font-black text-2xl leading-none tracking-tight">
-                  <CountUp end={s.n} suffix={s.suffix || ""} />
-                </p>
-                <p className="text-white/35 text-xs mt-1.5 uppercase tracking-wider">{s.l}</p>
+                <p style={{ margin: 0, fontWeight: 900, fontSize: "1.5rem", color: "#fff", letterSpacing: "-0.04em" }}>{s.n}</p>
+                <p style={{ margin: "4px 0 0", fontSize: "0.72rem", color: "rgba(255,255,255,.6)", textTransform: "uppercase", letterSpacing: "0.1em" }}>{s.l}</p>
               </div>
             ))}
           </motion.div>
         </div>
-      </motion.div>
 
-      {/* Floating chat widget */}
-      <motion.div
-        className="absolute bottom-10 right-10 glass rounded-2xl p-5 max-w-[240px] z-10 hidden lg:block"
-        initial={{ opacity: 0, x: 30, y: 10 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ duration: 0.7, delay: 1.0, type: "spring" }}
-        whileHover={{ y: -5, boxShadow: "0 20px 50px rgba(0,0,0,0.20)" }}
-      >
-        <div className="flex items-start gap-3 mb-4">
-          <motion.div
-            className="w-9 h-9 rounded-xl bg-brand-600 flex items-center justify-center flex-shrink-0"
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 2 }}
-          >
-            <MessageCircle size={16} className="text-white" />
-          </motion.div>
-          <div>
-            <p className="text-sm font-semibold text-surface-800">{dict.hero.chatTitle}</p>
-            <p className="text-xs text-surface-400 mt-0.5">{dict.hero.chatSubtitle}</p>
+        {/* RIGHT — animated image mosaic */}
+        <div style={{ background: "#dcecf7", overflow: "hidden", padding: "28px 30px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24, height: "100%" }}>
+            {[
+              { cards: COL1, dir: "down" },
+              { cards: COL2, dir: "up"   },
+              { cards: COL3, dir: "down" },
+            ].map(({ cards, dir }, ci) => (
+              <div key={ci} style={{ position: "relative", overflow: "hidden", borderRadius: 24 }}>
+                <div className={`mosaic-track-${dir}`} style={{ display: "grid", gap: 22, willChange: "transform" }}>
+                  {[...cards, ...cards].map((card, i) => <MosaicCard key={i} card={card} />)}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          className="w-full bg-[#25D366] text-white border-none rounded-xl px-4 py-2 text-xs font-semibold cursor-pointer flex items-center justify-center gap-2"
-        >
-          <MessageCircle size={12} /> {dict.hero.chatButton}
-        </motion.button>
-      </motion.div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.3 }}
-      >
-        <span className="text-white/25 text-[10px] uppercase tracking-widest">{dict.hero.scroll}</span>
-        <motion.div
-          className="w-5 h-8 rounded-full border border-white/15 flex items-start justify-center pt-1.5"
-          animate={{ borderColor: ["rgba(255,255,255,0.15)", "rgba(225,29,92,0.5)", "rgba(255,255,255,0.15)"] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <motion.div
-            className="w-1 h-2 bg-white/50 rounded-full"
-            animate={{ y: [0, 10, 0], opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }
@@ -1267,6 +1262,99 @@ export default function HomePageClient({ dict, lang }) {
 
       {/* 11. AI Planner CTA banner */}
       <PlannerBanner dict={dict} lang={lang} />
+
+      {/* 12. Stacked story sections */}
+      <div style={{ position: "relative", marginTop: -40, paddingBottom: 80 }}>
+        <style>{`
+          .story-sticky { position: sticky; top: 90px; borderRadius: 32px; overflow: hidden; boxShadow: "0 18px 50px rgba(58,21,42,0.08)"; border: "1px solid rgba(236,215,227,0.9)"; }
+        `}</style>
+
+        {[
+          {
+            zIndex: 10, bg: "#f1e8f5", color: "#57138d", mt: 0,
+            title: "Browse & compare",
+            desc: "Discover unique event professionals in one place. Compare style, presentation, and fit — without jumping through dozens of pages.",
+            img: "/images/flowers-roses.jpg",
+            card: { title: "Compare by style", desc: "Luxury, cute, playful, pastel, minimal, kids, wedding, or custom themed setups." },
+            cardPos: { right: 22, top: 22 },
+            href: `/${lang}/products`,
+            cta: "Browse vendors",
+          },
+          {
+            zIndex: 20, bg: "#ead8f4", color: "#58128c", mt: 56,
+            title: "Book securely",
+            desc: "Send requests with confidence, receive replies faster, and feel guided during the whole booking process.",
+            img: "/images/wedding-dance.jpg",
+            card: { title: "Fast inquiry flow", desc: "Message vendors, request a quote, and keep the event planning flow simple and premium." },
+            cardPos: { left: 22, bottom: 22 },
+            href: `/${lang}/account`,
+            cta: "Start planning",
+          },
+          {
+            zIndex: 30, bg: "#ffeef7", color: "#8c1f5f", mt: 56,
+            title: "Celebrate beautifully",
+            desc: "Birthdays, weddings, baby showers, anniversaries, family gatherings — every happy occasion deserves a perfect setup.",
+            img: "/images/wedding-ceremony.jpg",
+            card: { title: "Made for meaningful moments", desc: "Weddings, birthdays, anniversaries, kids parties, corporate events and more." },
+            cardPos: { right: 22, bottom: 22 },
+            href: `/${lang}/events/wedding`,
+            cta: "Explore events",
+          },
+        ].map((s, i) => (
+          <div key={i} style={{ position: "sticky", top: 90, zIndex: s.zIndex, marginTop: s.mt, marginLeft: "auto", marginRight: "auto", width: "min(1460px, calc(100% - 48px))", borderRadius: 32, overflow: "hidden", boxShadow: "0 18px 50px rgba(58,21,42,0.08)", border: "1px solid rgba(236,215,227,0.9)" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: "72vh", background: s.bg }}>
+              {/* Copy */}
+              <div style={{ padding: "72px", background: s.bg, color: s.color, display: "flex", flexDirection: "column", justifyContent: "center", position: "relative" }}>
+                <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 20% 20%, rgba(255,255,255,.22), transparent 22%), radial-gradient(circle at 86% 24%, rgba(255,255,255,.16), transparent 16%)", pointerEvents: "none" }} />
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  style={{ position: "relative", zIndex: 1 }}
+                >
+                  <h2 style={{ margin: "0 0 18px", fontSize: "clamp(2.4rem, 4vw, 4rem)", lineHeight: 0.95, letterSpacing: "-0.07em", fontWeight: 900 }}>{s.title}</h2>
+                  <p style={{ margin: "0 0 32px", lineHeight: 1.7, fontSize: "1.1rem", maxWidth: "28ch", color: s.color, opacity: 0.8 }}>{s.desc}</p>
+                  <Link href={s.href} className="no-underline" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: s.color, color: "#fff", borderRadius: 999, padding: "14px 26px", fontWeight: 800, fontSize: "0.95rem", transition: "transform .2s, opacity .2s" }}
+                    onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
+                    onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                  >
+                    {s.cta} <ArrowRight size={15} />
+                  </Link>
+                </motion.div>
+              </div>
+              {/* Visual */}
+              <div style={{ padding: 34, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: "100%", minHeight: 480, borderRadius: 24, overflow: "hidden", background: "rgba(255,255,255,.6)", position: "relative", boxShadow: "0 14px 25px rgba(20,15,19,.06)" }}>
+                  <Image src={s.img} alt={s.title} fill className="object-cover" />
+                  {/* Floating card */}
+                  <div style={{ position: "absolute", ...s.cardPos, background: "rgba(255,255,255,.94)", borderRadius: 22, border: "1px solid rgba(236,215,227,.96)", boxShadow: "0 16px 30px rgba(44,18,31,.09)", padding: "18px 20px", maxWidth: 300, color: "#38152a" }}>
+                    <p style={{ margin: "0 0 7px", fontWeight: 900, fontSize: "1rem", letterSpacing: "-0.03em" }}>{s.card.title}</p>
+                    <p style={{ margin: 0, lineHeight: 1.6, fontSize: "0.88rem", color: "#7f6676" }}>{s.card.desc}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Vendor CTA banner */}
+        <div style={{ marginTop: 40, marginLeft: "auto", marginRight: "auto", width: "min(1460px, calc(100% - 48px))", borderRadius: 32, background: "linear-gradient(135deg, #ff63ad, #ea3b91 58%, #d8257a)", color: "#fff", padding: "48px 52px", display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 28, alignItems: "center", boxShadow: "0 26px 55px rgba(216,37,122,.22)" }}>
+          <div>
+            <h3 style={{ margin: "0 0 14px", fontSize: "clamp(2rem, 3.5vw, 3.6rem)", lineHeight: 0.96, letterSpacing: "-0.06em", fontWeight: 900 }}>Bring your event business to Salooote</h3>
+            <p style={{ margin: "0 0 22px", lineHeight: 1.75, color: "rgba(255,255,255,.88)", maxWidth: "52ch" }}>Showcase your work to thousands of people planning events across Armenia. Verified profile, direct bookings, zero commission to start.</p>
+            <Link href={`/${lang}/apply`} className="no-underline" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#d8257a", borderRadius: 999, padding: "16px 28px", fontWeight: 800, fontSize: "1rem", transition: "transform .2s" }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = ""}
+            >
+              List your services <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div style={{ borderRadius: 26, overflow: "hidden", minHeight: 280 }}>
+            <Image src="/images/vendor-woman.jpg" alt="Become a vendor" fill={false} width={600} height={320} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block", minHeight: 280 }} />
+          </div>
+        </div>
+      </div>
 
       {/* 12. Become a partner form */}
       <PartnerSection dict={dict} />
