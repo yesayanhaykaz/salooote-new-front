@@ -35,52 +35,52 @@ const EVENT_TEMPLATES = {
     accent: "#e11d5c", gradient: "linear-gradient(135deg,#e11d5c 0%,#f97316 100%)",
     services: [
       { service_type: "ceremony_venue",  title: "Ceremony Venue",   category: "ceremony",      required: true },
-      { service_type: "reception_venue", title: "Reception Hall",   category: "reception",     required: true,  canSearch: true },
+      { service_type: "reception_venue", title: "Reception Hall",   category: "reception",     required: true, canSearch: true },
       { service_type: "tamada",          title: "Tamada (MC)",      category: "entertainment", required: true },
       { service_type: "wedding_rings",   title: "Wedding Rings",    category: "ceremony",      required: true },
       { service_type: "bridal_dress",    title: "Bridal Gown",      category: "attire",        required: true },
-      { service_type: "wedding_cake",    title: "Wedding Cake",     category: "food",          required: true,  canSearch: true },
-      { service_type: "catering",        title: "Catering",         category: "food",          required: true,  canSearch: true },
-      { service_type: "photographer",    title: "Photographer",     category: "media",         required: true,  canSearch: true },
-      { service_type: "videographer",    title: "Videographer",     category: "media",         required: true,  canSearch: true },
-      { service_type: "flowers",         title: "Bridal Flowers",   category: "decoration",    required: true,  canSearch: true },
-      { service_type: "music",           title: "DJ / Live Music",  category: "entertainment", required: true,  canSearch: true },
+      { service_type: "wedding_cake",    title: "Wedding Cake",     category: "food",          required: true, canSearch: true },
+      { service_type: "catering",        title: "Catering",         category: "food",          required: true, canSearch: true },
+      { service_type: "photographer",    title: "Photographer",     category: "media",         required: true, canSearch: true },
+      { service_type: "videographer",    title: "Videographer",     category: "media",         required: true, canSearch: true },
+      { service_type: "flowers",         title: "Bridal Flowers",   category: "decoration",    required: true, canSearch: true },
+      { service_type: "music",           title: "DJ / Live Music",  category: "entertainment", required: true, canSearch: true },
     ],
   },
   birthday: {
     label: "Birthday Party", emoji: "🎂",
     accent: "#3b82f6", gradient: "linear-gradient(135deg,#3b82f6 0%,#06b6d4 100%)",
     services: [
-      { service_type: "cake",               title: "Birthday Cake",       category: "food",         required: true,  canSearch: true },
-      { service_type: "venue",              title: "Venue",               category: "celebration",  required: true },
-      { service_type: "catering",           title: "Catering",            category: "food",         required: true,  canSearch: true },
-      { service_type: "balloon_decoration", title: "Balloon Decorations", category: "decoration",   required: true,  canSearch: true },
+      { service_type: "cake",               title: "Birthday Cake",       category: "food",          required: true,  canSearch: true },
+      { service_type: "venue",              title: "Venue",               category: "celebration",   required: true },
+      { service_type: "catering",           title: "Catering",            category: "food",          required: true,  canSearch: true },
+      { service_type: "balloon_decoration", title: "Balloon Decorations", category: "decoration",    required: true,  canSearch: true },
       { service_type: "music",              title: "Music / DJ",          category: "entertainment", required: false, canSearch: true },
-      { service_type: "photographer",       title: "Photographer",        category: "media",        required: false, canSearch: true },
+      { service_type: "photographer",       title: "Photographer",        category: "media",         required: false, canSearch: true },
     ],
   },
   kids_party: {
     label: "Kids' Party", emoji: "🎠",
     accent: "#10b981", gradient: "linear-gradient(135deg,#10b981 0%,#059669 100%)",
     services: [
-      { service_type: "cake",               title: "Themed Cake",            category: "food",          required: true,  canSearch: true },
-      { service_type: "balloon_decoration", title: "Balloon Decorations",    category: "decoration",    required: true,  canSearch: true },
-      { service_type: "animator",           title: "Kids Animator",          category: "entertainment", required: true,  canSearch: true },
-      { service_type: "venue",              title: "Venue",                  category: "celebration",   required: true },
-      { service_type: "catering",           title: "Kids-Friendly Catering", category: "food",          required: true,  canSearch: true },
-      { service_type: "decoration",         title: "Theme Decorations",      category: "decoration",    required: true,  canSearch: true },
-      { service_type: "photographer",       title: "Photographer",           category: "media",         required: false, canSearch: true },
+      { service_type: "cake",               title: "Themed Cake",             category: "food",          required: true,  canSearch: true },
+      { service_type: "balloon_decoration", title: "Balloon Decorations",     category: "decoration",    required: true,  canSearch: true },
+      { service_type: "animator",           title: "Kids Animator",           category: "entertainment", required: true,  canSearch: true },
+      { service_type: "venue",              title: "Venue",                   category: "celebration",   required: true },
+      { service_type: "catering",           title: "Kids-Friendly Catering",  category: "food",          required: true,  canSearch: true },
+      { service_type: "decoration",         title: "Theme Decorations",       category: "decoration",    required: true,  canSearch: true },
+      { service_type: "photographer",       title: "Photographer",            category: "media",         required: false, canSearch: true },
     ],
   },
   corporate: {
     label: "Corporate Event", emoji: "🏢",
     accent: "#475569", gradient: "linear-gradient(135deg,#475569 0%,#1e293b 100%)",
     services: [
-      { service_type: "venue",         title: "Conference / Event Venue",  category: "venue",         required: true },
-      { service_type: "catering",      title: "Catering & Coffee Breaks",  category: "food",          required: true,  canSearch: true },
-      { service_type: "av_tech",       title: "AV & Tech Setup",           category: "tech",          required: true },
-      { service_type: "photographer",  title: "Event Photographer",        category: "media",         required: true,  canSearch: true },
-      { service_type: "entertainment", title: "Evening Entertainment",     category: "entertainment", required: false, canSearch: true },
+      { service_type: "venue",         title: "Conference / Event Venue", category: "venue",         required: true },
+      { service_type: "catering",      title: "Catering & Coffee Breaks", category: "food",          required: true,  canSearch: true },
+      { service_type: "av_tech",       title: "AV & Tech Setup",          category: "tech",          required: true },
+      { service_type: "photographer",  title: "Event Photographer",       category: "media",         required: true,  canSearch: true },
+      { service_type: "entertainment", title: "Evening Entertainment",    category: "entertainment", required: false, canSearch: true },
     ],
   },
   engagement: {
@@ -88,44 +88,44 @@ const EVENT_TEMPLATES = {
     accent: "#8b5cf6", gradient: "linear-gradient(135deg,#8b5cf6 0%,#6d28d9 100%)",
     services: [
       { service_type: "ring",         title: "Engagement Ring",  category: "ceremony",    required: true },
-      { service_type: "flowers",      title: "Flowers",          category: "decoration",  required: true,  canSearch: true },
-      { service_type: "photographer", title: "Photographer",     category: "media",       required: true,  canSearch: true },
+      { service_type: "flowers",      title: "Flowers",          category: "decoration",  required: true, canSearch: true },
+      { service_type: "photographer", title: "Photographer",     category: "media",       required: true, canSearch: true },
       { service_type: "venue",        title: "Party Venue",      category: "celebration", required: true },
-      { service_type: "cake",         title: "Engagement Cake",  category: "food",        required: true,  canSearch: true },
-      { service_type: "catering",     title: "Food & Drinks",    category: "food",        required: true,  canSearch: true },
+      { service_type: "cake",         title: "Engagement Cake",  category: "food",        required: true, canSearch: true },
+      { service_type: "catering",     title: "Food & Drinks",    category: "food",        required: true, canSearch: true },
     ],
   },
   anniversary: {
     label: "Anniversary", emoji: "⭐",
     accent: "#d97706", gradient: "linear-gradient(135deg,#f59e0b 0%,#d97706 100%)",
     services: [
-      { service_type: "flowers",      title: "Flower Arrangement",  category: "decoration",  required: true,  canSearch: true },
-      { service_type: "venue",        title: "Restaurant / Venue",  category: "celebration", required: true },
-      { service_type: "cake",         title: "Anniversary Cake",    category: "food",        required: true,  canSearch: true },
-      { service_type: "catering",     title: "Dinner / Catering",   category: "food",        required: true,  canSearch: true },
-      { service_type: "photographer", title: "Photographer",        category: "media",       required: false, canSearch: true },
+      { service_type: "flowers",      title: "Flower Arrangement", category: "decoration",  required: true, canSearch: true },
+      { service_type: "venue",        title: "Restaurant / Venue", category: "celebration", required: true },
+      { service_type: "cake",         title: "Anniversary Cake",   category: "food",        required: true, canSearch: true },
+      { service_type: "catering",     title: "Dinner / Catering",  category: "food",        required: true, canSearch: true },
+      { service_type: "photographer", title: "Photographer",       category: "media",       required: false, canSearch: true },
     ],
   },
   baby_shower: {
     label: "Baby Shower", emoji: "🍼",
     accent: "#0ea5e9", gradient: "linear-gradient(135deg,#38bdf8 0%,#0ea5e9 100%)",
     services: [
-      { service_type: "balloon_decoration", title: "Balloon Decorations",   category: "decoration",  required: true,  canSearch: true },
-      { service_type: "cake",               title: "Baby Shower Cake",      category: "food",        required: true,  canSearch: true },
+      { service_type: "balloon_decoration", title: "Balloon Decorations",    category: "decoration", required: true,  canSearch: true },
+      { service_type: "cake",               title: "Baby Shower Cake",       category: "food",       required: true,  canSearch: true },
       { service_type: "catering",           title: "Finger Food / Catering", category: "food",       required: true,  canSearch: true },
-      { service_type: "decoration",         title: "Theme Decorations",     category: "decoration",  required: true,  canSearch: true },
-      { service_type: "photographer",       title: "Photographer",          category: "media",       required: false, canSearch: true },
+      { service_type: "decoration",         title: "Theme Decorations",      category: "decoration", required: true,  canSearch: true },
+      { service_type: "photographer",       title: "Photographer",           category: "media",      required: false, canSearch: true },
     ],
   },
   graduation: {
     label: "Graduation Party", emoji: "🎓",
     accent: "#ea580c", gradient: "linear-gradient(135deg,#f59e0b 0%,#ea580c 100%)",
     services: [
-      { service_type: "venue",              title: "Venue",            category: "celebration",  required: true },
-      { service_type: "cake",               title: "Graduation Cake",  category: "food",         required: true,  canSearch: true },
-      { service_type: "catering",           title: "Catering",         category: "food",         required: true,  canSearch: true },
-      { service_type: "balloon_decoration", title: "Balloons & Décor", category: "decoration",   required: false, canSearch: true },
-      { service_type: "photographer",       title: "Photographer",     category: "media",        required: false, canSearch: true },
+      { service_type: "venue",              title: "Venue",            category: "celebration", required: true },
+      { service_type: "cake",               title: "Graduation Cake",  category: "food",        required: true,  canSearch: true },
+      { service_type: "catering",           title: "Catering",         category: "food",        required: true,  canSearch: true },
+      { service_type: "balloon_decoration", title: "Balloons & Décor", category: "decoration",  required: false, canSearch: true },
+      { service_type: "photographer",       title: "Photographer",     category: "media",       required: false, canSearch: true },
     ],
   },
 };
@@ -153,7 +153,6 @@ const CATEGORY_LABELS = {
 function applyActions(actions, prev) {
   let state = { ...prev };
   const searches = [];
-
   for (const a of actions) {
     switch (a.type) {
       case "set_event_type": {
@@ -164,9 +163,11 @@ function applyActions(actions, prev) {
           event_type: a.event_type,
           event_type_label: tpl?.label || a.event_type,
           event_type_emoji: tpl?.emoji || "🎉",
-          accent:   tpl?.accent || "#e11d5c",
+          accent:   tpl?.accent   || "#e11d5c",
           gradient: tpl?.gradient,
-          services: state.services?.length ? state.services : (tpl?.services || []).map(s => ({ ...s, status: "pending" })),
+          services: state.services?.length
+            ? state.services
+            : (tpl?.services || []).map(s => ({ ...s, status: "pending" })),
         };
         break;
       }
@@ -181,10 +182,9 @@ function applyActions(actions, prev) {
           state = { ...state, services: [...(state.services||[]), {
             service_type: a.service_type,
             title: a.title || a.service_type.replace(/_/g," "),
-            category: a.category||"other",
-            required: a.priority==="required",
-            status: "pending",
-            canSearch: true,
+            category: a.category || "other",
+            required: a.priority === "required",
+            status: "pending", canSearch: true,
           }]};
         }
         break;
@@ -197,9 +197,9 @@ function applyActions(actions, prev) {
         if (!state.services?.find(s => s.service_type === a.item_type)) {
           state = { ...state, services: [...(state.services||[]), {
             service_type: a.item_type,
-            title: a.title||a.item_type.replace(/_/g," "),
-            category: a.category||"other",
-            required: a.type==="mark_required_item",
+            title: a.title || a.item_type.replace(/_/g," "),
+            category: a.category || "other",
+            required: a.type === "mark_required_item",
             status: "pending",
           }]};
         }
@@ -207,18 +207,18 @@ function applyActions(actions, prev) {
       }
       case "search_vendors":
         searches.push(a);
-        state = { ...state, services: (state.services||[]).map(s => s.service_type===a.service_type ? {...s, searching:true} : s) };
+        state = { ...state, services: (state.services||[]).map(s => s.service_type === a.service_type ? { ...s, searching: true } : s) };
         break;
       case "select_vendor":
         state = {
           ...state,
-          selected_vendors: { ...state.selected_vendors, [a.service_type]:{ id:a.vendor_id, name:a.vendor_name } },
-          services: (state.services||[]).map(s => s.service_type===a.service_type ? {...s, status:"selected", searching:false} : s),
+          selected_vendors: { ...state.selected_vendors, [a.service_type]: { id: a.vendor_id, name: a.vendor_name } },
+          services: (state.services||[]).map(s => s.service_type === a.service_type ? { ...s, status: "selected", searching: false } : s),
         };
         break;
       case "unselect_vendor": {
-        const sv = {...state.selected_vendors}; delete sv[a.service_type];
-        state = { ...state, selected_vendors:sv, services:(state.services||[]).map(s=>s.service_type===a.service_type?{...s,status:"pending"}:s) };
+        const sv = { ...state.selected_vendors }; delete sv[a.service_type];
+        state = { ...state, selected_vendors: sv, services: (state.services||[]).map(s => s.service_type === a.service_type ? { ...s, status: "pending" } : s) };
         break;
       }
       default: break;
@@ -249,10 +249,7 @@ function TypingIndicator() {
   return (
     <div style={{ display:"flex", alignItems:"flex-end", gap:8 }}>
       <BotAvatar />
-      <div style={{
-        background: "#f4f4f5", borderRadius: "18px 18px 18px 4px",
-        padding: "12px 16px", display: "flex", gap: 5, alignItems: "center",
-      }}>
+      <div style={{ background:"#f4f4f5", borderRadius:"18px 18px 18px 4px", padding:"12px 16px", display:"flex", gap:5, alignItems:"center" }}>
         {[0, 0.15, 0.30].map((d, i) => (
           <motion.span key={i}
             animate={{ y:[0,-4,0], opacity:[0.4,1,0.4] }}
@@ -271,39 +268,36 @@ function TypingIndicator() {
 function MessageBubble({ msg }) {
   const isBot = msg.role === "bot";
   const lines = msg.text.split("\n");
-
   const renderLine = (line, li) => {
     const parts = line.split(/(\*\*[^*]+\*\*)/g);
     return (
       <span key={li}>
         {parts.map((p, j) =>
           p.startsWith("**") && p.endsWith("**")
-            ? <strong key={j} style={{ fontWeight: 600 }}>{p.slice(2,-2)}</strong>
+            ? <strong key={j} style={{ fontWeight:600 }}>{p.slice(2,-2)}</strong>
             : p
         )}
         {li < lines.length - 1 && <br />}
       </span>
     );
   };
-
   return (
     <motion.div
       initial={{ opacity:0, y:8 }}
       animate={{ opacity:1, y:0 }}
-      transition={{ duration:0.2, ease:[0.22,1,0.36,1] }}
+      transition={{ duration:0.18, ease:[0.22,1,0.36,1] }}
       style={{ display:"flex", flexDirection:"column", alignItems: isBot ? "flex-start" : "flex-end" }}
     >
       <div style={{ display:"flex", alignItems:"flex-end", gap:8, maxWidth:"88%" }}>
         {isBot && <BotAvatar />}
         <div style={{
           background: isBot ? "#f4f4f5" : "#09090b",
-          color: isBot ? "#111827" : "#ffffff",
+          color: isBot ? "#111827" : "#fff",
           borderRadius: isBot ? "18px 18px 18px 4px" : "18px 18px 4px 18px",
           padding: "11px 15px",
           fontSize: "0.875rem",
           lineHeight: 1.65,
           letterSpacing: "-0.003em",
-          maxWidth: "100%",
         }}>
           {lines.map(renderLine)}
         </div>
@@ -327,7 +321,6 @@ function VendorCard({ vendor, onSelect }) {
   const city    = vendor.city || "";
   const initial = name[0]?.toUpperCase() || "V";
   const [fg, bg] = VENDOR_PALETTES[name.charCodeAt(0) % VENDOR_PALETTES.length];
-
   return (
     <motion.div
       onHoverStart={() => setHov(true)}
@@ -337,55 +330,38 @@ function VendorCard({ vendor, onSelect }) {
       whileHover={{ y:-3 }}
       transition={{ type:"spring", stiffness:340, damping:24 }}
       style={{
-        background: "#fff",
-        borderRadius: 14,
-        minWidth: 160, maxWidth: 180, flexShrink: 0,
-        border: `1px solid ${hov ? fg + "33" : "#f0f0f0"}`,
-        boxShadow: hov
-          ? `0 8px 24px rgba(0,0,0,0.09)`
-          : "0 1px 4px rgba(0,0,0,0.05)",
-        overflow: "hidden", cursor: "pointer",
-        transition: "border-color 0.18s, box-shadow 0.18s",
+        background:"#fff", borderRadius:14,
+        minWidth:156, maxWidth:176, flexShrink:0,
+        border:`1px solid ${hov ? fg+"33" : "#f0f0f0"}`,
+        boxShadow: hov ? "0 8px 24px rgba(0,0,0,0.09)" : "0 1px 4px rgba(0,0,0,0.05)",
+        overflow:"hidden", cursor:"pointer",
+        transition:"border-color 0.18s, box-shadow 0.18s",
       }}
     >
       <div style={{ height:3, background:`linear-gradient(90deg,${fg},${fg}99)` }} />
-      <div style={{ padding:"12px 12px 13px" }}>
-        <div style={{
-          width:36, height:36, borderRadius:10, background:bg,
-          display:"flex", alignItems:"center", justifyContent:"center",
-          fontSize:"1rem", fontWeight:800, color:fg, marginBottom:9, flexShrink:0,
-        }}>
+      <div style={{ padding:"11px 12px 12px" }}>
+        <div style={{ width:34, height:34, borderRadius:9, background:bg, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"0.95rem", fontWeight:800, color:fg, marginBottom:8 }}>
           {initial}
         </div>
-
-        <p style={{ margin:"0 0 2px", fontSize:"0.775rem", fontWeight:700, color:"#111827", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:"-0.01em" }}>
+        <p style={{ margin:"0 0 2px", fontSize:"0.76rem", fontWeight:700, color:"#111827", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", letterSpacing:"-0.01em" }}>
           {name}
         </p>
-
-        <div style={{ display:"flex", alignItems:"center", gap:3, marginBottom:10, minHeight:16 }}>
-          {rating > 0 && (
-            <>
-              <Star size={9} style={{ color:"#f59e0b", fill:"#f59e0b", flexShrink:0 }} />
-              <span style={{ fontSize:"0.7rem", color:"#6b7280", fontWeight:600 }}>{rating.toFixed(1)}</span>
-            </>
-          )}
-          {city && (
-            <span style={{ fontSize:"0.67rem", color:"#9ca3af", marginLeft: rating > 0 ? 2 : 0 }}>
-              {rating > 0 ? "· " : ""}{city}
-            </span>
-          )}
+        <div style={{ display:"flex", alignItems:"center", gap:3, marginBottom:9, minHeight:15 }}>
+          {rating > 0 && <>
+            <Star size={9} style={{ color:"#f59e0b", fill:"#f59e0b", flexShrink:0 }} />
+            <span style={{ fontSize:"0.68rem", color:"#6b7280", fontWeight:600 }}>{rating.toFixed(1)}</span>
+          </>}
+          {city && <span style={{ fontSize:"0.65rem", color:"#9ca3af", marginLeft: rating > 0 ? 2 : 0 }}>{rating > 0 ? "· " : ""}{city}</span>}
         </div>
-
         <motion.button
           whileTap={{ scale:0.96 }}
           onClick={() => onSelect(vendor)}
           style={{
-            width:"100%",
-            background: hov ? fg : "transparent",
-            border: `1px solid ${hov ? fg : "#e5e7eb"}`,
+            width:"100%", background: hov ? fg : "transparent",
+            border:`1px solid ${hov ? fg : "#e5e7eb"}`,
             borderRadius:8, color: hov ? "#fff" : "#374151",
-            fontSize:"0.72rem", fontWeight:600,
-            padding:"6px 0", cursor:"pointer",
+            fontSize:"0.7rem", fontWeight:600,
+            padding:"5px 0", cursor:"pointer",
             transition:"all 0.15s",
             display:"flex", alignItems:"center", justifyContent:"center", gap:3,
           }}
@@ -410,65 +386,45 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
   return (
     <div>
       <div style={{ display:"flex", alignItems:"center", gap:10, padding:"9px 0" }}>
-
-        {/* Status indicator */}
+        {/* Status */}
         <div style={{ width:20, height:20, flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center" }}>
           {isSelected ? (
-            <motion.div
-              initial={{ scale:0 }} animate={{ scale:1 }}
-              transition={{ type:"spring", stiffness:460, damping:22 }}
-              style={{ width:20, height:20, borderRadius:"50%", background:"#f0fdf4", border:"1.5px solid #86efac", display:"flex", alignItems:"center", justifyContent:"center" }}
-            >
+            <motion.div initial={{ scale:0 }} animate={{ scale:1 }} transition={{ type:"spring", stiffness:460, damping:22 }}
+              style={{ width:20, height:20, borderRadius:"50%", background:"#f0fdf4", border:"1.5px solid #86efac", display:"flex", alignItems:"center", justifyContent:"center" }}>
               <Check size={11} color="#16a34a" strokeWidth={2.5} />
             </motion.div>
           ) : isSearching ? (
-            <motion.div
-              animate={{ rotate:360 }}
-              transition={{ duration:0.9, repeat:Infinity, ease:"linear" }}
-              style={{ width:20, height:20, borderRadius:"50%", border:`2px solid ${accent||"#7c3aed"}22`, borderTopColor: accent||"#7c3aed" }}
-            />
+            <motion.div animate={{ rotate:360 }} transition={{ duration:0.9, repeat:Infinity, ease:"linear" }}
+              style={{ width:20, height:20, borderRadius:"50%", border:`2px solid ${(accent||"#7c3aed")}22`, borderTopColor: accent||"#7c3aed" }} />
           ) : (
-            <div style={{ width:20, height:20, borderRadius:"50%", border:"1.5px solid #e5e7eb", background:"#fff" }} />
+            <div style={{ width:20, height:20, borderRadius:"50%", border:"1.5px solid #e5e7eb" }} />
           )}
         </div>
 
-        {/* Emoji icon */}
-        <span style={{ fontSize:"0.95rem", flexShrink:0, lineHeight:1 }}>{icon}</span>
+        <span style={{ fontSize:"0.93rem", flexShrink:0, lineHeight:1 }}>{icon}</span>
 
-        {/* Title */}
         <div style={{ flex:1, minWidth:0 }}>
-          <p style={{
-            margin:0, fontSize:"0.8rem", fontWeight:600, letterSpacing:"-0.008em",
-            color: isSelected ? "#15803d" : "#111827",
-            overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap",
-          }}>
+          <p style={{ margin:0, fontSize:"0.8rem", fontWeight:600, letterSpacing:"-0.008em", color: isSelected ? "#15803d" : "#111827", overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>
             {service.title}
           </p>
           {isSelected && selectedVendor && (
-            <p style={{ margin:"1px 0 0", fontSize:"0.7rem", color:"#16a34a", fontWeight:500 }}>
-              {selectedVendor.name}
-            </p>
+            <p style={{ margin:"1px 0 0", fontSize:"0.7rem", color:"#16a34a", fontWeight:500 }}>{selectedVendor.name}</p>
           )}
           {!service.required && !isSelected && (
-            <span style={{ fontSize:"0.6rem", background:"#f9fafb", color:"#9ca3af", border:"1px solid #f3f4f6", borderRadius:100, padding:"1px 6px", fontWeight:600 }}>
-              optional
-            </span>
+            <span style={{ fontSize:"0.6rem", background:"#f9fafb", color:"#9ca3af", border:"1px solid #f3f4f6", borderRadius:100, padding:"1px 6px", fontWeight:600 }}>optional</span>
           )}
         </div>
 
-        {/* Action */}
-        <div style={{ flexShrink:0, display:"flex", alignItems:"center", gap:6 }}>
+        <div style={{ flexShrink:0, display:"flex", alignItems:"center" }}>
           {isSelected ? (
-            <button
-              onClick={() => onUnselectVendor(service.service_type)}
+            <button onClick={() => onUnselectVendor(service.service_type)}
               style={{ border:"none", background:"none", cursor:"pointer", padding:"3px 4px", color:"#d1d5db", display:"flex", alignItems:"center", borderRadius:6, transition:"color 0.15s" }}
               onMouseEnter={e => e.currentTarget.style.color="#9ca3af"}
-              onMouseLeave={e => e.currentTarget.style.color="#d1d5db"}
-            >
+              onMouseLeave={e => e.currentTarget.style.color="#d1d5db"}>
               <X size={13} />
             </button>
           ) : hasResults ? (
-            <span style={{ fontSize:"0.67rem", background:"#fef9c3", color:"#854d0e", fontWeight:700, borderRadius:100, padding:"3px 8px", border:"1px solid #fef08a" }}>
+            <span style={{ fontSize:"0.66rem", background:"#fef9c3", color:"#854d0e", fontWeight:700, borderRadius:100, padding:"2px 8px", border:"1px solid #fef08a" }}>
               {results.length} found
             </span>
           ) : service.canSearch && !isSearching ? (
@@ -479,35 +435,23 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
                 display:"inline-flex", alignItems:"center", gap:3,
                 background:"#fafafa", border:"1px solid #e5e7eb",
                 color:"#374151", borderRadius:8, padding:"5px 10px",
-                fontSize:"0.7rem", fontWeight:600, cursor:"pointer",
-                transition:"all 0.15s",
+                fontSize:"0.7rem", fontWeight:600, cursor:"pointer", transition:"all 0.15s",
               }}
               onMouseEnter={e => { e.currentTarget.style.background="#f4f4f5"; e.currentTarget.style.borderColor="#d1d5db"; }}
-              onMouseLeave={e => { e.currentTarget.style.background="#fafafa"; e.currentTarget.style.borderColor="#e5e7eb"; }}
-            >
+              onMouseLeave={e => { e.currentTarget.style.background="#fafafa"; e.currentTarget.style.borderColor="#e5e7eb"; }}>
               <Search size={9} strokeWidth={2.5} /> Find
             </motion.button>
           ) : null}
         </div>
       </div>
 
-      {/* Vendor results */}
       <AnimatePresence>
         {hasResults && (
-          <motion.div
-            initial={{ opacity:0, height:0 }}
-            animate={{ opacity:1, height:"auto" }}
-            exit={{ opacity:0, height:0 }}
-            transition={{ duration:0.22 }}
-            style={{ overflow:"hidden", paddingLeft:42, paddingBottom:12 }}
-          >
+          <motion.div initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:"auto" }} exit={{ opacity:0, height:0 }} transition={{ duration:0.22 }}
+            style={{ overflow:"hidden", paddingLeft:42, paddingBottom:10 }}>
             <div style={{ display:"flex", gap:8, overflowX:"auto", paddingBottom:2, scrollbarWidth:"none", msOverflowStyle:"none" }}>
               {results.slice(0,6).map((v, i) => (
-                <VendorCard
-                  key={v.id || i}
-                  vendor={v}
-                  onSelect={(vendor) => onSelectVendor(service.service_type, vendor)}
-                />
+                <VendorCard key={v.id||i} vendor={v} onSelect={(vendor) => onSelectVendor(service.service_type, vendor)} />
               ))}
             </div>
           </motion.div>
@@ -524,56 +468,28 @@ function CategorySection({ label, services, selectedVendors, ...rowProps }) {
   const [open, setOpen] = useState(true);
   const doneCount = services.filter(s => selectedVendors?.[s.service_type]).length;
   const allDone   = doneCount === services.length;
-
   return (
-    <div style={{
-      background: "#fff",
-      borderRadius: 12,
-      border: "1px solid #f3f4f6",
-      marginBottom: 6,
-      overflow: "hidden",
-    }}>
-      <button
-        onClick={() => setOpen(o => !o)}
-        style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between" }}
-      >
+    <div style={{ background:"#fff", borderRadius:12, border:"1px solid #f3f4f6", marginBottom:6, overflow:"hidden" }}>
+      <button onClick={() => setOpen(o => !o)}
+        style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"10px 14px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
         <div style={{ display:"flex", alignItems:"center", gap:7 }}>
-          <span style={{ fontSize:"0.68rem", fontWeight:700, color:"#6b7280", letterSpacing:"0.06em", textTransform:"uppercase" }}>
-            {label}
-          </span>
+          <span style={{ fontSize:"0.67rem", fontWeight:700, color:"#6b7280", letterSpacing:"0.06em", textTransform:"uppercase" }}>{label}</span>
           {doneCount > 0 && (
-            <span style={{
-              fontSize:"0.62rem", fontWeight:700, borderRadius:100, padding:"2px 7px",
-              background: allDone ? "#f0fdf4" : "#f9fafb",
-              color: allDone ? "#16a34a" : "#6b7280",
-              border: `1px solid ${allDone ? "#bbf7d0" : "#f3f4f6"}`,
-            }}>
+            <span style={{ fontSize:"0.62rem", fontWeight:700, borderRadius:100, padding:"2px 7px", background: allDone ? "#f0fdf4" : "#f9fafb", color: allDone ? "#16a34a" : "#6b7280", border:`1px solid ${allDone ? "#bbf7d0" : "#f3f4f6"}` }}>
               {doneCount}/{services.length}
             </span>
           )}
         </div>
-        {open
-          ? <ChevronUp size={12} style={{ color:"#d1d5db" }} />
-          : <ChevronDown size={12} style={{ color:"#d1d5db" }} />
-        }
+        {open ? <ChevronUp size={12} style={{ color:"#d1d5db" }} /> : <ChevronDown size={12} style={{ color:"#d1d5db" }} />}
       </button>
-
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ height:0 }} animate={{ height:"auto" }} exit={{ height:0 }}
-            transition={{ duration:0.18 }}
-            style={{ overflow:"hidden" }}
-          >
+          <motion.div initial={{ height:0 }} animate={{ height:"auto" }} exit={{ height:0 }} transition={{ duration:0.18 }} style={{ overflow:"hidden" }}>
             <div style={{ padding:"0 14px 8px" }}>
               {services.map((s, idx) => (
                 <div key={s.service_type}>
                   {idx > 0 && <div style={{ height:1, background:"#f9fafb" }} />}
-                  <ServiceRow
-                    service={s}
-                    selectedVendor={selectedVendors?.[s.service_type]}
-                    {...rowProps}
-                  />
+                  <ServiceRow service={s} selectedVendor={selectedVendors?.[s.service_type]} {...rowProps} />
                 </div>
               ))}
             </div>
@@ -585,109 +501,8 @@ function CategorySection({ label, services, selectedVendors, ...rowProps }) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   EVENT PLAN PANEL
+   PLAN PANEL
 ═══════════════════════════════════════════════════════ */
-function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor }) {
-  const {
-    event_type_label, event_type_emoji, accent, gradient,
-    date, city, guest_count, style, budget,
-    services=[], selected_vendors={},
-  } = eventState;
-
-  const searchableServices = services.filter(s => s.canSearch);
-  const selectedCount = Object.keys(selected_vendors).length;
-  const pct = searchableServices.length > 0 ? Math.round((selectedCount / searchableServices.length) * 100) : 0;
-
-  const grouped = {};
-  for (const s of services) {
-    if (!grouped[s.category]) grouped[s.category] = [];
-    grouped[s.category].push(s);
-  }
-
-  const missing = services.filter(s => s.required && s.canSearch && !selected_vendors[s.service_type]);
-
-  return (
-    <div style={{ maxWidth:700 }}>
-
-      {/* ── Header card ── */}
-      <div style={{
-        background: gradient || "linear-gradient(135deg,#7c3aed,#e11d5c)",
-        borderRadius:20, padding:"20px 22px", marginBottom:14,
-        color:"#fff", position:"relative", overflow:"hidden",
-      }}>
-        {/* Subtle dot grid */}
-        <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.1) 1px,transparent 1px)", backgroundSize:"20px 20px", pointerEvents:"none" }} />
-        {/* Decorative circle */}
-        <div style={{ position:"absolute", top:-48, right:-48, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.07)", pointerEvents:"none" }} />
-
-        <div style={{ position:"relative", zIndex:1 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14 }}>
-            <span style={{ fontSize:"2.2rem", lineHeight:1 }}>{event_type_emoji}</span>
-            <div style={{ flex:1, minWidth:0 }}>
-              <h2 style={{ margin:"0 0 6px", fontSize:"1.15rem", fontWeight:800, letterSpacing:"-0.03em" }}>
-                {event_type_label}
-              </h2>
-              <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
-                {date         && <Chip icon={<Calendar size={10}/>}>{date}</Chip>}
-                {city         && <Chip icon={<MapPin size={10}/>}>{city}</Chip>}
-                {guest_count  && <Chip icon={<Users size={10}/>}>{guest_count} guests</Chip>}
-                {budget?.description && <Chip icon={<DollarSign size={10}/>}>{budget.description}</Chip>}
-                {style        && <Chip>✨ {style}</Chip>}
-              </div>
-            </div>
-          </div>
-
-          {/* Progress bar */}
-          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-            <div style={{ flex:1, height:4, background:"rgba(255,255,255,0.2)", borderRadius:10, overflow:"hidden" }}>
-              <motion.div
-                animate={{ width:`${pct}%` }}
-                transition={{ duration:0.6, ease:"easeOut" }}
-                style={{ height:"100%", background:"rgba(255,255,255,0.9)", borderRadius:10 }}
-              />
-            </div>
-            <span style={{ fontSize:"0.75rem", fontWeight:700, opacity:0.85, flexShrink:0 }}>
-              {selectedCount}/{searchableServices.length} vendors
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Missing items alert ── */}
-      {missing.length > 0 && selectedCount > 0 && (
-        <motion.div
-          initial={{ opacity:0, y:-4 }} animate={{ opacity:1, y:0 }}
-          style={{ background:"#fffbeb", border:"1px solid #fef08a", borderRadius:12, padding:"10px 14px", marginBottom:10, display:"flex", gap:10, alignItems:"flex-start" }}
-        >
-          <span style={{ fontSize:"1rem", flexShrink:0, lineHeight:1.4 }}>⚠️</span>
-          <div>
-            <p style={{ margin:"0 0 2px", fontSize:"0.775rem", fontWeight:700, color:"#92400e" }}>Still needed:</p>
-            <p style={{ margin:0, fontSize:"0.72rem", color:"#b45309", lineHeight:1.5 }}>
-              {missing.map(s => s.title).join(" · ")}
-            </p>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── Service groups ── */}
-      {Object.entries(grouped).map(([cat, items]) => (
-        <CategorySection
-          key={cat}
-          label={CATEGORY_LABELS[cat] || cat}
-          services={items}
-          selectedVendors={selected_vendors}
-          vendorResults={vendorResults}
-          onSelectVendor={onSelectVendor}
-          onSearchVendors={onSearchVendors}
-          onUnselectVendor={onUnselectVendor}
-          accent={accent}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* tiny helper */
 function Chip({ icon, children }) {
   return (
     <span style={{ display:"inline-flex", alignItems:"center", gap:4, fontSize:"0.72rem", background:"rgba(255,255,255,0.18)", borderRadius:100, padding:"3px 9px", fontWeight:500 }}>
@@ -696,8 +511,70 @@ function Chip({ icon, children }) {
   );
 }
 
+function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor }) {
+  const { event_type_label, event_type_emoji, accent, gradient, date, city, guest_count, style, budget, services=[], selected_vendors={} } = eventState;
+  const searchableServices = services.filter(s => s.canSearch);
+  const selectedCount = Object.keys(selected_vendors).length;
+  const pct = searchableServices.length > 0 ? Math.round((selectedCount / searchableServices.length) * 100) : 0;
+  const grouped = {};
+  for (const s of services) {
+    if (!grouped[s.category]) grouped[s.category] = [];
+    grouped[s.category].push(s);
+  }
+  const missing = services.filter(s => s.required && s.canSearch && !selected_vendors[s.service_type]);
+  return (
+    <div style={{ maxWidth:700 }}>
+      {/* Header card */}
+      <div style={{ background: gradient||"linear-gradient(135deg,#7c3aed,#e11d5c)", borderRadius:18, padding:"20px 22px", marginBottom:14, color:"#fff", position:"relative", overflow:"hidden" }}>
+        <div style={{ position:"absolute", inset:0, backgroundImage:"radial-gradient(circle,rgba(255,255,255,0.1) 1px,transparent 1px)", backgroundSize:"20px 20px", pointerEvents:"none" }} />
+        <div style={{ position:"absolute", top:-48, right:-48, width:160, height:160, borderRadius:"50%", background:"rgba(255,255,255,0.07)", pointerEvents:"none" }} />
+        <div style={{ position:"relative", zIndex:1 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14 }}>
+            <span style={{ fontSize:"2rem", lineHeight:1 }}>{event_type_emoji}</span>
+            <div style={{ flex:1, minWidth:0 }}>
+              <h2 style={{ margin:"0 0 6px", fontSize:"1.1rem", fontWeight:800, letterSpacing:"-0.03em" }}>{event_type_label}</h2>
+              <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+                {date         && <Chip icon={<Calendar size={10}/>}>{date}</Chip>}
+                {city         && <Chip icon={<MapPin size={10}/>}>{city}</Chip>}
+                {guest_count  && <Chip icon={<Users size={10}/>}>{guest_count} guests</Chip>}
+                {budget?.description && <Chip icon={<DollarSign size={10}/>}>{budget.description}</Chip>}
+                {style        && <Chip>✨ {style}</Chip>}
+              </div>
+            </div>
+          </div>
+          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+            <div style={{ flex:1, height:4, background:"rgba(255,255,255,0.2)", borderRadius:10, overflow:"hidden" }}>
+              <motion.div animate={{ width:`${pct}%` }} transition={{ duration:0.6, ease:"easeOut" }}
+                style={{ height:"100%", background:"rgba(255,255,255,0.9)", borderRadius:10 }} />
+            </div>
+            <span style={{ fontSize:"0.73rem", fontWeight:700, opacity:0.85, flexShrink:0 }}>{selectedCount}/{searchableServices.length} vendors</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Missing items */}
+      {missing.length > 0 && selectedCount > 0 && (
+        <motion.div initial={{ opacity:0, y:-4 }} animate={{ opacity:1, y:0 }}
+          style={{ background:"#fffbeb", border:"1px solid #fef08a", borderRadius:12, padding:"10px 14px", marginBottom:10, display:"flex", gap:10, alignItems:"flex-start" }}>
+          <span style={{ fontSize:"0.95rem", flexShrink:0, lineHeight:1.5 }}>⚠️</span>
+          <div>
+            <p style={{ margin:"0 0 2px", fontSize:"0.775rem", fontWeight:700, color:"#92400e" }}>Still needed:</p>
+            <p style={{ margin:0, fontSize:"0.72rem", color:"#b45309", lineHeight:1.5 }}>{missing.map(s => s.title).join(" · ")}</p>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Services */}
+      {Object.entries(grouped).map(([cat, items]) => (
+        <CategorySection key={cat} label={CATEGORY_LABELS[cat]||cat} services={items} selectedVendors={selected_vendors}
+          vendorResults={vendorResults} onSelectVendor={onSelectVendor} onSearchVendors={onSearchVendors} onUnselectVendor={onUnselectVendor} accent={accent} />
+      ))}
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════
-   EMPTY PLAN STATE
+   EMPTY STATE
 ═══════════════════════════════════════════════════════ */
 const EVENT_TYPES_GRID = [
   { key:"christening", label:"Christening", emoji:"⛪", color:"#7c3aed", bg:"#f5f3ff" },
@@ -712,41 +589,25 @@ const EVENT_TYPES_GRID = [
 
 function EmptyPlan({ onPickType }) {
   return (
-    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", minHeight:"calc(100vh - 130px)", padding:"48px 24px" }}>
-
-      <motion.div
-        initial={{ scale:0.85, opacity:0 }}
-        animate={{ scale:1, opacity:1 }}
-        transition={{ type:"spring", stiffness:300, damping:22, delay:0.05 }}
-        style={{ marginBottom:20 }}
-      >
-        <div style={{
-          width:72, height:72, borderRadius:"50%",
-          background:"#fafafa", border:"1.5px dashed #e5e7eb",
-          display:"flex", alignItems:"center", justifyContent:"center",
-          margin:"0 auto",
-        }}>
-          <Wand2 size={28} style={{ color:"#9ca3af" }} strokeWidth={1.5} />
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", height:"100%", padding:"32px 24px", textAlign:"center" }}>
+      <motion.div initial={{ scale:0.85, opacity:0 }} animate={{ scale:1, opacity:1 }} transition={{ type:"spring", stiffness:300, damping:22, delay:0.05 }} style={{ marginBottom:16 }}>
+        <div style={{ width:64, height:64, borderRadius:"50%", background:"#fafafa", border:"1.5px dashed #e5e7eb", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto" }}>
+          <Wand2 size={26} style={{ color:"#9ca3af" }} strokeWidth={1.5} />
         </div>
       </motion.div>
 
-      <motion.div initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1 }} style={{ textAlign:"center", marginBottom:32 }}>
-        <h2 style={{ margin:"0 0 8px", fontSize:"1.35rem", fontWeight:800, color:"#111827", letterSpacing:"-0.035em" }}>
-          Your event plan
-        </h2>
-        <p style={{ margin:0, fontSize:"0.875rem", color:"#9ca3af", lineHeight:1.6, maxWidth:260 }}>
-          Describe your event in the chat →<br/>I'll build your checklist instantly.
+      <motion.div initial={{ opacity:0, y:8 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.1 }} style={{ marginBottom:28 }}>
+        <h2 style={{ margin:"0 0 7px", fontSize:"1.3rem", fontWeight:800, color:"#111827", letterSpacing:"-0.035em" }}>Your event plan</h2>
+        <p style={{ margin:0, fontSize:"0.85rem", color:"#9ca3af", lineHeight:1.6, maxWidth:250 }}>
+          Describe your event in the chat →<br />I'll build your checklist instantly.
         </p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.15 }}
-        style={{ width:"100%", maxWidth:400 }}
-      >
-        <p style={{ margin:"0 0 12px", fontSize:"0.7rem", fontWeight:600, color:"#d1d5db", textAlign:"center", letterSpacing:"0.08em", textTransform:"uppercase" }}>
-          Or choose an event type
+      <motion.div initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.15 }} style={{ width:"100%", maxWidth:380 }}>
+        <p style={{ margin:"0 0 10px", fontSize:"0.67rem", fontWeight:600, color:"#d1d5db", letterSpacing:"0.08em", textTransform:"uppercase" }}>
+          Or pick an event type
         </p>
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:8 }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:7 }}>
           {EVENT_TYPES_GRID.map((t, i) => (
             <motion.button
               key={t.key}
@@ -754,19 +615,16 @@ function EmptyPlan({ onPickType }) {
               whileHover={{ scale:1.05, y:-2 }} whileTap={{ scale:0.96 }}
               onClick={() => onPickType(t.label)}
               style={{
-                border: "1px solid #f3f4f6",
-                borderRadius: 14, padding: "14px 8px",
-                background: "#fff",
-                cursor: "pointer",
-                display: "flex", flexDirection: "column", alignItems: "center", gap: 5,
-                transition: "all 0.15s",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                border:"1px solid #f3f4f6", borderRadius:13, padding:"13px 6px",
+                background:"#fff", cursor:"pointer",
+                display:"flex", flexDirection:"column", alignItems:"center", gap:5,
+                transition:"all 0.15s", boxShadow:"0 1px 3px rgba(0,0,0,0.04)",
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = t.bg; e.currentTarget.style.borderColor = t.color + "33"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.borderColor = "#f3f4f6"; }}
+              onMouseEnter={e => { e.currentTarget.style.background=t.bg; e.currentTarget.style.borderColor=t.color+"33"; }}
+              onMouseLeave={e => { e.currentTarget.style.background="#fff"; e.currentTarget.style.borderColor="#f3f4f6"; }}
             >
-              <span style={{ fontSize:"1.5rem", lineHeight:1 }}>{t.emoji}</span>
-              <span style={{ fontSize:"0.63rem", fontWeight:700, color:"#374151", letterSpacing:"-0.01em" }}>{t.label}</span>
+              <span style={{ fontSize:"1.4rem", lineHeight:1 }}>{t.emoji}</span>
+              <span style={{ fontSize:"0.62rem", fontWeight:700, color:"#374151", letterSpacing:"-0.01em" }}>{t.label}</span>
             </motion.button>
           ))}
         </div>
@@ -785,6 +643,11 @@ const INITIAL_STATE = {
   services:[], selected_vendors:{},
 };
 
+// Site header is h-14 md:h-16 → 56px / 64px
+// Planner top bar is 52px
+// Total offset to subtract from 100vh so layout fills screen exactly
+const SITE_HEADER_H = 64; // desktop md:h-16
+
 export default function PlannerClient({ lang }) {
   const [messages,      setMessages]      = useState([]);
   const [eventState,    setEventState]    = useState(INITIAL_STATE);
@@ -793,10 +656,17 @@ export default function PlannerClient({ lang }) {
   const [input,         setInput]         = useState("");
   const [focused,       setFocused]       = useState(false);
 
-  const messagesEndRef = useRef(null);
-  const inputRef       = useRef(null);
+  const messagesScrollRef = useRef(null); // the scrollable messages container
+  const inputRef          = useRef(null);
 
-  useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior:"smooth" }); }, [messages, loading]);
+  // Scroll messages container to bottom
+  const scrollToBottom = useCallback(() => {
+    if (messagesScrollRef.current) {
+      messagesScrollRef.current.scrollTop = messagesScrollRef.current.scrollHeight;
+    }
+  }, []);
+
+  useEffect(() => { scrollToBottom(); }, [messages, loading, scrollToBottom]);
 
   useEffect(() => {
     if (eventState.event_type) {
@@ -804,53 +674,50 @@ export default function PlannerClient({ lang }) {
     }
   }, [eventState, vendorResults]);
 
+  // Initial greeting
   useEffect(() => {
     const timer = setTimeout(() => {
       setMessages([{
-        id:1, role:"bot",
-        text:"Hi! I'm your Salooote event planner 🎉\n\nJust describe what you want to plan — tell me the event, guests, city, style. I'll build your complete checklist and find vendors instantly!",
+        id: 1, role: "bot",
+        text: "Hi! I'm your Salooote event planner 🎉\n\nJust describe what you want to plan — tell me the event, guests, city, style. I'll build your complete checklist and find vendors instantly!",
       }]);
     }, 300);
     return () => clearTimeout(timer);
   }, []);
 
   const pushBot = useCallback((text) => {
-    setMessages(prev => [...prev, { id:Date.now()+Math.random(), role:"bot", text }]);
+    setMessages(prev => [...prev, { id: Date.now() + Math.random(), role: "bot", text }]);
   }, []);
 
-  const searchVendors = useCallback(async (service_type, search_term, filters={}) => {
+  const searchVendors = useCallback(async (service_type, search_term, filters = {}) => {
     try {
       const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
-      const term = search_term || service_type.replace(/_/g," ");
-      const params = new URLSearchParams({ search:term, limit:"8" });
+      const term = search_term || service_type.replace(/_/g, " ");
+      const params = new URLSearchParams({ search: term, limit: "8" });
       const city = filters.city || eventState.city;
       if (city) params.set("city", city);
 
       let data = null;
       try {
         const r = await fetch(`${base}/vendors?${params}`);
-        if (r.ok) { const j = await r.json(); data = j.data||[]; }
+        if (r.ok) { const j = await r.json(); data = j.data || []; }
       } catch {}
 
       if (!data?.length) {
         const r = await fetch(`${base}/products?${params}`);
         if (r.ok) {
           const j = await r.json();
-          data = (j.data||[]).map(p => ({
-            id: p.id,
-            business_name: p.vendor_name||p.name,
-            name: p.vendor_name||p.name,
-            rating: p.rating,
-            city: p.vendor_city||city||"",
-            slug: p.vendor_slug||"",
+          data = (j.data || []).map(p => ({
+            id: p.id, business_name: p.vendor_name||p.name, name: p.vendor_name||p.name,
+            rating: p.rating, city: p.vendor_city||city||"", slug: p.vendor_slug||"",
           }));
         }
       }
 
-      if (data?.length) setVendorResults(prev => ({ ...prev, [service_type]:data }));
-      setEventState(prev => ({ ...prev, services:prev.services.map(s => s.service_type===service_type?{...s,searching:false}:s) }));
+      if (data?.length) setVendorResults(prev => ({ ...prev, [service_type]: data }));
+      setEventState(prev => ({ ...prev, services: prev.services.map(s => s.service_type===service_type ? {...s, searching:false} : s) }));
     } catch {
-      setEventState(prev => ({ ...prev, services:prev.services.map(s => s.service_type===service_type?{...s,searching:false}:s) }));
+      setEventState(prev => ({ ...prev, services: prev.services.map(s => s.service_type===service_type ? {...s, searching:false} : s) }));
     }
   }, [eventState.city]);
 
@@ -858,51 +725,57 @@ export default function PlannerClient({ lang }) {
     const t = text.trim();
     if (!t || loading) return;
     setInput("");
-    setMessages(prev => [...prev, { id:Date.now(), role:"user", text:t }]);
+
+    // Add user message once (only here)
+    const userMsg = { id: Date.now(), role: "user", text: t };
+    setMessages(prev => [...prev, userMsg]);
     setLoading(true);
 
     try {
       const res = await fetch("/api/planner/chat", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({ messages:[...messages, { role:"user", text:t }], eventState }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, userMsg],
+          eventState,
+        }),
       });
       const data = await res.json();
-
       if (data.error) { pushBot(`⚠️ ${data.error}`); return; }
 
-      const { state:newState, searches } = applyActions(data.actions||[], eventState);
+      const { state: newState, searches } = applyActions(data.actions || [], eventState);
       setEventState(newState);
       if (data.assistant_message) pushBot(data.assistant_message);
-      for (const s of searches) searchVendors(s.service_type, s.search_term, s.filters||{});
+      for (const s of searches) searchVendors(s.service_type, s.search_term, s.filters || {});
     } catch {
       pushBot("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
-      inputRef.current?.focus();
+      // Re-focus input after response
+      setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [messages, eventState, loading, searchVendors, pushBot]);
 
   const handleSelectVendor = useCallback((service_type, vendor) => {
-    const name = vendor.business_name||vendor.name||"Vendor";
+    const name = vendor.business_name || vendor.name || "Vendor";
     setEventState(prev => ({
       ...prev,
-      selected_vendors:{ ...prev.selected_vendors, [service_type]:{ id:vendor.id, name } },
-      services: prev.services.map(s => s.service_type===service_type?{...s,status:"selected",searching:false}:s),
+      selected_vendors: { ...prev.selected_vendors, [service_type]: { id: vendor.id, name } },
+      services: prev.services.map(s => s.service_type===service_type ? {...s, status:"selected", searching:false} : s),
     }));
-    setVendorResults(prev => { const n={...prev}; delete n[service_type]; return n; });
+    setVendorResults(prev => { const n = {...prev}; delete n[service_type]; return n; });
     pushBot(`✅ **${name}** added for **${service_type.replace(/_/g," ")}**! What's next?`);
   }, [pushBot]);
 
   const handleSearchVendors = useCallback((service_type, title) => {
-    setEventState(prev => ({ ...prev, services:prev.services.map(s => s.service_type===service_type?{...s,searching:true}:s) }));
+    setEventState(prev => ({ ...prev, services: prev.services.map(s => s.service_type===service_type ? {...s, searching:true} : s) }));
     searchVendors(service_type, title);
   }, [searchVendors]);
 
   const handleUnselectVendor = useCallback((service_type) => {
     setEventState(prev => {
-      const sv={...prev.selected_vendors}; delete sv[service_type];
-      return { ...prev, selected_vendors:sv, services:prev.services.map(s=>s.service_type===service_type?{...s,status:"pending"}:s) };
+      const sv = { ...prev.selected_vendors }; delete sv[service_type];
+      return { ...prev, selected_vendors: sv, services: prev.services.map(s => s.service_type===service_type ? {...s, status:"pending"} : s) };
     });
   }, []);
 
@@ -910,66 +783,69 @@ export default function PlannerClient({ lang }) {
   const accent   = eventState.accent || "#7c3aed";
   const canSend  = !!input.trim() && !loading;
 
+  const PLANNER_TOP_H = 52;
+  const TOTAL_OFFSET  = SITE_HEADER_H + PLANNER_TOP_H; // 64 + 52 = 116px
+
   return (
-    <div style={{ minHeight:"100vh", background:"#ffffff", display:"flex", flexDirection:"column" }}>
+    <>
       <style>{`
         * { box-sizing:border-box; }
         ::-webkit-scrollbar { width:4px; height:4px; }
         ::-webkit-scrollbar-track { background:transparent; }
         ::-webkit-scrollbar-thumb { background:#e5e7eb; border-radius:10px; }
         ::-webkit-scrollbar-thumb:hover { background:#d1d5db; }
+        .planner-messages-hide-scroll::-webkit-scrollbar { display:none; }
+        .planner-messages-hide-scroll { scrollbar-width:none; -ms-overflow-style:none; }
       `}</style>
 
-      {/* ── Top bar ── */}
-      <div style={{ background:"#fff", borderBottom:"1px solid #f3f4f6", position:"sticky", top:0, zIndex:50 }}>
-        <div style={{ maxWidth:1440, margin:"0 auto", padding:"0 24px", height:54, display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+      {/*
+        Outer wrapper fills exactly the viewport space below the site header.
+        overflow:hidden prevents any outer scroll — inner panels scroll on their own.
+      */}
+      <div style={{
+        height: `calc(100vh - ${SITE_HEADER_H}px)`,
+        display: "flex",
+        flexDirection: "column",
+        background: "#fff",
+        overflow: "hidden",
+      }}>
 
-          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+        {/* ── Planner top bar ── */}
+        <div style={{ height: PLANNER_TOP_H, flexShrink: 0, background: "#fff", borderBottom: "1px solid #f3f4f6", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 22px" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:10 }}>
             <Link href={`/${lang}`} style={{ textDecoration:"none" }}>
-              <motion.button
-                whileHover={{ background:"#f9fafb" }} whileTap={{ scale:0.93 }}
-                style={{ width:30, height:30, borderRadius:8, border:"1px solid #e5e7eb", background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", transition:"background 0.15s" }}
-              >
+              <motion.button whileHover={{ background:"#f9fafb" }} whileTap={{ scale:0.93 }}
+                style={{ width:30, height:30, borderRadius:8, border:"1px solid #e5e7eb", background:"#fff", display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", transition:"background 0.15s" }}>
                 <ArrowLeft size={13} color="#6b7280" />
               </motion.button>
             </Link>
-
-            <div style={{ width:1, height:20, background:"#f3f4f6" }} />
-
+            <div style={{ width:1, height:18, background:"#f3f4f6" }} />
             <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-              <div style={{ width:28, height:28, borderRadius:8, background:"linear-gradient(135deg,#7c3aed,#e11d5c)", display:"flex", alignItems:"center", justifyContent:"center" }}>
-                <Sparkles size={12} color="#fff" strokeWidth={2.2} />
+              <div style={{ width:26, height:26, borderRadius:8, background:"linear-gradient(135deg,#7c3aed,#e11d5c)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                <Sparkles size={11} color="#fff" strokeWidth={2.2} />
               </div>
               <div>
-                <p style={{ margin:0, fontSize:"0.825rem", fontWeight:700, color:"#111827", letterSpacing:"-0.02em", lineHeight:1.2 }}>Event Planner</p>
-                <p style={{ margin:0, fontSize:"0.6rem", color:"#9ca3af", lineHeight:1.2 }}>Powered by OpenAI · Salooote</p>
+                <p style={{ margin:0, fontSize:"0.8rem", fontWeight:700, color:"#111827", letterSpacing:"-0.02em", lineHeight:1.2 }}>Event Planner</p>
+                <p style={{ margin:0, fontSize:"0.58rem", color:"#9ca3af", lineHeight:1.2 }}>Powered by OpenAI · Salooote</p>
               </div>
             </div>
           </div>
 
-          {/* Event progress pill in top bar */}
           {hasEvent && (
-            <motion.div
-              initial={{ opacity:0, x:10 }} animate={{ opacity:1, x:0 }}
-              style={{ display:"flex", alignItems:"center", gap:10, background:"#fafafa", border:"1px solid #f3f4f6", borderRadius:100, padding:"5px 14px 5px 10px" }}
-            >
-              <span style={{ fontSize:"1.1rem", lineHeight:1 }}>{eventState.event_type_emoji}</span>
+            <motion.div initial={{ opacity:0, x:10 }} animate={{ opacity:1, x:0 }}
+              style={{ display:"flex", alignItems:"center", gap:9, background:"#fafafa", border:"1px solid #f3f4f6", borderRadius:100, padding:"4px 12px 4px 9px" }}>
+              <span style={{ fontSize:"1rem", lineHeight:1 }}>{eventState.event_type_emoji}</span>
               <div>
-                <p style={{ margin:0, fontSize:"0.75rem", fontWeight:700, color:"#111827", letterSpacing:"-0.02em", lineHeight:1.2 }}>
-                  {eventState.event_type_label}
-                </p>
-                <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:2 }}>
-                  <div style={{ width:52, height:2.5, background:"#f3f4f6", borderRadius:10, overflow:"hidden" }}>
+                <p style={{ margin:0, fontSize:"0.72rem", fontWeight:700, color:"#111827", letterSpacing:"-0.02em", lineHeight:1.2 }}>{eventState.event_type_label}</p>
+                <div style={{ display:"flex", alignItems:"center", gap:5, marginTop:2 }}>
+                  <div style={{ width:48, height:2.5, background:"#f3f4f6", borderRadius:10, overflow:"hidden" }}>
                     <motion.div
-                      animate={{ width:`${eventState.services.filter(s=>s.canSearch).length > 0
-                        ? Math.round((Object.keys(eventState.selected_vendors).length / eventState.services.filter(s=>s.canSearch).length)*100)
-                        : 0}%`
-                      }}
+                      animate={{ width:`${eventState.services.filter(s=>s.canSearch).length > 0 ? Math.round((Object.keys(eventState.selected_vendors).length / eventState.services.filter(s=>s.canSearch).length)*100) : 0}%` }}
                       style={{ height:"100%", background:`linear-gradient(90deg,${accent},#e11d5c)`, borderRadius:10 }}
                       transition={{ duration:0.5 }}
                     />
                   </div>
-                  <span style={{ fontSize:"0.62rem", color:"#9ca3af", fontWeight:600 }}>
+                  <span style={{ fontSize:"0.6rem", color:"#9ca3af", fontWeight:600 }}>
                     {Object.keys(eventState.selected_vendors).length}/{eventState.services.filter(s=>s.canSearch).length}
                   </span>
                 </div>
@@ -977,117 +853,104 @@ export default function PlannerClient({ lang }) {
             </motion.div>
           )}
         </div>
-      </div>
 
-      {/* ── Main layout ── */}
-      <div style={{ flex:1, maxWidth:1440, margin:"0 auto", width:"100%", display:"flex" }}>
+        {/* ── Main content — fills remaining height ── */}
+        <div style={{ flex:1, display:"flex", overflow:"hidden" }}>
 
-        {/* ══ Chat panel ══ */}
-        <div style={{
-          width: 420, flexShrink:0,
-          borderRight: "1px solid #f3f4f6",
-          display:"flex", flexDirection:"column",
-          position:"sticky", top:54,
-          height:"calc(100vh - 54px)",
-        }}>
+          {/* ══ Chat panel ══ */}
+          <div style={{ width:420, flexShrink:0, display:"flex", flexDirection:"column", borderRight:"1px solid #f3f4f6", overflow:"hidden" }}>
 
-          {/* Messages area */}
-          <div style={{ flex:1, overflowY:"auto", padding:"20px 20px 0 20px" }}>
-            <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-              {messages.map(msg => <MessageBubble key={msg.id} msg={msg} />)}
-              {loading && <TypingIndicator />}
-              <div ref={messagesEndRef} />
+            {/* Messages — scrolls independently */}
+            <div
+              ref={messagesScrollRef}
+              className="planner-messages-hide-scroll"
+              style={{ flex:1, overflowY:"auto", padding:"20px 18px 12px" }}
+            >
+              <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
+                {messages.map(msg => <MessageBubble key={msg.id} msg={msg} />)}
+                {loading && <TypingIndicator />}
+              </div>
+            </div>
+
+            {/* Input — always at bottom */}
+            <div style={{ flexShrink:0, padding:"12px 18px 18px", borderTop:"1px solid #f9fafb" }}>
+              <div style={{
+                background:"#fff",
+                border:`1.5px solid ${focused ? "#d1d5db" : "#f3f4f6"}`,
+                borderRadius:14, padding:"7px 7px 7px 14px",
+                display:"flex", alignItems:"center", gap:8,
+                boxShadow: focused ? "0 0 0 3px rgba(0,0,0,0.04)" : "none",
+                transition:"border-color 0.15s, box-shadow 0.15s",
+              }}>
+                <form onSubmit={e => { e.preventDefault(); sendMessage(input); }} style={{ display:"flex", flex:1, alignItems:"center", gap:8 }}>
+                  <input
+                    ref={inputRef}
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    disabled={loading}
+                    placeholder="Describe your event…"
+                    autoFocus
+                    style={{
+                      flex:1, border:"none", outline:"none",
+                      fontSize:"0.875rem", background:"transparent",
+                      color:"#111827", fontFamily:"inherit", letterSpacing:"-0.01em",
+                    }}
+                  />
+                  <motion.button
+                    type="submit"
+                    disabled={!canSend}
+                    whileHover={canSend ? { scale:1.05 } : {}}
+                    whileTap={canSend ? { scale:0.93 } : {}}
+                    style={{
+                      width:34, height:34, borderRadius:10, flexShrink:0, border:"none",
+                      background: canSend ? "#09090b" : "#f4f4f5",
+                      cursor: canSend ? "pointer" : "default",
+                      display:"flex", alignItems:"center", justifyContent:"center",
+                      transition:"background 0.15s",
+                    }}
+                  >
+                    {loading
+                      ? <motion.div animate={{ rotate:360 }} transition={{ duration:0.9, repeat:Infinity, ease:"linear" }}><Loader2 size={13} color="#9ca3af" /></motion.div>
+                      : <Send size={13} color={canSend ? "#fff" : "#9ca3af"} strokeWidth={2.2} />
+                    }
+                  </motion.button>
+                </form>
+              </div>
+              <p style={{ margin:"6px 0 0", fontSize:"0.63rem", color:"#d1d5db", textAlign:"center" }}>
+                AI may make mistakes · Always verify with vendors
+              </p>
             </div>
           </div>
 
-          {/* Input area */}
-          <div style={{ padding:"16px 20px 20px" }}>
-            <div style={{
-              background:"#fff",
-              border: `1.5px solid ${focused ? "#d1d5db" : "#f3f4f6"}`,
-              borderRadius:14,
-              padding:"8px 8px 8px 14px",
-              display:"flex", alignItems:"center", gap:8,
-              boxShadow: focused ? "0 0 0 3px rgba(0,0,0,0.04)" : "none",
-              transition:"border-color 0.15s, box-shadow 0.15s",
-            }}>
-              <form
-                onSubmit={e => { e.preventDefault(); sendMessage(input); }}
-                style={{ display:"flex", flex:1, alignItems:"center", gap:8 }}
-              >
-                <input
-                  ref={inputRef}
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  onFocus={() => setFocused(true)}
-                  onBlur={() => setFocused(false)}
-                  disabled={loading}
-                  placeholder="Describe your event…"
-                  style={{
-                    flex:1, border:"none", outline:"none",
-                    fontSize:"0.875rem", background:"transparent",
-                    color:"#111827", fontFamily:"inherit",
-                    letterSpacing:"-0.01em",
-                  }}
-                />
-                <motion.button
-                  type="submit"
-                  disabled={!canSend}
-                  whileHover={canSend ? { scale:1.05 } : {}}
-                  whileTap={canSend ? { scale:0.93 } : {}}
-                  style={{
-                    width:36, height:36, borderRadius:10, flexShrink:0, border:"none",
-                    background: canSend ? "#09090b" : "#f4f4f5",
-                    cursor: canSend ? "pointer" : "default",
-                    display:"flex", alignItems:"center", justifyContent:"center",
-                    transition:"background 0.15s",
-                  }}
-                >
-                  {loading
-                    ? <motion.div animate={{ rotate:360 }} transition={{ duration:0.9, repeat:Infinity, ease:"linear" }}>
-                        <Loader2 size={14} color="#9ca3af" />
-                      </motion.div>
-                    : <Send size={14} color={canSend ? "#fff" : "#9ca3af"} />
-                  }
-                </motion.button>
-              </form>
-            </div>
-            <p style={{ margin:"7px 0 0", fontSize:"0.65rem", color:"#d1d5db", textAlign:"center" }}>
-              AI may make mistakes · Always verify with vendors
-            </p>
+          {/* ══ Plan panel — scrolls independently ══ */}
+          <div style={{ flex:1, overflowY:"auto", padding:"22px 24px 40px" }}>
+            <AnimatePresence mode="wait">
+              {!hasEvent ? (
+                <motion.div key="empty" initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+                  style={{ height:"100%", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                  <EmptyPlan onPickType={(label) => {
+                    // ✅ Only call sendMessage — it already adds the user message internally
+                    sendMessage(`I want to plan a ${label}`);
+                  }} />
+                </motion.div>
+              ) : (
+                <motion.div key="plan" initial={{ opacity:0, x:14 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.28, ease:[0.22,1,0.36,1] }}>
+                  <EventPlanPanel
+                    eventState={eventState}
+                    vendorResults={vendorResults}
+                    onSelectVendor={handleSelectVendor}
+                    onSearchVendors={handleSearchVendors}
+                    onUnselectVendor={handleUnselectVendor}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </div>
 
-        {/* ══ Plan panel ══ */}
-        <div style={{ flex:1, minWidth:0, padding:"24px 28px 48px", overflowY:"auto" }}>
-          <AnimatePresence mode="wait">
-            {!hasEvent ? (
-              <motion.div key="empty" initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}>
-                <EmptyPlan onPickType={(label) => {
-                  setMessages(prev => [...prev, { id:Date.now(), role:"user", text:`I want to plan a ${label}` }]);
-                  sendMessage(`I want to plan a ${label}`);
-                }} />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="plan"
-                initial={{ opacity:0, x:16 }}
-                animate={{ opacity:1, x:0 }}
-                transition={{ duration:0.3, ease:[0.22,1,0.36,1] }}
-              >
-                <EventPlanPanel
-                  eventState={eventState}
-                  vendorResults={vendorResults}
-                  onSelectVendor={handleSelectVendor}
-                  onSearchVendors={handleSearchVendors}
-                  onUnselectVendor={handleUnselectVendor}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
-
       </div>
-    </div>
+    </>
   );
 }
