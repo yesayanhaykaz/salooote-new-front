@@ -1387,10 +1387,7 @@ export default function HomePageClient({ dict, lang }) {
       {/* 2. Trust bar */}
       <TrustBar dict={dict} />
 
-      {/* 3. Partners */}
-      <PartnersBar lang={lang} />
-
-      {/* 4. Categories carousel */}
+      {/* 3. Categories carousel */}
       <CategoriesCarousel categories={apiCategories} lang={lang} dict={dict} />
 
       {/* ── Event Types Showcase ── */}
@@ -1656,8 +1653,8 @@ export default function HomePageClient({ dict, lang }) {
 
       </div>
 
-      {/* Become a partner form */}
-      <PartnerSection dict={dict} />
+      {/* Partners logo bar */}
+      <PartnersBar lang={lang} />
     </div>
   );
 }
