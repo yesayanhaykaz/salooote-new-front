@@ -135,7 +135,7 @@ function SetupCard({ onCreate }) {
               name="name"
               value={form.name}
               onChange={set}
-              placeholder='e.g. "Our Wedding" or "Anna's Birthday"'
+              placeholder='e.g. "Our Wedding" or "Anna&apos;s Birthday"'
               className={inputCls}
             />
           </div>
