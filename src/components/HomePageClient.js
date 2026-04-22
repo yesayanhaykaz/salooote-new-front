@@ -133,7 +133,7 @@ function HeroSection({ dict, lang }) {
       `}</style>
 
       {/* ── Hero shell ── */}
-      <div className="mx-auto" style={{ maxWidth: 1460, display: "grid", gridTemplateColumns: "1.04fr 1fr", minHeight: 860, borderRadius: "0 0 34px 34px", overflow: "hidden" }}>
+      <div className="mx-auto" style={{ maxWidth: 1460, display: "grid", gridTemplateColumns: "1.04fr 1fr", height: "calc(100svh - 86px)", minHeight: 560, maxHeight: 900, borderRadius: "0 0 34px 34px", overflow: "hidden" }}>
 
         {/* LEFT — pink gradient */}
         <div style={{ position: "relative", padding: "74px 64px 56px", background: "linear-gradient(135deg, #ff73b6 0%, #ec3b90 55%, #d92a7d 100%)", color: "#fff", overflow: "hidden", isolation: "isolate", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
@@ -1325,7 +1325,7 @@ export default function HomePageClient({ dict, lang }) {
               </div>
               {/* Visual */}
               <div style={{ padding: 34, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ width: "100%", minHeight: 480, borderRadius: 24, overflow: "hidden", background: "rgba(255,255,255,.6)", position: "relative", boxShadow: "0 14px 25px rgba(20,15,19,.06)" }}>
+                <div style={{ width: "100%", minHeight: 360, maxHeight: 520, borderRadius: 24, overflow: "hidden", background: "rgba(255,255,255,.6)", position: "relative", boxShadow: "0 14px 25px rgba(20,15,19,.06)" }}>
                   <Image src={s.img} alt={s.title} fill className="object-cover" />
                   {/* Floating card */}
                   <div style={{ position: "absolute", ...s.cardPos, background: "rgba(255,255,255,.94)", borderRadius: 22, border: "1px solid rgba(236,215,227,.96)", boxShadow: "0 16px 30px rgba(44,18,31,.09)", padding: "18px 20px", maxWidth: 300, color: "#38152a" }}>
