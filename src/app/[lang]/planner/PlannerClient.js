@@ -12,7 +12,7 @@ import {
   Cake, Camera, Video, Flower2, Music, Mic, Gem,
   Monitor, Smile, UtensilsCrossed, Briefcase, GraduationCap,
   Baby, AlertTriangle, Settings, Paperclip, Zap, Share2, Bookmark,
-  Lock, LogIn, Cloud, CloudCheck,
+  Lock, LogIn, Cloud, CheckCircle2,
 } from "lucide-react";
 import { getUser, isLoggedIn, plannerAPI } from "@/lib/api";
 
@@ -1106,7 +1106,7 @@ function SaveBadge({ status }) {
   if (status === "idle") return null;
   const config = {
     saving: { icon: <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}><Loader2 size={11} /></motion.div>, text: "Saving…", color: C.text3 },
-    saved:  { icon: <CloudCheck size={11} color={C.green} />, text: "Saved",   color: C.green },
+    saved:  { icon: <CheckCircle2 size={11} color={C.green} />, text: "Saved",   color: C.green },
     error:  { icon: <AlertTriangle size={11} color="#b91c1c" />, text: "Not saved", color: "#b91c1c" },
   }[status];
   if (!config) return null;

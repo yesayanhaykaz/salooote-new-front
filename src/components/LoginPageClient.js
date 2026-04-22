@@ -1,12 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import { authAPI, saveTokens, saveUser } from "@/lib/api";
 
-export default function LoginPageClient({ dict, lang }) {
+// Inner component that reads search params (must be inside Suspense)
+function LoginForm({ dict, lang }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams?.get("redirect") || null;
@@ -188,5 +189,13 @@ export default function LoginPageClient({ dict, lang }) {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function LoginPageClient({ dict, lang }) {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm dict={dict} lang={lang} />
+    </Suspense>
   );
 }
