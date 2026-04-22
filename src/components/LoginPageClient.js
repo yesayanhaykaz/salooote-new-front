@@ -1,13 +1,16 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import { authAPI, saveTokens, saveUser } from "@/lib/api";
 
 export default function LoginPageClient({ dict, lang }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams?.get("redirect") || null;
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +28,8 @@ export default function LoginPageClient({ dict, lang }) {
       const role = res.data.user?.role;
       if (role === "admin")  { router.push("/admin");  return; }
       if (role === "vendor") { router.push("/vendor"); return; }
+      // Honour redirect param (e.g. from planner auth gate)
+      if (redirectTo) { router.push(redirectTo); return; }
       router.push(`/${lang}/account`);
     } catch (err) {
       setError(err.message || "Invalid email or password");

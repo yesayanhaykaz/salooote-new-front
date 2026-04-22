@@ -169,3 +169,18 @@ export const vendorsAPI = {
   getBySlug: (slug) => request(`/vendors/slug/${slug}`),
   getById: (id) => request(`/vendors/${id}`),
 };
+
+// User — Planner sessions
+export const plannerAPI = {
+  list: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return request(`/user/planner/sessions${q ? "?" + q : ""}`);
+  },
+  getById: (id) => request(`/user/planner/sessions/${id}`),
+  create: (data) =>
+    request("/user/planner/sessions", { method: "POST", body: JSON.stringify(data) }),
+  update: (id, data) =>
+    request(`/user/planner/sessions/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  delete: (id) =>
+    request(`/user/planner/sessions/${id}`, { method: "DELETE" }),
+};

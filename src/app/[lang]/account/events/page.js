@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
   Calendar,
   DollarSign,
@@ -25,7 +27,13 @@ import {
   ChevronDown,
   PartyPopper,
   TrendingUp,
+  Bot,
+  ArrowRight,
+  Loader2,
+  MapPin,
+  Check,
 } from "lucide-react";
+import { plannerAPI, isLoggedIn } from "@/lib/api";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -598,9 +606,149 @@ function Dashboard({ plan, onUpdate, onReset }) {
   );
 }
 
+// ─── AI Planner Sessions ─────────────────────────────────────────────────────
+
+const EVENT_COLORS = {
+  christening: "#7c3aed", wedding: "#e11d5c", birthday: "#3b82f6",
+  kids_party: "#10b981", corporate: "#475569", baby_shower: "#0ea5e9",
+  engagement: "#8b5cf6", graduation: "#ea580c", anniversary: "#d97706",
+};
+
+function PlannerSessionCard({ session, lang, onDelete }) {
+  const [deleting, setDeleting] = useState(false);
+  const color = EVENT_COLORS[session.event_type] || "#e11d5c";
+  const eventData = session.event_data || {};
+  const selectedCount = Object.keys(eventData.selected_vendors || {}).length;
+  const totalSearchable = (eventData.services || []).filter(s => s.canSearch).length;
+  const date = session.event_date ? new Date(session.event_date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : null;
+  const pct = totalSearchable > 0 ? Math.round((selectedCount / totalSearchable) * 100) : 0;
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    if (!confirm("Delete this planning session?")) return;
+    setDeleting(true);
+    try {
+      await plannerAPI.delete(session.id);
+      onDelete(session.id);
+    } catch { setDeleting(false); }
+  };
+
+  return (
+    <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
+      <div className="h-1.5 w-full" style={{ background: `linear-gradient(90deg, ${color}, ${color}88)` }} />
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${color}14` }}>
+              <Bot size={16} style={{ color }} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-bold text-surface-900 truncate">{session.title || session.event_type_label || session.event_type}</p>
+              <p className="text-xs text-surface-400 capitalize">{session.event_type?.replace(/_/g, " ")}</p>
+            </div>
+          </div>
+          <button onClick={handleDelete} disabled={deleting}
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-red-50 text-surface-300 hover:text-red-500 cursor-pointer border-none bg-transparent flex-shrink-0">
+            {deleting ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+          </button>
+        </div>
+
+        {/* Meta */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {date && (
+            <span className="inline-flex items-center gap-1 text-xs text-surface-500 bg-surface-50 border border-surface-200 rounded-full px-2.5 py-1">
+              <Calendar size={10} /> {date}
+            </span>
+          )}
+          {session.location && (
+            <span className="inline-flex items-center gap-1 text-xs text-surface-500 bg-surface-50 border border-surface-200 rounded-full px-2.5 py-1">
+              <MapPin size={10} /> {session.location}
+            </span>
+          )}
+          {session.guest_count && (
+            <span className="inline-flex items-center gap-1 text-xs text-surface-500 bg-surface-50 border border-surface-200 rounded-full px-2.5 py-1">
+              <Users size={10} /> {session.guest_count} guests
+            </span>
+          )}
+        </div>
+
+        {/* Progress */}
+        {totalSearchable > 0 && (
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="text-[11px] font-semibold text-surface-400 uppercase tracking-wide">Vendors booked</span>
+              <span className="text-[11px] font-bold text-surface-600">{selectedCount}/{totalSearchable}</span>
+            </div>
+            <div className="h-1.5 bg-surface-100 rounded-full overflow-hidden">
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: pct === 100 ? "#16a34a" : `linear-gradient(90deg, ${color}, ${color}99)` }} />
+            </div>
+          </div>
+        )}
+
+        <Link href={`/${lang}/planner`} className="no-underline">
+          <button className="w-full flex items-center justify-center gap-2 py-2 text-xs font-semibold rounded-xl border cursor-pointer transition-all"
+            style={{ background: `${color}0e`, borderColor: `${color}28`, color }}>
+            Continue Planning <ArrowRight size={11} />
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function PlannerSessionsSection({ lang }) {
+  const [sessions, setSessions] = useState([]);
+  const [loading,  setLoading]  = useState(true);
+
+  useEffect(() => {
+    if (!isLoggedIn()) { setLoading(false); return; }
+    plannerAPI.list({ limit: 20 })
+      .then(res => setSessions(res?.data || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleDelete = (id) => setSessions(prev => prev.filter(s => s.id !== id));
+
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2 py-4 text-surface-400">
+        <Loader2 size={14} className="animate-spin" /> Loading AI sessions…
+      </div>
+    );
+  }
+
+  if (!sessions.length) return null;
+
+  return (
+    <section className="mb-8">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center">
+          <Bot size={14} className="text-white" />
+        </div>
+        <h2 className="text-sm font-bold text-surface-900">AI Planner Sessions</h2>
+        <span className="text-xs text-surface-400 bg-surface-100 rounded-full px-2 py-0.5">{sessions.length}</span>
+        <Link href={`/${lang}/planner`} className="ml-auto no-underline">
+          <span className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">
+            New plan <ArrowRight size={11} />
+          </span>
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sessions.map(s => (
+          <PlannerSessionCard key={s.id} session={s} lang={lang} onDelete={handleDelete} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // ─── Page root ────────────────────────────────────────────────────────────────
 
 export default function AccountEventsPage() {
+  const params = useParams();
+  const lang   = params?.lang || "en";
+
   const [plan,   setPlan]   = useState(null);   // null = not created yet
   const [loaded, setLoaded] = useState(false);  // hydration guard
 
@@ -656,7 +804,13 @@ export default function AccountEventsPage() {
   // Avoid hydration mismatch
   if (!loaded) return null;
 
-  return plan
-    ? <Dashboard plan={plan} onUpdate={handleUpdate} onReset={handleReset} />
-    : <SetupCard onCreate={handleCreate} />;
+  return (
+    <div>
+      <PlannerSessionsSection lang={lang} />
+      {plan
+        ? <Dashboard plan={plan} onUpdate={handleUpdate} onReset={handleReset} />
+        : <SetupCard onCreate={handleCreate} />
+      }
+    </div>
+  );
 }
