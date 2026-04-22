@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
-import { SAMPLE_PRODUCTS as FALLBACK_PRODUCTS, CATEGORIES as FALLBACK_CATEGORIES, EVENT_TYPES, PRODUCT_SECTIONS } from "@/lib/data";
 import { productsAPI, categoriesAPI } from "@/lib/api";
 import {
   Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, Heart,
@@ -12,27 +11,6 @@ import {
 } from "lucide-react";
 
 const catIcons = { Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, Heart };
-const catImages = {
-  Cakes:         "/images/wedding-cake.jpg",
-  Catering:      "/images/catering-setup.jpg",
-  Flowers:       "/images/flowers-roses.jpg",
-  Balloons:      "/images/balloons-blue.jpg",
-  "Party Props": "/images/party-balloons.jpg",
-  "DJ & Music":  "/images/hero-dj.jpg",
-};
-
-const sectionImages = {
-  Cakes:    ["/images/wedding-cake.jpg", "/images/wedding-cake2.jpg", "/images/cupcakes.jpg", "/images/cookies-box.jpg", "/images/cookies-box2.jpg"],
-  Catering: ["/images/catering-setup.jpg", "/images/catering-buffet.jpg", "/images/event-dinner.jpg", "/images/catering-setup.jpg", "/images/catering-buffet.jpg"],
-  Flowers:  ["/images/flowers-roses.jpg", "/images/wedding-arch-beach.jpg", "/images/flowers-roses.jpg", "/images/wedding-ceremony.jpg", "/images/flowers-roses.jpg"],
-};
-
-const eventColors = {
-  Birthdays:          "bg-blue-50 border-blue-100",
-  Weddings:           "bg-pink-50 border-pink-100",
-  "Flowers & Gifts":  "bg-green-50 border-green-100",
-  Parties:            "bg-amber-50 border-amber-100",
-};
 
 export default function ProductsPageClient({ dict, lang }) {
   const [search, setSearch] = useState("");
@@ -250,44 +228,6 @@ export default function ProductsPageClient({ dict, lang }) {
 
       <div className="max-w-container mx-auto px-6 md:px-8">
 
-        {/* ── Event types ── */}
-        <section className="py-10">
-          <p className="text-sm font-semibold text-surface-700 mb-5">Shop by occasion</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {EVENT_TYPES.map((ev, i) => {
-              const Icon = catIcons[ev.icon] || Gift;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                >
-                  <Link href={`/${lang}/category`} className="no-underline">
-                    <motion.div
-                      whileHover={{ y: -4, boxShadow: "0 12px 24px -8px rgba(0,0,0,0.10)" }}
-                      transition={{ duration: 0.2 }}
-                      className={`rounded-xl p-5 border ${eventColors[ev.title] || "bg-brand-50 border-brand-100"} cursor-pointer`}
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <div className="w-8 h-8 rounded-xl bg-white flex items-center justify-center">
-                          <Icon size={16} className="text-brand-600" strokeWidth={1.5} />
-                        </div>
-                        <span className="font-semibold text-sm text-surface-800">{ev.title}</span>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {ev.tags.slice(0, 4).map((tag, j) => (
-                          <span key={j} className="text-xs bg-white/70 text-surface-600 px-2 py-0.5 rounded-full border border-white/60">{tag}</span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
-
         {/* ── Categories ── */}
         <section className="pb-10">
           <div className="flex items-center justify-between mb-5">
@@ -299,7 +239,6 @@ export default function ProductsPageClient({ dict, lang }) {
           <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
             {categories.map((cat, i) => {
               const Icon = catIcons[cat.icon] || Gift;
-              const imgSrc = catImages[cat.name];
               return (
                 <Link key={i} href={`/${lang}/category/${cat.slug}`} className="no-underline flex-shrink-0">
                   <motion.div
@@ -308,10 +247,7 @@ export default function ProductsPageClient({ dict, lang }) {
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     className="w-[124px] h-[156px] rounded-xl overflow-hidden relative border border-surface-200 group cursor-pointer"
                   >
-                    {imgSrc
-                      ? <Image src={imgSrc} alt={cat.name} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                      : <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient}`} />
-                    }
+                    <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient}`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
                     <div className="absolute top-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-xl bg-white/85 flex items-center justify-center">
                       <Icon size={16} className="text-brand-600" strokeWidth={1.5} />
@@ -366,57 +302,43 @@ export default function ProductsPageClient({ dict, lang }) {
           </section>
         )}
 
-        {/* ── Products by section ── */}
-        {!search && minRating === 0 && maxPrice >= 300 && PRODUCT_SECTIONS.map((section, si) => {
-          const Icon = catIcons[section.icon] || Gift;
-          const imgs = sectionImages[section.title] || [];
-          const sectionProducts = rawProducts.slice(0, 5).map((p, i) => ({
-            ...p, id: si * 10 + i + 1, image: imgs[i] || null,
-          }));
-          return (
-            <section key={si} className="pb-16">
-              <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <Icon size={18} className="text-brand-600" strokeWidth={1.5} />
-                    <h2 className="text-2xl font-bold text-surface-900">{section.title}</h2>
-                  </div>
-                  <p className="text-surface-400 text-sm max-w-[340px]">{section.desc}</p>
-                </div>
-                <Link href={`/${lang}/category`} className="text-sm font-medium text-brand-600 no-underline flex items-center gap-1 hover:gap-2 transition-all">
-                  View all <ChevronRight size={14} />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
-                {sectionProducts.map((p, i) => (
+        {/* ── All Products ── */}
+        {!search && minRating === 0 && maxPrice >= 300 && (
+          <section className="pb-16">
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-xl font-bold text-surface-900">
+                All Products
+                {rawProducts.length > 0 && (
+                  <span className="text-surface-400 font-normal text-sm ml-2">({rawProducts.length} items)</span>
+                )}
+              </p>
+            </div>
+            {rawProducts.length > 0 ? (
+              <motion.div
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                {rawProducts.map((p, i) => (
                   <motion.div
-                    key={i}
+                    key={p.id}
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.06, duration: 0.4 }}
+                    transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.4 }}
                   >
                     <ProductCard product={p} lang={lang} />
                   </motion.div>
                 ))}
+              </motion.div>
+            ) : (
+              <div className="py-20 text-center">
+                <p className="text-surface-400 text-sm">No products available yet. Check back soon!</p>
               </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                {sectionProducts.map((p, i) => (
-                  <motion.div
-                    key={i + 5}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06, duration: 0.4 }}
-                  >
-                    <ProductCard product={{ ...p, id: p.id + 5 }} lang={lang} />
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-          );
-        })}
+            )}
+          </section>
+        )}
 
         {/* ── Promo banner ── */}
         <section className="pb-16">

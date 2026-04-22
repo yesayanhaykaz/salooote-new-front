@@ -7,7 +7,7 @@ import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { categoriesAPI, getUser, clearAuth, isLoggedIn } from "@/lib/api";
 import {
-  Search, Heart, ShoppingBag, Menu, X,
+  Search, Heart, ShoppingBag, Bell, Menu, X,
   Cake, UtensilsCrossed, Flower2, PartyPopper,
   Gift, Music, Sparkles, MapPin, Home, User, ChevronRight,
   LogOut, Package, Bookmark, Settings,
@@ -28,6 +28,7 @@ export default function Header({ lang = "en" }) {
   const [navCategories, setNavCategories] = useState(FALLBACK_NAV);
   const [user, setUser]                 = useState(null);
   const [loggedIn, setLoggedIn]         = useState(false);
+  const [unreadCount, setUnreadCount]   = useState(0);
   const dropdownRef = useRef(null);
 
   // Read auth state client-side only
@@ -35,6 +36,30 @@ export default function Header({ lang = "en" }) {
     setLoggedIn(isLoggedIn());
     setUser(getUser());
   }, []);
+
+  // Poll for unread notifications every 30 seconds
+  useEffect(() => {
+    if (!loggedIn) return;
+
+    const fetchUnread = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1"}/user/notifications?limit=50`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = await res.json();
+        if (data?.data) {
+          setUnreadCount(data.data.filter(n => !n.is_read).length);
+        }
+      } catch {}
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 30000);
+    return () => clearInterval(interval);
+  }, [loggedIn]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -122,6 +147,21 @@ export default function Header({ lang = "en" }) {
             <button className="w-9 h-9 rounded-xl items-center justify-center hover:bg-surface-100 transition-colors hidden md:flex">
               <Heart size={17} className="text-surface-500" />
             </button>
+
+            {/* Notifications bell — desktop, logged-in only */}
+            {loggedIn && (
+              <Link
+                href={`/${lang}/account/notifications`}
+                className="w-9 h-9 rounded-xl items-center justify-center hover:bg-surface-100 transition-colors relative hidden md:flex"
+              >
+                <Bell size={17} className="text-surface-500" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-brand-600 text-white text-[10px] min-w-[16px] h-[16px] rounded-full flex items-center justify-center font-bold leading-none">
+                    {unreadCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* Cart */}
             <Link href={`/${lang}/cart`} className="w-9 h-9 rounded-xl flex items-center justify-center hover:bg-surface-100 transition-colors relative">

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
-import { LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from "@/lib/getDictionary";
+import { LOCALES, LOCALE_NAMES } from "@/lib/getDictionary";
 
 export default function LanguageSwitcher({ currentLang }) {
   const [open, setOpen] = useState(false);
@@ -29,7 +29,6 @@ export default function LanguageSwitcher({ currentLang }) {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-surface-200 bg-white text-sm font-medium text-surface-700 hover:border-brand-300 hover:text-brand-600 transition-all cursor-pointer"
       >
-        <span>{LOCALE_FLAGS[currentLang]}</span>
         <span className="uppercase text-xs font-bold">{currentLang}</span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
@@ -63,7 +62,6 @@ export default function LanguageSwitcher({ currentLang }) {
                       : "bg-white text-surface-700 hover:bg-surface-50"
                   }`}
                 >
-                  <span>{LOCALE_FLAGS[locale]}</span>
                   <span>{LOCALE_NAMES[locale]}</span>
                   {locale === currentLang && (
                     <Check size={14} className="ml-auto text-brand-500" />
