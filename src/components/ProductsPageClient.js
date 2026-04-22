@@ -8,9 +8,28 @@ import { productsAPI, categoriesAPI } from "@/lib/api";
 import {
   Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, Heart,
   Search, SlidersHorizontal, ChevronRight, X, Star,
+  Camera, Mic2, Utensils, MapPin, Sparkles,
+  ShoppingBag as Bag,
 } from "lucide-react";
 
-const catIcons = { Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, Heart };
+const catIcons = {
+  Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, Heart,
+  Camera, Mic2, Utensils, MapPin, Sparkles, Star, Bag,
+};
+
+const slugIcon = (slug = "") => {
+  const s = slug.toLowerCase();
+  if (s.includes("cake") || s.includes("pastry") || s.includes("dessert")) return Cake;
+  if (s.includes("cater") || s.includes("food") || s.includes("buffet")) return UtensilsCrossed;
+  if (s.includes("flower") || s.includes("floral") || s.includes("bouquet")) return Flower2;
+  if (s.includes("balloon") || s.includes("party") || s.includes("decor")) return PartyPopper;
+  if (s.includes("music") || s.includes("dj") || s.includes("band")) return Music;
+  if (s.includes("photo") || s.includes("camera") || s.includes("video")) return Camera;
+  if (s.includes("venue") || s.includes("hall") || s.includes("location")) return MapPin;
+  if (s.includes("gift") || s.includes("favor")) return Gift;
+  if (s.includes("makeup") || s.includes("beauty") || s.includes("hair")) return Sparkles;
+  return Gift;
+};
 
 export default function ProductsPageClient({ dict, lang }) {
   const [search, setSearch] = useState("");
@@ -59,7 +78,8 @@ export default function ProductsPageClient({ dict, lang }) {
       setCategories((res?.data || []).map((c, i) => ({
         name: c.name,
         slug: c.slug,
-        icon: "Gift",
+        icon: c.icon || null,
+        emoji: c.emoji || null,
         gradient: gradients[i % gradients.length],
         count: c.product_count || 0,
       })));
@@ -238,7 +258,7 @@ export default function ProductsPageClient({ dict, lang }) {
           </div>
           <div className="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
             {categories.map((cat, i) => {
-              const Icon = catIcons[cat.icon] || Gift;
+              const Icon = catIcons[cat.icon] || catIcons[cat.emoji] || slugIcon(cat.slug);
               return (
                 <Link key={i} href={`/${lang}/category/${cat.slug}`} className="no-underline flex-shrink-0">
                   <motion.div

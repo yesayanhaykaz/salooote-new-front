@@ -11,10 +11,27 @@ import {
   Cake, UtensilsCrossed, Flower2, PartyPopper,
   Gift, Music, Sparkles, MapPin, Home, User, ChevronRight,
   LogOut, Package, Bookmark, Settings,
+  Camera, Mic2, Utensils, Star,
+  ShoppingBag as Bag,
 } from "lucide-react";
 
 const ICON_MAP = {
   Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music, MapPin, Sparkles,
+  Camera, Mic2, Utensils, Heart, Star, Bag,
+};
+
+const slugIcon = (slug = "") => {
+  const s = slug.toLowerCase();
+  if (s.includes("cake") || s.includes("pastry") || s.includes("dessert")) return Cake;
+  if (s.includes("cater") || s.includes("food") || s.includes("buffet")) return UtensilsCrossed;
+  if (s.includes("flower") || s.includes("floral") || s.includes("bouquet")) return Flower2;
+  if (s.includes("balloon") || s.includes("party") || s.includes("decor")) return PartyPopper;
+  if (s.includes("music") || s.includes("dj") || s.includes("band")) return Music;
+  if (s.includes("photo") || s.includes("camera") || s.includes("video")) return Camera;
+  if (s.includes("venue") || s.includes("hall") || s.includes("location")) return MapPin;
+  if (s.includes("gift") || s.includes("favor")) return Gift;
+  if (s.includes("makeup") || s.includes("beauty") || s.includes("hair")) return Sparkles;
+  return Gift;
 };
 
 const FALLBACK_NAV = [];
@@ -78,7 +95,7 @@ export default function Header({ lang = "en" }) {
         setNavCategories((res?.data || []).slice(0, 8).map(c => ({
           label: c.name,
           slug: c.slug,
-          icon: ICON_MAP[c.icon] || Gift,
+          icon: ICON_MAP[c.icon] || ICON_MAP[c.emoji] || slugIcon(c.slug),
         })));
       })
       .catch(() => {});

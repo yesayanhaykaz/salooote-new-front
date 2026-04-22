@@ -16,10 +16,28 @@ import {
   ArrowRight, Star, Quote, MapPin, Calendar, Sparkles,
   MessageCircle, ChevronRight, ChevronLeft, Heart, Send, Play,
   CheckCircle2, Users, Package, Smile, Shield, Truck, Zap,
-  Search, Clock, Award,
+  Search, Clock, Award, Camera, Mic2, Utensils,
+  ShoppingBag as Bag,
 } from "lucide-react";
 
-const catIcons  = { Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music };
+const catIcons = {
+  Cake, UtensilsCrossed, Flower2, PartyPopper, Gift, Music,
+  Camera, Mic2, Utensils, MapPin, Sparkles, Heart, Star, Bag,
+};
+
+const slugIcon = (slug = "") => {
+  const s = slug.toLowerCase();
+  if (s.includes("cake") || s.includes("pastry") || s.includes("dessert")) return Cake;
+  if (s.includes("cater") || s.includes("food") || s.includes("buffet")) return UtensilsCrossed;
+  if (s.includes("flower") || s.includes("floral") || s.includes("bouquet")) return Flower2;
+  if (s.includes("balloon") || s.includes("party") || s.includes("decor")) return PartyPopper;
+  if (s.includes("music") || s.includes("dj") || s.includes("band")) return Music;
+  if (s.includes("photo") || s.includes("camera") || s.includes("video")) return Camera;
+  if (s.includes("venue") || s.includes("hall") || s.includes("location")) return MapPin;
+  if (s.includes("gift") || s.includes("favor")) return Gift;
+  if (s.includes("makeup") || s.includes("beauty") || s.includes("hair")) return Sparkles;
+  return Gift;
+};
 const PORTRAIT_GRADIENTS = [
   ["#FF6B9D", "#C84B8F"],
   ["#F7971E", "#FFD200"],
@@ -385,7 +403,10 @@ function CategoryPortraitCard({ cat, index, lang }) {
           />
           <div className="absolute top-0 left-0 right-0 flex flex-col items-center pt-8">
             <div className="w-14 h-14 rounded-2xl bg-white/25 backdrop-blur-sm flex items-center justify-center">
-              <Gift size={26} className="text-white" strokeWidth={1.5} />
+              {(() => {
+                const Icon = (cat.iconName && catIcons[cat.iconName]) || slugIcon(cat.slug);
+                return <Icon size={26} className="text-white" strokeWidth={1.5} />;
+              })()}
             </div>
           </div>
           <div className="absolute bottom-0 left-0 right-0 px-3 pb-4">
@@ -1095,7 +1116,8 @@ export default function HomePageClient({ dict, lang }) {
           "from-green-400 via-emerald-400 to-teal-400",
         ];
         setApiCategories((res?.data || []).map((c, i) => ({
-          name: c.name, slug: c.slug, icon: c.icon || "Gift",
+          name: c.name, slug: c.slug,
+          iconName: catIcons[c.emoji] ? c.emoji : null,
           color: c.color || null,
           gradient: gradients[i % gradients.length],
           count: c.product_count || 0,
@@ -1113,6 +1135,120 @@ export default function HomePageClient({ dict, lang }) {
 
       {/* 4. Categories carousel */}
       <CategoriesCarousel categories={apiCategories} lang={lang} dict={dict} />
+
+      {/* ── Services Showcase ── */}
+      <section className="py-24 bg-white">
+        <div className="max-w-container mx-auto px-6 md:px-8">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.15em] mb-3">Everything You Need</p>
+            <h2 className="font-black text-surface-900 mb-4" style={{ fontSize: "clamp(28px, 3.5vw, 44px)" }}>
+              One place for every<br className="hidden md:block" /> part of your event
+            </h2>
+            <p className="text-surface-500 text-base max-w-[480px] mx-auto">
+              From the cake to the DJ — discover trusted Armenian vendors for every occasion.
+            </p>
+          </ScrollReveal>
+
+          {/* Bento grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
+            {[
+              {
+                title: "Wedding Cakes",
+                desc: "Artisan creations for your big day",
+                icon: Cake,
+                gradient: "from-pink-500 via-rose-500 to-red-400",
+                span: "col-span-2 row-span-2",
+                href: `/${lang}/category/cakes`,
+                size: 48,
+              },
+              {
+                title: "Flowers & Decor",
+                desc: "Blooms that tell your story",
+                icon: Flower2,
+                gradient: "from-green-400 via-emerald-500 to-teal-500",
+                span: "col-span-1 row-span-1",
+                href: `/${lang}/category/flowers`,
+                size: 28,
+              },
+              {
+                title: "Catering",
+                desc: "Feasts to remember",
+                icon: UtensilsCrossed,
+                gradient: "from-orange-400 via-amber-500 to-yellow-400",
+                span: "col-span-1 row-span-1",
+                href: `/${lang}/category/catering`,
+                size: 28,
+              },
+              {
+                title: "DJ & Music",
+                desc: "Set the perfect mood",
+                icon: Music,
+                gradient: "from-violet-500 via-purple-500 to-indigo-500",
+                span: "col-span-1 row-span-2",
+                href: `/${lang}/category/music`,
+                size: 36,
+              },
+              {
+                title: "Balloons & Party",
+                desc: "Pop, sparkle & celebrate",
+                icon: PartyPopper,
+                gradient: "from-blue-400 via-cyan-500 to-sky-400",
+                span: "col-span-1 row-span-1",
+                href: `/${lang}/category/balloons`,
+                size: 28,
+              },
+              {
+                title: "Gifts & Favors",
+                desc: "Leave a lasting impression",
+                icon: Gift,
+                gradient: "from-fuchsia-500 via-pink-500 to-rose-400",
+                span: "col-span-1 row-span-1",
+                href: `/${lang}/products`,
+                size: 28,
+              },
+            ].map(({ title, desc, icon: Icon, gradient, span, href, size }, i) => (
+              <motion.div
+                key={i}
+                className={`${span} rounded-2xl overflow-hidden relative cursor-pointer group`}
+                whileHover={{ scale: 1.02, zIndex: 10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                style={{ transitionProperty: "transform" }}
+              >
+                <Link href={href} className="absolute inset-0 no-underline">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
+                  {/* Dot pattern overlay */}
+                  <div className="absolute inset-0 opacity-10"
+                    style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "20px 20px" }}
+                  />
+                  {/* Gloss */}
+                  <div className="absolute inset-0"
+                    style={{ background: "linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%)" }}
+                  />
+                  {/* Content */}
+                  <div className="absolute inset-0 p-5 flex flex-col justify-between">
+                    <div className="w-fit rounded-2xl bg-white/20 backdrop-blur-sm p-2.5">
+                      <Icon size={size} className="text-white" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold mb-1" style={{ fontSize: size > 30 ? "1.35rem" : "1rem" }}>
+                        {title}
+                      </h3>
+                      <p className="text-white/80 text-sm">{desc}</p>
+                    </div>
+                  </div>
+                  {/* Hover arrow */}
+                  <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ArrowRight size={14} className="text-white" />
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* 5. Featured products */}
       <FeaturedProducts dict={dict} lang={lang} apiProducts={apiProducts} />
