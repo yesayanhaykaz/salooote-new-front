@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  motion, AnimatePresence, useScroll, useTransform,
+  motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring,
 } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/ScrollReveal";
@@ -84,173 +84,281 @@ const COL3 = [
   { src: "/images/catering-buffet.jpg",    h: "mid"   },
 ];
 
-const cardH = { short: "190px", mid: "280px", tall: "470px", label: "104px" };
+const cardH = { short: "150px", mid: "230px", tall: "390px", label: "82px" };
 
 function MosaicCard({ card }) {
   if (card.label) {
     return (
-      <div style={{ minHeight: cardH.label, borderRadius: 28, background: "#ffc93f", color: "#671687", fontWeight: 900, display: "flex", alignItems: "center", padding: "22px", fontSize: "1.1rem", lineHeight: 1.3 }}>
-        {card.label}
+      <div style={{
+        minHeight: cardH.label, borderRadius: 12,
+        background: "rgba(255,255,255,0.06)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "14px 16px",
+        backdropFilter: "blur(8px)",
+      }}>
+        <span style={{
+          width: 26, height: 26, borderRadius: 7, flexShrink: 0,
+          background: "linear-gradient(135deg, #7c3aed, #e11d5c)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: "0.72rem",
+        }}>✦</span>
+        <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "rgba(255,255,255,0.78)", lineHeight: 1.35 }}>
+          {card.label}
+        </span>
       </div>
     );
   }
   if (card.confetti) {
     return (
-      <div style={{ minHeight: cardH.short, borderRadius: 28, background: "linear-gradient(180deg,#ffd72d,#ffca17)", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 10% 18%, #fff 0 3px, transparent 4px), radial-gradient(circle at 28% 32%, #ff7bb4 0 4px, transparent 5px), radial-gradient(circle at 54% 22%, #8e3cff 0 3px, transparent 4px), radial-gradient(circle at 72% 44%, #fff 0 4px, transparent 5px), radial-gradient(circle at 82% 18%, #ff8d38 0 4px, transparent 5px), radial-gradient(circle at 38% 68%, #fff 0 3px, transparent 4px)", opacity: 0.75 }} />
+      <div style={{
+        minHeight: cardH.short, borderRadius: 12,
+        background: "linear-gradient(135deg, #1e1035 0%, #2d1b5e 50%, #1a0f3d 100%)",
+        position: "relative", overflow: "hidden",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        border: "1px solid rgba(124,58,237,0.22)",
+      }}>
+        <span style={{ fontSize: "2rem", position: "relative", zIndex: 1 }}>🎊</span>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle at 20% 30%, rgba(124,58,237,0.35) 0 3px, transparent 4px), radial-gradient(circle at 70% 20%, rgba(225,29,92,0.28) 0 3px, transparent 4px), radial-gradient(circle at 50% 72%, rgba(251,191,36,0.2) 0 2px, transparent 3px), radial-gradient(circle at 85% 65%, rgba(255,255,255,0.12) 0 2px, transparent 3px)" }} />
       </div>
     );
   }
   return (
-    <div style={{ minHeight: cardH[card.h] || 190, borderRadius: 28, overflow: "hidden", background: "#fff", boxShadow: "0 10px 18px rgba(36,22,29,0.06)" }}>
-      <Image src={card.src} alt="" fill={false} width={400} height={parseInt(cardH[card.h]) || 190} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+    <div style={{ minHeight: cardH[card.h] || 150, borderRadius: 12, overflow: "hidden", background: "#e8e0f0" }}>
+      <Image src={card.src} alt="" fill={false} width={400} height={parseInt(cardH[card.h]) || 150}
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
     </div>
   );
 }
 
-function HeroSection({ dict, lang }) {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchVal,  setSearchVal]  = useState("");
-  const router = useRef(null);
+/* ── Primary white button with shimmer ── */
+function HeroPrimaryBtn({ href, children }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <Link href={href} className="no-underline">
+      <motion.span
+        onHoverStart={() => setHov(true)}
+        onHoverEnd={() => setHov(false)}
+        whileHover={{ scale: 1.04, y: -3 }}
+        whileTap={{ scale: 0.97, y: 0 }}
+        transition={{ type: "spring", stiffness: 380, damping: 22 }}
+        style={{
+          position: "relative", overflow: "hidden",
+          display: "inline-flex", alignItems: "center", gap: 8,
+          height: 52, padding: "0 28px", borderRadius: 12,
+          background: "#e11d5c", color: "#fff",
+          fontWeight: 700, fontSize: "0.9rem", cursor: "pointer",
+          boxShadow: hov ? "0 16px 40px rgba(225,29,92,0.38)" : "0 4px 20px rgba(225,29,92,0.2)",
+          transition: "box-shadow 0.3s",
+        }}
+      >
+        <AnimatePresence>
+          {hov && (
+            <motion.span key="sh"
+              initial={{ x: "-120%", skewX: "-18deg" }}
+              animate={{ x: "260%" }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] }}
+              style={{ position: "absolute", top: 0, bottom: 0, width: "45%", background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent)", pointerEvents: "none" }}
+            />
+          )}
+        </AnimatePresence>
+        <span style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 7 }}>
+          {children}
+          <motion.span animate={{ x: hov ? 4 : 0 }} transition={{ type: "spring", stiffness: 350, damping: 20 }} style={{ display: "flex" }}>
+            <ArrowRight size={15} strokeWidth={2.5} />
+          </motion.span>
+        </span>
+      </motion.span>
+    </Link>
+  );
+}
 
-  const CATS = [
-    { icon: "🎈", name: "Decor & balloons", desc: "Balloon styling, themed backdrops, welcome zones, garlands and custom setups." },
-    { icon: "🎂", name: "Cakes & desserts",  desc: "Birthday cakes, wedding cakes, dessert tables, cupcakes and cookies." },
-    { icon: "📸", name: "Photo & video",      desc: "Photographers, videographers, reels creators and wedding storytelling." },
-    { icon: "🎁", name: "Event services",     desc: "Gifts, flowers, rentals, entertainment, hosts and celebration extras." },
-  ];
+/* ── Ghost button with frosted fill ── */
+function HeroGhostBtn({ href, children }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <Link href={href} className="no-underline">
+      <motion.span
+        onHoverStart={() => setHov(true)}
+        onHoverEnd={() => setHov(false)}
+        whileHover={{ scale: 1.03, y: -3 }}
+        whileTap={{ scale: 0.97, y: 0 }}
+        transition={{ type: "spring", stiffness: 380, damping: 22 }}
+        style={{
+          position: "relative", overflow: "hidden",
+          display: "inline-flex", alignItems: "center", gap: 7,
+          height: 52, padding: "0 24px", borderRadius: 12,
+          border: `1px solid ${hov ? "rgba(225,29,92,0.45)" : "rgba(15,23,42,0.18)"}`,
+          color: hov ? "#e11d5c" : "rgba(15,23,42,0.6)",
+          fontWeight: 600, fontSize: "0.9rem",
+          cursor: "pointer", background: "transparent",
+          transition: "color 0.2s, border-color 0.2s",
+        }}
+      >
+        <motion.span
+          animate={{ scaleX: hov ? 1 : 0, opacity: hov ? 1 : 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 26 }}
+          style={{ position: "absolute", inset: 0, background: "rgba(225,29,92,0.05)", transformOrigin: "left center", pointerEvents: "none" }}
+        />
+        <span style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", gap: 7 }}>
+          {children}
+          <motion.span animate={{ x: hov ? 3 : 0 }} transition={{ type: "spring", stiffness: 350, damping: 20 }} style={{ display: "flex" }}>
+            <ChevronRight size={16} strokeWidth={2} />
+          </motion.span>
+        </span>
+      </motion.span>
+    </Link>
+  );
+}
+
+function HeroSection({ dict, lang }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const orbX = useSpring(mouseX, { stiffness: 40, damping: 25 });
+  const orbY = useSpring(mouseY, { stiffness: 40, damping: 25 });
+
+  const handleMouseMove = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - 240);
+    mouseY.set(e.clientY - rect.top - 240);
+  }, [mouseX, mouseY]);
+
 
   return (
-    <section style={{ paddingTop: 28, background: "#f6f3f6" }}>
+    <section style={{ background: "#fff" }}>
       <style>{`
         @keyframes mosaic-down { from { transform: translateY(-28%); } to { transform: translateY(0%); } }
         @keyframes mosaic-up   { from { transform: translateY(0%);  } to { transform: translateY(-28%); } }
-        .mosaic-track-down { animation: mosaic-down 22s linear infinite; }
-        .mosaic-track-up   { animation: mosaic-up   22s linear infinite; }
+        .mosaic-track-down { animation: mosaic-down 30s linear infinite; }
+        .mosaic-track-up   { animation: mosaic-up   30s linear infinite; }
         @media (prefers-reduced-motion: reduce) {
           .mosaic-track-down, .mosaic-track-up { animation: none !important; }
         }
+        .hero-grad-text {
+          background: linear-gradient(125deg, #7c3aed 0%, #c026d3 45%, #e11d5c 85%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
       `}</style>
 
-      {/* ── Hero shell ── */}
-      <div className="mx-auto" style={{ maxWidth: 1460, display: "grid", gridTemplateColumns: "1.04fr 1fr", height: "calc(100svh - 86px)", minHeight: 560, maxHeight: 900, borderRadius: "0 0 34px 34px", overflow: "hidden" }}>
+      <div
+        onMouseMove={handleMouseMove}
+        style={{
+          maxWidth: 1460, margin: "0 auto",
+          display: "grid", gridTemplateColumns: "1.05fr 0.95fr",
+          height: "calc(100svh - 86px)", minHeight: 560, maxHeight: 900,
+          borderRadius: "0 0 28px 28px", overflow: "hidden",
+        }}
+      >
+        {/* ════ LEFT ════ */}
+        <div style={{
+          position: "relative", overflow: "hidden",
+          background: "#fff", color: "#0f172a",
+          display: "flex", flexDirection: "column",
+          justifyContent: "center", padding: "0 72px", gap: 0,
+        }}>
+          {/* Cursor-following violet orb */}
+          <motion.div style={{
+            position: "absolute", width: 480, height: 480, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(124,58,237,0.1) 0%, rgba(124,58,237,0.03) 45%, transparent 70%)",
+            pointerEvents: "none", x: orbX, y: orbY, filter: "blur(20px)",
+          }} />
+          {/* Static rose orb — bottom right */}
+          <div style={{
+            position: "absolute", width: 360, height: 360, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(225,29,92,0.08) 0%, transparent 70%)",
+            bottom: -80, right: -20, filter: "blur(55px)", pointerEvents: "none",
+          }} />
+          {/* Top-right teal accent */}
+          <div style={{
+            position: "absolute", width: 200, height: 200, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)",
+            top: 30, right: 60, filter: "blur(40px)", pointerEvents: "none",
+          }} />
 
-        {/* LEFT — pink gradient */}
-        <div style={{ position: "relative", padding: "74px 64px 56px", background: "linear-gradient(135deg, #ff73b6 0%, #ec3b90 55%, #d92a7d 100%)", color: "#fff", overflow: "hidden", isolation: "isolate", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          {/* burst shapes */}
-          {[
-            { w: 280, h: 260, l: -20, t: 0,   r: "rotate(-18deg)" },
-            { w: 240, h: 300, r: -10, t: 12,  r2: "rotate(28deg)"  },
-            { w: 360, h: 200, l: -40, b: 70,  r2: "rotate(-74deg)" },
-            { w: 260, h: 220, r2: -10, b: 36, r3: "rotate(98deg)"  },
-          ].map((b, i) => (
-            <span key={i} style={{ position: "absolute", background: "rgba(255,255,255,.12)", clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)", transformOrigin: "center bottom", width: b.w, height: b.h, left: b.l, right: b.r, top: b.t, bottom: b.b, transform: b.r || b.r2 || b.r3, pointerEvents: "none" }} />
-          ))}
+          {/* ── Content ── */}
+          <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", gap: 28 }}>
 
-          {/* Copy */}
-          <div style={{ position: "relative", zIndex: 2, maxWidth: 580 }}>
+            {/* Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              style={{ margin: "0 0 20px", fontSize: "clamp(3.2rem, 5.5vw, 5.8rem)", lineHeight: 0.92, letterSpacing: "-0.07em", fontWeight: 900 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                margin: 0,
+                fontSize: "clamp(3rem, 5.6vw, 6.4rem)",
+                lineHeight: 0.92, letterSpacing: "-0.07em", fontWeight: 900,
+              }}
             >
-              {dict.hero.title1} {dict.hero.titleAccent} {dict.hero.title2}
+              {dict.hero.title1}{" "}
+              <span className="hero-grad-text">{dict.hero.titleAccent}</span>
+              <br />{dict.hero.title2}
             </motion.h1>
+
+            {/* Subtitle */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              style={{ margin: "0 0 36px", fontSize: "1.12rem", lineHeight: 1.7, color: "rgba(255,255,255,.88)", maxWidth: "30ch" }}
+              transition={{ duration: 0.55, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                margin: 0, fontSize: "1.1rem", lineHeight: 1.7,
+                color: "rgba(15,23,42,0.48)", maxWidth: "34ch", fontWeight: 400,
+              }}
             >
               {dict.hero.subtitle}
             </motion.p>
-          </div>
 
-          {/* Search bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            style={{ position: "relative", zIndex: 4, maxWidth: 640 }}
-          >
-            <div
-              onClick={() => setSearchOpen(true)}
-              style={{ width: "100%", minHeight: 82, borderRadius: 22, background: "rgba(255,255,255,.98)", border: "1px solid rgba(255,255,255,.55)", display: "flex", alignItems: "center", gap: 14, padding: "0 24px", color: "#958896", fontSize: "1.1rem", boxShadow: "0 16px 28px rgba(49,13,29,0.12)", cursor: "text" }}
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              style={{ display: "flex", gap: 12, alignItems: "center" }}
             >
-              <Search size={22} style={{ color: "#b1458f", flexShrink: 0 }} />
-              <input
-                value={searchVal}
-                onChange={e => setSearchVal(e.target.value)}
-                onFocus={() => setSearchOpen(true)}
-                placeholder={dict.hero.subtitle ? "Find event services, vendors, or categories…" : "Search…"}
-                style={{ border: "none", outline: "none", background: "transparent", width: "100%", fontSize: "1rem", color: "#38152a", fontFamily: "inherit" }}
-              />
-            </div>
+              <HeroPrimaryBtn href={`/${lang}/products`}>Browse Vendors</HeroPrimaryBtn>
+              <HeroGhostBtn href={`/${lang}/events/wedding`}>Plan an Event</HeroGhostBtn>
+            </motion.div>
 
-            {/* Dropdown panel */}
-            <AnimatePresence>
-              {searchOpen && (
-                <>
-                  <div style={{ position: "fixed", inset: 0, zIndex: 3 }} onClick={() => setSearchOpen(false)} />
-                  <motion.div
-                    initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                    transition={{ duration: 0.2 }}
-                    style={{ position: "absolute", left: 0, top: "calc(100% + 8px)", width: "100%", background: "rgba(255,255,255,.98)", border: "1px solid rgba(236,215,227,.95)", borderRadius: 24, padding: "24px 28px 20px", boxShadow: "0 30px 55px rgba(46,14,29,.16)", zIndex: 50, color: "#38152a" }}
-                  >
-                    <p style={{ fontSize: "1.6rem", fontWeight: 900, letterSpacing: "-0.05em", marginBottom: 18, color: "#5a136f" }}>Browse categories</p>
-                    <div style={{ display: "grid", gap: 14 }}>
-                      {CATS.map((cat, i) => (
-                        <Link key={i} href={`/${lang}/products?search=${encodeURIComponent(cat.name)}`} onClick={() => setSearchOpen(false)} className="no-underline" style={{ display: "grid", gridTemplateColumns: "96px 1fr", gap: 16, alignItems: "center", borderRadius: 18, padding: "2px 0", transition: "transform .2s", cursor: "pointer" }}
-                          onMouseEnter={e => e.currentTarget.style.transform = "translateX(4px)"}
-                          onMouseLeave={e => e.currentTarget.style.transform = ""}
-                        >
-                          <div style={{ minHeight: 96, borderRadius: 18, background: "#f7eef8", display: "grid", placeItems: "center", fontSize: "1.9rem" }}>{cat.icon}</div>
-                          <div>
-                            <p style={{ margin: "0 0 5px", fontSize: "1.15rem", fontWeight: 700, color: "#5a136f", letterSpacing: "-0.03em" }}>{cat.name}</p>
-                            <p style={{ margin: 0, color: "#7d7480", lineHeight: 1.45, fontSize: "0.92rem" }}>{cat.desc}</p>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.55 }}
-            style={{ position: "relative", zIndex: 2, display: "flex", gap: 32, marginTop: 28, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,.22)" }}
-          >
-            {[
-              { n: "15K+", l: dict.hero.stat1Label },
-              { n: "850+", l: dict.hero.stat2Label },
-              { n: "4.9/5", l: dict.hero.stat3Label },
-            ].map((s, i) => (
-              <div key={i}>
-                <p style={{ margin: 0, fontWeight: 900, fontSize: "1.5rem", color: "#fff", letterSpacing: "-0.04em" }}>{s.n}</p>
-                <p style={{ margin: "4px 0 0", fontSize: "0.72rem", color: "rgba(255,255,255,.6)", textTransform: "uppercase", letterSpacing: "0.1em" }}>{s.l}</p>
-              </div>
-            ))}
-          </motion.div>
+            {/* Minimal stat row */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.42, duration: 0.6 }}
+              style={{
+                display: "flex", gap: 32, paddingTop: 8,
+                borderTop: "1px solid rgba(15,23,42,0.08)",
+              }}
+            >
+              {[
+                { n: "15,000+", l: "Events planned" },
+                { n: "850+",    l: "Verified vendors" },
+                { n: "4.9",     l: "Average rating" },
+              ].map((s, i) => (
+                <div key={i}>
+                  <p style={{ margin: 0, fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.04em", lineHeight: 1 }}>{s.n}</p>
+                  <p style={{ margin: "5px 0 0", fontSize: "0.72rem", color: "rgba(15,23,42,0.38)", fontWeight: 400, letterSpacing: "0.04em" }}>{s.l}</p>
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
 
-        {/* RIGHT — animated image mosaic */}
-        <div style={{ background: "#dcecf7", overflow: "hidden", padding: "28px 30px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 24, height: "100%" }}>
+        {/* ════ RIGHT — mosaic ════ */}
+        <div style={{ background: "#f5f0fa", overflow: "hidden", padding: "16px 16px 16px 10px", position: "relative" }}>
+          {/* Top & bottom vignette */}
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 90, background: "linear-gradient(to bottom, #f5f0fa, transparent)", zIndex: 10, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 90, background: "linear-gradient(to top, #f5f0fa, transparent)", zIndex: 10, pointerEvents: "none" }} />
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, height: "100%" }}>
             {[
               { cards: COL1, dir: "down" },
               { cards: COL2, dir: "up"   },
               { cards: COL3, dir: "down" },
             ].map(({ cards, dir }, ci) => (
-              <div key={ci} style={{ position: "relative", overflow: "hidden", borderRadius: 24 }}>
-                <div className={`mosaic-track-${dir}`} style={{ display: "grid", gap: 22, willChange: "transform" }}>
+              <div key={ci} style={{ position: "relative", overflow: "hidden", borderRadius: 14 }}>
+                <div className={`mosaic-track-${dir}`} style={{ display: "grid", gap: 8, willChange: "transform" }}>
                   {[...cards, ...cards].map((card, i) => <MosaicCard key={i} card={card} />)}
                 </div>
               </div>
@@ -748,79 +856,148 @@ function HowItWorksSection({ lang }) {
     {
       num: "01",
       title: "Browse & Discover",
-      desc: "Explore hundreds of verified vendors across every event category — from cakes and flowers to DJ services and full catering.",
+      desc: "Explore hundreds of verified vendors across every event category — cakes, flowers, DJs, catering and more.",
       icon: Search,
+      color: "#7c3aed",
+      light: "#f5f3ff",
     },
     {
       num: "02",
       title: "Compare & Choose",
-      desc: "Read real reviews, compare portfolios and pricing, and find the perfect match for your event size and style.",
+      desc: "Read real reviews, compare portfolios and pricing, and find the perfect match for your event.",
       icon: Star,
+      color: "#db2777",
+      light: "#fdf2f8",
     },
     {
       num: "03",
       title: "Contact & Book",
-      desc: "Reach vendors directly through the platform. Request quotes, confirm details, and lock in your booking with confidence.",
+      desc: "Reach vendors directly, request quotes, confirm details and lock in your booking with confidence.",
       icon: MessageCircle,
+      color: "#0891b2",
+      light: "#ecfeff",
     },
     {
       num: "04",
       title: "Celebrate",
-      desc: "Relax and enjoy your event knowing every detail is handled by trusted professionals who care about your celebration.",
+      desc: "Relax and enjoy — every detail is handled by trusted professionals who care about your celebration.",
       icon: Sparkles,
+      color: "#059669",
+      light: "#ecfdf5",
     },
   ];
 
   return (
-    <section className="py-28 overflow-hidden" style={{ background: "linear-gradient(160deg, #fdf2f8 0%, #f8f4ff 100%)" }}>
+    <section className="py-28 bg-white">
       <div className="max-w-container mx-auto px-6 md:px-8">
+
+        {/* Header */}
         <ScrollReveal className="text-center mb-20">
-          <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.15em] mb-3">How it works</p>
-          <h2 className="font-black text-surface-900 tracking-tight" style={{ fontSize: "clamp(30px, 4vw, 52px)" }}>
+          <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.18em] mb-4">How it works</p>
+          <h2 className="font-black text-surface-900 tracking-tight mb-4" style={{ fontSize: "clamp(28px, 4vw, 52px)" }}>
             Your event, in four steps
           </h2>
-          <p className="text-surface-400 mt-4 text-lg max-w-[440px] mx-auto">Simple, transparent, and designed around you.</p>
+          <p className="text-surface-400 text-base max-w-[400px] mx-auto leading-relaxed">
+            Simple, transparent, and designed around you.
+          </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map(({ num, title, desc, icon: Icon }, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.12, duration: 0.55 }}
-              whileHover={{ y: -6, boxShadow: "0 20px 48px -12px rgba(225,29,92,0.14)" }}
-              className="bg-white rounded-2xl p-8 border border-surface-100 relative overflow-hidden"
-            >
-              {/* Big number background */}
-              <div
-                className="absolute top-4 right-4 font-black leading-none pointer-events-none select-none"
-                style={{ fontSize: "80px", color: "rgba(225,29,92,0.04)" }}
+        {/* Steps grid — no overflow-hidden so hover isn't clipped */}
+        <div className="relative">
+
+          {/* Connecting dashed line (desktop only) */}
+          <div className="absolute hidden lg:block" style={{
+            top: 36, left: "calc(25% - 8px)", right: "calc(25% - 8px)", height: 1,
+            background: "repeating-linear-gradient(90deg, #e2e8f0 0px, #e2e8f0 6px, transparent 6px, transparent 14px)",
+          }} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {steps.map(({ num, title, desc, icon: Icon, color, light }, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 36 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ delay: i * 0.11, duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
               >
-                {num}
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center mb-6">
-                <Icon size={20} className="text-brand-600" />
-              </div>
-              <p className="text-brand-500 text-xs font-bold uppercase tracking-widest mb-2">{num}</p>
-              <h3 className="text-surface-900 font-bold text-lg mb-3">{title}</h3>
-              <p className="text-surface-400 text-sm leading-relaxed">{desc}</p>
-            </motion.div>
-          ))}
+                <motion.div
+                  whileHover={{ y: -8, boxShadow: `0 24px 48px -12px ${color}22` }}
+                  transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                  style={{
+                    background: "#fff",
+                    border: "1px solid #f1f5f9",
+                    borderRadius: 20,
+                    padding: "32px 28px",
+                    height: "100%",
+                    position: "relative",
+                    cursor: "default",
+                  }}
+                >
+                  {/* Step number — watermark */}
+                  <span style={{
+                    position: "absolute", bottom: 16, right: 20,
+                    fontSize: 72, fontWeight: 900, lineHeight: 1,
+                    color: light, userSelect: "none", pointerEvents: "none",
+                    fontVariantNumeric: "tabular-nums",
+                  }}>
+                    {num}
+                  </span>
+
+                  {/* Icon circle */}
+                  <div style={{
+                    position: "relative", zIndex: 1,
+                    width: 56, height: 56, borderRadius: 16,
+                    background: light,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    marginBottom: 24,
+                    border: `1px solid ${color}22`,
+                  }}>
+                    <Icon size={22} style={{ color }} strokeWidth={1.8} />
+
+                    {/* Step dot on connecting line */}
+                    <span style={{
+                      position: "absolute", top: -22, left: "50%", transform: "translateX(-50%)",
+                      width: 10, height: 10, borderRadius: "50%",
+                      background: color,
+                      border: "2px solid #fff",
+                      boxShadow: `0 0 0 3px ${color}30`,
+                      display: "block",
+                    }} />
+                  </div>
+
+                  <p style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color, marginBottom: 8 }}>
+                    Step {num}
+                  </p>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#0f172a", marginBottom: 10, letterSpacing: "-0.02em" }}>
+                    {title}
+                  </h3>
+                  <p style={{ fontSize: "0.875rem", lineHeight: 1.65, color: "#94a3b8" }}>
+                    {desc}
+                  </p>
+                </motion.div>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
-        <ScrollReveal className="text-center mt-14" variant="fadeIn">
-          <Link href={`/${lang}/products`}>
+        {/* CTA */}
+        <div className="text-center mt-16">
+          <Link href={`/${lang}/products`} className="no-underline">
             <motion.button
-              whileHover={{ scale: 1.04, boxShadow: "0 12px 32px -4px rgba(225,29,92,0.45)" }}
+              whileHover={{ scale: 1.04, boxShadow: "0 14px 36px -4px rgba(225,29,92,0.38)" }}
               whileTap={{ scale: 0.97 }}
-              className="bg-brand-600 text-white border-none rounded-xl px-8 py-4 text-sm font-bold cursor-pointer inline-flex items-center gap-2.5"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "linear-gradient(135deg, #c0196a, #e11d5c)",
+                color: "#fff", border: "none",
+                borderRadius: 12, padding: "14px 32px",
+                fontSize: "0.9rem", fontWeight: 700, cursor: "pointer",
+              }}
             >
-              Start Exploring <ArrowRight size={16} />
+              Start Exploring <ArrowRight size={16} strokeWidth={2.5} />
             </motion.button>
           </Link>
-        </ScrollReveal>
+        </div>
       </div>
     </section>
   );
@@ -1248,14 +1425,10 @@ export default function HomePageClient({ dict, lang }) {
       {/* 5. Featured products */}
       <FeaturedProducts dict={dict} lang={lang} apiProducts={apiProducts} />
 
-      {/* 6. Benefits / About — alternating layout */}
-      <BenefitsSection dict={dict} />
 
       {/* 8. How it works */}
       <HowItWorksSection lang={lang} />
 
-      {/* 9. Testimonials */}
-      <TestimonialsSection dict={dict} />
 
       {/* 10. Destinations */}
       <DestinationsSection dict={dict} lang={lang} />
@@ -1264,99 +1437,143 @@ export default function HomePageClient({ dict, lang }) {
       <PlannerBanner dict={dict} lang={lang} />
 
       {/* 12. Stacked story sections */}
-      <div style={{ position: "relative", marginTop: -40, paddingBottom: 80 }}>
-        <style>{`
-          .story-sticky { position: sticky; top: 90px; borderRadius: 32px; overflow: hidden; boxShadow: "0 18px 50px rgba(58,21,42,0.08)"; border: "1px solid rgba(236,215,227,0.9)"; }
-        `}</style>
-
+      <div style={{ position: "relative", paddingTop: 48, paddingBottom: 80 }}>
         {[
           {
-            zIndex: 10, bg: "#f1e8f5", color: "#57138d", mt: 0,
+            zIndex: 10, bg: "#f6f0fc", color: "#6d13a8", mt: 0,
             title: "Browse & compare",
-            desc: "Discover unique event professionals in one place. Compare style, presentation, and fit — without jumping through dozens of pages.",
+            desc: "Discover event professionals in one place. Compare style, fit, and pricing — without jumping through dozens of tabs.",
             img: "/images/flowers-roses.jpg",
-            card: { title: "Compare by style", desc: "Luxury, cute, playful, pastel, minimal, kids, wedding, or custom themed setups." },
-            cardPos: { right: 22, top: 22 },
+            chip: "Compare by style",
             href: `/${lang}/products`,
             cta: "Browse vendors",
           },
           {
-            zIndex: 20, bg: "#ead8f4", color: "#58128c", mt: 56,
+            zIndex: 20, bg: "#f0f4ff", color: "#2b4fce", mt: 32,
             title: "Book securely",
-            desc: "Send requests with confidence, receive replies faster, and feel guided during the whole booking process.",
+            desc: "Send requests with confidence, receive replies faster, and stay guided through the whole booking process.",
             img: "/images/wedding-dance.jpg",
-            card: { title: "Fast inquiry flow", desc: "Message vendors, request a quote, and keep the event planning flow simple and premium." },
-            cardPos: { left: 22, bottom: 22 },
+            chip: "Fast inquiry flow",
             href: `/${lang}/account`,
             cta: "Start planning",
           },
           {
-            zIndex: 30, bg: "#ffeef7", color: "#8c1f5f", mt: 56,
+            zIndex: 30, bg: "#fff0f6", color: "#b3185a", mt: 32,
             title: "Celebrate beautifully",
-            desc: "Birthdays, weddings, baby showers, anniversaries, family gatherings — every happy occasion deserves a perfect setup.",
+            desc: "Birthdays, weddings, anniversaries, baby showers — every happy occasion deserves a perfect setup.",
             img: "/images/wedding-ceremony.jpg",
-            card: { title: "Made for meaningful moments", desc: "Weddings, birthdays, anniversaries, kids parties, corporate events and more." },
-            cardPos: { right: 22, bottom: 22 },
+            chip: "Made for every moment",
             href: `/${lang}/events/wedding`,
             cta: "Explore events",
           },
         ].map((s, i) => (
-          <div key={i} style={{ position: "sticky", top: 90, zIndex: s.zIndex, marginTop: s.mt, marginLeft: "auto", marginRight: "auto", width: "min(1460px, calc(100% - 48px))", borderRadius: 32, overflow: "hidden", boxShadow: "0 18px 50px rgba(58,21,42,0.08)", border: "1px solid rgba(236,215,227,0.9)" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: "72vh", background: s.bg }}>
-              {/* Copy */}
-              <div style={{ padding: "72px", background: s.bg, color: s.color, display: "flex", flexDirection: "column", justifyContent: "center", position: "relative" }}>
-                <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 20% 20%, rgba(255,255,255,.22), transparent 22%), radial-gradient(circle at 86% 24%, rgba(255,255,255,.16), transparent 16%)", pointerEvents: "none" }} />
-                <motion.div
-                  initial={{ opacity: 0, y: 24 }}
+          <div
+            key={i}
+            style={{
+              position: "sticky",
+              top: 90 + i * 6,
+              zIndex: s.zIndex,
+              marginTop: i === 0 ? 0 : s.mt,
+              marginLeft: "auto",
+              marginRight: "auto",
+              width: "min(1360px, calc(100% - 48px))",
+              borderRadius: 24,
+              overflow: "hidden",
+              boxShadow: "0 12px 40px rgba(30,10,40,0.07)",
+              border: "1px solid rgba(220,200,230,0.6)",
+              background: s.bg,
+            }}
+          >
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 440 }}>
+
+              {/* Left — copy */}
+              <div style={{
+                padding: "56px 60px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                gap: 20,
+              }}>
+                {/* Chip */}
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  background: `${s.color}14`, color: s.color,
+                  border: `1px solid ${s.color}22`,
+                  borderRadius: 100, padding: "5px 14px",
+                  fontSize: "0.72rem", fontWeight: 700,
+                  letterSpacing: "0.06em", textTransform: "uppercase",
+                  width: "fit-content",
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: s.color, display: "inline-block", flexShrink: 0 }} />
+                  {s.chip}
+                </span>
+
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  style={{ position: "relative", zIndex: 1 }}
+                  transition={{ duration: 0.55 }}
+                  style={{
+                    margin: 0,
+                    fontSize: "clamp(1.9rem, 3vw, 3rem)",
+                    lineHeight: 1.05,
+                    letterSpacing: "-0.05em",
+                    fontWeight: 900,
+                    color: "#0f172a",
+                  }}
                 >
-                  <h2 style={{ margin: "0 0 18px", fontSize: "clamp(2.4rem, 4vw, 4rem)", lineHeight: 0.95, letterSpacing: "-0.07em", fontWeight: 900 }}>{s.title}</h2>
-                  <p style={{ margin: "0 0 32px", lineHeight: 1.7, fontSize: "1.1rem", maxWidth: "28ch", color: s.color, opacity: 0.8 }}>{s.desc}</p>
-                  <Link href={s.href} className="no-underline" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: s.color, color: "#fff", borderRadius: 999, padding: "14px 26px", fontWeight: 800, fontSize: "0.95rem", transition: "transform .2s, opacity .2s" }}
-                    onMouseEnter={e => e.currentTarget.style.opacity = "0.88"}
-                    onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                  {s.title}
+                </motion.h2>
+
+                <p style={{
+                  margin: 0,
+                  fontSize: "1rem",
+                  lineHeight: 1.7,
+                  color: "#64748b",
+                  maxWidth: "32ch",
+                }}>
+                  {s.desc}
+                </p>
+
+                <Link href={s.href} className="no-underline" style={{ width: "fit-content" }}>
+                  <motion.span
+                    whileHover={{ scale: 1.04, opacity: 0.9 }}
+                    whileTap={{ scale: 0.97 }}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 8,
+                      background: s.color, color: "#fff",
+                      borderRadius: 10, padding: "12px 22px",
+                      fontWeight: 700, fontSize: "0.875rem",
+                      cursor: "pointer",
+                    }}
                   >
-                    {s.cta} <ArrowRight size={15} />
-                  </Link>
-                </motion.div>
+                    {s.cta} <ArrowRight size={14} strokeWidth={2.5} />
+                  </motion.span>
+                </Link>
               </div>
-              {/* Visual */}
-              <div style={{ padding: 34, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ width: "100%", minHeight: 360, maxHeight: 520, borderRadius: 24, overflow: "hidden", background: "rgba(255,255,255,.6)", position: "relative", boxShadow: "0 14px 25px rgba(20,15,19,.06)" }}>
+
+              {/* Right — image */}
+              <div style={{ padding: "24px 24px 24px 12px", display: "flex", alignItems: "center" }}>
+                <div style={{
+                  width: "100%",
+                  height: "100%",
+                  minHeight: 340,
+                  borderRadius: 16,
+                  overflow: "hidden",
+                  position: "relative",
+                }}>
                   <Image src={s.img} alt={s.title} fill className="object-cover" />
-                  {/* Floating card */}
-                  <div style={{ position: "absolute", ...s.cardPos, background: "rgba(255,255,255,.94)", borderRadius: 22, border: "1px solid rgba(236,215,227,.96)", boxShadow: "0 16px 30px rgba(44,18,31,.09)", padding: "18px 20px", maxWidth: 300, color: "#38152a" }}>
-                    <p style={{ margin: "0 0 7px", fontWeight: 900, fontSize: "1rem", letterSpacing: "-0.03em" }}>{s.card.title}</p>
-                    <p style={{ margin: 0, lineHeight: 1.6, fontSize: "0.88rem", color: "#7f6676" }}>{s.card.desc}</p>
-                  </div>
+                  {/* Subtle gradient overlay */}
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.12) 0%, transparent 50%)" }} />
                 </div>
               </div>
             </div>
           </div>
         ))}
 
-        {/* Vendor CTA banner */}
-        <div style={{ marginTop: 40, marginLeft: "auto", marginRight: "auto", width: "min(1460px, calc(100% - 48px))", borderRadius: 32, background: "linear-gradient(135deg, #ff63ad, #ea3b91 58%, #d8257a)", color: "#fff", padding: "48px 52px", display: "grid", gridTemplateColumns: "1.1fr .9fr", gap: 28, alignItems: "center", boxShadow: "0 26px 55px rgba(216,37,122,.22)" }}>
-          <div>
-            <h3 style={{ margin: "0 0 14px", fontSize: "clamp(2rem, 3.5vw, 3.6rem)", lineHeight: 0.96, letterSpacing: "-0.06em", fontWeight: 900 }}>Bring your event business to Salooote</h3>
-            <p style={{ margin: "0 0 22px", lineHeight: 1.75, color: "rgba(255,255,255,.88)", maxWidth: "52ch" }}>Showcase your work to thousands of people planning events across Armenia. Verified profile, direct bookings, zero commission to start.</p>
-            <Link href={`/${lang}/apply`} className="no-underline" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#fff", color: "#d8257a", borderRadius: 999, padding: "16px 28px", fontWeight: 800, fontSize: "1rem", transition: "transform .2s" }}
-              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
-              onMouseLeave={e => e.currentTarget.style.transform = ""}
-            >
-              List your services <ArrowRight size={16} />
-            </Link>
-          </div>
-          <div style={{ borderRadius: 26, overflow: "hidden", minHeight: 280 }}>
-            <Image src="/images/vendor-woman.jpg" alt="Become a vendor" fill={false} width={600} height={320} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block", minHeight: 280 }} />
-          </div>
-        </div>
       </div>
 
-      {/* 12. Become a partner form */}
+      {/* Become a partner form */}
       <PartnerSection dict={dict} />
     </div>
   );
