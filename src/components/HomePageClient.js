@@ -1136,16 +1136,16 @@ export default function HomePageClient({ dict, lang }) {
       {/* 4. Categories carousel */}
       <CategoriesCarousel categories={apiCategories} lang={lang} dict={dict} />
 
-      {/* ── Services Showcase ── */}
+      {/* ── Event Types Showcase ── */}
       <section className="py-24 bg-white">
         <div className="max-w-container mx-auto px-6 md:px-8">
           <ScrollReveal className="text-center mb-14">
-            <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.15em] mb-3">Everything You Need</p>
+            <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.15em] mb-3">Plan Any Occasion</p>
             <h2 className="font-black text-surface-900 mb-4" style={{ fontSize: "clamp(28px, 3.5vw, 44px)" }}>
-              One place for every<br className="hidden md:block" /> part of your event
+              What are you<br className="hidden md:block" /> celebrating?
             </h2>
             <p className="text-surface-500 text-base max-w-[480px] mx-auto">
-              From the cake to the DJ — discover trusted Armenian vendors for every occasion.
+              Find trusted vendors for every event type — from intimate birthdays to grand weddings.
             </p>
           </ScrollReveal>
 
@@ -1153,57 +1153,57 @@ export default function HomePageClient({ dict, lang }) {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
             {[
               {
-                title: "Wedding Cakes",
-                desc: "Artisan creations for your big day",
-                icon: Cake,
+                title: "Weddings",
+                desc: "Make your big day unforgettable",
+                icon: Heart,
                 gradient: "from-pink-500 via-rose-500 to-red-400",
                 span: "col-span-2 row-span-2",
-                href: `/${lang}/category/cakes`,
+                href: `/${lang}/events/wedding`,
                 size: 48,
               },
               {
-                title: "Flowers & Decor",
-                desc: "Blooms that tell your story",
-                icon: Flower2,
-                gradient: "from-green-400 via-emerald-500 to-teal-500",
-                span: "col-span-1 row-span-1",
-                href: `/${lang}/category/flowers`,
-                size: 28,
-              },
-              {
-                title: "Catering",
-                desc: "Feasts to remember",
-                icon: UtensilsCrossed,
-                gradient: "from-orange-400 via-amber-500 to-yellow-400",
-                span: "col-span-1 row-span-1",
-                href: `/${lang}/category/catering`,
-                size: 28,
-              },
-              {
-                title: "DJ & Music",
-                desc: "Set the perfect mood",
-                icon: Music,
-                gradient: "from-violet-500 via-purple-500 to-indigo-500",
-                span: "col-span-1 row-span-2",
-                href: `/${lang}/category/music`,
-                size: 36,
-              },
-              {
-                title: "Balloons & Party",
-                desc: "Pop, sparkle & celebrate",
+                title: "Birthdays",
+                desc: "Celebrate every year in style",
                 icon: PartyPopper,
                 gradient: "from-blue-400 via-cyan-500 to-sky-400",
                 span: "col-span-1 row-span-1",
-                href: `/${lang}/category/balloons`,
+                href: `/${lang}/events/birthday`,
                 size: 28,
               },
               {
-                title: "Gifts & Favors",
-                desc: "Leave a lasting impression",
-                icon: Gift,
-                gradient: "from-fuchsia-500 via-pink-500 to-rose-400",
+                title: "Corporate",
+                desc: "Impress clients & teams",
+                icon: Users,
+                gradient: "from-slate-500 via-gray-600 to-zinc-500",
                 span: "col-span-1 row-span-1",
-                href: `/${lang}/products`,
+                href: `/${lang}/events/corporate`,
+                size: 28,
+              },
+              {
+                title: "Engagements",
+                desc: "Say yes to forever",
+                icon: Sparkles,
+                gradient: "from-violet-500 via-purple-500 to-indigo-500",
+                span: "col-span-1 row-span-2",
+                href: `/${lang}/events/engagement`,
+                size: 36,
+              },
+              {
+                title: "Anniversaries",
+                desc: "Honor every milestone",
+                icon: Star,
+                gradient: "from-orange-400 via-amber-500 to-yellow-400",
+                span: "col-span-1 row-span-1",
+                href: `/${lang}/events/anniversary`,
+                size: 28,
+              },
+              {
+                title: "Kids' Parties",
+                desc: "Magical moments for little ones",
+                icon: Gift,
+                gradient: "from-green-400 via-emerald-500 to-teal-500",
+                span: "col-span-1 row-span-1",
+                href: `/${lang}/events/kids-party`,
                 size: 28,
               },
             ].map(({ title, desc, icon: Icon, gradient, span, href, size }, i) => (
