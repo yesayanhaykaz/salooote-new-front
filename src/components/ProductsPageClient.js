@@ -41,7 +41,7 @@ export default function ProductsPageClient({ dict, lang }) {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const params = { locale: lang, limit: 50 };
+    const params = { locale: lang, limit: 500 };
     if (selectedCat) params.category = selectedCat;
     if (search) params.search = search;
 

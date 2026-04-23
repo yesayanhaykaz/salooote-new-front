@@ -142,7 +142,7 @@ export default function VendorProfileClient({ lang = "en", slug }) {
 
       // Fetch products + all categories in parallel
       const [pRes, cRes] = await Promise.all([
-        productsAPI.list({ vendor_id: vendor.id, limit: 100, locale: lang }).catch(() => null),
+        productsAPI.list({ vendor_id: vendor.id, limit: 500, locale: lang }).catch(() => null),
         categoriesAPI.list(lang).catch(() => null),
       ]);
 
