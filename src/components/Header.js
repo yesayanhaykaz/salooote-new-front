@@ -34,7 +34,16 @@ const slugIcon = (slug = "") => {
   return Gift;
 };
 
-const FALLBACK_NAV = [];
+const FALLBACK_NAV = [
+  { label: "Cakes & Desserts",     slug: "cakes-desserts",           icon: Cake },
+  { label: "Catering & Food",      slug: "catering-food",            icon: UtensilsCrossed },
+  { label: "Flowers & Decor",      slug: "flowers-decor",            icon: Flower2 },
+  { label: "Photography",          slug: "photography-videography",  icon: Camera },
+  { label: "Music & Entertainment",slug: "music-entertainment",      icon: Music },
+  { label: "Venues & Halls",       slug: "venues-halls",             icon: MapPin },
+  { label: "Beauty & Makeup",      slug: "beauty-makeup",            icon: Sparkles },
+  { label: "Gifts & Souvenirs",    slug: "gifts-souvenirs",          icon: Gift },
+];
 
 export default function Header({ lang = "en" }) {
   const router = useRouter();
@@ -328,32 +337,41 @@ export default function Header({ lang = "en" }) {
             .header-pills-track {
               display: flex;
               align-items: center;
-              gap: 2px;
+              gap: 0px;
               width: max-content;
-              animation: headerPillsTicker 28s linear infinite;
+              animation: headerPillsTicker 40s linear infinite;
+              will-change: transform;
             }
-            .header-pills-track:hover { animation-play-state: paused; }
           `}</style>
           <div className="py-1.5">
-            <div className="header-pills-track">
-              {/* Doubled for seamless loop */}
-              {[...navCategories, { label: "All Products", slug: "products", icon: Sparkles, isAll: true },
-                ...navCategories, { label: "All Products", slug: "products", icon: Sparkles, isAll: true }
-              ].map((item, i) => {
-                const Icon = item.icon;
-                const href = item.isAll ? `/${lang}/products` : `/${lang}/category/${item.slug}`;
-                return (
-                  <Link
-                    key={i}
-                    href={href}
-                    className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
-                  >
-                    <Icon size={12} strokeWidth={2} />
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </div>
+            {(() => {
+              const allProductsItem = { label: "All Products", slug: "products", icon: Sparkles, isAll: true };
+              const base = [...navCategories, allProductsItem];
+              // Repeat enough times so one "half" (the copy we animate through) is always wider than any screen
+              const minItems = 20;
+              const repsNeeded = Math.max(1, Math.ceil(minItems / base.length));
+              const oneHalf = Array.from({ length: repsNeeded }, () => base).flat();
+              // Double it for seamless loop: animation moves exactly -50% (= one half)
+              const pills = [...oneHalf, ...oneHalf];
+              return (
+                <div className="header-pills-track">
+                  {pills.map((item, i) => {
+                    const Icon = item.icon;
+                    const href = item.isAll ? `/${lang}/products` : `/${lang}/category/${item.slug}`;
+                    return (
+                      <Link
+                        key={i}
+                        href={href}
+                        className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
+                      >
+                        <Icon size={12} strokeWidth={2} />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </header>

@@ -659,7 +659,7 @@ function VendorCard({ vendor, onSelect }) {
 /* ─────────────────────────────────────────
    SERVICE ROW
 ───────────────────────────────────────── */
-function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, accent }) {
+function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, onOpenSearch, accent }) {
   const results    = vendorResults[service.service_type] || [];
   const isSelected = !!selectedVendor;
   const isSearching = service.searching;
@@ -700,12 +700,14 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
               <X size={13} />
             </button>
           ) : hasResults ? (
-            <span style={{ fontSize: "0.65rem", background: "#fefce8", color: "#854d0e", fontWeight: 700, borderRadius: 100, padding: "2px 8px", border: "1px solid #fef08a" }}>
-              {results.length} found
-            </span>
+            <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+              onClick={() => onOpenSearch(service.service_type)}
+              style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#fefce8", border: "1px solid #fef08a", color: "#854d0e", borderRadius: 8, padding: "5px 10px", fontSize: "0.69rem", fontWeight: 700, cursor: "pointer" }}>
+              {results.length} found <ChevronRight size={10} strokeWidth={2.5} />
+            </motion.button>
           ) : service.canSearch && !isSearching ? (
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-              onClick={() => onSearchVendors(service.service_type, service.title)}
+              onClick={() => { onSearchVendors(service.service_type, service.title); onOpenSearch(service.service_type); }}
               style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#f8fafc", border: `1px solid ${C.borderMd}`, color: C.text2, borderRadius: 8, padding: "5px 10px", fontSize: "0.69rem", fontWeight: 600, cursor: "pointer", transition: "all 0.15s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = C.text; }}
               onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.color = C.text2; }}>
@@ -715,16 +717,6 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
         </div>
       </div>
 
-      <AnimatePresence>
-        {hasResults && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }}
-            style={{ overflow: "hidden", paddingLeft: 48, paddingBottom: 10 }}>
-            <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, scrollbarWidth: "none" }}>
-              {results.slice(0, 6).map((v, i) => <VendorCard key={v.id || i} vendor={v} onSelect={vendor => onSelectVendor(service.service_type, vendor)} />)}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -732,7 +724,7 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
 /* ─────────────────────────────────────────
    CATEGORY SECTION
 ───────────────────────────────────────── */
-function CategorySection({ label, services, selectedVendors, ...rowProps }) {
+function CategorySection({ label, services, selectedVendors, onOpenSearch, ...rowProps }) {
   const [open, setOpen] = useState(true);
   const done = services.filter(s => selectedVendors?.[s.service_type]).length;
   const all  = done === services.length;
@@ -757,7 +749,7 @@ function CategorySection({ label, services, selectedVendors, ...rowProps }) {
               {services.map((s, idx) => (
                 <div key={s.service_type}>
                   {idx > 0 && <div style={{ height: 1, background: "rgba(15,23,42,0.04)" }} />}
-                  <ServiceRow service={s} selectedVendor={selectedVendors?.[s.service_type]} {...rowProps} />
+                  <ServiceRow service={s} selectedVendor={selectedVendors?.[s.service_type]} onOpenSearch={onOpenSearch} {...rowProps} />
                 </div>
               ))}
             </div>
@@ -1015,6 +1007,107 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
 }
 
 /* ─────────────────────────────────────────
+   VENDOR SEARCH MODAL  (popup on Find click)
+───────────────────────────────────────── */
+function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch, accent }) {
+  const [query, setQuery] = useState("");
+  const results   = vendorResults[service.service_type] || [];
+  const isSearching = service.searching;
+
+  const filtered = query.trim()
+    ? results.filter(v => (v.business_name || v.name || "").toLowerCase().includes(query.toLowerCase()))
+    : results;
+
+  // Auto-trigger search on open if no results yet
+  useEffect(() => {
+    if (!results.length && !isSearching) onSearch(service.service_type, service.title);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.40)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        onClick={e => e.stopPropagation()}
+        style={{ background: "#fff", borderRadius: 20, width: "90%", maxWidth: 560, maxHeight: "80vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 24px 64px rgba(0,0,0,0.18)" }}
+      >
+        {/* Header */}
+        <div style={{ padding: "18px 20px 14px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: `${accent || C.brand}12`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {getServiceIcon(service.service_type, { size: 16, color: accent || C.brand, strokeWidth: 1.8 })}
+            </div>
+            <div>
+              <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 800, color: C.text, letterSpacing: "-0.02em" }}>{service.title}</h3>
+              <p style={{ margin: 0, fontSize: "0.72rem", color: C.text3 }}>
+                {isSearching ? "Searching…" : results.length > 0 ? `${results.length} vendors found` : "Search for vendors"}
+              </p>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${C.border}`, background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: C.text3 }}>
+            <X size={14} />
+          </button>
+        </div>
+
+        {/* Search bar */}
+        <div style={{ padding: "12px 20px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f8fafc", border: `1px solid ${C.borderMd}`, borderRadius: 10, padding: "8px 12px" }}>
+            <Search size={13} color={C.text3} />
+            <input
+              autoFocus
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Filter by name…"
+              style={{ flex: 1, border: "none", outline: "none", fontSize: "0.84rem", background: "transparent", color: C.text, fontFamily: "inherit" }}
+            />
+            {query && <button onClick={() => setQuery("")} style={{ border: "none", background: "none", cursor: "pointer", color: C.text3, padding: 0, display: "flex" }}><X size={12} /></button>}
+          </div>
+        </div>
+
+        {/* Results */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "14px 20px 20px" }}>
+          {isSearching && !results.length ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: 12 }}>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}>
+                <Loader2 size={24} color={C.text3} />
+              </motion.div>
+              <p style={{ margin: 0, fontSize: "0.84rem", color: C.text3 }}>Finding vendors…</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "40px 0" }}>
+              <p style={{ margin: "0 0 12px", fontSize: "0.88rem", color: C.text2, fontWeight: 600 }}>No vendors found</p>
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                onClick={() => { setQuery(""); onSearch(service.service_type, service.title); }}
+                style={{ background: C.grad, border: "none", borderRadius: 8, padding: "8px 18px", fontSize: "0.8rem", color: "#fff", fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "inherit" }}>
+                <Search size={12} /> Search again
+              </motion.button>
+            </div>
+          ) : (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: 10 }}>
+              {filtered.map((v, i) => (
+                <VendorCard key={v.id || i} vendor={v} onSelect={vendor => { onSelect(service.service_type, vendor); onClose(); }} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: "12px 20px", borderTop: `1px solid ${C.border}`, display: "flex", justifyContent: "flex-end", flexShrink: 0 }}>
+          <button onClick={onClose} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${C.borderMd}`, borderRadius: 8, color: C.text2, fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+            Close
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────
    PLAN PANEL (right, when event active)
 ───────────────────────────────────────── */
 function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, sessionId, lang, onOpenBulkModal }) {
@@ -1024,6 +1117,11 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
   const grouped = {};
   for (const s of services) { if (!grouped[s.category]) grouped[s.category] = []; grouped[s.category].push(s); }
   const missing = services.filter(s => s.required && s.canSearch && !selected_vendors[s.service_type]);
+
+  // Vendor search modal state
+  const [searchModalSvc, setSearchModalSvc] = useState(null); // service_type string | null
+  const modalService = searchModalSvc ? services.find(s => s.service_type === searchModalSvc) : null;
+  const openSearch = (service_type) => { setSearchModalSvc(service_type); };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
@@ -1082,7 +1180,8 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
         <div style={{ marginBottom: 16 }}>
           {Object.entries(grouped).map(([cat, items]) => (
             <CategorySection key={cat} label={CATEGORY_LABELS[cat] || cat} services={items} selectedVendors={selected_vendors}
-              vendorResults={vendorResults} onSelectVendor={onSelectVendor} onSearchVendors={onSearchVendors} onUnselectVendor={onUnselectVendor} accent={accent} />
+              vendorResults={vendorResults} onSelectVendor={onSelectVendor} onSearchVendors={onSearchVendors} onUnselectVendor={onUnselectVendor} accent={accent}
+              onOpenSearch={openSearch} />
           ))}
         </div>
 
@@ -1094,6 +1193,20 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
           </div>
         )}
       </div>
+
+      {/* Vendor search modal */}
+      <AnimatePresence>
+        {searchModalSvc && modalService && (
+          <VendorSearchModal
+            service={modalService}
+            vendorResults={vendorResults}
+            onSelect={onSelectVendor}
+            onClose={() => setSearchModalSvc(null)}
+            onSearch={(type, title) => { onSearchVendors(type, title); }}
+            accent={accent}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

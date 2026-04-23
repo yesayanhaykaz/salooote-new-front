@@ -6,13 +6,71 @@ import ProductCard from "@/components/ProductCard";
 import { productsAPI, vendorsAPI, categoriesAPI } from "@/lib/api";
 import { Star, LayoutGrid, List, ChevronRight, MapPin, Package, X, Search, Filter, ChevronDown, Check } from "lucide-react";
 
-const SORT_OPTIONS = [
-  { label: "Most Popular", value: "popular" },
-  { label: "Newest",       value: "newest" },
-  { label: "Price: Low–High", value: "price_asc" },
-  { label: "Price: High–Low", value: "price_desc" },
-  { label: "Highest Rated",   value: "rating" },
-];
+const T = {
+  en: {
+    home: "Home",
+    products: "Products", vendors: "Vendors",
+    filters: "Filters", clearAll: "Clear all", clearFilters: "Clear filters",
+    priceRange: "Price range", tags: "Tags",
+    noFilters: "No additional filters for this category.",
+    productsAvailable: "products available",
+    vendorsCount: "vendors",
+    noProducts: "No products found",
+    noProductsDesc: "Try adjusting your filters or check back later.",
+    noVendors: "No vendors yet",
+    noVendorsDesc: "Be the first vendor in this category!",
+    applyAsVendor: "Apply as Vendor",
+    applyFilters: "Apply Filters",
+    sortMostPopular: "Most Popular",
+    sortNewest: "Newest",
+    sortPriceLow: "Price: Low–High",
+    sortPriceHigh: "Price: High–Low",
+    sortRating: "Highest Rated",
+    searchIn: (name) => `Search in ${name}…`,
+  },
+  hy: {
+    home: "Գլխ.",
+    products: "Ապրանքներ", vendors: "Վաճառողներ",
+    filters: "Ֆիլտրեր", clearAll: "Մաքրել", clearFilters: "Մաքրել ֆիլտրերը",
+    priceRange: "Գնի միջակայք", tags: "Թեգեր",
+    noFilters: "Այս կատեգորիայի համար լրացուցիչ ֆիլտրեր չկան:",
+    productsAvailable: "ապրանք",
+    vendorsCount: "վաճառող",
+    noProducts: "Ապրանքներ չեն գտնվել",
+    noProductsDesc: "Փոխեք ֆիլտրերը կամ ստուգեք ավելի ուշ:",
+    noVendors: "Վաճառողներ դեռ չկան",
+    noVendorsDesc: "Դարձե՛ք առաջին վաճառողը այս կատեգորիայում:",
+    applyAsVendor: "Դիմել որպես Վաճառող",
+    applyFilters: "Կիրառել Ֆիլտրերը",
+    sortMostPopular: "Ամենատարածված",
+    sortNewest: "Ամենանոր",
+    sortPriceLow: "Գին՝ ցածրից բարձր",
+    sortPriceHigh: "Գին՝ բարձրից ցածր",
+    sortRating: "Ամենաբարձր վարկ.",
+    searchIn: (name) => `Որոնել ${name}–ում…`,
+  },
+  ru: {
+    home: "Главная",
+    products: "Товары", vendors: "Продавцы",
+    filters: "Фильтры", clearAll: "Очистить", clearFilters: "Сбросить фильтры",
+    priceRange: "Ценовой диапазон", tags: "Теги",
+    noFilters: "Нет дополнительных фильтров для этой категории.",
+    productsAvailable: "товаров",
+    vendorsCount: "продавцов",
+    noProducts: "Товары не найдены",
+    noProductsDesc: "Измените фильтры или проверьте позже.",
+    noVendors: "Продавцов пока нет",
+    noVendorsDesc: "Станьте первым продавцом в этой категории!",
+    applyAsVendor: "Стать Продавцом",
+    applyFilters: "Применить Фильтры",
+    sortMostPopular: "Популярные",
+    sortNewest: "Новые",
+    sortPriceLow: "Цена: по возрастанию",
+    sortPriceHigh: "Цена: по убыванию",
+    sortRating: "Высший рейтинг",
+    searchIn: (name) => `Поиск в ${name}…`,
+  },
+};
 
 function buildPriceRanges(min, max) {
   if (!max || max === 0) {
@@ -136,6 +194,15 @@ function CheckboxFilter({ label, checked, onChange }) {
 }
 
 export default function CategoryPage({ lang = "en", slug }) {
+  const t = T[lang] || T.en;
+  const SORT_OPTIONS = [
+    { label: t.sortMostPopular, value: "popular" },
+    { label: t.sortNewest,      value: "newest" },
+    { label: t.sortPriceLow,    value: "price_asc" },
+    { label: t.sortPriceHigh,   value: "price_desc" },
+    { label: t.sortRating,      value: "rating" },
+  ];
+
   const [mainTab, setMainTab]           = useState("products");
   const [view, setView]                 = useState("grid");
   const [sort, setSort]                 = useState("popular");
@@ -261,7 +328,7 @@ export default function CategoryPage({ lang = "en", slug }) {
         <div className={`relative max-w-container mx-auto px-6 md:px-8 py-12 flex items-center justify-between gap-8 flex-wrap ${categoryInfo?.image_url ? "text-white" : ""}`}>
           <div>
             <div className={`flex items-center gap-1.5 text-xs mb-4 ${categoryInfo?.image_url ? "text-white/70" : "text-surface-400"}`}>
-              <Link href={`/${lang}`} className={`no-underline transition-colors ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-400"}`}>Home</Link>
+              <Link href={`/${lang}`} className={`no-underline transition-colors ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-400"}`}>{t.home}</Link>
               <ChevronRight size={12} />
               <span className={categoryInfo?.image_url ? "text-white font-medium" : "text-surface-700 font-medium"}>{categoryName}</span>
             </div>
@@ -275,9 +342,9 @@ export default function CategoryPage({ lang = "en", slug }) {
               </p>
             )}
             <div className={`flex items-center gap-3 mt-4 ${categoryInfo?.image_url ? "text-white/70" : ""}`}>
-              <span className="text-sm font-medium">{total} products available</span>
+              <span className="text-sm font-medium">{total} {t.productsAvailable}</span>
               {vendors.length > 0 && (
-                <span className="text-sm opacity-70">· {vendors.length} vendors</span>
+                <span className="text-sm opacity-70">· {vendors.length} {t.vendorsCount}</span>
               )}
             </div>
           </div>
@@ -287,7 +354,7 @@ export default function CategoryPage({ lang = "en", slug }) {
               <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400" />
               <input
                 type="text"
-                placeholder={`Search in ${categoryName}…`}
+                placeholder={t.searchIn(categoryName)}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && fetchProducts()}
@@ -308,14 +375,14 @@ export default function CategoryPage({ lang = "en", slug }) {
                 onClick={() => setMainTab("products")}
                 className={`px-5 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "products" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
               >
-                Products
+                {t.products}
                 {total > 0 && <span className="ml-1.5 text-xs text-surface-400">({total})</span>}
               </button>
               <button
                 onClick={() => setMainTab("vendors")}
                 className={`px-5 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "vendors" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
               >
-                Vendors
+                {t.vendors}
                 {vendors.length > 0 && <span className="ml-1.5 text-xs text-surface-400">({vendors.length})</span>}
               </button>
             </div>
@@ -326,7 +393,7 @@ export default function CategoryPage({ lang = "en", slug }) {
                 className="lg:hidden flex items-center gap-1.5 border border-surface-200 rounded-xl px-4 py-2 text-sm font-medium text-surface-600 bg-white cursor-pointer hover:border-surface-300 transition-colors relative"
               >
                 <Filter size={14} />
-                Filters
+                {t.filters}
                 {activeFilterCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
                     {activeFilterCount}
@@ -358,20 +425,20 @@ export default function CategoryPage({ lang = "en", slug }) {
             <aside className="w-[220px] flex-shrink-0 hidden lg:block">
               <div className="bg-white rounded-xl border border-surface-200 p-5 sticky top-24">
                 <div className="flex items-center justify-between mb-5">
-                  <p className="font-semibold text-surface-900">Filters</p>
+                  <p className="font-semibold text-surface-900">{t.filters}</p>
                   {activeFilterCount > 0 && (
                     <button
                       onClick={clearFilters}
                       className="text-xs text-brand-600 font-medium border-none bg-transparent cursor-pointer hover:text-brand-700"
                     >
-                      Clear all
+                      {t.clearAll}
                     </button>
                   )}
                 </div>
 
                 {/* Price range */}
                 <div className="mb-5 pb-5 border-b border-surface-100">
-                  <p className="text-sm font-semibold text-surface-800 mb-3">Price range</p>
+                  <p className="text-sm font-semibold text-surface-800 mb-3">{t.priceRange}</p>
                   {priceRanges.map((p, i) => (
                     <label key={p.label} className="flex items-center gap-2.5 py-1.5 cursor-pointer group" onClick={() => setPriceIdx(i)}>
                       <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${priceIdx === i ? "border-brand-600 bg-brand-600" : "border-surface-300 group-hover:border-brand-400"}`}>
@@ -385,20 +452,20 @@ export default function CategoryPage({ lang = "en", slug }) {
                 {/* Tags (from DB) */}
                 {filters.tags.length > 0 && (
                   <div>
-                    <p className="text-sm font-semibold text-surface-800 mb-3">Tags</p>
-                    {filters.tags.map(t => (
+                    <p className="text-sm font-semibold text-surface-800 mb-3">{t.tags}</p>
+                    {filters.tags.map(tag => (
                       <CheckboxFilter
-                        key={t}
-                        label={t}
-                        checked={selectedTags.includes(t)}
-                        onChange={() => toggleTag(t)}
+                        key={tag}
+                        label={tag}
+                        checked={selectedTags.includes(tag)}
+                        onChange={() => toggleTag(tag)}
                       />
                     ))}
                   </div>
                 )}
 
                 {filters.tags.length === 0 && !loading && (
-                  <p className="text-xs text-surface-400 italic">No additional filters for this category.</p>
+                  <p className="text-xs text-surface-400 italic">{t.noFilters}</p>
                 )}
               </div>
             </aside>
@@ -436,14 +503,14 @@ export default function CategoryPage({ lang = "en", slug }) {
                 ) : filtered.length === 0 ? (
                   <div className="py-20 text-center">
                     <Search size={40} className="text-surface-300 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-surface-700 mb-2">No products found</p>
-                    <p className="text-sm text-surface-400">Try adjusting your filters or check back later.</p>
+                    <p className="text-lg font-semibold text-surface-700 mb-2">{t.noProducts}</p>
+                    <p className="text-sm text-surface-400">{t.noProductsDesc}</p>
                     {activeFilterCount > 0 && (
                       <button
                         onClick={clearFilters}
                         className="mt-4 text-sm text-brand-600 font-medium border-none bg-transparent cursor-pointer hover:text-brand-700"
                       >
-                        Clear filters
+                        {t.clearFilters}
                       </button>
                     )}
                   </div>
@@ -495,10 +562,10 @@ export default function CategoryPage({ lang = "en", slug }) {
                 {vendors.length === 0 && !loading ? (
                   <div className="py-20 text-center">
                     <Package size={40} className="text-surface-300 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-surface-700 mb-2">No vendors yet</p>
-                    <p className="text-sm text-surface-400">Be the first vendor in this category!</p>
+                    <p className="text-lg font-semibold text-surface-700 mb-2">{t.noVendors}</p>
+                    <p className="text-sm text-surface-400">{t.noVendorsDesc}</p>
                     <Link href={`/${lang}/apply`} className="inline-block mt-4 bg-brand-600 text-white rounded-xl px-6 py-2.5 text-sm font-semibold no-underline hover:bg-brand-700 transition-colors">
-                      Apply as Vendor
+                      {t.applyAsVendor}
                     </Link>
                   </div>
                 ) : (
@@ -517,14 +584,14 @@ export default function CategoryPage({ lang = "en", slug }) {
         <div className="fixed inset-0 bg-black/40 z-50 lg:hidden" onClick={() => setShowMobileFilters(false)}>
           <div className="absolute right-0 top-0 bottom-0 bg-white w-[300px] p-6 overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <p className="font-bold text-surface-900 text-lg">Filters</p>
+              <p className="font-bold text-surface-900 text-lg">{t.filters}</p>
               <button onClick={() => setShowMobileFilters(false)} className="border-none bg-transparent cursor-pointer">
                 <X size={20} className="text-surface-500" />
               </button>
             </div>
 
             <div className="mb-6 pb-6 border-b border-surface-100">
-              <p className="text-sm font-semibold text-surface-800 mb-3">Price range</p>
+              <p className="text-sm font-semibold text-surface-800 mb-3">{t.priceRange}</p>
               {priceRanges.map((p, i) => (
                 <label key={p.label} className="flex items-center gap-2.5 py-2 cursor-pointer" onClick={() => setPriceIdx(i)}>
                   <div className={`w-4 h-4 rounded-full border-2 ${priceIdx === i ? "border-brand-600 bg-brand-600" : "border-surface-300"}`} />
@@ -535,13 +602,13 @@ export default function CategoryPage({ lang = "en", slug }) {
 
             {filters.tags.length > 0 && (
               <div className="mb-6">
-                <p className="text-sm font-semibold text-surface-800 mb-3">Tags</p>
-                {filters.tags.map(t => (
+                <p className="text-sm font-semibold text-surface-800 mb-3">{t.tags}</p>
+                {filters.tags.map(tag => (
                   <CheckboxFilter
-                    key={t}
-                    label={t}
-                    checked={selectedTags.includes(t)}
-                    onChange={() => toggleTag(t)}
+                    key={tag}
+                    label={tag}
+                    checked={selectedTags.includes(tag)}
+                    onChange={() => toggleTag(tag)}
                   />
                 ))}
               </div>
@@ -551,7 +618,7 @@ export default function CategoryPage({ lang = "en", slug }) {
               onClick={() => setShowMobileFilters(false)}
               className="w-full bg-brand-600 text-white border-none rounded-xl py-3 text-sm font-semibold cursor-pointer"
             >
-              Apply Filters
+              {t.applyFilters}
             </button>
           </div>
         </div>
