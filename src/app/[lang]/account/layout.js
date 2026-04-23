@@ -9,10 +9,17 @@ import {
   CalendarHeart, Send,
 } from "lucide-react";
 
+const T = {
+  en: { dashboard: "Dashboard", myOrders: "My Orders", messages: "Messages", myEvents: "My Events", inquiries: "Inquiries", myReviews: "My Reviews", savedItems: "Saved Items", notifications: "Notifications", settings: "Settings", signOut: "Sign Out" },
+  hy: { dashboard: "Վահանակ", myOrders: "Իմ Պատվերները", messages: "Հաղ-ներ", myEvents: "Իմ Միջ-ները", inquiries: "Հարցումներ", myReviews: "Կարծիքներ", savedItems: "Պահված", notifications: "Ծانоуцումներ", settings: "Կարգ-ումներ", signOut: "Ելք" },
+  ru: { dashboard: "Главная", myOrders: "Мои Заказы", messages: "Сообщения", myEvents: "Мои Мероприятия", inquiries: "Запросы", myReviews: "Отзывы", savedItems: "Сохранённое", notifications: "Уведомления", settings: "Настройки", signOut: "Выйти" },
+};
+
 export default function AccountLayout({ children }) {
   const router   = useRouter();
   const pathname = usePathname();
   const { lang } = useParams();
+  const t = T[lang] || T.en;
   const [user,  setUser]  = useState(null);
   const [ready, setReady] = useState(false);
 
@@ -33,15 +40,15 @@ export default function AccountLayout({ children }) {
     : "";
 
   const nav = [
-    { icon: LayoutDashboard, label: "Dashboard",     href: `/${lang}/account` },
-    { icon: Package,         label: "My Orders",     href: `/${lang}/account/orders` },
-    { icon: MessageSquare,   label: "Messages",      href: `/${lang}/account/messages` },
-    { icon: CalendarHeart,   label: "My Events",     href: `/${lang}/account/events` },
-    { icon: Send,            label: "Inquiries",     href: `/${lang}/account/inquiries` },
-    { icon: Star,            label: "My Reviews",    href: `/${lang}/account/reviews` },
-    { icon: Bookmark,        label: "Saved Items",   href: `/${lang}/account/saved` },
-    { icon: Bell,            label: "Notifications", href: `/${lang}/account/notifications` },
-    { icon: Settings,        label: "Settings",      href: `/${lang}/account/settings` },
+    { icon: LayoutDashboard, label: t.dashboard,     href: `/${lang}/account` },
+    { icon: Package,         label: t.myOrders,      href: `/${lang}/account/orders` },
+    { icon: MessageSquare,   label: t.messages,      href: `/${lang}/account/messages` },
+    { icon: CalendarHeart,   label: t.myEvents,      href: `/${lang}/account/events` },
+    { icon: Send,            label: t.inquiries,     href: `/${lang}/account/inquiries` },
+    { icon: Star,            label: t.myReviews,     href: `/${lang}/account/reviews` },
+    { icon: Bookmark,        label: t.savedItems,    href: `/${lang}/account/saved` },
+    { icon: Bell,            label: t.notifications, href: `/${lang}/account/notifications` },
+    { icon: Settings,        label: t.settings,      href: `/${lang}/account/settings` },
   ];
 
   if (!ready) return (
@@ -90,7 +97,7 @@ export default function AccountLayout({ children }) {
             <button onClick={handleLogout}
               className="flex items-center gap-3 px-4 py-3.5 text-sm font-medium text-red-500 hover:bg-red-50 w-full text-left border-none bg-transparent cursor-pointer transition-colors"
             >
-              <LogOut size={16} /> Sign Out
+              <LogOut size={16} /> {t.signOut}
             </button>
           </nav>
         </aside>

@@ -1,13 +1,14 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { vendorsAPI, productsAPI, categoriesAPI } from "@/lib/api";
+import { vendorsAPI, productsAPI, userAPI, inquiriesAPI, isLoggedIn } from "@/lib/api";
 import {
   Star, MapPin, Phone, MessageCircle,
   Heart, Share2, ArrowLeft, X, Package,
-  Calendar, Clock, Globe, Instagram, Facebook, Images
+  Calendar, Clock, Globe, Instagram, Facebook, Images,
+  Send, Loader2, Check, Link2,
 } from "lucide-react";
 
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -47,6 +48,88 @@ export default function VendorProfileClient({ lang = "en", slug }) {
   const [mainTab, setMainTab]         = useState("products");
   const [activeCat, setActiveCat]     = useState("all");
   const [lightbox, setLightbox]       = useState(null);
+
+  // Save state
+  const [savedId, setSavedId]         = useState(null); // saved item ID if saved
+  const [savingState, setSavingState] = useState("idle"); // idle | saving | saved | error
+
+  // Share state
+  const [shareCopied, setShareCopied] = useState(false);
+
+  // Message modal
+  const [showMsgModal, setShowMsgModal] = useState(false);
+  const [msgText, setMsgText]          = useState("");
+  const [msgSending, setMsgSending]    = useState(false);
+  const [msgSent, setMsgSent]          = useState(false);
+  const [msgError, setMsgError]        = useState("");
+
+  // Load saved status
+  useEffect(() => {
+    if (!isLoggedIn() || !vendorData?.id) return;
+    userAPI.saved({ limit: 100 })
+      .then(res => {
+        const found = (res?.data || []).find(
+          s => s.target_type === "vendor" && s.target_id === vendorData.id
+        );
+        if (found) setSavedId(found.id);
+      })
+      .catch(() => {});
+  }, [vendorData?.id]);
+
+  const handleSave = async () => {
+    if (!isLoggedIn()) {
+      window.location.href = `/${lang}/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+      return;
+    }
+    setSavingState("saving");
+    try {
+      if (savedId) {
+        await userAPI.unsaveItem(savedId);
+        setSavedId(null);
+      } else {
+        const res = await userAPI.saveItem("vendor", vendorData.id);
+        setSavedId(res?.data?.id || res?.id || "saved");
+      }
+      setSavingState("idle");
+    } catch {
+      setSavingState("idle");
+    }
+  };
+
+  const handleShare = () => {
+    const url = window.location.href;
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator.share({ title: vendorData?.business_name || slug, url }).catch(() => {});
+    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }).catch(() => {});
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!msgText.trim()) return;
+    if (!isLoggedIn()) {
+      window.location.href = `/${lang}/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+      return;
+    }
+    setMsgSending(true);
+    setMsgError("");
+    try {
+      await inquiriesAPI.create({
+        vendor_id: vendorData.id,
+        subject: `Inquiry about ${vendorData.business_name || slug}`,
+        message: msgText.trim(),
+      });
+      setMsgSent(true);
+      setMsgText("");
+    } catch (err) {
+      setMsgError(err.message || "Failed to send. Please try again.");
+    } finally {
+      setMsgSending(false);
+    }
+  };
 
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
@@ -173,11 +256,18 @@ export default function VendorProfileClient({ lang = "en", slug }) {
             </div>
 
             <div className="absolute top-4 right-4 z-10 flex gap-2">
-              <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
-                <Heart size={14} className="text-accent-400" /> Save
+              <button
+                onClick={handleSave}
+                className={`backdrop-blur-sm rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer transition-all flex items-center gap-1.5 ${savedId ? "bg-brand-600 text-white hover:bg-brand-700" : "bg-white/90 text-surface-700 hover:bg-white"}`}
+              >
+                <Heart size={14} className={savedId ? "fill-white text-white" : "text-brand-500"} />
+                {savedId ? "Saved" : "Save"}
               </button>
-              <button className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5">
-                <Share2 size={14} /> Share
+              <button
+                onClick={handleShare}
+                className="bg-white/90 backdrop-blur-sm text-surface-700 rounded-xl px-4 py-2 text-sm font-medium border-none cursor-pointer hover:bg-white transition-all flex items-center gap-1.5"
+              >
+                {shareCopied ? <><Check size={14} className="text-green-600" /> Copied!</> : <><Share2 size={14} /> Share</>}
               </button>
             </div>
 
@@ -277,7 +367,10 @@ export default function VendorProfileClient({ lang = "en", slug }) {
                 )}
               </div>
             )}
-            <button className="ml-auto flex items-center gap-2 bg-brand-600 text-white border-none rounded-xl px-5 py-2.5 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
+            <button
+              onClick={() => { setShowMsgModal(true); setMsgSent(false); setMsgError(""); }}
+              className="ml-auto flex items-center gap-2 bg-brand-600 text-white border-none rounded-xl px-5 py-2.5 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors"
+            >
               <MessageCircle size={15} /> Message Vendor
             </button>
           </div>
@@ -383,6 +476,65 @@ export default function VendorProfileClient({ lang = "en", slug }) {
           </button>
           <div className="relative w-full max-w-[860px] h-[560px]">
             <Image src={lightbox} alt="" fill className="object-contain" />
+          </div>
+        </div>
+      )}
+
+      {/* Message Vendor Modal */}
+      {showMsgModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={() => setShowMsgModal(false)}>
+          <div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-[440px] p-6"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h3 className="text-lg font-bold text-surface-900">Message Vendor</h3>
+                <p className="text-xs text-surface-400 mt-0.5">{v.name}</p>
+              </div>
+              <button onClick={() => setShowMsgModal(false)} className="w-8 h-8 rounded-xl bg-surface-100 flex items-center justify-center border-none cursor-pointer hover:bg-surface-200 transition-colors">
+                <X size={15} className="text-surface-500" />
+              </button>
+            </div>
+
+            {msgSent ? (
+              <div className="text-center py-8">
+                <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                  <Check size={24} className="text-green-600" />
+                </div>
+                <h4 className="font-bold text-surface-900 mb-2">Message sent!</h4>
+                <p className="text-sm text-surface-400 mb-5">The vendor will get back to you soon.</p>
+                <Link href={`/${lang}/account/inquiries`} className="no-underline text-sm font-semibold text-brand-600 hover:underline">
+                  View in My Inquiries →
+                </Link>
+              </div>
+            ) : (
+              <>
+                {msgError && (
+                  <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4">{msgError}</div>
+                )}
+                <textarea
+                  value={msgText}
+                  onChange={e => setMsgText(e.target.value)}
+                  placeholder={`Hi ${v.name}, I'm interested in your services…`}
+                  rows={5}
+                  className="w-full border border-surface-200 rounded-xl px-4 py-3 text-sm text-surface-700 placeholder:text-surface-300 outline-none focus:border-brand-400 resize-none transition-colors mb-4"
+                />
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleSendMessage}
+                    disabled={!msgText.trim() || msgSending}
+                    className="flex-1 flex items-center justify-center gap-2 bg-brand-600 text-white border-none rounded-xl py-3 text-sm font-semibold cursor-pointer hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {msgSending ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
+                    {msgSending ? "Sending…" : "Send Message"}
+                  </button>
+                  <button onClick={() => setShowMsgModal(false)} className="px-5 py-3 border border-surface-200 rounded-xl text-sm font-medium text-surface-600 bg-transparent cursor-pointer hover:bg-surface-50 transition-colors">
+                    Cancel
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

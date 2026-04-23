@@ -202,5 +202,18 @@
     "total": "Total",
     "checkout": "Proceed to Checkout",
     "continueShopping": "Continue Shopping"
+  },
+  "events": {
+    "sectionLabel": "Plan Any Occasion",
+    "title": "What are you celebrating?",
+    "subtitle": "Find trusted vendors for every event type — from intimate birthdays to grand weddings.",
+    "types": {
+      "wedding":    { "title": "Weddings",      "desc": "Make your big day unforgettable" },
+      "birthday":   { "title": "Birthdays",     "desc": "Celebrate every year in style" },
+      "corporate":  { "title": "Corporate",     "desc": "Impress clients & teams" },
+      "engagement": { "title": "Engagements",   "desc": "Say yes to forever" },
+      "anniversary":{ "title": "Anniversaries", "desc": "Honor every milestone" },
+      "kids_party": { "title": "Kids' Parties", "desc": "Magical moments for little ones" }
+    }
   }
 }

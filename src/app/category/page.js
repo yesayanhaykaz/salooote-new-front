@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { productsAPI, vendorsAPI, categoriesAPI } from "@/lib/api";
-import { Star, LayoutGrid, List, ChevronRight, MapPin, Package, CheckCircle2, X, SlidersHorizontal, Search, Filter } from "lucide-react";
+import { Star, LayoutGrid, List, ChevronRight, MapPin, Package, X, Search, Filter, ChevronDown, Check } from "lucide-react";
 
 const SORT_OPTIONS = [
   { label: "Most Popular", value: "popular" },
@@ -69,22 +69,54 @@ function VendorCard({ vendor, lang = "en" }) {
           </div>
         </div>
         <div className="p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs bg-brand-50 text-brand-600 border border-brand-100 rounded-full px-2.5 py-0.5 font-medium">
-              {vendor.category_name || "Vendor"}
-            </span>
-            <div className="flex items-center gap-1">
-              <CheckCircle2 size={12} className="text-brand-500" />
-              <span className="text-xs text-surface-400">Verified</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 mt-2 text-xs text-surface-400">
-            <span className="flex items-center gap-1"><Package size={10} />{vendor.product_count || 0} products</span>
+          <div className="flex items-center gap-3 text-xs text-surface-400">
+            {vendor.product_count > 0 && (
+              <span className="flex items-center gap-1"><Package size={10} />{vendor.product_count} products</span>
+            )}
             <span className="flex items-center gap-1"><MapPin size={10} />{vendor.city || "Yerevan"}</span>
           </div>
         </div>
       </div>
     </Link>
+  );
+}
+
+// Custom sort dropdown
+function SortDropdown({ value, onChange, options }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const current = options.find(o => o.value === value);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="flex items-center gap-2 border border-surface-200 rounded-xl px-4 py-2 text-sm text-surface-700 bg-white cursor-pointer hover:border-surface-300 transition-colors"
+      >
+        <span className="font-medium">{current?.label || "Sort"}</span>
+        <ChevronDown size={14} className={`text-surface-400 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1.5 w-[180px] bg-white rounded-xl border border-surface-200 shadow-lg py-1.5 z-30">
+          {options.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => { onChange(opt.value); setOpen(false); }}
+              className="w-full flex items-center justify-between px-4 py-2.5 text-sm text-surface-700 hover:bg-surface-50 hover:text-surface-900 transition-colors text-left border-none bg-transparent cursor-pointer"
+            >
+              {opt.label}
+              {value === opt.value && <Check size={13} className="text-brand-600 flex-shrink-0" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -306,13 +338,7 @@ export default function CategoryPage({ lang = "en", slug }) {
 
           {mainTab === "products" && (
             <div className="flex items-center gap-3">
-              <select
-                value={sort}
-                onChange={e => setSort(e.target.value)}
-                className="border border-surface-200 rounded-xl px-4 py-2 text-sm text-surface-700 bg-white outline-none cursor-pointer"
-              >
-                {SORT_OPTIONS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
-              </select>
+              <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
               <div className="flex border border-surface-200 rounded-xl overflow-hidden bg-white">
                 <button onClick={() => setView("grid")} className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "grid" ? "bg-brand-50 text-brand-600" : "bg-white text-surface-400"}`}>
                   <LayoutGrid size={15} />

@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { categoriesAPI, getUser, clearAuth, isLoggedIn } from "@/lib/api";
@@ -38,9 +38,11 @@ const FALLBACK_NAV = [];
 
 export default function Header({ lang = "en" }) {
   const router = useRouter();
+  const pathname = usePathname();
   const { cartCount } = useCart();
   const [menuOpen, setMenuOpen]         = useState(false);
   const [searchOpen, setSearchOpen]     = useState(false);
+  const [searchQuery, setSearchQuery]   = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [navCategories, setNavCategories] = useState(FALLBACK_NAV);
   const [user, setUser]                 = useState(null);
@@ -48,11 +50,18 @@ export default function Header({ lang = "en" }) {
   const [unreadCount, setUnreadCount]   = useState(0);
   const dropdownRef = useRef(null);
 
-  // Read auth state client-side only
+  // Re-read auth state on every route change (fixes stale header after login)
   useEffect(() => {
     setLoggedIn(isLoggedIn());
     setUser(getUser());
-  }, []);
+  }, [pathname]);
+
+  const handleSearchSubmit = (e) => {
+    if ((e.key === "Enter" || e.type === "click") && searchQuery.trim()) {
+      router.push(`/${lang}/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+    }
+  };
 
   // Poll for unread notifications every 30 seconds
   useEffect(() => {
@@ -130,9 +139,9 @@ export default function Header({ lang = "en" }) {
             <Image
               src="/images/logo.png"
               alt="Salooote"
-              width={120}
-              height={36}
-              className="h-8 w-auto object-contain"
+              width={160}
+              height={48}
+              className="h-10 w-auto object-contain"
               priority
             />
           </Link>
@@ -143,6 +152,9 @@ export default function Header({ lang = "en" }) {
               <Search size={15} className="text-surface-400 mr-3 flex-shrink-0" />
               <input
                 type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchSubmit}
                 placeholder="Search products, vendors…"
                 className="flex-1 bg-transparent border-none outline-none text-sm text-surface-700 placeholder:text-surface-400"
               />
@@ -161,9 +173,9 @@ export default function Header({ lang = "en" }) {
             </button>
 
             {/* Wishlist — desktop */}
-            <button className="w-9 h-9 rounded-xl items-center justify-center hover:bg-surface-100 transition-colors hidden md:flex">
+            <Link href={`/${lang}/account/saved`} className="no-underline w-9 h-9 rounded-xl items-center justify-center hover:bg-surface-100 transition-colors hidden md:flex">
               <Heart size={17} className="text-surface-500" />
-            </button>
+            </Link>
 
             {/* Notifications bell — desktop, logged-in only */}
             {loggedIn && (
@@ -293,6 +305,9 @@ export default function Header({ lang = "en" }) {
               <input
                 autoFocus
                 type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchSubmit}
                 placeholder="Search products, vendors…"
                 className="flex-1 bg-transparent border-none outline-none text-sm text-surface-700 placeholder:text-surface-400"
               />
@@ -303,29 +318,42 @@ export default function Header({ lang = "en" }) {
           </div>
         )}
 
-        {/* ── Category pills nav ── */}
-        <div className="border-t border-surface-100 bg-white">
-          <div className="max-w-container mx-auto px-4 md:px-8 flex items-center gap-0.5 overflow-x-auto hide-scrollbar py-2">
-            {navCategories.map((item, i) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={i}
-                  href={`/${lang}/category/${item.slug}`}
-                  className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
-                >
-                  <Icon size={12} strokeWidth={2} />
-                  {item.label}
-                </Link>
-              );
-            })}
-            <Link
-              href={`/${lang}/products`}
-              className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
-            >
-              <Sparkles size={12} strokeWidth={2} />
-              All Products
-            </Link>
+        {/* ── Category pills nav — full-width auto-scrolling ticker ── */}
+        <div className="border-t border-surface-100 bg-white overflow-hidden">
+          <style>{`
+            @keyframes headerPillsTicker {
+              0%   { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            .header-pills-track {
+              display: flex;
+              align-items: center;
+              gap: 2px;
+              width: max-content;
+              animation: headerPillsTicker 28s linear infinite;
+            }
+            .header-pills-track:hover { animation-play-state: paused; }
+          `}</style>
+          <div className="py-1.5">
+            <div className="header-pills-track">
+              {/* Doubled for seamless loop */}
+              {[...navCategories, { label: "All Products", slug: "products", icon: Sparkles, isAll: true },
+                ...navCategories, { label: "All Products", slug: "products", icon: Sparkles, isAll: true }
+              ].map((item, i) => {
+                const Icon = item.icon;
+                const href = item.isAll ? `/${lang}/products` : `/${lang}/category/${item.slug}`;
+                return (
+                  <Link
+                    key={i}
+                    href={href}
+                    className="flex items-center gap-1.5 text-surface-500 no-underline py-1.5 px-3 rounded-full text-xs font-medium hover:bg-surface-100 hover:text-surface-900 whitespace-nowrap transition-colors flex-shrink-0"
+                  >
+                    <Icon size={12} strokeWidth={2} />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </header>

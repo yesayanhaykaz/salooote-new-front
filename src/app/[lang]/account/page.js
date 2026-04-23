@@ -8,6 +8,78 @@ import {
   Package, ChevronRight, Star, CalendarHeart, Send,
 } from "lucide-react";
 
+const T = {
+  en: {
+    welcomeBack: "Welcome back",
+    subtitle: "Here's what's happening with your account.",
+    myOrders: "My Orders",
+    savedItems: "Saved Items",
+    activeInquiries: "Active Inquiries",
+    unreadNotifs: "Unread Notifs",
+    recentOrders: "Recent Orders",
+    recentInquiries: "Recent Inquiries",
+    recentActivity: "Recent Activity",
+    quickLinks: "Quick Links",
+    viewAll: "View all",
+    noOrders: "No orders yet.",
+    noInquiries: "No inquiries yet.",
+    sendOne: "Send one",
+    noNotifications: "No notifications.",
+    messages: "Messages",
+    myEvents: "My Events",
+    inquiries: "Inquiries",
+    myReviews: "My Reviews",
+    notifications: "Notifications",
+    noSubject: "(No subject)",
+  },
+  hy: {
+    welcomeBack: "Բարի վերադարձ",
+    subtitle: "Ահա թե ինչ է կատարվում ձեր հաշվով:",
+    myOrders: "Իմ Պատվերները",
+    savedItems: "Պահված",
+    activeInquiries: "Ակտիվ Հարցումներ",
+    unreadNotifs: "Չկարդացված",
+    recentOrders: "Վերջին Պատվերները",
+    recentInquiries: "Վերջին Հարցումները",
+    recentActivity: "Վերջին Գործողություններ",
+    quickLinks: "Արագ Հղումներ",
+    viewAll: "Բոլորը",
+    noOrders: "Դեռ պատվեր չկա:",
+    noInquiries: "Դեռ հարցում չկա:",
+    sendOne: "Ուղարկել",
+    noNotifications: "Ծаноуцումներ չկան:",
+    messages: "Հաղ-ներ",
+    myEvents: "Իմ Միջ-ները",
+    inquiries: "Հարցումներ",
+    myReviews: "Կարծիքներ",
+    notifications: "Ծаноуцումներ",
+    noSubject: "(Թեմա չկա)",
+  },
+  ru: {
+    welcomeBack: "С возвращением",
+    subtitle: "Вот что происходит с вашим аккаунтом.",
+    myOrders: "Мои Заказы",
+    savedItems: "Сохранённое",
+    activeInquiries: "Активные Запросы",
+    unreadNotifs: "Непрочитанные",
+    recentOrders: "Последние Заказы",
+    recentInquiries: "Последние Запросы",
+    recentActivity: "Последние Уведомления",
+    quickLinks: "Быстрые Ссылки",
+    viewAll: "Все",
+    noOrders: "Заказов пока нет.",
+    noInquiries: "Запросов пока нет.",
+    sendOne: "Отправить",
+    noNotifications: "Уведомлений нет.",
+    messages: "Сообщения",
+    myEvents: "Мои Мероприятия",
+    inquiries: "Запросы",
+    myReviews: "Отзывы",
+    notifications: "Уведомления",
+    noSubject: "(Без темы)",
+  },
+};
+
 const STATUS_STYLES = {
   pending:    "bg-amber-50  text-amber-600  border-amber-200",
   confirmed:  "bg-blue-50   text-blue-600   border-blue-200",
@@ -49,6 +121,7 @@ function formatDate(iso) {
 
 export default function AccountDashboard() {
   const { lang } = useParams();
+  const t = T[lang] || T.en;
   const [user,      setUser]      = useState(null);
   const [orders,    setOrders]    = useState([]);
   const [inquiries, setInquiries] = useState([]);
@@ -87,17 +160,17 @@ export default function AccountDashboard() {
 
       {/* Welcome */}
       <div>
-        <h1 className="text-2xl font-bold text-surface-900">Welcome back, {firstName}! 👋</h1>
-        <p className="text-surface-400 text-sm mt-1">Here's what's happening with your account.</p>
+        <h1 className="text-2xl font-bold text-surface-900">{t.welcomeBack}, {firstName}! 👋</h1>
+        <p className="text-surface-400 text-sm mt-1">{t.subtitle}</p>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "My Orders",          value: orders.length,    icon: ShoppingBag,   bg: "bg-violet-50", color: "text-violet-500", href: `/${lang}/account/orders` },
-          { label: "Saved Items",        value: savedCount,       icon: Heart,         bg: "bg-pink-50",   color: "text-brand-500",  href: `/${lang}/account/saved` },
-          { label: "Active Inquiries",   value: activeInquiries,  icon: MessageSquare, bg: "bg-blue-50",   color: "text-blue-500",   href: `/${lang}/account/inquiries` },
-          { label: "Unread Notifs",      value: unread,           icon: Bell,          bg: "bg-amber-50",  color: "text-amber-500",  href: `/${lang}/account/notifications` },
+          { label: t.myOrders,        value: orders.length,    icon: ShoppingBag,   bg: "bg-violet-50", color: "text-violet-500", href: `/${lang}/account/orders` },
+          { label: t.savedItems,      value: savedCount,       icon: Heart,         bg: "bg-pink-50",   color: "text-brand-500",  href: `/${lang}/account/saved` },
+          { label: t.activeInquiries, value: activeInquiries,  icon: MessageSquare, bg: "bg-blue-50",   color: "text-blue-500",   href: `/${lang}/account/inquiries` },
+          { label: t.unreadNotifs,    value: unread,           icon: Bell,          bg: "bg-amber-50",  color: "text-amber-500",  href: `/${lang}/account/notifications` },
         ].map(s => (
           <Link key={s.label} href={s.href} className="no-underline bg-white rounded-2xl border border-surface-200 shadow-sm p-4 flex items-center gap-3 hover:border-surface-300 transition-colors">
             <div className={`w-10 h-10 rounded-xl ${s.bg} flex items-center justify-center flex-shrink-0`}>
@@ -119,13 +192,13 @@ export default function AccountDashboard() {
           {/* Recent Orders */}
           <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-surface-100 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-surface-900">Recent Orders</h2>
+              <h2 className="text-sm font-bold text-surface-900">{t.recentOrders}</h2>
               <Link href={`/${lang}/account/orders`} className="text-xs text-brand-600 font-semibold hover:text-brand-700 no-underline flex items-center gap-1">
-                View all <ChevronRight size={12} />
+                {t.viewAll} <ChevronRight size={12} />
               </Link>
             </div>
             {orders.length === 0 ? (
-              <div className="py-12 text-center text-sm text-surface-400">No orders yet.</div>
+              <div className="py-12 text-center text-sm text-surface-400">{t.noOrders}</div>
             ) : (
               <div className="divide-y divide-surface-50">
                 {orders.map(order => (
@@ -152,15 +225,15 @@ export default function AccountDashboard() {
           {/* Recent Inquiries */}
           <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-surface-100 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-surface-900">Recent Inquiries</h2>
+              <h2 className="text-sm font-bold text-surface-900">{t.recentInquiries}</h2>
               <Link href={`/${lang}/account/inquiries`} className="text-xs text-brand-600 font-semibold hover:text-brand-700 no-underline flex items-center gap-1">
-                View all <ChevronRight size={12} />
+                {t.viewAll} <ChevronRight size={12} />
               </Link>
             </div>
             {inquiries.length === 0 ? (
               <div className="py-12 text-center text-sm text-surface-400">
-                No inquiries yet.{" "}
-                <Link href={`/${lang}/account/inquiries`} className="text-brand-600 font-semibold no-underline">Send one</Link>
+                {t.noInquiries}{" "}
+                <Link href={`/${lang}/account/inquiries`} className="text-brand-600 font-semibold no-underline">{t.sendOne}</Link>
               </div>
             ) : (
               <div className="divide-y divide-surface-50">
@@ -170,7 +243,7 @@ export default function AccountDashboard() {
                       <MessageSquare size={15} className="text-blue-500" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-surface-900 truncate">{inq.subject || "(No subject)"}</p>
+                      <p className="text-sm font-semibold text-surface-900 truncate">{inq.subject || t.noSubject}</p>
                       <p className="text-xs text-surface-400">{timeAgo(inq.created_at)}</p>
                     </div>
                     <Badge status={inq.status} />
@@ -187,13 +260,13 @@ export default function AccountDashboard() {
           {/* Recent Activity */}
           <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden">
             <div className="px-5 py-4 border-b border-surface-100 flex items-center justify-between">
-              <h2 className="text-sm font-bold text-surface-900">Recent Activity</h2>
+              <h2 className="text-sm font-bold text-surface-900">{t.recentActivity}</h2>
               <Link href={`/${lang}/account/notifications`} className="text-xs text-brand-600 font-semibold hover:text-brand-700 no-underline flex items-center gap-1">
-                View all <ChevronRight size={12} />
+                {t.viewAll} <ChevronRight size={12} />
               </Link>
             </div>
             {notifs.length === 0 ? (
-              <div className="py-10 text-center text-sm text-surface-400">No notifications.</div>
+              <div className="py-10 text-center text-sm text-surface-400">{t.noNotifications}</div>
             ) : (
               <div className="divide-y divide-surface-50">
                 {notifs.map(n => {
@@ -220,16 +293,16 @@ export default function AccountDashboard() {
 
           {/* Quick Links */}
           <div className="bg-white rounded-2xl border border-surface-200 shadow-sm p-5">
-            <h2 className="text-sm font-bold text-surface-900 mb-3">Quick Links</h2>
+            <h2 className="text-sm font-bold text-surface-900 mb-3">{t.quickLinks}</h2>
             <div className="space-y-1">
               {[
-                { href: `/${lang}/account/saved`,        label: "Saved Items",     icon: Heart,         color: "text-brand-500",  bg: "bg-brand-50" },
-                { href: `/${lang}/account/orders`,        label: "My Orders",       icon: ShoppingBag,   color: "text-violet-500", bg: "bg-violet-50" },
-                { href: `/${lang}/account/messages`,      label: "Messages",        icon: MessageSquare, color: "text-blue-500",   bg: "bg-blue-50" },
-                { href: `/${lang}/account/events`,        label: "My Events",       icon: CalendarHeart, color: "text-rose-500",   bg: "bg-rose-50" },
-                { href: `/${lang}/account/inquiries`,     label: "Inquiries",       icon: Send,          color: "text-indigo-500", bg: "bg-indigo-50" },
-                { href: `/${lang}/account/reviews`,       label: "My Reviews",      icon: Star,          color: "text-amber-500",  bg: "bg-amber-50" },
-                { href: `/${lang}/account/notifications`, label: "Notifications",   icon: Bell,          color: "text-surface-500",bg: "bg-surface-100" },
+                { href: `/${lang}/account/saved`,        label: t.savedItems,     icon: Heart,         color: "text-brand-500",  bg: "bg-brand-50" },
+                { href: `/${lang}/account/orders`,        label: t.myOrders,       icon: ShoppingBag,   color: "text-violet-500", bg: "bg-violet-50" },
+                { href: `/${lang}/account/messages`,      label: t.messages,       icon: MessageSquare, color: "text-blue-500",   bg: "bg-blue-50" },
+                { href: `/${lang}/account/events`,        label: t.myEvents,       icon: CalendarHeart, color: "text-rose-500",   bg: "bg-rose-50" },
+                { href: `/${lang}/account/inquiries`,     label: t.inquiries,      icon: Send,          color: "text-indigo-500", bg: "bg-indigo-50" },
+                { href: `/${lang}/account/reviews`,       label: t.myReviews,      icon: Star,          color: "text-amber-500",  bg: "bg-amber-50" },
+                { href: `/${lang}/account/notifications`, label: t.notifications,  icon: Bell,          color: "text-surface-500",bg: "bg-surface-100" },
               ].map(l => (
                 <Link key={l.href} href={l.href}
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-surface-50 transition-colors no-underline group"

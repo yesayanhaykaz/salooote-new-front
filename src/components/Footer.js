@@ -1,6 +1,67 @@
 "use client";
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube, Apple, Play, ArrowRight, Shield } from "lucide-react";
+import { Facebook, Instagram, Twitter, Youtube, Apple, ArrowRight } from "lucide-react";
+
+// Payment brand SVG icons
+function VisaIcon() {
+  return (
+    <svg width="46" height="28" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="46" height="28" rx="4" fill="#1A1F71"/>
+      <text x="23" y="20" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="14" fill="#FFFFFF" fontStyle="italic" letterSpacing="-0.5">VISA</text>
+    </svg>
+  );
+}
+function MastercardIcon() {
+  return (
+    <svg width="46" height="28" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="46" height="28" rx="4" fill="#fff" stroke="#e5e7eb"/>
+      <circle cx="17" cy="14" r="8" fill="#EB001B"/>
+      <circle cx="29" cy="14" r="8" fill="#F79E1B"/>
+      <path d="M23 7.53a8 8 0 0 1 0 12.94A8 8 0 0 1 23 7.53z" fill="#FF5F00"/>
+    </svg>
+  );
+}
+function AmexIcon() {
+  return (
+    <svg width="46" height="28" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="46" height="28" rx="4" fill="#007BC1"/>
+      <text x="23" y="19" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="11" fill="#FFFFFF" letterSpacing="1.5">AMEX</text>
+    </svg>
+  );
+}
+function PayPalIcon() {
+  return (
+    <svg width="54" height="28" viewBox="0 0 54 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="54" height="28" rx="4" fill="#fff" stroke="#e5e7eb"/>
+      <text x="8" y="19" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="13" fill="#003087">Pay</text>
+      <text x="28" y="19" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="13" fill="#009cde">Pal</text>
+    </svg>
+  );
+}
+// Google Play icon
+function GooglePlayIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.5 1.5L13.5 10L2.5 18.5V1.5Z" fill="url(#gp_grad1)"/>
+      <path d="M2.5 1.5L10.5 9.5L13.5 6.5L4.5 1.5H2.5Z" fill="#00BCD4"/>
+      <path d="M2.5 18.5L10.5 10.5L13.5 13.5L4.5 18.5H2.5Z" fill="#FF3D00"/>
+      <path d="M13.5 6.5L17.5 10L13.5 13.5L10.5 10.5V9.5L13.5 6.5Z" fill="#FFD600"/>
+      <defs>
+        <linearGradient id="gp_grad1" x1="2.5" y1="1.5" x2="2.5" y2="18.5" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#00E676"/>
+          <stop offset="1" stopColor="#00897B"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+const PAYMENT_ICONS = [
+  { label: "Visa",       Icon: VisaIcon },
+  { label: "Mastercard", Icon: MastercardIcon },
+  { label: "Amex",       Icon: AmexIcon },
+  { label: "PayPal",     Icon: PayPalIcon },
+];
 
 function getColumns(lang) {
   return [
@@ -83,19 +144,22 @@ export default function Footer({ lang = "en" }) {
           {/* App */}
           <div>
             <p className="font-semibold text-sm mb-4 text-surface-900">Get the App</p>
-            {[
-              { icon: Apple, store: "App Store",   sub: "Download on the" },
-              { icon: Play,  store: "Google Play",  sub: "Get it on" },
-            ].map(({ icon: Icon, store, sub }, i) => (
-              <a key={i} href="#"
-                 className="flex items-center gap-3 bg-surface-100 rounded-xl px-4 py-3 mb-3 hover:bg-surface-200 transition-colors no-underline">
-                <Icon size={18} className="text-surface-700" />
-                <div>
-                  <div className="text-[10px] text-surface-500 leading-tight">{sub}</div>
-                  <div className="text-sm font-semibold text-surface-900 leading-tight">{store}</div>
-                </div>
-              </a>
-            ))}
+            <a href="#"
+               className="flex items-center gap-3 bg-black rounded-xl px-4 py-2.5 mb-3 hover:bg-gray-900 transition-colors no-underline">
+              <Apple size={20} className="text-white flex-shrink-0" />
+              <div>
+                <div className="text-[9px] text-gray-400 leading-tight font-medium">Download on the</div>
+                <div className="text-sm font-semibold text-white leading-tight">App Store</div>
+              </div>
+            </a>
+            <a href="#"
+               className="flex items-center gap-3 bg-black rounded-xl px-4 py-2.5 hover:bg-gray-900 transition-colors no-underline">
+              <GooglePlayIcon />
+              <div>
+                <div className="text-[9px] text-gray-400 leading-tight font-medium">Get it on</div>
+                <div className="text-sm font-semibold text-white leading-tight">Google Play</div>
+              </div>
+            </a>
           </div>
         </div>
 
@@ -129,10 +193,10 @@ export default function Footer({ lang = "en" }) {
             <Link href={`/${lang}/terms`} className="hover:text-surface-700 transition-colors no-underline text-surface-400">Terms of Service</Link>
           </div>
           <div className="flex gap-2 items-center">
-            {["Visa", "Mastercard", "Amex", "PayPal"].map((card, i) => (
-              <span key={i} className="bg-surface-100 px-2.5 py-1.5 rounded-lg text-[10px] font-bold text-surface-500 tracking-wider border border-surface-200">
-                {card.toUpperCase()}
-              </span>
+            {PAYMENT_ICONS.map(({ label, Icon }) => (
+              <div key={label} title={label} className="flex-shrink-0">
+                <Icon />
+              </div>
             ))}
           </div>
         </div>

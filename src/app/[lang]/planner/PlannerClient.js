@@ -392,13 +392,6 @@ function MessageBubble({ msg, onSuggestionClick }) {
             }}>
               {lines.map(renderLine)}
             </div>
-            {msg.suggestions?.length > 0 && (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
-                {msg.suggestions.map(s => (
-                  <SuggestionChip key={s} text={s} onClick={onSuggestionClick} />
-                ))}
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -1150,81 +1143,82 @@ function RightEmptyState({ onPickType }) {
 }
 
 /* ─────────────────────────────────────────
-   AUTH GATE  (login wall overlay)
+   AUTH GATE  (login wall — shown after 3 free messages)
 ───────────────────────────────────────── */
 function AuthGate({ lang }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      transition={{ duration: 0.25 }}
       style={{
         position: "absolute", inset: 0, zIndex: 100,
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: "rgba(241,245,249,0.92)",
-        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        background: "rgba(255,255,255,0.88)",
+        backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
       }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 24, scale: 0.96 }}
+        initial={{ opacity: 0, y: 16, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ delay: 0.05, type: "spring", stiffness: 280, damping: 26 }}
+        transition={{ delay: 0.08, type: "spring", stiffness: 300, damping: 28 }}
         style={{
-          background: "#fff", border: `1px solid ${C.borderMd}`,
-          borderRadius: 24, padding: "40px 36px", maxWidth: 420, width: "100%",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.05)",
-          textAlign: "center",
+          background: "#fff",
+          border: `1px solid rgba(15,23,42,0.1)`,
+          borderRadius: 20,
+          padding: "36px 32px",
+          maxWidth: 400,
+          width: "calc(100% - 48px)",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04)",
         }}
       >
-        {/* Icon */}
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}
-        >
-          <div style={{ width: 68, height: 68, borderRadius: "50%", background: "radial-gradient(circle at 35% 28%,#f0abfc 0%,#a855f7 30%,#7c3aed 58%,#1e1b4b 100%)", boxShadow: "0 8px 28px rgba(124,58,237,0.35)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: "12%", left: "18%", width: "38%", height: "32%", borderRadius: "50%", background: "rgba(255,255,255,0.35)", filter: "blur(4px)" }} />
-            <Lock size={22} color="rgba(255,255,255,0.9)" strokeWidth={2} style={{ position: "relative", zIndex: 1 }} />
+        {/* Top: icon + headline */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
+          <div style={{ width: 46, height: 46, borderRadius: 14, background: "linear-gradient(135deg,#fce7f3,#ede9fe)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <Sparkles size={20} color={C.brand} strokeWidth={2} />
           </div>
-        </motion.div>
+          <div>
+            <h2 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: C.text, letterSpacing: "-0.025em", lineHeight: 1.3 }}>
+              Save your event plan
+            </h2>
+            <p style={{ margin: "3px 0 0", fontSize: "0.8rem", color: C.text3 }}>Free account — no credit card</p>
+          </div>
+        </div>
 
-        {/* Heading */}
-        <h2 style={{ margin: "0 0 10px", fontSize: "1.4rem", fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.25 }}>
-          Sign in to use{" "}
-          <span style={{ background: C.grad, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-            AI Planner
-          </span>
-        </h2>
-        <p style={{ margin: "0 0 28px", fontSize: "0.88rem", color: C.text2, lineHeight: 1.65 }}>
-          Your event plans are saved to your account so you can pick up where you left off, share with your partner, and track every vendor.
+        {/* Description */}
+        <p style={{ margin: "0 0 20px", fontSize: "0.86rem", color: C.text2, lineHeight: 1.6 }}>
+          Create a free account to save your plan, get vendor matches, and track every detail of your event in one place.
         </p>
 
-        {/* Benefits */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28, textAlign: "left" }}>
+        {/* Feature list */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 24 }}>
           {[
-            { icon: <Sparkles size={14} color={C.brand} />, text: "AI builds your complete event checklist" },
-            { icon: <Cloud size={14} color={C.purple} />, text: "Plans saved to your account automatically" },
-            { icon: <Users size={14} color="#059669" />, text: "Find & track vendors all in one place" },
-          ].map(({ icon, text }, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(15,23,42,0.03)", border: `1px solid ${C.border}`, borderRadius: 10, padding: "9px 13px" }}>
-              <div style={{ flexShrink: 0 }}>{icon}</div>
-              <span style={{ fontSize: "0.82rem", color: C.text2 }}>{text}</span>
+            "Complete checklist built automatically for your event",
+            "Find & compare vendors in your city",
+            "Everything saved — pick up where you left off",
+          ].map((text, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+              <div style={{ width: 18, height: 18, borderRadius: "50%", background: `${C.brand}12`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
+                <Check size={10} color={C.brand} strokeWidth={2.5} />
+              </div>
+              <span style={{ fontSize: "0.82rem", color: C.text2, lineHeight: 1.5 }}>{text}</span>
             </div>
           ))}
         </div>
 
         {/* CTAs */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <Link href={`/${lang}/login?redirect=/${lang}/planner`} style={{ textDecoration: "none" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <Link href={`/${lang}/signup?redirect=/${lang}/planner`} style={{ textDecoration: "none" }}>
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-              style={{ width: "100%", padding: "13px 0", background: C.grad, border: "none", borderRadius: 14, color: "#fff", fontSize: "0.92rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, boxShadow: "0 6px 20px rgba(225,29,92,0.28)", fontFamily: "inherit" }}>
-              <LogIn size={16} strokeWidth={2} /> Sign in to continue
+              style={{ width: "100%", padding: "12px 0", background: C.grad, border: "none", borderRadius: 12, color: "#fff", fontSize: "0.9rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, boxShadow: "0 6px 20px rgba(225,29,92,0.25)", fontFamily: "inherit" }}>
+              <Sparkles size={14} strokeWidth={2} /> Create free account
             </motion.button>
           </Link>
-          <Link href={`/${lang}/signup?redirect=/${lang}/planner`} style={{ textDecoration: "none" }}>
-            <button style={{ width: "100%", padding: "11px 0", background: "transparent", border: `1px solid ${C.borderMd}`, borderRadius: 14, color: C.text2, fontSize: "0.88rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.brand + "44"; e.currentTarget.style.color = C.brand; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.borderMd; e.currentTarget.style.color = C.text2; }}>
-              Create a free account
+          <Link href={`/${lang}/login?redirect=/${lang}/planner`} style={{ textDecoration: "none" }}>
+            <button style={{ width: "100%", padding: "10px 0", background: "transparent", border: `1px solid rgba(15,23,42,0.12)`, borderRadius: 12, color: C.text2, fontSize: "0.87rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(15,23,42,0.2)"; e.currentTarget.style.color = C.text; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(15,23,42,0.12)"; e.currentTarget.style.color = C.text2; }}>
+              Already have an account? Sign in
             </button>
           </Link>
         </div>
@@ -1463,6 +1457,10 @@ function PlannerClientInner({ lang }) {
   const hasEvent    = !!eventState.event_type;
   const showWelcome = messages.length <= 1 && !hasEvent;
 
+  // Show auth gate: when not logged in AND user has sent 3+ messages
+  const userMsgCount = messages.filter(m => m.role === "user").length;
+  const showAuthGate = authed === false && userMsgCount >= 3;
+
   // Still checking auth — render nothing until confirmed
   if (authed === null) {
     return (
@@ -1490,9 +1488,9 @@ function PlannerClientInner({ lang }) {
 
       <div style={{ height: `calc(100vh - ${SITE_HEADER_H}px)`, display: "flex", flexDirection: "column", background: C.bg, overflow: "hidden", position: "relative" }}>
 
-        {/* Auth gate — shown when not logged in */}
+        {/* Auth gate — shown when not logged in and 3 free messages used */}
         <AnimatePresence>
-          {!authed && <AuthGate lang={lang} />}
+          {showAuthGate && <AuthGate lang={lang} />}
         </AnimatePresence>
 
         {/* Subtle bg orbs */}
@@ -1583,9 +1581,9 @@ function PlannerClientInner({ lang }) {
             <Composer
               input={input}
               setInput={setInput}
-              onSend={sendMessage}
-              loading={loading}
-              onSuggestionClick={sendMessage}
+              onSend={showAuthGate ? () => {} : sendMessage}
+              loading={loading || showAuthGate}
+              onSuggestionClick={showAuthGate ? () => {} : sendMessage}
             />
           </div>
 

@@ -1,16 +1,24 @@
 "use client";
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
-import { authAPI, saveTokens, saveUser } from "@/lib/api";
+import { authAPI, saveTokens, saveUser, isLoggedIn } from "@/lib/api";
 
 // Inner component that reads search params (must be inside Suspense)
 function LoginForm({ dict, lang }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams?.get("redirect") || null;
+
+  // Redirect already-logged-in users
+  useEffect(() => {
+    if (isLoggedIn()) {
+      router.replace(redirectTo || `/${lang}/account`);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");

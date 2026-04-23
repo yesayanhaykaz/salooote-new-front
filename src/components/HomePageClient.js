@@ -689,7 +689,7 @@ function CategoriesCarousel({ categories, lang, dict }) {
           <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none transition-opacity duration-300"
             style={{ background: "linear-gradient(to left, #f0f4ff, transparent)", opacity: canScrollRight ? 1 : 0 }}
           />
-          <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-4" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+          <div ref={scrollRef} className="flex gap-4 overflow-x-auto" style={{ scrollbarWidth: "none", msOverflowStyle: "none", paddingTop: "14px", paddingBottom: "20px" }}>
             {categories.length > 0 ? categories.map((cat, i) => (
               <CategoryPortraitCard key={cat.slug || i} cat={cat} index={i} lang={lang} />
             )) : (
@@ -1410,12 +1410,12 @@ export default function HomePageClient({ dict, lang }) {
       <section className="py-24 bg-white">
         <div className="max-w-container mx-auto px-6 md:px-8">
           <ScrollReveal className="text-center mb-14">
-            <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.15em] mb-3">Plan Any Occasion</p>
+            <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.15em] mb-3">{dict?.events?.sectionLabel || "Plan Any Occasion"}</p>
             <h2 className="font-black text-surface-900 mb-4" style={{ fontSize: "clamp(28px, 3.5vw, 44px)" }}>
-              What are you<br className="hidden md:block" /> celebrating?
+              {dict?.events?.title || "What are you celebrating?"}
             </h2>
             <p className="text-surface-500 text-base max-w-[480px] mx-auto">
-              Find trusted vendors for every event type — from intimate birthdays to grand weddings.
+              {dict?.events?.subtitle || "Find trusted vendors for every event type — from intimate birthdays to grand weddings."}
             </p>
           </ScrollReveal>
 
@@ -1423,8 +1423,9 @@ export default function HomePageClient({ dict, lang }) {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
             {[
               {
-                title: "Weddings",
-                desc: "Make your big day unforgettable",
+                key: "wedding",
+                title: dict?.events?.types?.wedding?.title || "Weddings",
+                desc: dict?.events?.types?.wedding?.desc || "Make your big day unforgettable",
                 icon: Heart,
                 gradient: "from-pink-500 via-rose-500 to-red-400",
                 span: "col-span-2 row-span-2",
@@ -1432,8 +1433,9 @@ export default function HomePageClient({ dict, lang }) {
                 size: 48,
               },
               {
-                title: "Birthdays",
-                desc: "Celebrate every year in style",
+                key: "birthday",
+                title: dict?.events?.types?.birthday?.title || "Birthdays",
+                desc: dict?.events?.types?.birthday?.desc || "Celebrate every year in style",
                 icon: PartyPopper,
                 gradient: "from-blue-400 via-cyan-500 to-sky-400",
                 span: "col-span-1 row-span-1",
@@ -1441,8 +1443,9 @@ export default function HomePageClient({ dict, lang }) {
                 size: 28,
               },
               {
-                title: "Corporate",
-                desc: "Impress clients & teams",
+                key: "corporate",
+                title: dict?.events?.types?.corporate?.title || "Corporate",
+                desc: dict?.events?.types?.corporate?.desc || "Impress clients & teams",
                 icon: Users,
                 gradient: "from-slate-500 via-gray-600 to-zinc-500",
                 span: "col-span-1 row-span-1",
@@ -1450,8 +1453,9 @@ export default function HomePageClient({ dict, lang }) {
                 size: 28,
               },
               {
-                title: "Engagements",
-                desc: "Say yes to forever",
+                key: "engagement",
+                title: dict?.events?.types?.engagement?.title || "Engagements",
+                desc: dict?.events?.types?.engagement?.desc || "Say yes to forever",
                 icon: Sparkles,
                 gradient: "from-violet-500 via-purple-500 to-indigo-500",
                 span: "col-span-1 row-span-2",
@@ -1459,8 +1463,9 @@ export default function HomePageClient({ dict, lang }) {
                 size: 36,
               },
               {
-                title: "Anniversaries",
-                desc: "Honor every milestone",
+                key: "anniversary",
+                title: dict?.events?.types?.anniversary?.title || "Anniversaries",
+                desc: dict?.events?.types?.anniversary?.desc || "Honor every milestone",
                 icon: Star,
                 gradient: "from-orange-400 via-amber-500 to-yellow-400",
                 span: "col-span-1 row-span-1",
@@ -1468,17 +1473,18 @@ export default function HomePageClient({ dict, lang }) {
                 size: 28,
               },
               {
-                title: "Kids' Parties",
-                desc: "Magical moments for little ones",
+                key: "kids_party",
+                title: dict?.events?.types?.kids_party?.title || "Kids' Parties",
+                desc: dict?.events?.types?.kids_party?.desc || "Magical moments for little ones",
                 icon: Gift,
                 gradient: "from-green-400 via-emerald-500 to-teal-500",
                 span: "col-span-1 row-span-1",
                 href: `/${lang}/events/kids-party`,
                 size: 28,
               },
-            ].map(({ title, desc, icon: Icon, gradient, span, href, size }, i) => (
+            ].map(({ key, title, desc, icon: Icon, gradient, span, href, size }) => (
               <motion.div
-                key={i}
+                key={key}
                 className={`${span} rounded-2xl overflow-hidden relative cursor-pointer group`}
                 whileHover={{ scale: 1.02, zIndex: 10 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
