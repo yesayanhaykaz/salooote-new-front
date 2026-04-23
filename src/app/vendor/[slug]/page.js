@@ -231,14 +231,14 @@ export default function VendorProfileClient({ lang = "en", slug }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-surface-50 flex items-center justify-center">
+      <div className="py-24 bg-surface-50 flex items-center justify-center">
         <p className="text-sm text-surface-400">Loading vendor…</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-surface-50">
+    <div className="bg-surface-50">
 
       {/* ── Cover ── */}
       <div className="bg-white pt-5 pb-0">
@@ -418,7 +418,7 @@ export default function VendorProfileClient({ lang = "en", slug }) {
               </div>
             )}
             {products.length === 0 ? (
-              <p className="text-sm text-surface-400 text-center py-16">No products yet.</p>
+              <p className="text-sm text-surface-400 text-center py-10">No products yet.</p>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
                 {products.map((p, i) => <ProductCard key={i} product={p} lang={lang} />)}

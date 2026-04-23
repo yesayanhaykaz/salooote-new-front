@@ -321,7 +321,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   const clearFilters = () => { setPriceIdx(0); setSelectedTags([]); };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
 
       {/* ── Hero ── */}
       <section className={`border-b border-surface-200 relative overflow-hidden ${categoryInfo?.image_url ? "" : "bg-gradient-to-br from-surface-50 to-white"}`}>
@@ -570,7 +570,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
                     ))}
                   </div>
                 ) : filtered.length === 0 ? (
-                  <div className="py-20 text-center">
+                  <div className="py-10 text-center">
                     <Search size={40} className="text-surface-300 mx-auto mb-4" />
                     <p className="text-lg font-semibold text-surface-700 mb-2">{t.noProducts}</p>
                     <p className="text-sm text-surface-400">{t.noProductsDesc}</p>
@@ -629,7 +629,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
             {mainTab === "vendors" && (
               <>
                 {vendors.length === 0 && !loading ? (
-                  <div className="py-20 text-center">
+                  <div className="py-10 text-center">
                     <Package size={40} className="text-surface-300 mx-auto mb-4" />
                     <p className="text-lg font-semibold text-surface-700 mb-2">{t.noVendors}</p>
                     <p className="text-sm text-surface-400">{t.noVendorsDesc}</p>
