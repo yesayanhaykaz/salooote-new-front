@@ -47,7 +47,7 @@ const FALLBACK_NAV = [
   { label: "Gifts & Souvenirs",    slug: "gifts-souvenirs",          icon: Gift },
 ];
 
-export default function Header({ lang = "en" }) {
+export default function Header({ lang: langProp = "en" }) {
   const router = useRouter();
   const pathname = usePathname();
   const { cartCount } = useCart();
@@ -60,6 +60,12 @@ export default function Header({ lang = "en" }) {
   const [loggedIn, setLoggedIn]         = useState(false);
   const [unreadCount, setUnreadCount]   = useState(0);
   const dropdownRef = useRef(null);
+
+  // Always derive lang from the URL — more reliable than relying on the server prop
+  // which may not update when Next.js preserves the client component across navigations
+  const VALID_LANGS = ["en", "hy", "ru"];
+  const pathLang = pathname.split("/")[1];
+  const lang = VALID_LANGS.includes(pathLang) ? pathLang : (langProp || "en");
 
   // Re-read auth state on every route change (fixes stale header after login)
   useEffect(() => {
@@ -109,17 +115,23 @@ export default function Header({ lang = "en" }) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Re-fetch categories whenever the active language changes (derived from pathname)
+  const lastFetchedLang = useRef(null);
   useEffect(() => {
+    if (lastFetchedLang.current === lang) return; // skip if lang hasn't actually changed
+    lastFetchedLang.current = lang;
     categoriesAPI.list(lang)
       .then(res => {
-        setNavCategories((res?.data || []).slice(0, 8).map(c => ({
+        const cats = res?.data || [];
+        if (!cats.length) return;
+        setNavCategories(cats.slice(0, 8).map(c => ({
           label: c.name,
           slug: c.slug,
           icon: ICON_MAP[c.icon] || ICON_MAP[c.emoji] || slugIcon(c.slug),
         })));
       })
       .catch(() => {});
-  }, [lang]);
+  }, [pathname]); // pathname changes on every navigation, lang is derived from it
 
   const handleLogout = () => {
     clearAuth();
