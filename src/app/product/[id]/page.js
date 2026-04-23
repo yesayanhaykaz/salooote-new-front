@@ -44,7 +44,9 @@ export default function ProductDetailPage({ productId, lang = "en" }) {
             rating: parseFloat(p.rating) || 0,
             reviewCount: p.review_count || 0,
             tag: null,
-            description: p.description || p.short_description || "",
+            description: (p.description || p.short_description || "")
+              .replace(/\\n/g, "\n")   // turn literal \n into real newline
+              .replace(/\n/g, "<br>"), // then convert to <br> for HTML rendering
             images: imageUrls,
             tags: p.tags || [],
             thumbnail: imageUrls[0] || null,

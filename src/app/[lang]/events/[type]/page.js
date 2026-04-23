@@ -3,7 +3,7 @@ import EventTypeClient from "./EventTypeClient";
 
 export async function generateStaticParams() {
   const langs = ["en", "hy", "ru"];
-  const types = ["wedding", "birthday", "corporate", "engagement", "anniversary", "kids-party"];
+  const types = ["wedding", "birthday", "corporate", "engagement", "anniversary", "kids-party", "balloons", "cakes", "cartoon-characters", "gifts", "romantic", "baptism", "baby-tooth", "christmas"];
   return langs.flatMap(lang => types.map(type => ({ lang, type })));
 }
 
