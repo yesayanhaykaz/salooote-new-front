@@ -29,7 +29,6 @@ export default function LanguageSwitcher({ currentLang }) {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-surface-200 bg-white text-sm font-medium text-surface-700 hover:border-brand-300 hover:bg-surface-50 transition-all cursor-pointer"
       >
-        <span className="text-base leading-none">{LOCALE_FLAGS[currentLang]}</span>
         <span className="uppercase text-xs font-bold text-surface-600">{currentLang}</span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
@@ -65,7 +64,6 @@ export default function LanguageSwitcher({ currentLang }) {
                       : "bg-white text-surface-700 hover:bg-surface-50"
                   }`}
                 >
-                  <span className="text-base leading-none">{LOCALE_FLAGS[locale]}</span>
                   <span className="flex-1">{LOCALE_NAMES[locale]}</span>
                   {locale === currentLang && (
                     <Check size={13} className="text-brand-500 flex-shrink-0" />
