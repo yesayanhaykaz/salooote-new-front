@@ -183,4 +183,20 @@ export const plannerAPI = {
     request(`/user/planner/sessions/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   delete: (id) =>
     request(`/user/planner/sessions/${id}`, { method: "DELETE" }),
+  getInquiries: (sessionId) =>
+    request(`/user/planner/sessions/${sessionId}/inquiries`),
+};
+
+// User — Inquiries + messaging
+export const inquiriesAPI = {
+  list: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return request(`/user/inquiries${q ? "?" + q : ""}`);
+  },
+  create: (data) =>
+    request("/user/inquiries", { method: "POST", body: JSON.stringify(data) }),
+  getMessages: (inquiryId) =>
+    request(`/user/inquiries/${inquiryId}/messages`),
+  sendMessage: (inquiryId, body) =>
+    request(`/user/inquiries/${inquiryId}/messages`, { method: "POST", body: JSON.stringify({ body }) }),
 };

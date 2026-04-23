@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send, Sparkles, ArrowLeft, Check, Search, X, Star,
@@ -892,9 +892,139 @@ function ProgressByCategory({ services, selectedVendors }) {
 }
 
 /* ─────────────────────────────────────────
+   BULK INQUIRY MODAL (T3)
+───────────────────────────────────────── */
+function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
+  const vendors = Object.entries(eventState.selected_vendors || {});
+  const [sending,   setSending]   = useState(false);
+  const [results,   setResults]   = useState({}); // {service_type: "ok"|"err"}
+  const [done,      setDone]      = useState(false);
+
+  const allSent = Object.keys(results).length === vendors.length && Object.values(results).every(v => v === "ok");
+
+  const handleSend = async () => {
+    if (!vendors.length) return;
+    setSending(true);
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
+    const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+
+    const eventTypeLine = eventState.event_type_label || eventState.event_type?.replace(/_/g, " ") || "event";
+    const guestLine = eventState.guest_count ? `Guests: ${eventState.guest_count}` : "";
+    const dateLine  = eventState.date ? `Date: ${eventState.date}` : "";
+    const cityLine  = eventState.city ? `Location: ${eventState.city}` : "";
+    const budgetLine = eventState.budget?.description ? `Budget: ${eventState.budget.description}` : "";
+
+    const newResults = {};
+    await Promise.all(vendors.map(async ([serviceType, vendor]) => {
+      const svc = (eventState.services || []).find(s => s.service_type === serviceType);
+      const svcTitle = svc?.title || serviceType.replace(/_/g, " ");
+      const body = {
+        vendor_id: vendor.id,
+        subject: `Inquiry for ${svcTitle} — ${eventTypeLine}`,
+        message: [
+          `Hello! I'm planning a ${eventTypeLine} and I'd love to work with you for ${svcTitle}.`,
+          "",
+          [dateLine, cityLine, guestLine, budgetLine].filter(Boolean).join("\n"),
+          "",
+          "Please let me know your availability and pricing. Looking forward to hearing from you!",
+        ].join("\n"),
+        event_type: eventState.event_type,
+        guest_count: eventState.guest_count ? parseInt(eventState.guest_count) : undefined,
+        ...(sessionId ? { planner_session_id: sessionId } : {}),
+      };
+      try {
+        const res = await fetch(`${base}/user/inquiries`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+          body: JSON.stringify(body),
+        });
+        newResults[serviceType] = res.ok ? "ok" : "err";
+      } catch {
+        newResults[serviceType] = "err";
+      }
+    }));
+
+    setResults(newResults);
+    setSending(false);
+    setDone(true);
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.35)", backdropFilter: "blur(8px)" }} onClick={onClose}>
+      <motion.div initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 26 }}
+        onClick={e => e.stopPropagation()}
+        style={{ background: "#fff", borderRadius: 20, padding: "28px 28px 24px", width: "90%", maxWidth: 480, maxHeight: "85vh", overflowY: "auto", boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}>
+
+        <div style={{ marginBottom: 20 }}>
+          <h3 style={{ margin: "0 0 6px", fontSize: "1.05rem", fontWeight: 800, color: C.text }}>
+            {done ? (allSent ? "✓ Requests Sent!" : "Sent with some errors") : "Send Inquiry to All Vendors"}
+          </h3>
+          <p style={{ margin: 0, fontSize: "0.82rem", color: C.text2, lineHeight: 1.5 }}>
+            {done
+              ? "Vendors will reply to your inquiries. You can track them in your messages."
+              : `Send one personalised inquiry to each of your ${vendors.length} selected vendors. They'll receive your event details and get back to you.`
+            }
+          </p>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
+          {vendors.map(([serviceType, vendor]) => {
+            const result = results[serviceType];
+            return (
+              <div key={serviceType} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 13px", background: result === "ok" ? "#f0fdf4" : result === "err" ? "#fef2f2" : "#f8fafc", border: `1px solid ${result === "ok" ? "#bbf7d0" : result === "err" ? "#fecaca" : C.border}`, borderRadius: 12 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: result === "ok" ? "#dcfce7" : result === "err" ? "#fee2e2" : "rgba(15,23,42,0.05)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  {sending && !result
+                    ? <Loader2 size={14} color={C.text3} style={{ animation: "spin 0.8s linear infinite" }} />
+                    : result === "ok" ? <Check size={14} color="#16a34a" />
+                    : result === "err" ? <X size={14} color="#dc2626" />
+                    : <Send size={14} color={C.text3} />
+                  }
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ margin: 0, fontSize: "0.8rem", fontWeight: 600, color: C.text }}>{vendor.name}</p>
+                  <p style={{ margin: 0, fontSize: "0.7rem", color: C.text3, textTransform: "capitalize" }}>{serviceType.replace(/_/g, " ")}</p>
+                </div>
+                {result === "ok" && <span style={{ fontSize: "0.68rem", color: "#16a34a", fontWeight: 700 }}>Sent</span>}
+                {result === "err" && <span style={{ fontSize: "0.68rem", color: "#dc2626", fontWeight: 700 }}>Failed</span>}
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          {done ? (
+            <>
+              <Link href={`/${lang}/account/inquiries`} style={{ textDecoration: "none", flex: 1 }}>
+                <button style={{ width: "100%", padding: "11px 0", background: C.grad, border: "none", borderRadius: 12, color: "#fff", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                  View Inquiries
+                </button>
+              </Link>
+              <button onClick={onClose} style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 12, color: C.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                Close
+              </button>
+            </>
+          ) : (
+            <>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+                onClick={handleSend} disabled={sending || !vendors.length}
+                style={{ flex: 1, padding: "11px 0", background: vendors.length ? C.grad : "rgba(15,23,42,0.07)", border: "none", borderRadius: 12, color: vendors.length ? "#fff" : C.text3, fontSize: "0.88rem", fontWeight: 700, cursor: vendors.length ? "pointer" : "default", boxShadow: vendors.length ? "0 6px 20px rgba(225,29,92,0.25)" : "none", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                {sending ? <><Loader2 size={14} /> Sending…</> : <><Send size={14} /> Send to {vendors.length} Vendors</>}
+              </motion.button>
+              <button onClick={onClose} style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 12, color: C.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+                Cancel
+              </button>
+            </>
+          )}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
    PLAN PANEL (right, when event active)
 ───────────────────────────────────────── */
-function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor }) {
+function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, sessionId, lang, onOpenBulkModal }) {
   const { event_type, event_type_label, accent, date, city, guest_count, budget, services = [], selected_vendors = {} } = eventState;
   const searchable = services.filter(s => s.canSearch);
   const sel = Object.keys(selected_vendors).length;
@@ -917,9 +1047,13 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
             </h2>
           </div>
           <div style={{ display: "flex", gap: 5, flexShrink: 0 }}>
-            <button style={{ background: "transparent", border: `1px solid ${C.border}`, borderRadius: 999, padding: "5px 10px", fontSize: 11.5, color: C.text2, cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
-              <Bookmark size={11} /> Save
-            </button>
+            {sel > 0 && (
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                onClick={onOpenBulkModal}
+                style={{ background: C.grad, border: "none", borderRadius: 999, padding: "5px 12px", fontSize: 11.5, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit", fontWeight: 700, boxShadow: "0 4px 14px rgba(225,29,92,0.25)" }}>
+                <Send size={11} /> Send to Vendors
+              </motion.button>
+            )}
             <button style={{ background: "transparent", border: `1px solid ${C.border}`, borderRadius: 999, padding: "5px 10px", fontSize: 11.5, color: C.text2, cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
               <Share2 size={11} /> Share
             </button>
@@ -1130,14 +1264,17 @@ const INITIAL_STATE = {
 
 const SITE_HEADER_H = 64;
 
-export default function PlannerClient({ lang }) {
+function PlannerClientInner({ lang }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const resumeSessionId = searchParams?.get("session") || null;
 
   // ── Auth ──────────────────────────────────────────────────
-  const [authed,    setAuthed]    = useState(null); // null = checking, true/false
-  const [user,      setUser]      = useState(null);
-  const [sessionId, setSessionId] = useState(null); // backend session id
-  const [saveStatus,setSaveStatus]= useState("idle"); // "idle"|"saving"|"saved"|"error"
+  const [authed,       setAuthed]       = useState(null); // null = checking, true/false
+  const [user,         setUser]         = useState(null);
+  const [sessionId,    setSessionId]    = useState(null); // backend session id
+  const [saveStatus,   setSaveStatus]   = useState("idle"); // "idle"|"saving"|"saved"|"error"
+  const [showBulkModal,setShowBulkModal]= useState(false);
   const saveTimerRef = useRef(null);
 
   useEffect(() => {
@@ -1217,6 +1354,28 @@ export default function PlannerClient({ lang }) {
     }, 400);
     return () => clearTimeout(t);
   }, []);
+
+  // Load saved session from ?session= param (T2)
+  useEffect(() => {
+    if (!resumeSessionId || !authed) return;
+    plannerAPI.getById(resumeSessionId)
+      .then(res => {
+        const sess = res?.data || res;
+        if (!sess) return;
+        const savedState = sess.event_data;
+        if (savedState && savedState.event_type) {
+          setEventState(savedState);
+          setSessionId(sess.id);
+          setMessages(prev => [...prev, {
+            id: Date.now(), role: "bot",
+            text: `Welcome back! 🎉 I loaded your **${savedState.event_type_label || savedState.event_type}** plan. You have ${Object.keys(savedState.selected_vendors || {}).length} vendors confirmed. What would you like to work on?`,
+            suggestions: getContextSuggestions(savedState),
+          }]);
+        }
+      })
+      .catch(() => {});
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resumeSessionId, authed]);
 
   const pushBot = useCallback((text, currentState) => {
     const suggestions = getContextSuggestions(currentState || eventState);
@@ -1452,6 +1611,9 @@ export default function PlannerClient({ lang }) {
                     onSelectVendor={handleSelectVendor}
                     onSearchVendors={handleSearchVendors}
                     onUnselectVendor={handleUnselectVendor}
+                    sessionId={sessionId}
+                    lang={lang}
+                    onOpenBulkModal={() => setShowBulkModal(true)}
                   />
                 </motion.div>
               )}
@@ -1460,6 +1622,24 @@ export default function PlannerClient({ lang }) {
 
         </div>
       </div>
+
+      {/* Bulk Inquiry Modal */}
+      {showBulkModal && (
+        <BulkInquiryModal
+          eventState={eventState}
+          sessionId={sessionId}
+          lang={lang}
+          onClose={() => setShowBulkModal(false)}
+        />
+      )}
     </>
+  );
+}
+
+export default function PlannerClient({ lang }) {
+  return (
+    <Suspense fallback={null}>
+      <PlannerClientInner lang={lang} />
+    </Suspense>
   );
 }
