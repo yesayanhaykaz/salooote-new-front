@@ -604,54 +604,177 @@ function ChatWelcome() {
 }
 
 /* ─────────────────────────────────────────
-   VENDOR CARD  (in service results)
+   VENDOR CARD  — image-based grid card
 ───────────────────────────────────────── */
-const VENDOR_PALETTES = [
-  ["#7c3aed", "rgba(124,58,237,0.07)"], ["#e11d5c", "rgba(225,29,92,0.07)"],
-  ["#059669", "rgba(5,150,105,0.07)"],  ["#d97706", "rgba(217,119,6,0.07)"],
-  ["#0891b2", "rgba(8,145,178,0.07)"],  ["#db2777", "rgba(219,39,119,0.07)"],
+const VENDOR_GRAD_COLORS = [
+  ["#7c3aed","#a855f7"], ["#e11d5c","#f43f5e"], ["#059669","#10b981"],
+  ["#d97706","#f59e0b"], ["#0891b2","#06b6d4"], ["#db2777","#ec4899"],
 ];
 
-function VendorCard({ vendor, onSelect }) {
-  const [hov, setHov] = useState(false);
-  const name   = vendor.business_name || vendor.name || "Vendor";
+function VendorCard({ vendor, isSelected, onPreview }) {
+  const name  = vendor.business_name || vendor.name || "Vendor";
+  const image = vendor.cover_image || vendor.logo_url || null;
   const rating = parseFloat(vendor.rating) || 0;
   const city   = vendor.city || "";
-  const [fg, bg] = VENDOR_PALETTES[name.charCodeAt(0) % VENDOR_PALETTES.length];
+  const [c1, c2] = VENDOR_GRAD_COLORS[name.charCodeAt(0) % VENDOR_GRAD_COLORS.length];
+
   return (
     <motion.div
-      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
-      initial={{ opacity: 0, scale: 0.92, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-      whileHover={{ y: -3 }} transition={{ type: "spring", stiffness: 340, damping: 24 }}
+      initial={{ opacity: 0, scale: 0.94, y: 6 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+      whileHover={{ scale: 1.03, y: -3, boxShadow: `0 14px 32px rgba(0,0,0,0.14)` }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      onClick={() => onPreview(vendor)}
       style={{
-        background: "#fff", border: `1px solid ${hov ? fg + "44" : C.border}`,
-        boxShadow: hov ? `0 10px 28px ${fg}18,0 2px 8px rgba(0,0,0,0.04)` : "0 2px 6px rgba(0,0,0,0.04)",
-        borderRadius: 12, minWidth: 152, maxWidth: 172, flexShrink: 0,
-        overflow: "hidden", cursor: "pointer", transition: "border-color 0.18s,box-shadow 0.18s",
+        borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff",
+        border: isSelected ? `2.5px solid ${C.purple}` : `1.5px solid ${C.border}`,
+        boxShadow: isSelected ? `0 0 0 4px ${C.purple}18, 0 4px 16px rgba(0,0,0,0.08)` : "0 2px 8px rgba(0,0,0,0.06)",
+        transition: "border-color 0.15s, box-shadow 0.15s",
       }}
     >
-      {/* color top bar */}
-      <div style={{ height: 3, background: hov ? `linear-gradient(90deg,${fg},${fg}88)` : C.border }} />
-      <div style={{ padding: "11px 12px 12px" }}>
-        <div style={{ width: 32, height: 32, borderRadius: 8, background: bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem", fontWeight: 800, color: fg, marginBottom: 8 }}>
-          {name[0]?.toUpperCase() || "V"}
-        </div>
-        <p style={{ margin: "0 0 2px", fontSize: "0.75rem", fontWeight: 700, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
-        <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 9, minHeight: 15 }}>
-          {rating > 0 && <><Star size={9} style={{ color: "#f59e0b", fill: "#f59e0b", flexShrink: 0 }} /><span style={{ fontSize: "0.67rem", color: C.text2, fontWeight: 600 }}>{rating.toFixed(1)}</span></>}
-          {city && <span style={{ fontSize: "0.65rem", color: C.text3, marginLeft: rating > 0 ? 2 : 0 }}>{rating > 0 ? "· " : ""}{city}</span>}
-        </div>
-        <motion.button whileTap={{ scale: 0.96 }} onClick={() => onSelect(vendor)}
-          style={{
-            width: "100%", background: hov ? `linear-gradient(135deg,${fg},${fg}cc)` : "transparent",
-            border: `1px solid ${hov ? fg : C.borderMd}`, borderRadius: 7,
-            color: hov ? "#fff" : C.text2, fontSize: "0.69rem", fontWeight: 600,
-            padding: "5px 0", cursor: "pointer", transition: "all 0.15s",
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 3,
-          }}>
-          Select <ChevronRight size={10} strokeWidth={2.5} />
-        </motion.button>
+      {/* Image */}
+      <div style={{ height: 120, position: "relative", overflow: "hidden" }}>
+        {image ? (
+          <img src={image} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        ) : (
+          <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${c1}33, ${c2}55)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: "2rem", fontWeight: 900, color: c1, opacity: 0.55 }}>{name[0]?.toUpperCase()}</span>
+          </div>
+        )}
+        {/* Selected overlay */}
+        <AnimatePresence>
+          {isSelected && (
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ position: "absolute", inset: 0, background: "rgba(124,58,237,0.52)", display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              <div style={{ background: "#fff", borderRadius: 100, padding: "5px 13px", display: "flex", alignItems: "center", gap: 5, boxShadow: "0 2px 12px rgba(0,0,0,0.18)" }}>
+                <Check size={12} color={C.purple} strokeWidth={3} />
+                <span style={{ fontSize: "0.74rem", fontWeight: 800, color: C.purple }}>Selected</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+      {/* Info */}
+      <div style={{ padding: "9px 10px 10px" }}>
+        <p style={{ margin: "0 0 3px", fontSize: "0.78rem", fontWeight: 700, color: C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "nowrap", overflow: "hidden" }}>
+          {rating > 0 && (
+            <>
+              <Star size={9} style={{ color: "#f59e0b", fill: "#f59e0b", flexShrink: 0 }} />
+              <span style={{ fontSize: "0.66rem", color: C.text2, fontWeight: 600, flexShrink: 0 }}>{rating.toFixed(1)}</span>
+            </>
+          )}
+          {city && <span style={{ fontSize: "0.64rem", color: C.text3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{rating > 0 ? " · " : ""}{city}</span>}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   VENDOR DETAIL POPUP  — masonry photo grid
+───────────────────────────────────────── */
+function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
+  const [photos,  setPhotos]  = useState([]);
+  const [loading, setLoading] = useState(true);
+  const name = vendor.business_name || vendor.name || "Vendor";
+  const slug = vendor.slug || "";
+
+  useEffect(() => {
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
+    const params = new URLSearchParams({ limit: "16" });
+    if (vendor.id) params.set("vendor_id", vendor.id);
+    fetch(`${base}/products?${params}`)
+      .then(r => r.json())
+      .then(d => setPhotos((d.data || []).filter(p => p.thumbnail_url || p.images?.[0]?.url)))
+      .catch(() => setPhotos([]))
+      .finally(() => setLoading(false));
+  }, [vendor.id]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 400, background: "rgba(15,23,42,0.55)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center" }}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.97, y: 10 }}
+        transition={{ type: "spring", stiffness: 300, damping: 28 }}
+        onClick={e => e.stopPropagation()}
+        style={{ background: "#fff", borderRadius: 20, width: "90%", maxWidth: 660, maxHeight: "86vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.22)" }}
+      >
+        {/* Header */}
+        <div style={{ padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <button onClick={onClose}
+              style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${C.border}`, background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: C.text2, flexShrink: 0 }}>
+              <X size={13} />
+            </button>
+            <span style={{ fontSize: "0.95rem", fontWeight: 800, color: C.text, letterSpacing: "-0.02em" }}>{name}</span>
+          </div>
+          {slug && (
+            <a href={`/${lang}/vendor/${slug}`} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                style={{ background: C.purple, border: "none", borderRadius: 8, padding: "7px 14px", color: "#fff", fontSize: "0.76rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", letterSpacing: "-0.01em" }}>
+                View Business Page
+              </motion.button>
+            </a>
+          )}
+        </div>
+
+        {/* Photo masonry */}
+        <div style={{ flex: 1, overflowY: "auto", padding: 14 }}>
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "48px 0" }}>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}>
+                <Loader2 size={26} color={C.text3} />
+              </motion.div>
+            </div>
+          ) : photos.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "48px 0", color: C.text3, fontSize: "0.84rem" }}>
+              No portfolio photos yet
+            </div>
+          ) : (
+            <div style={{ columns: "4 140px", columnGap: 8 }}>
+              {photos.map((p, i) => {
+                const img = p.thumbnail_url || p.images?.[0]?.url;
+                return (
+                  <div key={p.id || i} style={{ breakInside: "avoid", marginBottom: 8, borderRadius: 8, overflow: "hidden", background: C.border }}>
+                    <img src={img} alt={p.name || ""} style={{ width: "100%", display: "block", borderRadius: 8 }} loading="lazy" />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: "14px 18px", borderTop: `1px solid ${C.border}`, display: "flex", gap: 10, flexShrink: 0 }}>
+          <motion.button
+            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
+            onClick={() => { onSelect(vendor); onClose(); }}
+            style={{
+              flex: 1, padding: "11px 0",
+              background: isSelected ? "#f0fdf4" : `linear-gradient(135deg, #7c3aed, #a855f7)`,
+              border: isSelected ? "1.5px solid #86efac" : "none",
+              borderRadius: 12, color: isSelected ? "#16a34a" : "#fff",
+              fontSize: "0.88rem", fontWeight: 700, cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+              fontFamily: "inherit",
+              boxShadow: isSelected ? "none" : "0 6px 20px rgba(124,58,237,0.3)",
+            }}>
+            <Check size={14} strokeWidth={2.5} />
+            {isSelected ? "Already Selected — Click to deselect" : "Select this vendor"}
+          </motion.button>
+          <button onClick={onClose}
+            style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${C.borderMd}`, borderRadius: 12, color: C.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+            Close
+          </button>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -1009,8 +1132,9 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
 /* ─────────────────────────────────────────
    VENDOR SEARCH MODAL  (popup on Find click)
 ───────────────────────────────────────── */
-function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch, accent }) {
+function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch, accent, selectedVendors = {}, lang = "en" }) {
   const [query, setQuery] = useState("");
+  const [detailVendor, setDetailVendor] = useState(null);
   const results   = vendorResults[service.service_type] || [];
   const isSearching = service.searching;
 
@@ -1025,9 +1149,10 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
   }, []);
 
   return (
+    <>
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={onClose}
+      onClick={() => { if (!detailVendor) onClose(); }}
       style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.40)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }}
     >
       <motion.div
@@ -1090,7 +1215,12 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: 10 }}>
               {filtered.map((v, i) => (
-                <VendorCard key={v.id || i} vendor={v} onSelect={vendor => { onSelect(service.service_type, vendor); onClose(); }} />
+                <VendorCard
+                  key={v.id || i}
+                  vendor={v}
+                  isSelected={!!(selectedVendors[service.service_type]?.id === v.id)}
+                  onPreview={setDetailVendor}
+                />
               ))}
             </div>
           )}
@@ -1104,6 +1234,20 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
         </div>
       </motion.div>
     </motion.div>
+
+    {/* Vendor detail popup — rendered on top of this modal */}
+    <AnimatePresence>
+      {detailVendor && (
+        <VendorDetailPopup
+          vendor={detailVendor}
+          isSelected={!!(selectedVendors[service.service_type]?.id === detailVendor.id)}
+          onSelect={vendor => { onSelect(service.service_type, vendor); setDetailVendor(null); onClose(); }}
+          onClose={() => setDetailVendor(null)}
+          lang={lang}
+        />
+      )}
+    </AnimatePresence>
+    </>
   );
 }
 
@@ -1204,6 +1348,8 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
             onClose={() => setSearchModalSvc(null)}
             onSearch={(type, title) => { onSearchVendors(type, title); }}
             accent={accent}
+            selectedVendors={selected_vendors}
+            lang={lang}
           />
         )}
       </AnimatePresence>

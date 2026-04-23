@@ -34,6 +34,8 @@ const slugIcon = (slug = "") => {
   return Gift;
 };
 
+const PILL_ALL_LABEL = { en: "All Products", hy: "Բոլոր Ապրանքներ", ru: "Все Товары" };
+
 const FALLBACK_NAV = [
   { label: "Cakes & Desserts",     slug: "cakes-desserts",           icon: Cake },
   { label: "Catering & Food",      slug: "catering-food",            icon: UtensilsCrossed },
@@ -339,13 +341,13 @@ export default function Header({ lang = "en" }) {
               align-items: center;
               gap: 0px;
               width: max-content;
-              animation: headerPillsTicker 40s linear infinite;
+              animation: headerPillsTicker 70s linear infinite;
               will-change: transform;
             }
           `}</style>
           <div className="py-1.5">
             {(() => {
-              const allProductsItem = { label: "All Products", slug: "products", icon: Sparkles, isAll: true };
+              const allProductsItem = { label: PILL_ALL_LABEL[lang] || PILL_ALL_LABEL.en, slug: "products", icon: Sparkles, isAll: true };
               const base = [...navCategories, allProductsItem];
               // Repeat enough times so one "half" (the copy we animate through) is always wider than any screen
               const minItems = 20;
