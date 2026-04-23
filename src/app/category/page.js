@@ -219,20 +219,26 @@ export default function CategoryPage({ lang = "en", slug }) {
   const [categoryInfo, setCategoryInfo] = useState(null);
   const [loading, setLoading]           = useState(true);
   const [categoryID, setCategoryID]     = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
 
   const categoryName = categoryInfo?.name ||
     (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "All Categories");
 
-  // Step 1: resolve slug → category info + filters
+  // Step 1: resolve slug → category info + filters + subcategories
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
     Promise.all([
       categoriesAPI.getBySlug(slug, lang).catch(() => null),
       categoriesAPI.getFilters(slug, lang).catch(() => null),
-    ]).then(([catRes, filterRes]) => {
+      categoriesAPI.list(lang).catch(() => null),
+    ]).then(([catRes, filterRes, listRes]) => {
       if (catRes?.data) {
         setCategoryInfo(catRes.data);
         setCategoryID(catRes.data.id);
+        // Find subcategories from the full tree
+        const allCats = listRes?.data || [];
+        const parent = allCats.find(c => c.slug === slug);
+        setSubcategories(parent?.children || []);
       }
       if (filterRes?.data) {
         const fd = filterRes.data;
@@ -364,6 +370,54 @@ export default function CategoryPage({ lang = "en", slug }) {
           </div>
         </div>
       </section>
+
+      {/* ── Subcategory strip ── */}
+      {subcategories.length > 0 && (
+        <section className="border-b border-surface-100 bg-white">
+          <div className="max-w-container mx-auto px-6 md:px-8 py-5">
+            <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-1">
+              {subcategories.map((sub, i) => {
+                const hue = sub.color || "#7c3aed";
+                return (
+                  <Link
+                    key={sub.id || sub.slug}
+                    href={`/${lang}/category/${sub.slug}`}
+                    className="no-underline flex-shrink-0 group"
+                  >
+                    <div
+                      className="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-2xl border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                      style={{
+                        background: `${hue}0d`,
+                        borderColor: `${hue}30`,
+                      }}
+                    >
+                      {/* colored dot */}
+                      <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ background: hue }}
+                      />
+                      <span
+                        className="text-sm font-semibold whitespace-nowrap transition-colors"
+                        style={{ color: hue }}
+                      >
+                        {sub.name}
+                      </span>
+                      {sub.product_count > 0 && (
+                        <span
+                          className="text-[11px] font-bold px-1.5 py-0.5 rounded-full"
+                          style={{ background: `${hue}20`, color: hue }}
+                        >
+                          {sub.product_count}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="max-w-container mx-auto px-6 md:px-8 py-8">
 
