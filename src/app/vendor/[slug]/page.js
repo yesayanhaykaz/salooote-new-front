@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { vendorsAPI, productsAPI, userAPI, inquiriesAPI, isLoggedIn } from "@/lib/api";
+import { categoriesAPI } from "@/lib/api";
 import {
   Star, MapPin, Phone, MessageCircle,
   Heart, Share2, ArrowLeft, X, Package,
@@ -139,19 +140,22 @@ export default function VendorProfileClient({ lang = "en", slug }) {
       const vendor = vRes.data;
       setVendorData(vendor);
 
-      // Fetch products + vendor categories in parallel
+      // Fetch products + all categories in parallel
       const [pRes, cRes] = await Promise.all([
-        productsAPI.list({ vendor_id: vendor.id, limit: 50, locale: lang }).catch(() => null),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/vendors/${vendor.id}/categories`).then(r => r.json()).catch(() => null),
+        productsAPI.list({ vendor_id: vendor.id, limit: 100, locale: lang }).catch(() => null),
+        categoriesAPI.list(lang).catch(() => null),
       ]);
 
       const raw = pRes?.data || [];
-      setProducts(raw.map(p => ({
+      const allCats = cRes || [];
+
+      const mapped = raw.map(p => ({
         id: p.id,
         name: p.name,
         slug: p.slug || "",
         vendor_id: vendor.id,
         vendor_slug: vendor.slug || "",
+        category_id: p.category_id || null,
         price: parseFloat(p.price) || 0,
         originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
         rating: parseFloat(p.rating) || 0,
@@ -161,11 +165,16 @@ export default function VendorProfileClient({ lang = "en", slug }) {
         image: p.thumbnail_url || p.images?.[0]?.url || null,
         tags: p.tags || [],
         gradient: "from-brand-50 to-brand-100",
-      })));
+      }));
+      setProducts(mapped);
 
-      // Only show categories the vendor is registered in (no product-level filtering needed)
-      const cats = cRes?.data || cRes || [];
-      setVendorCats(Array.isArray(cats) ? cats : []);
+      // Build category filter list from unique category_ids in products
+      const usedCatIds = [...new Set(mapped.map(p => p.category_id).filter(Boolean))];
+      const flatCats = allCats.flatMap(c => [c, ...(c.children || [])]);
+      const vendorCategories = usedCatIds
+        .map(id => flatCats.find(c => c.id === id))
+        .filter(Boolean);
+      setVendorCats(vendorCategories);
     }).finally(() => setLoading(false));
   }, [slug, lang]);
 
@@ -395,37 +404,45 @@ export default function VendorProfileClient({ lang = "en", slug }) {
       {/* ── Content ── */}
       <div className="max-w-container mx-auto px-6 md:px-8 py-8">
 
-        {mainTab === "products" && (
-          <>
-            {/* Category filter tabs — only shown when vendor has multiple categories */}
-            {vendorCats.length > 1 && (
-              <div className="flex items-center gap-2 mb-6 flex-wrap">
-                <button
-                  onClick={() => setActiveCat("all")}
-                  className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all cursor-pointer ${activeCat === "all" ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
-                >
-                  All
-                </button>
-                {vendorCats.map(cat => (
+        {mainTab === "products" && (() => {
+          const filtered = activeCat === "all"
+            ? products
+            : products.filter(p => p.category_id === activeCat);
+          return (
+            <>
+              {/* Category filter chips — only when vendor has products in multiple categories */}
+              {vendorCats.length > 1 && (
+                <div className="flex items-center gap-2 mb-6 flex-wrap">
                   <button
-                    key={cat.id}
-                    onClick={() => setActiveCat(cat.id)}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all cursor-pointer ${activeCat === cat.id ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
+                    onClick={() => setActiveCat("all")}
+                    className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all cursor-pointer ${activeCat === "all" ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
                   >
-                    {cat.name}
+                    All ({products.length})
                   </button>
-                ))}
-              </div>
-            )}
-            {products.length === 0 ? (
-              <p className="text-sm text-surface-400 text-center py-10">No products yet.</p>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                {products.map((p, i) => <ProductCard key={i} product={p} lang={lang} />)}
-              </div>
-            )}
-          </>
-        )}
+                  {vendorCats.map(cat => {
+                    const count = products.filter(p => p.category_id === cat.id).length;
+                    return (
+                      <button
+                        key={cat.id}
+                        onClick={() => setActiveCat(cat.id)}
+                        className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all cursor-pointer ${activeCat === cat.id ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"}`}
+                      >
+                        {cat.name} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              {filtered.length === 0 ? (
+                <p className="text-sm text-surface-400 text-center py-10">No products in this category.</p>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {filtered.map((p, i) => <ProductCard key={i} product={p} lang={lang} />)}
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         {mainTab === "gallery" && (
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
