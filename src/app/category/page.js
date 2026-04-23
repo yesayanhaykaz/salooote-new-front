@@ -193,7 +193,7 @@ function CheckboxFilter({ label, checked, onChange }) {
   );
 }
 
-export default function CategoryPage({ lang = "en", slug }) {
+export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   const t = T[lang] || T.en;
   const SORT_OPTIONS = [
     { label: t.sortMostPopular, value: "popular" },
@@ -216,37 +216,44 @@ export default function CategoryPage({ lang = "en", slug }) {
   const [total, setTotal]               = useState(0);
   const [filters, setFilters]           = useState({ min_price: 0, max_price: 0, tags: [] });
   const [priceRanges, setPriceRanges]   = useState(buildPriceRanges(0, 0));
-  const [categoryInfo, setCategoryInfo] = useState(null);
-  const [loading, setLoading]           = useState(true);
-  const [categoryID, setCategoryID]     = useState(null);
+  const [categoryInfo, setCategoryInfo]   = useState(null);
+  const [parentInfo, setParentInfo]       = useState(null);
+  const [loading, setLoading]             = useState(true);
+  const [categoryID, setCategoryID]       = useState(null);
   const [subcategories, setSubcategories] = useState([]);
 
   const categoryName = categoryInfo?.name ||
     (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "All Categories");
+  const parentName = parentInfo?.name ||
+    (parentSlug ? parentSlug.charAt(0).toUpperCase() + parentSlug.slice(1).replace(/-/g, " ") : "");
 
-  // Step 1: resolve slug → category info + filters + subcategories
+  // Step 1: resolve slug → category info + filters + subcategories (+ parent if subcat)
   useEffect(() => {
     if (!slug) { setLoading(false); return; }
     Promise.all([
       categoriesAPI.getBySlug(slug, lang).catch(() => null),
       categoriesAPI.getFilters(slug, lang).catch(() => null),
       categoriesAPI.list(lang).catch(() => null),
-    ]).then(([catRes, filterRes, listRes]) => {
+      parentSlug ? categoriesAPI.getBySlug(parentSlug, lang).catch(() => null) : Promise.resolve(null),
+    ]).then(([catRes, filterRes, listRes, parentRes]) => {
       if (catRes?.data) {
         setCategoryInfo(catRes.data);
         setCategoryID(catRes.data.id);
-        // Find subcategories from the full tree
-        const allCats = listRes?.data || [];
-        const parent = allCats.find(c => c.slug === slug);
-        setSubcategories(parent?.children || []);
+        // Subcategories only shown on parent-level pages
+        if (!parentSlug) {
+          const allCats = listRes?.data || [];
+          const found = allCats.find(c => c.slug === slug);
+          setSubcategories(found?.children || []);
+        }
       }
+      if (parentRes?.data) setParentInfo(parentRes.data);
       if (filterRes?.data) {
         const fd = filterRes.data;
         setFilters(fd);
         setPriceRanges(buildPriceRanges(fd.min_price, fd.max_price));
       }
     });
-  }, [slug, lang]);
+  }, [slug, parentSlug, lang]);
 
   // Step 2: fetch products when categoryID or sort changes
   const fetchProducts = useCallback(() => {
@@ -333,10 +340,18 @@ export default function CategoryPage({ lang = "en", slug }) {
         )}
         <div className={`relative max-w-container mx-auto px-6 md:px-8 py-12 flex items-center justify-between gap-8 flex-wrap ${categoryInfo?.image_url ? "text-white" : ""}`}>
           <div>
-            <div className={`flex items-center gap-1.5 text-xs mb-4 ${categoryInfo?.image_url ? "text-white/70" : "text-surface-400"}`}>
+            <div className={`flex items-center gap-1.5 text-xs mb-4 flex-wrap ${categoryInfo?.image_url ? "text-white/70" : "text-surface-400"}`}>
               <Link href={`/${lang}`} className={`no-underline transition-colors ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-400"}`}>{t.home}</Link>
               <ChevronRight size={12} />
-              <span className={categoryInfo?.image_url ? "text-white font-medium" : "text-surface-700 font-medium"}>{categoryName}</span>
+              {parentSlug ? (
+                <>
+                  <Link href={`/${lang}/category/${parentSlug}`} className={`no-underline transition-colors ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-400"}`}>{parentName}</Link>
+                  <ChevronRight size={12} />
+                  <span className={categoryInfo?.image_url ? "text-white font-medium" : "text-surface-700 font-medium"}>{categoryName}</span>
+                </>
+              ) : (
+                <span className={categoryInfo?.image_url ? "text-white font-medium" : "text-surface-700 font-medium"}>{categoryName}</span>
+              )}
             </div>
             <div className="flex items-center gap-3 mb-2">
               {categoryInfo?.emoji && <span className="text-4xl">{categoryInfo.emoji}</span>}
@@ -381,7 +396,7 @@ export default function CategoryPage({ lang = "en", slug }) {
                 return (
                   <Link
                     key={sub.id || sub.slug}
-                    href={`/${lang}/category/${sub.slug}`}
+                    href={`/${lang}/category/${slug}/${sub.slug}`}
                     className="no-underline flex-shrink-0 group"
                   >
                     <div
