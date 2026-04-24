@@ -12,7 +12,7 @@ import {
   Cake, Camera, Video, Flower2, Music, Mic, Gem,
   Monitor, Smile, UtensilsCrossed, Briefcase, GraduationCap,
   Baby, AlertTriangle, Settings, Paperclip, Zap, Share2, Bookmark,
-  Lock, LogIn, Cloud, CheckCircle2,
+  Lock, LogIn, Cloud, CheckCircle2, ClipboardList,
 } from "lucide-react";
 import { getUser, isLoggedIn, plannerAPI } from "@/lib/api";
 
@@ -416,7 +416,7 @@ function MessageBubble({ msg, onSuggestionClick }) {
 function ChatPanelHeader({ onNewChat }) {
   return (
     <div style={{
-      padding: "14px 20px 12px",
+      padding: "12px 16px 10px",
       display: "flex", alignItems: "center", justifyContent: "space-between",
       borderBottom: `1px solid ${C.border}`, flexShrink: 0,
     }}>
@@ -1528,7 +1528,17 @@ function PlannerClientInner({ lang }) {
   const [sessionId,    setSessionId]    = useState(null); // backend session id
   const [saveStatus,   setSaveStatus]   = useState("idle"); // "idle"|"saving"|"saved"|"error"
   const [showBulkModal,setShowBulkModal]= useState(false);
+  const [mobilePlanOpen, setMobilePlanOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const saveTimerRef = useRef(null);
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   useEffect(() => {
     const ok = isLoggedIn();
@@ -1763,7 +1773,7 @@ function PlannerClientInner({ lang }) {
           height: 52, flexShrink: 0, position: "relative", zIndex: 10,
           background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
           borderBottom: `1px solid ${C.border}`,
-          display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 32px",
+          display: "flex", alignItems: "center", justifyContent: "space-between", padding: isMobile ? "0 14px" : "0 32px",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Link href={`/${lang}`} style={{ textDecoration: "none" }}>
@@ -1806,13 +1816,13 @@ function PlannerClientInner({ lang }) {
         </div>
 
         {/* Main two-column layout */}
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", padding: "16px 28px 16px", gap: 16, position: "relative", zIndex: 1 }}>
+        <div style={{ flex: 1, overflow: "hidden", display: "flex", padding: isMobile ? "8px 10px 80px" : "16px 28px 16px", gap: 16, position: "relative", zIndex: 1 }}>
 
           {/* ── LEFT: Chat panel ── */}
           <div style={{
-            flex: "1.4", minWidth: 0, display: "flex", flexDirection: "column",
+            flex: isMobile ? 1 : "1.4", minWidth: 0, display: "flex", flexDirection: "column",
             background: C.panel, border: `1px solid ${C.border}`,
-            borderRadius: 20, boxShadow: "0 4px 24px rgba(0,0,0,0.05),0 1px 4px rgba(0,0,0,0.03)",
+            borderRadius: isMobile ? 16 : 20, boxShadow: "0 4px 24px rgba(0,0,0,0.05),0 1px 4px rgba(0,0,0,0.03)",
             overflow: "hidden",
           }}>
             <ChatPanelHeader onNewChat={handleNewChat} />
@@ -1846,8 +1856,8 @@ function PlannerClientInner({ lang }) {
             />
           </div>
 
-          {/* ── RIGHT: Plan panel ── */}
-          <div style={{
+          {/* ── RIGHT: Plan panel (desktop only) ── */}
+          {!isMobile && <div style={{
             flex: "1", minWidth: 0, display: "flex", flexDirection: "column",
             background: C.panel, border: `1px solid ${C.border}`,
             borderRadius: 20, boxShadow: "0 4px 24px rgba(0,0,0,0.05),0 1px 4px rgba(0,0,0,0.03)",
@@ -1875,10 +1885,188 @@ function PlannerClientInner({ lang }) {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </div>}
 
         </div>
       </div>
+
+      {/* ── MOBILE: Floating Plan Button ── */}
+      {isMobile && (
+        <motion.button
+          onClick={() => setMobilePlanOpen(true)}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.93 }}
+          style={{
+            position: "fixed",
+            bottom: 24,
+            right: 20,
+            zIndex: 150,
+            width: 58,
+            height: 58,
+            borderRadius: "50%",
+            background: hasEvent ? C.grad : "#ffffff",
+            border: hasEvent ? "none" : `1.5px solid ${C.borderMd}`,
+            boxShadow: hasEvent
+              ? "0 8px 28px rgba(225,29,92,0.4), 0 4px 12px rgba(0,0,0,0.12)"
+              : "0 6px 20px rgba(0,0,0,0.12)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <ClipboardList size={22} color={hasEvent ? "#fff" : C.brand} strokeWidth={1.8} />
+          {hasEvent && Object.keys(eventState.selected_vendors).length > 0 && (
+            <span style={{
+              position: "absolute",
+              top: -3,
+              right: -3,
+              width: 18,
+              height: 18,
+              borderRadius: "50%",
+              background: "#22c55e",
+              border: "2px solid #fff",
+              fontSize: "0.58rem",
+              fontWeight: 800,
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              {Object.keys(eventState.selected_vendors).length}
+            </span>
+          )}
+        </motion.button>
+      )}
+
+      {/* ── MOBILE: Plan Panel Overlay (slides up) ── */}
+      <AnimatePresence>
+        {isMobile && mobilePlanOpen && (
+          <motion.div
+            key="mobile-plan"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 200,
+              background: C.bg,
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+            }}
+          >
+            {/* Overlay top bar */}
+            <div style={{
+              height: 52,
+              flexShrink: 0,
+              background: "rgba(255,255,255,0.95)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+              borderBottom: `1px solid ${C.border}`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "0 16px",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <motion.button
+                  whileTap={{ scale: 0.92 }}
+                  onClick={() => setMobilePlanOpen(false)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 10,
+                    border: `1px solid ${C.border}`,
+                    background: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <ChevronDown size={16} color={C.text2} />
+                </motion.button>
+                <span style={{ fontSize: "0.9rem", fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>
+                  {hasEvent ? eventState.event_type_label : "Event Plan"}
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <AnimatePresence mode="wait">
+                  <SaveBadge key={saveStatus} status={saveStatus} />
+                </AnimatePresence>
+                {hasEvent && Object.keys(eventState.selected_vendors).length > 0 && (
+                  <motion.button
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => { setShowBulkModal(true); setMobilePlanOpen(false); }}
+                    style={{
+                      background: C.grad,
+                      border: "none",
+                      borderRadius: 999,
+                      padding: "5px 12px",
+                      fontSize: 11.5,
+                      color: "#fff",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                      fontFamily: "inherit",
+                      fontWeight: 700,
+                      boxShadow: "0 4px 14px rgba(225,29,92,0.25)",
+                    }}
+                  >
+                    <Send size={11} /> Contact Vendors
+                  </motion.button>
+                )}
+              </div>
+            </div>
+
+            {/* Overlay content */}
+            <div style={{ flex: 1, overflow: "hidden", padding: "10px 10px 16px" }}>
+              <div style={{
+                height: "100%",
+                background: C.panel,
+                border: `1px solid ${C.border}`,
+                borderRadius: 16,
+                boxShadow: "0 4px 24px rgba(0,0,0,0.05)",
+                overflow: "hidden",
+              }}>
+                <AnimatePresence mode="wait">
+                  {!hasEvent ? (
+                    <motion.div key="empty-mobile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                      style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <RightEmptyState
+                        onPickType={label => {
+                          sendMessage(`I want to plan a ${label}`);
+                          setMobilePlanOpen(false);
+                        }}
+                      />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="plan-mobile" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                      style={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                      <EventPlanPanel
+                        eventState={eventState}
+                        vendorResults={vendorResults}
+                        onSelectVendor={handleSelectVendor}
+                        onSearchVendors={handleSearchVendors}
+                        onUnselectVendor={handleUnselectVendor}
+                        sessionId={sessionId}
+                        lang={lang}
+                        onOpenBulkModal={() => { setShowBulkModal(true); setMobilePlanOpen(false); }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Bulk Inquiry Modal */}
       {showBulkModal && (

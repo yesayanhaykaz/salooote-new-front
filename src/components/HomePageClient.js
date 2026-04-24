@@ -235,6 +235,9 @@ function HeroSection({ dict, lang }) {
         @media (prefers-reduced-motion: reduce) {
           .mosaic-track-down, .mosaic-track-up { animation: none !important; }
         }
+        @media (max-width: 767px) {
+          .mosaic-track-down, .mosaic-track-up { animation: none !important; }
+        }
         .hero-grad-text {
           background: linear-gradient(125deg, #7c3aed 0%, #c026d3 45%, #e11d5c 85%);
           -webkit-background-clip: text;
@@ -245,6 +248,7 @@ function HeroSection({ dict, lang }) {
 
       <div
         onMouseMove={handleMouseMove}
+        className="hero-grid"
         style={{
           maxWidth: 1460, margin: "0 auto",
           display: "grid", gridTemplateColumns: "1.05fr 0.95fr",
@@ -253,7 +257,7 @@ function HeroSection({ dict, lang }) {
         }}
       >
         {/* ════ LEFT ════ */}
-        <div style={{
+        <div className="hero-left" style={{
           position: "relative", overflow: "hidden",
           background: "#fff", color: "#0f172a",
           display: "flex", flexDirection: "column",
@@ -315,6 +319,7 @@ function HeroSection({ dict, lang }) {
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              className="hero-cta-row"
               style={{ display: "flex", gap: 12, alignItems: "center" }}
             >
               <HeroPrimaryBtn href={`/${lang}/products`}>Browse Vendors</HeroPrimaryBtn>
@@ -326,6 +331,7 @@ function HeroSection({ dict, lang }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.42, duration: 0.6 }}
+              className="hero-stat-row"
               style={{
                 display: "flex", gap: 32, paddingTop: 8,
                 borderTop: "1px solid rgba(15,23,42,0.08)",
@@ -346,7 +352,7 @@ function HeroSection({ dict, lang }) {
         </div>
 
         {/* ════ RIGHT — mosaic ════ */}
-        <div style={{ background: "#f5f0fa", overflow: "hidden", padding: "16px 16px 16px 10px", position: "relative" }}>
+        <div className="hero-mosaic" style={{ background: "#f5f0fa", overflow: "hidden", padding: "16px 16px 16px 10px", position: "relative" }}>
           {/* Top & bottom vignette */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 90, background: "linear-gradient(to bottom, #f5f0fa, transparent)", zIndex: 10, pointerEvents: "none" }} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 90, background: "linear-gradient(to top, #f5f0fa, transparent)", zIndex: 10, pointerEvents: "none" }} />
@@ -411,7 +417,7 @@ function StatementSection({ dict }) {
         </ScrollReveal>
 
         {/* 4 pillars */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px mt-20 border border-white/5 rounded-2xl overflow-hidden">
+        <div className="statement-pillars grid grid-cols-2 md:grid-cols-4 gap-px mt-20 border border-white/5 rounded-2xl overflow-hidden">
           {[
             { icon: Search,   label: "Discover",  desc: "Browse verified vendors across every category" },
             { icon: Shield,   label: "Trust",      desc: "Every vendor vetted and quality-reviewed" },
@@ -498,6 +504,7 @@ function PartnersBar({ lang }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
+          className="partners-box"
           style={{
             background: "#f8f8f8",
             borderRadius: 20,
@@ -657,7 +664,7 @@ function CategoriesCarousel({ categories, lang, dict }) {
             </h2>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex gap-2">
+            <div className="flex gap-2 cat-nav-buttons">
               {[{ dir: -1, can: canScrollLeft }, { dir: 1, can: canScrollRight }].map(({ dir, can }, i) => (
                 <motion.button
                   key={i}
@@ -676,7 +683,7 @@ function CategoriesCarousel({ categories, lang, dict }) {
                 </motion.button>
               ))}
             </div>
-            <Link href={`/${lang}/products`} className="text-sm font-semibold text-brand-600 no-underline items-center gap-1 hover:gap-2 transition-all hidden md:flex">
+            <Link href={`/${lang}/products`} className="text-sm font-semibold text-brand-600 no-underline items-center gap-1 hover:gap-2 transition-all flex">
               {dict.categories.viewAll} <ChevronRight size={15} />
             </Link>
           </div>
@@ -1158,7 +1165,7 @@ function PlannerBanner({ dict, lang }) {
           <div className="absolute inset-0 opacity-8"
             style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
           />
-          <div className="relative z-10 p-10 md:p-16 max-w-[560px]">
+          <div className="planner-content relative z-10 p-10 md:p-16 max-w-[560px]">
             <motion.div className="flex items-center gap-2 mb-5" animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 2.5, repeat: Infinity }}>
               <div className="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center">
                 <Sparkles size={14} className="text-white" />
@@ -1172,7 +1179,7 @@ function PlannerBanner({ dict, lang }) {
             <p className="text-white/55 text-base leading-relaxed mb-8 max-w-[380px]">
               {dict.aiPlanner.subtitle}
             </p>
-            <div className="flex gap-3 flex-wrap">
+            <div className="planner-cta-row flex gap-3 flex-wrap">
               <MagneticButton>
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: "0 8px 28px rgba(0,0,0,0.18)" }}
@@ -1208,11 +1215,11 @@ function DestinationsSection({ dict, lang }) {
       <div className="max-w-container mx-auto px-6 md:px-8 flex items-center gap-16 flex-wrap-reverse">
         <ScrollReveal variant="slideRight" className="flex-1 min-w-[300px] max-w-[500px]">
           <div className="relative">
-            <motion.div className="rounded-2xl overflow-hidden h-[380px]" whileHover={{ scale: 1.02 }} transition={{ duration: 0.4 }}>
+            <motion.div className="dest-image rounded-2xl overflow-hidden h-[380px]" whileHover={{ scale: 1.02 }} transition={{ duration: 0.4 }}>
               <Image src="/images/wedding-beach.jpg" alt="Destination Wedding" fill className="object-cover" />
             </motion.div>
             <motion.div
-              className="absolute -bottom-4 -right-4 glass rounded-xl p-4"
+              className="dest-badge absolute -bottom-4 -right-4 glass rounded-xl p-4"
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -1397,6 +1404,90 @@ export default function HomePageClient({ dict, lang }) {
 
   return (
     <div className="bg-white">
+      <style>{`
+  /* ── HERO ── */
+  @media (max-width: 767px) {
+    .hero-grid {
+      grid-template-columns: 1fr !important;
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      border-radius: 0 !important;
+    }
+    .hero-mosaic { display: none !important; }
+    .hero-left {
+      padding: 52px 24px 64px !important;
+      min-height: calc(100svh - 70px) !important;
+      background: linear-gradient(160deg, #fefcff 0%, #f5eeff 50%, #fff0f8 100%) !important;
+    }
+    .hero-left h1 { font-size: clamp(2rem, 9vw, 3.2rem) !important; }
+    .hero-cta-row { flex-direction: column !important; gap: 10px !important; }
+    .hero-cta-row > * { width: 100% !important; }
+    .hero-cta-row span { width: 100% !important; justify-content: center !important; }
+    .hero-stat-row { gap: 20px !important; flex-wrap: wrap !important; }
+  }
+
+  /* ── CATEGORIES NAV ── */
+  @media (max-width: 767px) {
+    .cat-nav-buttons { display: none !important; }
+    .cat-view-all { display: flex !important; }
+  }
+
+  /* ── STACKED STORY CARDS ── */
+  @media (max-width: 767px) {
+    .stories-outer { padding-top: 24px !important; padding-bottom: 40px !important; }
+    .story-card {
+      position: relative !important;
+      top: auto !important;
+      width: calc(100% - 32px) !important;
+      margin: 0 auto 16px !important;
+      border-radius: 16px !important;
+    }
+    .story-grid { grid-template-columns: 1fr !important; min-height: 0 !important; }
+    .story-copy { padding: 32px 24px 36px !important; gap: 16px !important; }
+    .story-img-wrap { display: none !important; }
+  }
+
+  /* ── PARTNERS BAR ── */
+  @media (max-width: 767px) {
+    .partners-box {
+      padding: 24px 20px !important;
+      gap: 16px 24px !important;
+      justify-content: center !important;
+    }
+  }
+
+  /* ── PLANNER BANNER ── */
+  @media (max-width: 767px) {
+    .planner-content { padding: 36px 24px 40px !important; max-width: 100% !important; }
+    .planner-cta-row { flex-direction: column !important; }
+    .planner-cta-row > * { width: 100% !important; }
+    .planner-cta-row button { width: 100% !important; justify-content: center !important; }
+  }
+
+  /* ── STATEMENT PILLARS ── */
+  @media (max-width: 767px) {
+    .statement-pillars { grid-template-columns: 1fr 1fr !important; }
+    .statement-pillars > div { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 24px 16px !important; }
+  }
+
+  /* ── BENTO GRID ── */
+  @media (max-width: 479px) {
+    .bento-grid { grid-auto-rows: 140px !important; }
+  }
+
+  /* ── DESTINATIONS FLOATING BADGE ── */
+  @media (max-width: 767px) {
+    .dest-badge { right: 0 !important; bottom: -12px !important; }
+    .dest-image { height: 260px !important; }
+  }
+
+  /* ── BENEFITS STATS ROW ── */
+  @media (max-width: 479px) {
+    .benefits-stats { gap: 16px !important; flex-wrap: wrap !important; }
+  }
+`}</style>
+
       {/* 1. Hero — cinematic, full-screen */}
       <HeroSection dict={dict} lang={lang} />
 
@@ -1420,7 +1511,7 @@ export default function HomePageClient({ dict, lang }) {
           </ScrollReveal>
 
           {/* Bento grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
+          <div className="bento-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[180px]">
             {[
               {
                 key: "wedding",
@@ -1539,7 +1630,7 @@ export default function HomePageClient({ dict, lang }) {
       <PlannerBanner dict={dict} lang={lang} />
 
       {/* 12. Stacked story sections */}
-      <div style={{ position: "relative", paddingTop: 48, paddingBottom: 80 }}>
+      <div className="stories-outer" style={{ position: "relative", paddingTop: 48, paddingBottom: 80 }}>
         {[
           {
             zIndex: 10, bg: "#f6f0fc", color: "#6d13a8", mt: 0,
@@ -1571,6 +1662,7 @@ export default function HomePageClient({ dict, lang }) {
         ].map((s, i) => (
           <div
             key={i}
+            className="story-card"
             style={{
               position: "sticky",
               top: 90 + i * 6,
@@ -1586,10 +1678,10 @@ export default function HomePageClient({ dict, lang }) {
               background: s.bg,
             }}
           >
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 440 }}>
+            <div className="story-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", minHeight: 440 }}>
 
               {/* Left — copy */}
-              <div style={{
+              <div className="story-copy" style={{
                 padding: "56px 60px",
                 display: "flex",
                 flexDirection: "column",
@@ -1655,7 +1747,7 @@ export default function HomePageClient({ dict, lang }) {
               </div>
 
               {/* Right — image */}
-              <div style={{ padding: "24px 24px 24px 12px", display: "flex", alignItems: "center" }}>
+              <div className="story-img-wrap" style={{ padding: "24px 24px 24px 12px", display: "flex", alignItems: "center" }}>
                 <div style={{
                   width: "100%",
                   height: "100%",
