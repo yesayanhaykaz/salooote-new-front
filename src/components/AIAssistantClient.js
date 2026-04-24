@@ -374,81 +374,84 @@ export default function AIAssistantClient({ lang, dict }) {
           }}
         >
           {msgs.map(msg => (
-            <div key={msg.id} style={{
-              display: "flex",
-              flexDirection: msg.role === "user" ? "row-reverse" : "row",
-              alignItems: "flex-end", gap: 8,
-              animation: "msgIn .22s ease",
-            }}>
-              {/* Bot avatar */}
-              {msg.role === "bot" && (
-                <div style={{
-                  width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                  background: "radial-gradient(circle at 35% 30%, #fda4af, #e11d5c 70%, #9f1239)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 14, boxShadow: "0 2px 6px rgba(225,29,92,.3)",
-                }}>✨</div>
-              )}
+            <div key={msg.id} style={{ display: "flex", flexDirection: "column", gap: 6, animation: "msgIn .22s ease" }}>
 
+              {/* ── text row ── */}
               <div style={{
-                maxWidth: "78%", display: "flex", flexDirection: "column", gap: 8,
-                alignItems: msg.role === "user" ? "flex-end" : "flex-start",
+                display: "flex",
+                flexDirection: msg.role === "user" ? "row-reverse" : "row",
+                alignItems: "flex-end", gap: 8,
               }}>
+                {/* Bot avatar */}
+                {msg.role === "bot" && (
+                  <div style={{
+                    width: 30, height: 30, borderRadius: "50%", flexShrink: 0, alignSelf: "flex-start", marginTop: 2,
+                    background: "radial-gradient(circle at 35% 30%, #fda4af, #e11d5c 70%, #9f1239)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 14, boxShadow: "0 2px 6px rgba(225,29,92,.3)",
+                  }}>✨</div>
+                )}
                 {/* Bubble */}
                 <div style={{
-                  padding: "10px 14px",
+                  maxWidth: "75%", padding: "10px 14px",
                   borderRadius: msg.role === "user" ? "18px 18px 4px 18px" : "4px 18px 18px 18px",
-                  fontSize: 13, lineHeight: 1.55,
+                  fontSize: 13, lineHeight: 1.6,
                   ...(msg.role === "user"
-                    ? { background: PINK, color: "#fff", boxShadow: "0 2px 10px rgba(225,29,92,.25)" }
+                    ? { background: PINK, color: "#fff", boxShadow: "0 2px 10px rgba(225,29,92,.22)" }
                     : { background: "#fff", color: "#1a1a1a", border: "1px solid #efefef", boxShadow: "0 1px 4px rgba(0,0,0,.05)" }
                   ),
                 }}>
                   <MsgText text={msg.text} />
                 </div>
-
-                {/* Plan event button */}
-                {msg.action === "plan_event" && (
-                  <button onClick={() => router.push(`/${lang}/planner?event_type=${msg.event_type || "birthday"}`)}
-                    style={{
-                      padding: "9px 18px", borderRadius: 10,
-                      background: `linear-gradient(135deg,${PINK},#f43f5e)`,
-                      color: "#fff", fontWeight: 700, fontSize: 13,
-                      border: "none", cursor: "pointer",
-                      boxShadow: "0 3px 12px rgba(225,29,92,.3)",
-                    }}>
-                    {PLAN_BTN[lang] || PLAN_BTN.en}
-                  </button>
-                )}
-
-                {/* Product cards */}
-                {msg.products?.length > 0 && (
-                  <div style={{ width: "100%" }}>
-                    <p style={{ margin: "0 0 6px 2px", fontSize: 11, fontWeight: 600, color: "#aaa", textTransform: "uppercase", letterSpacing: .5 }}>
-                      {lbl.products}
-                    </p>
-                    <div className="cards-row">
-                      {msg.products.map((p, i) => (
-                        <ProductCard key={p.id || i} p={p} lang={lang} onOpen={(item, t) => setPopup({ item, type: t })} />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Vendor cards */}
-                {msg.vendors?.length > 0 && (
-                  <div style={{ width: "100%" }}>
-                    <p style={{ margin: "0 0 6px 2px", fontSize: 11, fontWeight: 600, color: "#aaa", textTransform: "uppercase", letterSpacing: .5 }}>
-                      {lbl.stores}
-                    </p>
-                    <div className="cards-row">
-                      {msg.vendors.map((v, i) => (
-                        <VendorCard key={v.id || i} v={v} lang={lang} onOpen={(item, t) => setPopup({ item, type: t })} />
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
+
+              {/* ── cards — full width, indented past avatar ── */}
+              {(msg.products?.length > 0 || msg.vendors?.length > 0 || msg.action === "plan_event") && (
+                <div style={{ paddingLeft: 38, display: "flex", flexDirection: "column", gap: 10 }}>
+
+                  {/* Plan event button */}
+                  {msg.action === "plan_event" && (
+                    <button onClick={() => router.push(`/${lang}/planner?event_type=${msg.event_type || "birthday"}`)}
+                      style={{
+                        alignSelf: "flex-start", padding: "9px 18px", borderRadius: 10,
+                        background: `linear-gradient(135deg,${PINK},#f43f5e)`,
+                        color: "#fff", fontWeight: 700, fontSize: 13,
+                        border: "none", cursor: "pointer",
+                        boxShadow: "0 3px 12px rgba(225,29,92,.3)",
+                      }}>
+                      {PLAN_BTN[lang] || PLAN_BTN.en}
+                    </button>
+                  )}
+
+                  {/* Product cards */}
+                  {msg.products?.length > 0 && (
+                    <div>
+                      <p style={{ margin: "0 0 7px", fontSize: 10, fontWeight: 700, color: "#bbb", textTransform: "uppercase", letterSpacing: .8 }}>
+                        {lbl.products}
+                      </p>
+                      <div className="cards-row">
+                        {msg.products.map((p, i) => (
+                          <ProductCard key={p.id || i} p={p} lang={lang} onOpen={(item, t) => setPopup({ item, type: t })} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Vendor cards */}
+                  {msg.vendors?.length > 0 && (
+                    <div>
+                      <p style={{ margin: "0 0 7px", fontSize: 10, fontWeight: 700, color: "#bbb", textTransform: "uppercase", letterSpacing: .8 }}>
+                        {lbl.stores}
+                      </p>
+                      <div className="cards-row">
+                        {msg.vendors.map((v, i) => (
+                          <VendorCard key={v.id || i} v={v} lang={lang} onOpen={(item, t) => setPopup({ item, type: t })} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
 
