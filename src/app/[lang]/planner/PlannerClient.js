@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Send, Sparkles, ArrowLeft, Check, Search, X, Star,
+  Send, Sparkles, Check, Search, X, Star,
   ChevronDown, ChevronUp, ChevronRight, Users, Calendar,
   MapPin, DollarSign, Loader2, Heart,
   Building, Building2, Flame, Plus, User, Package,
@@ -29,11 +29,11 @@ const C = {
   text2:    "#64748b",
   text3:    "#94a3b8",
   brand:    "#e11d5c",
-  purple:   "#7c3aed",
+  purple:   "#e11d5c",
   green:    "#16a34a",
-  grad:     "linear-gradient(135deg,#e11d5c,#7c3aed)",
-  gradFull: "linear-gradient(135deg,#f97316,#e11d5c,#7c3aed)",
-  userBg:   "linear-gradient(135deg,#e11d5c 0%,#7c3aed 100%)",
+  grad:     "linear-gradient(135deg,#e11d5c,#f43f5e)",
+  gradFull: "linear-gradient(135deg,#f97316,#e11d5c,#f43f5e)",
+  userBg:   "linear-gradient(135deg,#e11d5c,#f43f5e)",
   botBg:    "#f8fafc",
 };
 
@@ -79,8 +79,8 @@ const CATEGORY_LABELS = {
 ───────────────────────────────────────── */
 const EVENT_TEMPLATES = {
   christening: {
-    label: "Christening / Baptism", accent: "#7c3aed",
-    gradient: "linear-gradient(135deg,#7c3aed,#a855f7)",
+    label: "Christening / Baptism", accent: "#e11d5c",
+    gradient: "linear-gradient(135deg,#e11d5c,#f43f5e)",
     services: [
       { service_type: "church",         title: "Church Booking",              category: "religious",   required: true },
       { service_type: "baptism_candle", title: "Baptism Candle (Knonki Mom)", category: "religious",   required: true },
@@ -287,8 +287,8 @@ function BotAvatar({ size = 28 }) {
   return (
     <div style={{
       width: size, height: size, borderRadius: "50%", flexShrink: 0,
-      background: "radial-gradient(circle at 32% 28%, #f0abfc 0%, #a855f7 30%, #7c3aed 58%, #1e1b4b 100%)",
-      boxShadow: "0 2px 10px rgba(124,58,237,0.3)", overflow: "hidden", position: "relative",
+      background: "radial-gradient(circle at 32% 28%, #fda4af 0%, #f43f5e 40%, #e11d5c 70%, #9f1239 100%)",
+      boxShadow: "0 2px 10px rgba(225,29,92,0.3)", overflow: "hidden", position: "relative",
     }}>
       <div style={{ position: "absolute", top: "12%", left: "16%", width: "36%", height: "30%", borderRadius: "50%", background: "rgba(255,255,255,0.35)", filter: "blur(2px)" }} />
     </div>
@@ -302,8 +302,8 @@ function OrbLarge({ size = 68 }) {
   return (
     <motion.div animate={{ y: [0, -10, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
       style={{ width: size, height: size, borderRadius: "50%", position: "relative", flexShrink: 0 }}>
-      <div style={{ position: "absolute", inset: -size * 0.25, borderRadius: "50%", background: "radial-gradient(circle,rgba(168,85,247,0.15) 0%,transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "radial-gradient(circle at 35% 28%,#f0abfc 0%,#a855f7 30%,#7c3aed 58%,#1e1b4b 100%)", boxShadow: `0 0 ${size * 0.4}px rgba(168,85,247,0.4),0 ${size * 0.15}px ${size * 0.4}px rgba(0,0,0,0.1)`, overflow: "hidden", position: "relative" }}>
+      <div style={{ position: "absolute", inset: -size * 0.25, borderRadius: "50%", background: "radial-gradient(circle,rgba(225,29,92,0.15) 0%,transparent 70%)", pointerEvents: "none" }} />
+      <div style={{ width: "100%", height: "100%", borderRadius: "50%", background: "radial-gradient(circle at 35% 28%,#fda4af 0%,#f43f5e 35%,#e11d5c 62%,#9f1239 100%)", boxShadow: `0 0 ${size * 0.4}px rgba(225,29,92,0.4),0 ${size * 0.15}px ${size * 0.4}px rgba(0,0,0,0.1)`, overflow: "hidden", position: "relative" }}>
         <div style={{ position: "absolute", top: "12%", left: "18%", width: "38%", height: "32%", borderRadius: "50%", background: "rgba(255,255,255,0.35)", filter: "blur(4px)", transform: "rotate(-25deg)" }} />
       </div>
     </motion.div>
@@ -398,9 +398,13 @@ function MessageBubble({ msg, onSuggestionClick }) {
       {!isBot && (
         <div style={{ maxWidth: "76%" }}>
           <div style={{
-            background: C.userBg, borderRadius: "18px 18px 4px 18px",
-            padding: "11px 15px", fontSize: "0.875rem", lineHeight: 1.65, color: "#fff",
-            boxShadow: "0 4px 16px rgba(225,29,92,0.22)",
+            background: "rgba(255,255,255,0.92)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(225,29,92,0.14)",
+            borderRadius: "18px 18px 4px 18px",
+            padding: "11px 15px", fontSize: "0.875rem", lineHeight: 1.65, color: C.text,
+            boxShadow: "0 2px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
           }}>
             {lines.map(renderLine)}
           </div>
@@ -646,7 +650,7 @@ function VendorCard({ vendor, isSelected, onPreview }) {
           {isSelected && (
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              style={{ position: "absolute", inset: 0, background: "rgba(124,58,237,0.52)", display: "flex", alignItems: "center", justifyContent: "center" }}
+              style={{ position: "absolute", inset: 0, background: "rgba(225,29,92,0.52)", display: "flex", alignItems: "center", justifyContent: "center" }}
             >
               <div style={{ background: "#fff", borderRadius: 100, padding: "5px 13px", display: "flex", alignItems: "center", gap: 5, boxShadow: "0 2px 12px rgba(0,0,0,0.18)" }}>
                 <Check size={12} color={C.purple} strokeWidth={3} />
@@ -758,13 +762,13 @@ function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
             onClick={() => { onSelect(vendor); onClose(); }}
             style={{
               flex: 1, padding: "11px 0",
-              background: isSelected ? "#f0fdf4" : `linear-gradient(135deg, #7c3aed, #a855f7)`,
+              background: isSelected ? "#f0fdf4" : C.grad,
               border: isSelected ? "1.5px solid #86efac" : "none",
               borderRadius: 12, color: isSelected ? "#16a34a" : "#fff",
               fontSize: "0.88rem", fontWeight: 700, cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
               fontFamily: "inherit",
-              boxShadow: isSelected ? "none" : "0 6px 20px rgba(124,58,237,0.3)",
+              boxShadow: isSelected ? "none" : "0 6px 20px rgba(225,29,92,0.28)",
             }}>
             <Check size={14} strokeWidth={2.5} />
             {isSelected ? "Already Selected — Click to deselect" : "Select this vendor"}
@@ -1361,7 +1365,7 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
    RIGHT EMPTY STATE  (event type picker)
 ───────────────────────────────────────── */
 const EVENT_TYPES_GRID = [
-  { key: "christening", label: "Christening", color: "#7c3aed" },
+  { key: "christening", label: "Christening", color: "#e11d5c" },
   { key: "wedding",     label: "Wedding",     color: "#e11d5c" },
   { key: "birthday",    label: "Birthday",    color: "#3b82f6" },
   { key: "kids_party",  label: "Kids Party",  color: "#10b981" },
@@ -1766,53 +1770,6 @@ function PlannerClientInner({ lang }) {
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "-10%", right: "-5%", width: "45%", height: "50%", borderRadius: "50%", background: "radial-gradient(ellipse,rgba(225,29,92,0.055) 0%,transparent 65%)" }} />
           <div style={{ position: "absolute", bottom: "0", left: "-10%", width: "50%", height: "50%", borderRadius: "50%", background: "radial-gradient(ellipse,rgba(124,58,237,0.055) 0%,transparent 65%)" }} />
-        </div>
-
-        {/* Top bar */}
-        <div style={{
-          height: 52, flexShrink: 0, position: "relative", zIndex: 10,
-          background: "rgba(255,255,255,0.85)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-          borderBottom: `1px solid ${C.border}`,
-          display: "flex", alignItems: "center", justifyContent: "space-between", padding: isMobile ? "0 14px" : "0 32px",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Link href={`/${lang}`} style={{ textDecoration: "none" }}>
-              <motion.button whileHover={{ background: "rgba(15,23,42,0.05)" }} whileTap={{ scale: 0.93 }}
-                style={{ width: 30, height: 30, borderRadius: 8, border: `1px solid ${C.border}`, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-                <ArrowLeft size={13} color={C.text2} />
-              </motion.button>
-            </Link>
-            <div style={{ width: 1, height: 18, background: C.border }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 6, background: C.grad, borderRadius: 100, padding: "5px 14px", boxShadow: "0 4px 14px rgba(225,29,92,0.22)" }}>
-              <Sparkles size={11} color="#fff" strokeWidth={2.2} />
-              <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#fff", letterSpacing: "-0.01em" }}>AI Planner</span>
-            </div>
-            <AnimatePresence mode="wait">
-              <SaveBadge key={saveStatus} status={saveStatus} />
-            </AnimatePresence>
-          </div>
-
-          {hasEvent && (
-            <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }}
-              style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: `1px solid ${C.border}`, borderRadius: 100, padding: "5px 14px 5px 10px", boxShadow: "0 2px 8px rgba(0,0,0,0.05)" }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", background: `${eventState.accent || C.brand}15`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {getEventIcon(eventState.event_type, { size: 12, color: eventState.accent || C.brand, strokeWidth: 2 })}
-              </div>
-              <div>
-                <p style={{ margin: 0, fontSize: "0.72rem", fontWeight: 700, color: C.text, letterSpacing: "-0.02em", lineHeight: 1.2 }}>{eventState.event_type_label}</p>
-                <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
-                  <div style={{ width: 44, height: 2.5, background: "rgba(15,23,42,0.08)", borderRadius: 10, overflow: "hidden" }}>
-                    <motion.div
-                      animate={{ width: `${eventState.services.filter(s => s.canSearch).length > 0 ? Math.round((Object.keys(eventState.selected_vendors).length / eventState.services.filter(s => s.canSearch).length) * 100) : 0}%` }}
-                      style={{ height: "100%", background: C.grad, borderRadius: 10 }} transition={{ duration: 0.5 }} />
-                  </div>
-                  <span style={{ fontSize: "0.6rem", color: C.text3, fontWeight: 600 }}>
-                    {Object.keys(eventState.selected_vendors).length}/{eventState.services.filter(s => s.canSearch).length}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          )}
         </div>
 
         {/* Main two-column layout */}
