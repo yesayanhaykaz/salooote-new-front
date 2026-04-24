@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,7 +34,8 @@ const slugIcon = (slug = "") => {
 
 export default function ProductsPageClient({ dict, lang }) {
   const PAGE_SIZE = 24;
-  const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+  const [search, setSearch] = useState(() => searchParams?.get("search") || "");
   const [selectedCat, setSelectedCat] = useState(null);
   const [minRating, setMinRating] = useState(0);
   const [maxPrice, setMaxPrice] = useState(300);

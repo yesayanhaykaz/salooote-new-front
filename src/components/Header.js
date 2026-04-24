@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
-import { categoriesAPI, getUser, clearAuth, isLoggedIn } from "@/lib/api";
+import { categoriesAPI, vendorsAPI, productsAPI, getUser, clearAuth, isLoggedIn } from "@/lib/api";
 import {
   Search, Heart, ShoppingBag, Bell, Menu, X,
   Cake, UtensilsCrossed, Flower2, PartyPopper,
@@ -36,6 +36,210 @@ const slugIcon = (slug = "") => {
 
 const PILL_ALL_LABEL = { en: "All Products", hy: "Բոլոր Ապրանքներ", ru: "Все Товары" };
 
+/* ─── Type badge colours ─── */
+const TYPE_STYLES = {
+  product:  { bg: "rgba(225,29,92,0.08)",  color: "#e11d5c",  label: "Product"  },
+  vendor:   { bg: "rgba(234,88,12,0.08)",  color: "#ea580c",  label: "Vendor"   },
+  category: { bg: "rgba(22,163,74,0.08)",  color: "#16a34a",  label: "Category" },
+  event:    { bg: "rgba(59,130,246,0.08)", color: "#3b82f6",  label: "Event"    },
+};
+
+function TypeBadge({ type }) {
+  const s = TYPE_STYLES[type] || TYPE_STYLES.product;
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", padding: "1px 7px",
+      borderRadius: 100, fontSize: 10, fontWeight: 700, letterSpacing: "0.02em",
+      background: s.bg, color: s.color, flexShrink: 0,
+    }}>{s.label}</span>
+  );
+}
+
+/* ── Sparkle SVG decoration ── */
+function SparkleIcon({ size = 13, color = "#e11d5c" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+      <path d="M12 2 L13.5 10.5 L22 12 L13.5 13.5 L12 22 L10.5 13.5 L2 12 L10.5 10.5 Z"
+        fill={color} stroke="none" opacity="0.9" />
+    </svg>
+  );
+}
+
+/* ── Live Search Dropdown ── */
+function LiveSearchDropdown({ query, results, loading, lang, navCategories, eventTypes, onClose }) {
+  const { products, vendors } = results;
+
+  const matchingCats = navCategories.filter(c =>
+    c.label.toLowerCase().includes(query.toLowerCase())
+  ).slice(0, 3);
+
+  const matchingEvents = eventTypes.filter(e =>
+    e.label.toLowerCase().includes(query.toLowerCase())
+  ).slice(0, 3);
+
+  const hasAny = products.length > 0 || vendors.length > 0 || matchingCats.length > 0 || matchingEvents.length > 0;
+
+  const rowStyle = {
+    display: "flex", alignItems: "center", gap: 10, padding: "8px 14px",
+    cursor: "pointer", textDecoration: "none", color: "inherit",
+    transition: "background 0.12s",
+    borderRadius: 10,
+  };
+
+  return (
+    <div style={{
+      position: "absolute", top: "calc(100% + 6px)", left: 0, right: 0, zIndex: 200,
+      background: "#fff",
+      border: "1px solid rgba(15,23,42,0.08)",
+      borderRadius: 16,
+      boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
+      overflow: "hidden",
+      maxHeight: "72vh",
+      overflowY: "auto",
+    }}>
+      {/* Header row */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 7,
+        padding: "11px 14px 9px",
+        borderBottom: "1px solid rgba(15,23,42,0.05)",
+        background: "linear-gradient(135deg, rgba(225,29,92,0.03) 0%, rgba(255,255,255,0) 100%)",
+      }}>
+        <SparkleIcon size={12} color="#e11d5c" />
+        <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+          Results for
+        </span>
+        <span style={{ fontSize: 12, fontWeight: 700, color: "#0f172a", maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          &ldquo;{query}&rdquo;
+        </span>
+        {loading && (
+          <span style={{ marginLeft: "auto", width: 14, height: 14, borderRadius: "50%", border: "2px solid rgba(225,29,92,0.2)", borderTopColor: "#e11d5c", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+        )}
+      </div>
+
+      {!loading && !hasAny && (
+        <div style={{ padding: "28px 14px", textAlign: "center", color: "#94a3b8", fontSize: 13 }}>
+          No results found for &ldquo;{query}&rdquo;
+        </div>
+      )}
+
+      {/* Products */}
+      {products.length > 0 && (
+        <div style={{ padding: "8px 6px 4px" }}>
+          <div style={{ padding: "4px 10px 6px", fontSize: 10, fontWeight: 800, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>Products</div>
+          {products.map(p => (
+            <Link key={p.id} href={`/${lang}/product/${p.id}`} onClick={onClose}
+              style={rowStyle}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(225,29,92,0.04)"}
+              onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+            >
+              <div style={{ width: 38, height: 38, borderRadius: 8, overflow: "hidden", flexShrink: 0, background: "#f1f5f9" }}>
+                {p.thumbnail_url
+                  ? <img src={p.thumbnail_url} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}><SparkleIcon size={14} color="#cbd5e1" /></div>
+                }
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</div>
+                <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 1 }}>
+                  {p.vendor_name && <span>{p.vendor_name} · </span>}
+                  {p.price > 0 && <span style={{ color: "#e11d5c", fontWeight: 600 }}>{p.price.toLocaleString()} {p.currency || "AMD"}</span>}
+                </div>
+              </div>
+              <TypeBadge type="product" />
+            </Link>
+          ))}
+          <Link href={`/${lang}/products?search=${encodeURIComponent(query)}`} onClick={onClose}
+            style={{ display: "flex", alignItems: "center", gap: 4, padding: "5px 10px 8px", fontSize: 11.5, color: "#e11d5c", fontWeight: 600, textDecoration: "none" }}>
+            See all products →
+          </Link>
+        </div>
+      )}
+
+      {/* Vendors */}
+      {vendors.length > 0 && (
+        <div style={{ padding: "4px 6px", borderTop: products.length > 0 ? "1px solid rgba(15,23,42,0.05)" : "none" }}>
+          <div style={{ padding: "4px 10px 6px", fontSize: 10, fontWeight: 800, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>Vendors</div>
+          {vendors.map(v => (
+            <Link key={v.id} href={`/${lang}/vendor/${v.slug}`} onClick={onClose}
+              style={rowStyle}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(234,88,12,0.04)"}
+              onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+            >
+              <div style={{ width: 38, height: 38, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "#f1f5f9", border: "1px solid rgba(0,0,0,0.06)" }}>
+                {v.logo_url
+                  ? <img src={v.logo_url} alt={v.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, color: "#ea580c" }}>{(v.name || "V")[0].toUpperCase()}</div>
+                }
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{v.name}</div>
+                {v.city && <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 1 }}>{v.city}</div>}
+              </div>
+              <TypeBadge type="vendor" />
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Categories */}
+      {matchingCats.length > 0 && (
+        <div style={{ padding: "4px 6px", borderTop: "1px solid rgba(15,23,42,0.05)" }}>
+          <div style={{ padding: "4px 10px 6px", fontSize: 10, fontWeight: 800, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>Categories</div>
+          {matchingCats.map((cat, i) => {
+            const Icon = cat.icon;
+            return (
+              <Link key={i} href={`/${lang}/category/${cat.slug}`} onClick={onClose}
+                style={rowStyle}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(22,163,74,0.04)"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+              >
+                <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(22,163,74,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  {Icon && <Icon size={16} color="#16a34a" strokeWidth={1.8} />}
+                </div>
+                <div style={{ flex: 1, fontSize: 13, fontWeight: 600, color: "#0f172a" }}>{cat.label}</div>
+                <TypeBadge type="category" />
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Events */}
+      {matchingEvents.length > 0 && (
+        <div style={{ padding: "4px 6px", borderTop: "1px solid rgba(15,23,42,0.05)" }}>
+          <div style={{ padding: "4px 10px 6px", fontSize: 10, fontWeight: 800, color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase" }}>Events</div>
+          {matchingEvents.map(ev => (
+            <Link key={ev.key} href={`/${lang}/${ev.href}`} onClick={onClose}
+              style={rowStyle}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(59,130,246,0.04)"}
+              onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+            >
+              <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(59,130,246,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <SparkleIcon size={15} color="#3b82f6" />
+              </div>
+              <div style={{ flex: 1, fontSize: 13, fontWeight: 600, color: "#0f172a" }}>{ev.label}</div>
+              <TypeBadge type="event" />
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* Footer — see all */}
+      {hasAny && (
+        <div style={{ borderTop: "1px solid rgba(15,23,42,0.05)", padding: "10px 14px", background: "rgba(248,250,252,0.6)" }}>
+          <Link href={`/${lang}/products?search=${encodeURIComponent(query)}`} onClick={onClose}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 12.5, fontWeight: 700, color: "#e11d5c", textDecoration: "none" }}>
+            <SparkleIcon size={11} color="#e11d5c" />
+            See all results for &ldquo;{query}&rdquo;
+          </Link>
+        </div>
+      )}
+
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
+}
+
 const FALLBACK_NAV = [
   { label: "Cakes & Desserts",     slug: "cakes-desserts",           icon: Cake },
   { label: "Catering & Food",      slug: "catering-food",            icon: UtensilsCrossed },
@@ -60,6 +264,70 @@ export default function Header({ lang: langProp = "en" }) {
   const [loggedIn, setLoggedIn]         = useState(false);
   const [unreadCount, setUnreadCount]   = useState(0);
   const dropdownRef = useRef(null);
+  const searchContainerRef = useRef(null);
+  const mobileSearchContainerRef = useRef(null);
+  const debounceRef = useRef(null);
+  const [liveResults, setLiveResults] = useState({ products: [], vendors: [] });
+  const [liveLoading, setLiveLoading] = useState(false);
+  const [showLive, setShowLive] = useState(false);
+
+  const EVENT_TYPES = [
+    { key: "wedding",     label: "Wedding",        href: "events/wedding" },
+    { key: "christening", label: "Christening",    href: "events/christening" },
+    { key: "birthday",    label: "Birthday Party", href: "events/birthday" },
+    { key: "corporate",   label: "Corporate",      href: "events/corporate" },
+    { key: "kids_party",  label: "Kids Party",     href: "events/kids_party" },
+    { key: "engagement",  label: "Engagement",     href: "events/engagement" },
+    { key: "graduation",  label: "Graduation",     href: "events/graduation" },
+  ];
+
+  // Debounced live search
+  useEffect(() => {
+    if (searchQuery.length < 2) {
+      setShowLive(false);
+      setLiveResults({ products: [], vendors: [] });
+      setLiveLoading(false);
+      return;
+    }
+    clearTimeout(debounceRef.current);
+    setLiveLoading(true);
+    setShowLive(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const [prodRes, vendRes] = await Promise.allSettled([
+          productsAPI.list({ search: searchQuery, limit: 5, page: 1 }),
+          vendorsAPI.list({ search: searchQuery, limit: 4 }),
+        ]);
+        setLiveResults({
+          products: prodRes.status === "fulfilled" ? (prodRes.value?.data || []) : [],
+          vendors:  vendRes.status === "fulfilled"  ? (vendRes.value?.data  || []) : [],
+        });
+      } catch {}
+      setLiveLoading(false);
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [searchQuery]);
+
+  // Close live dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (
+        searchContainerRef.current && !searchContainerRef.current.contains(e.target) &&
+        mobileSearchContainerRef.current && !mobileSearchContainerRef.current.contains(e.target)
+      ) setShowLive(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // ESC closes live dropdown
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") setShowLive(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, []);
+
+  const closeSearch = () => { setShowLive(false); setSearchOpen(false); setSearchQuery(""); };
 
   // Always derive lang from the URL — more reliable than relying on the server prop
   // which may not update when Next.js preserves the client component across navigations
@@ -170,18 +438,38 @@ export default function Header({ lang: langProp = "en" }) {
           </Link>
 
           {/* Search — desktop */}
-          <div className="flex-1 max-w-[480px] mx-4 hidden md:block">
-            <div className="flex items-center bg-surface-50 rounded-xl px-4 py-2.5 border border-surface-200 hover:border-surface-300 focus-within:border-brand-500 focus-within:bg-white focus-within:shadow-focus transition-all">
-              <Search size={15} className="text-surface-400 mr-3 flex-shrink-0" />
+          <div className="flex-1 max-w-[480px] mx-4 hidden md:block relative" ref={searchContainerRef}>
+            <div className="flex items-center bg-surface-50 rounded-xl px-4 py-2.5 border border-surface-200 hover:border-surface-300 focus-within:border-brand-500 focus-within:bg-white transition-all">
+              {liveLoading
+                ? <span className="mr-3 flex-shrink-0 w-[15px] h-[15px] rounded-full border-2 border-brand-300 border-t-brand-600 animate-spin" />
+                : <Search size={15} className="text-surface-400 mr-3 flex-shrink-0" />
+              }
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchSubmit}
-                placeholder="Search products, vendors…"
+                onFocus={() => searchQuery.length >= 2 && setShowLive(true)}
+                placeholder="Search products, vendors, events…"
                 className="flex-1 bg-transparent border-none outline-none text-sm text-surface-700 placeholder:text-surface-400"
               />
+              {searchQuery && (
+                <button onClick={() => { setSearchQuery(""); setShowLive(false); }} className="ml-2 text-surface-300 hover:text-surface-500 border-none bg-transparent cursor-pointer p-0">
+                  <X size={13} />
+                </button>
+              )}
             </div>
+            {showLive && (
+              <LiveSearchDropdown
+                query={searchQuery}
+                results={liveResults}
+                loading={liveLoading}
+                lang={lang}
+                navCategories={navCategories}
+                eventTypes={EVENT_TYPES}
+                onClose={closeSearch}
+              />
+            )}
           </div>
 
           {/* Right actions */}
@@ -322,22 +610,36 @@ export default function Header({ lang: langProp = "en" }) {
 
         {/* ── Mobile search bar (expands on tap) ── */}
         {searchOpen && (
-          <div className="md:hidden px-4 pb-3 animate-fade-up">
+          <div className="md:hidden px-4 pb-3 animate-fade-up relative" ref={mobileSearchContainerRef}>
             <div className="flex items-center bg-surface-50 rounded-xl px-4 py-3 border border-surface-200 focus-within:border-brand-500 focus-within:bg-white transition-all">
-              <Search size={15} className="text-surface-400 mr-3 flex-shrink-0" />
+              {liveLoading
+                ? <span className="mr-3 flex-shrink-0 w-[15px] h-[15px] rounded-full border-2 border-brand-300 border-t-brand-600 animate-spin" />
+                : <Search size={15} className="text-surface-400 mr-3 flex-shrink-0" />
+              }
               <input
                 autoFocus
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchSubmit}
-                placeholder="Search products, vendors…"
+                placeholder="Search products, vendors, events…"
                 className="flex-1 bg-transparent border-none outline-none text-sm text-surface-700 placeholder:text-surface-400"
               />
-              <button onClick={() => setSearchOpen(false)}>
+              <button onClick={closeSearch} className="border-none bg-transparent cursor-pointer p-0">
                 <X size={15} className="text-surface-400" />
               </button>
             </div>
+            {showLive && (
+              <LiveSearchDropdown
+                query={searchQuery}
+                results={liveResults}
+                loading={liveLoading}
+                lang={lang}
+                navCategories={navCategories}
+                eventTypes={EVENT_TYPES}
+                onClose={closeSearch}
+              />
+            )}
           </div>
         )}
 

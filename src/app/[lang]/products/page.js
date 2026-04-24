@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getDictionary } from "@/lib/getDictionary";
 import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import ProductsPageClient from "@/components/ProductsPageClient";
@@ -60,7 +61,9 @@ export default async function ProductsPage({ params }) {
   return (
     <>
       <BreadcrumbJsonLd items={breadcrumbs} />
-      <ProductsPageClient dict={dict} lang={lang} />
+      <Suspense fallback={null}>
+        <ProductsPageClient dict={dict} lang={lang} />
+      </Suspense>
     </>
   );
 }
