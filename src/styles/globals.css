@@ -153,11 +153,12 @@ a, button { transition: all 0.2s var(--transition-smooth); }
 .stagger-4 { animation-delay: 0.32s; }
 .stagger-5 { animation-delay: 0.40s; }
 
-/* ── Focus ring ── */
-input:focus, textarea:focus, select:focus {
-  border-color: var(--brand-600) !important;
-  box-shadow: 0 0 0 3px rgba(225,29,92,0.10);
-  outline: none;
+/* ── Focus ring: removed ── */
+*:focus { outline: none !important; }
+*:focus-visible { outline: none !important; }
+input:focus, textarea:focus, select:focus, button:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* ── Inputs ── */
