@@ -123,13 +123,13 @@ export default function ProductsPageClient({ dict, lang }) {
 
   const filtered = useMemo(() => {
     return allProducts.filter((p) => {
-      const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.vendor.toLowerCase().includes(search.toLowerCase());
+      // search is already applied server-side — only apply local price/rating filters
       const matchRating = p.rating >= minRating;
       const numPrice = typeof p.price === "string" ? parseFloat(p.price.replace(/[^0-9.]/g, "")) : p.price;
       const matchPrice = numPrice <= maxPrice;
-      return matchSearch && matchRating && matchPrice;
+      return matchRating && matchPrice;
     });
-  }, [allProducts, search, minRating, maxPrice]);
+  }, [allProducts, minRating, maxPrice]);
 
   return (
     <div className="min-h-screen bg-white">
