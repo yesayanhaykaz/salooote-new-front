@@ -156,6 +156,10 @@ export default function VendorProfileClient({ lang = "en", slug }) {
         vendor_id: vendor.id,
         vendor_slug: vendor.slug || "",
         category_id: p.category_id || null,
+        // multi-category: prefer category_ids array, fall back to category_id
+        category_ids: p.category_ids?.length > 0
+          ? p.category_ids
+          : (p.category_id ? [p.category_id] : []),
         price: parseFloat(p.price) || 0,
         originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
         rating: parseFloat(p.rating) || 0,
@@ -168,8 +172,8 @@ export default function VendorProfileClient({ lang = "en", slug }) {
       }));
       setProducts(mapped);
 
-      // Build category filter list from unique category_ids in products
-      const usedCatIds = [...new Set(mapped.map(p => p.category_id).filter(Boolean))];
+      // Build category filter list from ALL category_ids across products
+      const usedCatIds = [...new Set(mapped.flatMap(p => p.category_ids))].filter(Boolean);
       const flatCats = allCats.flatMap(c => [c, ...(c.children || [])]);
       const vendorCategories = usedCatIds
         .map(id => flatCats.find(c => c.id === id))
@@ -407,7 +411,7 @@ export default function VendorProfileClient({ lang = "en", slug }) {
         {mainTab === "products" && (() => {
           const filtered = activeCat === "all"
             ? products
-            : products.filter(p => p.category_id === activeCat);
+            : products.filter(p => (p.category_ids || []).includes(activeCat) || p.category_id === activeCat);
           return (
             <>
               {/* Category filter chips — only when vendor has products in multiple categories */}
@@ -420,7 +424,7 @@ export default function VendorProfileClient({ lang = "en", slug }) {
                     All ({products.length})
                   </button>
                   {vendorCats.map(cat => {
-                    const count = products.filter(p => p.category_id === cat.id).length;
+                    const count = products.filter(p => (p.category_ids || []).includes(cat.id) || p.category_id === cat.id).length;
                     return (
                       <button
                         key={cat.id}
