@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,6 +32,7 @@ const slugIcon = (slug = "") => {
 };
 
 export default function ProductsPageClient({ dict, lang }) {
+  const PAGE_SIZE = 24;
   const [search, setSearch] = useState("");
   const [selectedCat, setSelectedCat] = useState(null);
   const [minRating, setMinRating] = useState(0);
@@ -39,33 +40,63 @@ export default function ProductsPageClient({ dict, lang }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [rawProducts, setRawProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const sentinelRef = useRef(null);
+  const fetchKeyRef = useRef(0);
 
-  useEffect(() => {
-    const params = { locale: lang, limit: 500 };
+  const fetchProducts = useCallback(async (pageNum = 1) => {
+    const myKey = ++fetchKeyRef.current;
+    if (pageNum > 1) setLoadingMore(true);
+    const params = { locale: lang, limit: PAGE_SIZE, page: pageNum };
     if (selectedCat) params.category = selectedCat;
     if (search) params.search = search;
+    try {
+      const res = await productsAPI.list(params);
+      if (fetchKeyRef.current !== myKey) return;
+      const pag = res?.pagination;
+      setTotalCount(pag?.total || 0);
+      setHasMore(pag?.has_next || false);
+      const mapped = (res?.data || []).map(p => ({
+        id: p.id, name: p.name, slug: p.slug || "",
+        vendor_slug: p.vendor_slug || "",
+        price: parseFloat(p.price) || 0,
+        originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
+        rating: parseFloat(p.rating) || 0,
+        reviews: p.review_count || 0,
+        vendor: p.vendor_name || "",
+        image: p.thumbnail_url || p.images?.[0]?.url || null,
+        tags: p.tags || [],
+        category: p.category_name || "",
+        status: p.status,
+        gradient: "from-brand-50 to-brand-100",
+      }));
+      if (pageNum === 1) setRawProducts(mapped);
+      else setRawProducts(prev => [...prev, ...mapped]);
+    } catch {}
+    finally { setLoadingMore(false); }
+  }, [lang, selectedCat, search]);
 
-    productsAPI.list(params).then(res => {
-      {
-        setRawProducts((res?.data || []).map(p => ({
-          id: p.id,
-          name: p.name,
-          slug: p.slug || "",
-          vendor_slug: p.vendor_slug || "",
-          price: parseFloat(p.price) || 0,
-          originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
-          rating: parseFloat(p.rating) || 0,
-          reviews: p.review_count || 0,
-          vendor: p.vendor_name || "",
-          image: p.thumbnail_url || p.images?.[0]?.url || null,
-          tags: p.tags || [],
-          category: p.category_name || "",
-          status: p.status,
-          gradient: "from-brand-50 to-brand-100",
-        })));
-      }
-    }).catch(() => {});
+  // Reset on filter change
+  useEffect(() => { setPage(1); setRawProducts([]); fetchProducts(1); }, [fetchProducts]);
 
+  // Load next page
+  useEffect(() => { if (page > 1) fetchProducts(page); }, [page]);
+
+  // IntersectionObserver
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasMore && !loadingMore) setPage(p => p + 1);
+    }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [hasMore, loadingMore]);
+
+  useEffect(() => {
     categoriesAPI.list(lang).then(res => {
       const gradients = [
         "from-pink-400 via-rose-400 to-red-400",
@@ -76,15 +107,13 @@ export default function ProductsPageClient({ dict, lang }) {
         "from-green-400 via-emerald-400 to-teal-400",
       ];
       setCategories((res?.data || []).map((c, i) => ({
-        name: c.name,
-        slug: c.slug,
-        icon: c.icon || null,
-        emoji: c.emoji || null,
+        name: c.name, slug: c.slug,
+        icon: c.icon || null, emoji: c.emoji || null,
         gradient: gradients[i % gradients.length],
         count: c.product_count || 0,
       })));
     }).catch(() => {});
-  }, [lang, selectedCat]);
+  }, [lang]);
 
   const allProducts = useMemo(() => {
     return rawProducts.map((p, i) => ({ ...p, id: typeof p.id === "string" ? p.id : i + 1 }));
@@ -328,30 +357,45 @@ export default function ProductsPageClient({ dict, lang }) {
             <div className="flex items-center justify-between mb-6">
               <p className="text-xl font-bold text-surface-900">
                 All Products
-                {rawProducts.length > 0 && (
-                  <span className="text-surface-400 font-normal text-sm ml-2">({rawProducts.length} items)</span>
+                {totalCount > 0 && (
+                  <span className="text-surface-400 font-normal text-sm ml-2">({totalCount} items)</span>
                 )}
               </p>
             </div>
             {rawProducts.length > 0 ? (
-              <motion.div
-                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                {rawProducts.map((p, i) => (
-                  <motion.div
-                    key={p.id}
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.4 }}
-                  >
-                    <ProductCard product={p} lang={lang} />
-                  </motion.div>
-                ))}
-              </motion.div>
+              <>
+                <motion.div
+                  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {rawProducts.map((p, i) => (
+                    <motion.div
+                      key={p.id}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: Math.min(i * 0.04, 0.4), duration: 0.4 }}
+                    >
+                      <ProductCard product={p} lang={lang} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+                {/* Infinite scroll sentinel */}
+                <div ref={sentinelRef} className="h-10 mt-4" />
+                {loadingMore && (
+                  <div className="flex justify-center py-6">
+                    <div className="flex items-center gap-2 text-sm text-surface-400">
+                      <div className="w-4 h-4 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
+                      Loading more...
+                    </div>
+                  </div>
+                )}
+                {!hasMore && rawProducts.length > 0 && (
+                  <p className="text-center text-xs text-surface-300 py-4">All {totalCount} products loaded</p>
+                )}
+              </>
             ) : (
               <div className="py-20 text-center">
                 <p className="text-surface-400 text-sm">No products available yet. Check back soon!</p>

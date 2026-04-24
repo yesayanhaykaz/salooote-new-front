@@ -222,6 +222,14 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   const [categoryID, setCategoryID]       = useState(null);
   const [subcategories, setSubcategories] = useState([]);
 
+  // Infinite scroll
+  const PAGE_SIZE = 24;
+  const [page, setPage]           = useState(1);
+  const [hasMore, setHasMore]     = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinelRef               = useRef(null);
+  const fetchKeyRef               = useRef(0);
+
   const categoryName = categoryInfo?.name ||
     (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "All Categories");
   const parentName = parentInfo?.name ||
@@ -255,20 +263,17 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
     });
   }, [slug, parentSlug, lang]);
 
-  // Step 2: fetch products when categoryID or sort changes
-  const fetchProducts = useCallback(() => {
-    if (slug && !categoryID) return; // wait for slug→ID resolution
-    if (!slug && !categoryID) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
+  // Step 2: fetch products — supports pagination
+  const fetchProducts = useCallback(async (pageNum = 1) => {
+    if (slug && !categoryID) return;
+    if (!slug && !categoryID) { setLoading(false); return; }
+
+    const myKey = ++fetchKeyRef.current;
+    if (pageNum === 1) { setLoading(true); setProducts([]); }
+    else setLoadingMore(true);
+
     const pr = priceRanges[priceIdx];
-    const params = {
-      limit: 48,
-      locale: lang,
-      sort: sort,
-    };
+    const params = { limit: PAGE_SIZE, page: pageNum, locale: lang, sort };
     if (categoryID) params.category_id = categoryID;
     if (pr && priceIdx > 0) {
       if (pr.min > 0) params.min_price = pr.min;
@@ -276,13 +281,15 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
     }
     if (search) params.search = search;
 
-    productsAPI.list(params).then(res => {
+    try {
+      const res = await productsAPI.list(params);
+      if (fetchKeyRef.current !== myKey) return; // stale response
       const raw = res?.data || [];
-      setTotal(res?.pagination?.total || raw.length);
-      setProducts(raw.map(p => ({
-        id: p.id,
-        name: p.name,
-        slug: p.slug || "",
+      const pag = res?.pagination;
+      setTotal(pag?.total || raw.length);
+      setHasMore(pag?.has_next || false);
+      const mapped = raw.map(p => ({
+        id: p.id, name: p.name, slug: p.slug || "",
         vendor_slug: p.vendor_slug || "",
         price: parseFloat(p.price) || 0,
         originalPrice: p.compare_price ? parseFloat(p.compare_price) : null,
@@ -292,11 +299,35 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
         image: p.thumbnail_url || p.images?.[0]?.url || null,
         tags: p.tags || [],
         gradient: "from-brand-50 to-brand-100",
-      })));
-    }).catch(() => setProducts([])).finally(() => setLoading(false));
+      }));
+      if (pageNum === 1) setProducts(mapped);
+      else setProducts(prev => [...prev, ...mapped]);
+    } catch {
+      if (pageNum === 1) setProducts([]);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
   }, [slug, categoryID, sort, priceIdx, priceRanges, search, lang]);
 
-  useEffect(() => { fetchProducts(); }, [fetchProducts]);
+  // Reset + re-fetch when filters change
+  useEffect(() => { setPage(1); fetchProducts(1); }, [fetchProducts]);
+
+  // Load next page when page increments
+  useEffect(() => { if (page > 1) fetchProducts(page); }, [page]);
+
+  // IntersectionObserver — trigger next page when sentinel visible
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && hasMore && !loadingMore && !loading) {
+        setPage(p => p + 1);
+      }
+    }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [hasMore, loadingMore, loading]);
 
   // Step 3: fetch vendors for this category
   useEffect(() => {
@@ -584,9 +615,26 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
                     )}
                   </div>
                 ) : view === "grid" ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filtered.map((p, i) => <ProductCard key={p.id || i} product={p} lang={lang} />)}
-                  </div>
+                  <>
+                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {filtered.map((p, i) => <ProductCard key={p.id || i} product={p} lang={lang} />)}
+                    </div>
+                    {/* Infinite scroll sentinel */}
+                    <div ref={sentinelRef} className="h-10 mt-4" />
+                    {loadingMore && (
+                      <div className="flex justify-center py-4">
+                        <div className="flex items-center gap-2 text-sm text-surface-400">
+                          <div className="w-4 h-4 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
+                          {lang === "hy" ? "Բեռնվում է..." : lang === "ru" ? "Загрузка..." : "Loading more..."}
+                        </div>
+                      </div>
+                    )}
+                    {!hasMore && filtered.length > 0 && (
+                      <p className="text-center text-xs text-surface-300 py-4">
+                        {lang === "hy" ? `Բոլոր ${total} ապранknery ցуцваdz` : lang === "ru" ? `Все ${total} товаров загружены` : `All ${total} products loaded`}
+                      </p>
+                    )}
+                  </>
                 ) : (
                   <div className="flex flex-col gap-3">
                     {filtered.map((p, i) => {
