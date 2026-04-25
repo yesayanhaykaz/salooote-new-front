@@ -1,5 +1,4 @@
 import { getDictionary } from "@/lib/getDictionary";
-import HomePageClient from "@/components/HomePageClient";
 
 export function generateStaticParams() {
   return [{ lang: "en" }, { lang: "hy" }, { lang: "ru" }];
@@ -53,8 +52,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function Page({ params }) {
-  const { lang } = await params;
-  const dict = await getDictionary(lang);
-  return <HomePageClient dict={dict} lang={lang} />;
+// Renders nothing — the global AI assistant in the layout shows its landing
+// view when the path is the root locale (see AIAssistantV2Client).
+export default function Page() {
+  return null;
 }

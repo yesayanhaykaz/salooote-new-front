@@ -1307,7 +1307,7 @@ function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
 export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
   const pathname = usePathname() || "";
-  const onAIPage = pathname.includes("/newhomepage2nd");
+  const onAIPage = /^\/(en|hy|ru)\/?$/.test(pathname);
   const HIDE_ON = ["/login", "/signup", "/forgot-password", "/checkout", "/payment"];
   const hideEverything = HIDE_ON.some(p => pathname.includes(p));
   const [phase, setPhase] = useState("landing");
