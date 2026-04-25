@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/lib/cart-context";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
@@ -143,6 +144,8 @@ const ICON_PATHS = {
   x:        <><path d="M6 6l12 12"/><path d="M18 6 6 18"/></>,
   grid:     <><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></>,
   flame:    <><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-5 0 2 1 3 2 3 0-3 0-5 2-8z"/></>,
+  plus:     <><path d="M12 5v14"/><path d="M5 12h14"/></>,
+  cart:     <><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></>,
 };
 function Icon({ name, size = 18, className = "", style }) {
   const path = ICON_PATHS[name] || ICON_PATHS.sparkle;
@@ -227,14 +230,21 @@ function StateBar({ state, lang }) {
 
 function Avatar({ size = 30 }) {
   return (
-    <div style={{
-      width: size, height: size, minWidth: size, borderRadius: "50%",
-      background: "radial-gradient(circle at 30% 25%, #ffd1dc 0%, #f43f5e 55%, #9f1239 100%)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      color: "#fff",
-      boxShadow: "0 3px 10px rgba(225,29,92,.3)",
-    }}>
-      <Icon name="sparkle" size={Math.round(size * 0.5)} />
+    <div className="v2-avatar" style={{ width: size, height: size, minWidth: size }}>
+      <span className="v2-avatar-ring" />
+      <span className="v2-avatar-core">
+        <svg width={Math.round(size * 0.55)} height={Math.round(size * 0.55)} viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path d="M12 3.5c1.4 3.6 2.7 4.9 6.3 6.3-3.6 1.4-4.9 2.7-6.3 6.3-1.4-3.6-2.7-4.9-6.3-6.3 3.6-1.4 4.9-2.7 6.3-6.3z" fill="url(#sg)" />
+          <circle cx="18" cy="18" r="1.6" fill="url(#sg)" opacity=".85" />
+          <circle cx="5.4" cy="17.5" r="1.1" fill="url(#sg)" opacity=".7" />
+          <defs>
+            <linearGradient id="sg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#fff" />
+              <stop offset="1" stopColor="#ffe4ee" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </span>
     </div>
   );
 }
@@ -264,13 +274,35 @@ function ProductCard({ p, lang, onOpen }) {
   const img = imgSrc(p.thumbnail_url || p.images?.[0]?.url);
   const name = (lang !== "en" && p[`name_${lang}`]) || p.name || "Product";
   const [hover, setHover] = useState(false);
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+
+  const handleAddCart = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (added) return;
+    addToCart({
+      product_id: p.id,
+      vendor_id: p.vendor_id,
+      name,
+      price: parseFloat(p.price) || 0,
+      image: img,
+      qty: 1,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1600);
+  };
+
   return (
-    <button
+    <div
       onClick={() => onOpen(p, "product")}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={e => { if (e.key === "Enter") onOpen(p, "product"); }}
       style={{
-        flexShrink: 0, width: 152, borderRadius: 18, padding: 0,
+        flexShrink: 0, width: 158, borderRadius: 18, padding: 0,
         background: "#fff", cursor: "pointer", textAlign: "left",
         overflow: "hidden", position: "relative",
         border: `1.5px solid ${hover ? "#fbc9d8" : "rgba(240,228,232,.8)"}`,
@@ -283,8 +315,18 @@ function ProductCard({ p, lang, onOpen }) {
     >
       <div style={{ width: "100%", aspectRatio: "1/1", background: "linear-gradient(145deg,#fdf3f6,#fbe8ed)", position: "relative", overflow: "hidden" }}>
         {img
-          ? <Image src={img} alt={name} fill style={{ objectFit: "cover", transform: hover ? "scale(1.07)" : "none", transition: "transform .4s ease" }} sizes="152px" />
+          ? <Image src={img} alt={name} fill style={{ objectFit: "cover", transform: hover ? "scale(1.07)" : "none", transition: "transform .4s ease" }} sizes="158px" />
           : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#e0c0cb" }}><Icon name="gift" size={32} /></div>}
+        {p.price > 0 && (
+          <button
+            type="button"
+            onClick={handleAddCart}
+            aria-label={lang === "ru" ? "В корзину" : lang === "hy" ? "Զամբյուղ" : "Add to cart"}
+            className={`v2-mini-cart ${added ? "is-added" : ""}`}
+          >
+            <Icon name={added ? "check" : "plus"} size={14} />
+          </button>
+        )}
       </div>
       <div style={{ padding: "11px 13px 13px" }}>
         <p style={{
@@ -293,7 +335,7 @@ function ProductCard({ p, lang, onOpen }) {
         }}>{name}</p>
         {p.price > 0 && <p style={{ margin: "6px 0 0", fontSize: 13, fontWeight: 800, color: PINK, letterSpacing: -0.3 }}>{fmt(p.price)}</p>}
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -460,72 +502,84 @@ function Popup({ item, type, lang, onClose }) {
     return () => { window.removeEventListener("keydown", h); document.body.style.overflow = ""; };
   }, [onClose]);
 
+  const { addToCart } = useCart();
+  const [added, setAdded] = useState(false);
+  const handleAdd = () => {
+    if (added) return;
+    addToCart({
+      product_id: item.id,
+      vendor_id: item.vendor_id,
+      name,
+      price: parseFloat(item.price) || 0,
+      image: imgs[0] || null,
+      qty: 1,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1600);
+  };
+
   return (
-    <div onClick={onClose} style={{
-      position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(16,4,9,.7)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-      display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
-      animation: "v2fade .22s ease",
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: "#fff", borderRadius: 26, overflow: "hidden",
-        maxWidth: 480, width: "100%", maxHeight: "88vh",
-        display: "flex", flexDirection: "column",
-        boxShadow: "0 40px 90px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06)",
-        animation: "v2pop .32s cubic-bezier(.2,.8,.2,1)",
-      }}>
-        <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: "#f5eff2", flexShrink: 0 }}>
+    <div onClick={onClose} className="v2-pop-back">
+      <div onClick={e => e.stopPropagation()} className="v2-pop">
+        <button onClick={onClose} className="v2-pop-close" aria-label="Close">
+          <Icon name="x" size={16} />
+        </button>
+
+        {/* Image / gallery */}
+        <div className="v2-pop-media">
           {imgs[idx]
-            ? <Image src={imgs[idx]} alt={name} fill style={{ objectFit: "cover" }} sizes="480px" />
-            : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#d8c3ce" }}><Icon name="gift" size={60} /></div>}
-          <button onClick={onClose} style={{
-            position: "absolute", top: 14, right: 14, width: 38, height: 38, borderRadius: "50%",
-            background: "rgba(0,0,0,.48)", backdropFilter: "blur(10px)", border: "none", color: "#fff", fontSize: 15,
-            cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-          }} aria-label="Close"><Icon name="x" size={16} /></button>
+            ? <Image src={imgs[idx]} alt={name} fill style={{ objectFit: "cover" }} sizes="(max-width:760px) 100vw, 420px" />
+            : <div className="v2-pop-fallback"><Icon name="gift" size={60} /></div>}
           {imgs.length > 1 && (
-            <div style={{ position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5 }}>
-              {imgs.map((_, i) => (
-                <button key={i} onClick={() => setIdx(i)} style={{
-                  width: i === idx ? 22 : 7, height: 7, borderRadius: 4, border: "none",
-                  cursor: "pointer", background: i === idx ? "#fff" : "rgba(255,255,255,.45)", transition: "width .22s ease",
-                }} />
+            <div className="v2-pop-thumbs">
+              {imgs.slice(0, 5).map((src, i) => (
+                <button key={i} onClick={() => setIdx(i)} className={`v2-pop-thumb ${i === idx ? "is-active" : ""}`} aria-label={`Image ${i+1}`}>
+                  <Image src={src} alt="" fill style={{ objectFit: "cover" }} sizes="56px" />
+                </button>
               ))}
             </div>
           )}
         </div>
-        <div style={{ padding: "24px 28px 28px", overflowY: "auto" }}>
-          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1a0a14", letterSpacing: -0.5, lineHeight: 1.2 }}>{name}</h2>
+
+        {/* Details column */}
+        <div className="v2-pop-info">
+          <h2 className="v2-pop-name">{name}</h2>
+
           {type === "product" && item.price > 0 && (
-            <p style={{ margin: "8px 0 0", fontSize: 21, fontWeight: 800, color: PINK, letterSpacing: -0.4 }}>{fmt(item.price)}</p>
+            <p className="v2-pop-price">{fmt(item.price)}</p>
           )}
           {type === "vendor" && item.city && (
-            <p style={{ margin: "8px 0 0", fontSize: 13, color: "#9b8390", display: "inline-flex", alignItems: "center", gap: 5 }}><Icon name="pin" size={13} />{item.city}</p>
+            <p className="v2-pop-meta"><Icon name="pin" size={13} />{item.city}</p>
           )}
+
           {desc && (
-            <p style={{ margin: "14px 0 0", fontSize: 14.5, color: "#5a4452", lineHeight: 1.75 }}>
-              {desc.slice(0, 280)}{desc.length > 280 ? "…" : ""}
+            <p className="v2-pop-desc">
+              {desc.slice(0, 220)}{desc.length > 220 ? "…" : ""}
             </p>
           )}
+
           {type === "product" && item.tags?.length > 0 && (
-            <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 6 }}>
-              {item.tags.slice(0, 5).map((tag, i) => (
-                <span key={i} style={{
-                  padding: "5px 13px", borderRadius: 20, fontSize: 11.5,
-                  background: "#fce7ef", color: PINK, fontWeight: 600, letterSpacing: 0.1,
-                }}>{tag}</span>
+            <div className="v2-pop-tags">
+              {item.tags.slice(0, 4).map((tag, i) => (
+                <span key={i} className="v2-pop-tag">{tag}</span>
               ))}
             </div>
           )}
-          <Link href={href} style={{
-            display: "block", marginTop: 24, padding: "15px", borderRadius: 16,
-            background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
-            color: "#fff", textAlign: "center", fontWeight: 700, fontSize: 15,
-            textDecoration: "none", letterSpacing: 0.1,
-            boxShadow: "0 10px 24px rgba(225,29,92,.34)",
-          }}>
-            {type === "product" ? tx(T.viewProduct, lang) : tx(T.viewStore, lang)}
-          </Link>
+
+          <div className="v2-pop-actions">
+            {type === "product" && item.price > 0 && (
+              <button onClick={handleAdd} className={`v2-pop-cart ${added ? "is-added" : ""}`}>
+                <Icon name={added ? "check" : "gift"} size={16} />
+                {added
+                  ? (lang === "ru" ? "Добавлено" : lang === "hy" ? "Ավելացված է" : "Added")
+                  : (lang === "ru" ? "В корзину" : lang === "hy" ? "Զամբյուղ" : "Add to cart")}
+              </button>
+            )}
+            <Link href={href} className="v2-pop-view">
+              {type === "product" ? tx(T.viewProduct, lang) : tx(T.viewStore, lang)}
+              <Icon name="arrowRight" size={14} style={{ marginLeft: 6 }} />
+            </Link>
+          </div>
         </div>
       </div>
     </div>
@@ -925,8 +979,8 @@ function ChatHeader({ lang, chatState, messages, sessionId, setSessionId }) {
       </div>
       <div style={{ minWidth: 0 }}>
         <p style={{
-          margin: 0, fontWeight: 700, fontSize: 19, color: "#1a0a14", letterSpacing: -0.2,
-          fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: "italic", lineHeight: 1,
+          margin: 0, fontWeight: 800, fontSize: 17, color: "#1a0a14", letterSpacing: -0.4,
+          lineHeight: 1.1,
         }}>Sali</p>
         <p style={{ margin: "1px 0 0", fontSize: 11.5, color: "#b09aa6", fontWeight: 500 }}>
           {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI օգնական" : "AI Concierge"}
@@ -1168,7 +1222,7 @@ export default function AIAssistantV2Client({ lang }) {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap');
         @keyframes v2dot{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-6px);opacity:1}}
         @keyframes orbPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.18);opacity:.25}}
         @keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -1201,14 +1255,14 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-left{display:flex;flex-direction:column;gap:18px;animation:v2In .55s cubic-bezier(.2,.8,.2,1)}
 
         .v2-headline{
-          margin:0;font-family:'Cormorant Garamond',Georgia,serif;
+          margin:0;font-family:'Fraunces',Georgia,serif;
           font-size:clamp(40px,5vw,68px);font-weight:700;
           line-height:1.02;letter-spacing:-1.6px;color:#1a0a14;
         }
-        .v2-h-line1{font-style:italic}
+        .v2-h-line1{font-style:normal;font-variation-settings:"opsz" 144}
         .v2-h-line2{
-          font-style:italic;
-          background:linear-gradient(135deg,#1a0a14 0%,#5a1a2f 100%);
+          font-style:italic;font-variation-settings:"opsz" 144;
+          background:linear-gradient(135deg,${PINK} 0%,#9f1239 100%);
           -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
         }
 
@@ -1355,7 +1409,7 @@ export default function AIAssistantV2Client({ lang }) {
           text-transform:uppercase;color:${PINK};
         }
         .v2-browse-headline{
-          margin:6px 0 0;font-family:'Cormorant Garamond',Georgia,serif;
+          margin:6px 0 0;font-family:'Fraunces',Georgia,serif;
           font-size:clamp(32px,4vw,46px);font-style:italic;font-weight:700;
           color:#1a0a14;letter-spacing:-1px;line-height:1.05;
         }
@@ -1420,7 +1474,7 @@ export default function AIAssistantV2Client({ lang }) {
           border-top:1px solid #f5e9ee;
         }
         .v2-how-title{
-          margin:0 0 12px;font-family:'Cormorant Garamond',Georgia,serif;
+          margin:0 0 12px;font-family:'Fraunces',Georgia,serif;
           font-size:clamp(28px,3.6vw,42px);font-style:italic;font-weight:700;
           color:#1a0a14;letter-spacing:-.8px;text-align:center;
         }
@@ -1449,6 +1503,134 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-how-card-desc{
           margin:0;font-size:13.5px;line-height:1.55;color:#7c5566;
+        }
+
+        /* ── Avatar ── */
+        .v2-avatar{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+        .v2-avatar-ring{
+          position:absolute;inset:-2px;border-radius:50%;
+          background:conic-gradient(from 0deg, ${PINK}, #f43f5e, #c026d3, #f0abfc, ${PINK});
+          animation:v2-avatar-spin 6s linear infinite;
+          filter:blur(.4px);
+        }
+        .v2-avatar-core{
+          position:relative;width:100%;height:100%;border-radius:50%;
+          background:radial-gradient(circle at 30% 28%,#ff8db4 0%,${PINK} 55%,#7c1d3f 100%);
+          display:flex;align-items:center;justify-content:center;color:#fff;
+          box-shadow:inset 0 -6px 12px rgba(124,29,63,.45),inset 0 6px 10px rgba(255,255,255,.35),0 4px 14px rgba(225,29,92,.3);
+        }
+        @keyframes v2-avatar-spin{to{transform:rotate(360deg)}}
+
+        /* ── Textarea placeholder ── */
+        .v2-chat-textarea::placeholder,
+        .v2-chat-textarea::-webkit-input-placeholder{color:#a08596;opacity:1}
+        .v2-chat-textarea:focus::placeholder{color:#bba3af}
+        textarea::placeholder{color:#a08596;opacity:1}
+
+        /* ── Mini cart button on product card ── */
+        .v2-mini-cart{
+          position:absolute;right:8px;bottom:8px;
+          width:32px;height:32px;border-radius:50%;
+          background:#fff;border:1.5px solid #f3d8e1;color:${PINK};
+          display:flex;align-items:center;justify-content:center;
+          cursor:pointer;box-shadow:0 6px 14px rgba(225,29,92,.18);
+          transition:all .18s cubic-bezier(.2,.8,.2,1);z-index:2;
+        }
+        .v2-mini-cart:hover{background:${PINK};color:#fff;border-color:${PINK};transform:scale(1.08)}
+        .v2-mini-cart.is-added{background:#16a34a;color:#fff;border-color:#16a34a}
+
+        /* ── Popup (gift / vendor detail) ── */
+        .v2-pop-back{
+          position:fixed;inset:0;z-index:1000;
+          background:rgba(20,5,12,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+          display:flex;align-items:center;justify-content:center;
+          padding:16px;animation:v2fade .22s ease;
+        }
+        .v2-pop{
+          position:relative;width:100%;max-width:880px;max-height:calc(100vh - 32px);
+          background:#fff;border-radius:24px;overflow:hidden;
+          display:grid;grid-template-columns:1.05fr 1fr;
+          box-shadow:0 30px 80px rgba(20,5,12,.4),0 4px 16px rgba(225,29,92,.18);
+          animation:v2pop .28s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-pop-close{
+          position:absolute;top:14px;right:14px;z-index:5;
+          width:34px;height:34px;border-radius:50%;
+          background:rgba(255,255,255,.92);backdrop-filter:blur(8px);
+          border:1px solid rgba(240,218,228,.7);color:#1a0a14;
+          display:flex;align-items:center;justify-content:center;cursor:pointer;
+          box-shadow:0 4px 12px rgba(0,0,0,.1);transition:all .18s;
+        }
+        .v2-pop-close:hover{background:#fff;color:${PINK};transform:scale(1.06)}
+        .v2-pop-media{
+          position:relative;background:linear-gradient(160deg,#fdf3f6,#fbe8ed);
+          min-height:360px;display:flex;align-items:center;justify-content:center;
+        }
+        .v2-pop-media>img{width:100%!important;height:100%!important;object-fit:cover}
+        .v2-pop-fallback{display:flex;align-items:center;justify-content:center;color:#e0bfca}
+        .v2-pop-thumbs{
+          position:absolute;left:14px;right:14px;bottom:14px;
+          display:flex;gap:8px;justify-content:flex-start;
+        }
+        .v2-pop-thumb{
+          position:relative;width:48px;height:48px;border-radius:12px;
+          border:2px solid rgba(255,255,255,.8);overflow:hidden;cursor:pointer;
+          padding:0;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18);
+          transition:all .18s;
+        }
+        .v2-pop-thumb:hover{transform:translateY(-2px)}
+        .v2-pop-thumb.is-active{border-color:${PINK};box-shadow:0 0 0 3px rgba(225,29,92,.22)}
+        .v2-pop-info{
+          padding:30px 30px 26px;display:flex;flex-direction:column;gap:12px;
+          overflow-y:auto;max-height:calc(100vh - 32px);
+        }
+        .v2-pop-name{
+          margin:0;font-family:'Fraunces',Georgia,serif;
+          font-size:26px;font-weight:600;color:#1a0a14;letter-spacing:-.6px;line-height:1.15;
+          font-variation-settings:"opsz" 144;
+        }
+        .v2-pop-price{
+          margin:0;font-size:22px;font-weight:800;color:${PINK};letter-spacing:-.3px;
+        }
+        .v2-pop-meta{
+          margin:0;font-size:13.5px;color:#7c5566;font-weight:500;
+          display:inline-flex;align-items:center;gap:6px;
+        }
+        .v2-pop-desc{
+          margin:0;font-size:14px;line-height:1.65;color:#4a3540;
+        }
+        .v2-pop-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+        .v2-pop-tag{
+          padding:4px 10px;border-radius:999px;
+          background:#fdf2f5;color:#7c1d3f;font-size:11.5px;font-weight:600;
+          border:1px solid #fbe1e9;
+        }
+        .v2-pop-actions{
+          display:flex;gap:10px;margin-top:auto;padding-top:14px;flex-wrap:wrap;
+        }
+        .v2-pop-cart{
+          flex:1;min-width:140px;display:inline-flex;align-items:center;justify-content:center;
+          gap:8px;padding:13px 18px;border-radius:14px;border:none;cursor:pointer;
+          background:linear-gradient(135deg,${PINK} 0%,#f43f5e 100%);color:#fff;
+          font-size:14px;font-weight:700;letter-spacing:.1px;font-family:inherit;
+          box-shadow:0 8px 22px rgba(225,29,92,.32);transition:all .18s;
+        }
+        .v2-pop-cart:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(225,29,92,.42)}
+        .v2-pop-cart.is-added{background:#16a34a;box-shadow:0 8px 22px rgba(22,163,74,.32)}
+        .v2-pop-view{
+          display:inline-flex;align-items:center;justify-content:center;
+          padding:13px 18px;border-radius:14px;
+          background:#fff;border:1.5px solid #f0e2e8;color:#1a0a14;
+          font-size:14px;font-weight:600;text-decoration:none;
+          transition:all .18s;
+        }
+        .v2-pop-view:hover{border-color:${PINK};color:${PINK};transform:translateY(-1px)}
+        @media (max-width:760px){
+          .v2-pop{grid-template-columns:1fr;max-height:calc(100vh - 24px)}
+          .v2-pop-media{min-height:240px;aspect-ratio:4/3}
+          .v2-pop-info{padding:20px 22px 22px}
+          .v2-pop-name{font-size:22px}
+          .v2-pop-price{font-size:19px}
         }
 
         /* Mobile / tablet */
