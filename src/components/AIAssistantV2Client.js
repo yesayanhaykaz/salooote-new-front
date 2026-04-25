@@ -663,66 +663,69 @@ function Popup({ item, type, lang, onClose }) {
   );
 }
 
-const ORB_PHOTOS = [
-  "/images/wedding-arch-beach.jpg",
-  "/images/wedding-cake.jpg",
-  "/images/party-balloons.jpg",
-  "/images/event-dinner.jpg",
-  "/images/wedding-dance.jpg",
-  "/images/cupcakes.jpg",
+const HERO_CARDS = [
+  { src: "/images/wedding-cake.jpg",   tag: "wedding",  icon: "ring" },
+  { src: "/images/party-balloons.jpg", tag: "birthday", icon: "balloon" },
+  { src: "/images/cupcakes.jpg",       tag: "celebration", icon: "cake" },
 ];
 
-function OrbVisual() {
-  // Glassy 3D iridescent orb hero with rotating event photo inside
-  const [photoIdx, setPhotoIdx] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setPhotoIdx(i => (i + 1) % ORB_PHOTOS.length), 4500);
-    return () => clearInterval(t);
-  }, []);
+function OrbVisual({ lang }) {
+  // Premium floating Polaroid stack — three event photos arranged in depth
+  const labels = {
+    en: { wedding: "Wedding", birthday: "Birthday", celebration: "Celebration", planned: "Planned" },
+    hy: { wedding: "Հարսանիք", birthday: "Ծնունդ", celebration: "Տոն", planned: "Պլանավորված" },
+    ru: { wedding: "Свадьба", birthday: "День рожд.", celebration: "Праздник", planned: "Готово" },
+  };
+  const L = labels[lang] || labels.en;
 
   return (
-    <div className="v2-orb-stage">
-      {/* Soft ambient halo */}
-      <div className="v2-orb-halo" />
-      {/* Photo orb */}
-      <div className="v2-orb-photo">
-        {ORB_PHOTOS.map((src, i) => (
-          <Image
-            key={src}
-            src={src}
-            alt=""
-            fill
-            sizes="(max-width:920px) 340px, 420px"
-            priority={i === 0}
-            style={{
-              objectFit: "cover",
-              opacity: i === photoIdx ? 1 : 0,
-              transition: "opacity 1.2s ease",
-            }}
-          />
-        ))}
-      </div>
-      {/* Glassy iridescent overlay */}
-      <div className="v2-orb">
-        <div className="v2-orb-glow" />
-        <div className="v2-orb-highlight" />
-        <div className="v2-orb-rim" />
-      </div>
-      {/* Reflection */}
-      <div className="v2-orb-reflection" />
-      {/* Floating icon chips around the orb */}
-      {[
-        { icon: "cake",    style: { top: "8%",  left: "12%" }, delay: "0s"   },
-        { icon: "balloon", style: { top: "14%", right: "10%" }, delay: ".5s" },
-        { icon: "gift",    style: { top: "55%", left: "4%" },  delay: "1s"   },
-        { icon: "ring",    style: { top: "52%", right: "2%" }, delay: "1.5s" },
-        { icon: "flower",  style: { bottom: "8%", left: "26%" }, delay: "2s" },
-        { icon: "glass",   style: { bottom: "12%", right: "22%" }, delay: "2.5s" },
-      ].map((c, i) => (
-        <div key={i} className="v2-orb-chip" style={{ ...c.style, animationDelay: c.delay }}>
-          <Icon name={c.icon} size={18} />
-        </div>
+    <div className="v2-stack-stage">
+      {/* Ambient halo */}
+      <div className="v2-stack-halo" />
+
+      {/* Floating sparkle particles */}
+      {[0,1,2,3,4,5].map(i => (
+        <span key={i} className={`v2-stack-spark v2-stack-spark-${i}`} />
       ))}
+
+      {/* Card 1 — back */}
+      <div className="v2-stack-card v2-stack-card-3">
+        <div className="v2-stack-img">
+          <Image src={HERO_CARDS[2].src} alt="" fill sizes="280px" style={{ objectFit: "cover" }} />
+        </div>
+        <div className="v2-stack-tag"><Icon name={HERO_CARDS[2].icon} size={12} />{L.celebration}</div>
+      </div>
+
+      {/* Card 2 — middle */}
+      <div className="v2-stack-card v2-stack-card-2">
+        <div className="v2-stack-img">
+          <Image src={HERO_CARDS[1].src} alt="" fill sizes="300px" style={{ objectFit: "cover" }} priority />
+        </div>
+        <div className="v2-stack-tag"><Icon name={HERO_CARDS[1].icon} size={12} />{L.birthday}</div>
+      </div>
+
+      {/* Card 3 — front */}
+      <div className="v2-stack-card v2-stack-card-1">
+        <div className="v2-stack-img">
+          <Image src={HERO_CARDS[0].src} alt="" fill sizes="320px" style={{ objectFit: "cover" }} priority />
+        </div>
+        <div className="v2-stack-tag"><Icon name={HERO_CARDS[0].icon} size={12} />{L.wedding}</div>
+
+        {/* Floating success chip */}
+        <div className="v2-stack-success">
+          <span className="v2-stack-success-dot"><Icon name="check" size={11} /></span>
+          <span className="v2-stack-success-text">{L.planned}</span>
+        </div>
+      </div>
+
+      {/* Floating Sali chip */}
+      <div className="v2-stack-sali">
+        <Avatar size={32} />
+        <div className="v2-stack-sali-text">
+          <p>Sali</p>
+          <span>AI</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -809,9 +812,9 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
           </button>
         </div>
 
-        {/* RIGHT: 3D glassy orb visual */}
+        {/* RIGHT: floating event card stack */}
         <div className="v2-right">
-          <OrbVisual />
+          <OrbVisual lang={lang} />
         </div>
       </div>
 
@@ -1036,12 +1039,8 @@ function PlanAnyOccasion({ lang }) {
   );
 }
 
-// ── Chat header with step progress + Save + History ────────────────
-function ChatHeader({ lang, chatState, messages, sessionId, setSessionId, onClose }) {
-  const [saving, setSaving] = useState(false);
-  const [savedTick, setSavedTick] = useState(false);
-
-  // Compute progress steps based on what we know about the event.
+// ── Chat header — slim, ChatGPT-style ──────────────────────────────
+function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose }) {
   const stepDefs = [
     { key: "event_type", label: lang === "ru" ? "Тип" : lang === "hy" ? "Տեսակ" : "Type" },
     { key: "deadline",   label: lang === "ru" ? "Дата" : lang === "hy" ? "Ամսաթիվ" : "Date" },
@@ -1051,163 +1050,140 @@ function ChatHeader({ lang, chatState, messages, sessionId, setSessionId, onClos
     { key: "style",      label: lang === "ru" ? "Стиль" : lang === "hy" ? "Ոճ" : "Style" },
   ];
 
-  const isLoggedIn = typeof window !== "undefined" && !!localStorage.getItem("access_token");
-
-  const onSave = async () => {
-    if (!isLoggedIn) {
-      window.location.href = `/${lang}/login?next=/${lang}/newhomepage2nd`;
-      return;
-    }
-    if (saving) return;
-    setSaving(true);
-    try {
-      const token = localStorage.getItem("access_token");
-      const title = chatState.event_type
-        ? `${chatState.event_type.replace(/_/g, " ")}${chatState.recipient ? ` — ${chatState.recipient}` : ""}`
-        : (lang === "ru" ? "Новый план" : lang === "hy" ? "Նոր պլան" : "New plan");
-      const body = {
-        title,
-        event_type: chatState.event_type || null,
-        event_date: chatState.deadline || null,
-        guest_count: chatState.guest_count || null,
-        budget: chatState.budget || null,
-        currency: "AMD",
-        location: chatState.city || null,
-        event_data: { ...chatState, _messages: messages.slice(-30) },
-      };
-      const url = sessionId
-        ? `${API}/user/planner/sessions/${sessionId}`
-        : `${API}/user/planner/sessions`;
-      const method = sessionId ? "PUT" : "POST";
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify(body),
-      });
-      const j = await res.json();
-      if (j?.success && j?.data?.id && !sessionId) setSessionId(j.data.id);
-      setSavedTick(true);
-      setTimeout(() => setSavedTick(false), 1800);
-    } catch (e) {
-      // silent fail
-    } finally {
-      setSaving(false);
-    }
-  };
-
   return (
-    <div style={{
-      display: "flex", alignItems: "center", gap: 14,
-      padding: "12px 22px",
-      background: "rgba(255,255,255,.92)",
-      backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-      borderBottom: "1px solid rgba(240,218,228,.6)",
-      flexShrink: 0, flexWrap: "wrap",
-    }}>
-      <div style={{ position: "relative" }}>
-        <div style={{
-          position: "absolute", inset: -6, borderRadius: "50%",
-          background: "radial-gradient(circle,rgba(225,29,92,.26) 0%,transparent 70%)",
-          animation: "halo 3s ease-in-out infinite",
-        }} />
-        <Avatar size={38} />
-      </div>
-      <div style={{ minWidth: 0 }}>
-        <p style={{
-          margin: 0, fontWeight: 800, fontSize: 17, color: "#1a0a14", letterSpacing: -0.4,
-          lineHeight: 1.1,
-        }}>Sali</p>
-        <p style={{ margin: "1px 0 0", fontSize: 11.5, color: "#b09aa6", fontWeight: 500 }}>
-          {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI օգնական" : "AI Concierge"}
-        </p>
+    <div className="v2-chat-head">
+      {/* Sidebar toggle (mobile) */}
+      <button
+        type="button"
+        className="v2-head-icon-btn v2-sidebar-toggle"
+        onClick={onToggleSidebar}
+        aria-label={lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}
+      >
+        <Icon name="grid" size={16} />
+      </button>
+
+      <div className="v2-head-brand">
+        <div className="v2-head-avatar">
+          <span className="v2-head-halo" />
+          <Avatar size={34} />
+        </div>
+        <div className="v2-head-titles">
+          <p className="v2-head-name">Sali</p>
+          <p className="v2-head-role">
+            {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI օգնական" : "AI Concierge"}
+          </p>
+        </div>
       </div>
 
       {/* Step progress */}
-      <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: 14, flex: 1, minWidth: 240 }}>
+      <div className="v2-head-steps">
         {stepDefs.map((s, i) => {
           const filled = !!chatState[s.key];
           return (
-            <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
-              <div style={{
-                width: 22, height: 22, borderRadius: "50%",
-                background: filled ? PINK : "#fff",
-                border: `1.5px solid ${filled ? PINK : "#ebd5dd"}`,
-                color: filled ? "#fff" : "#c4a5b3",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 11, fontWeight: 700, flexShrink: 0,
-                transition: "all .25s",
-              }}>{filled ? <Icon name="check" size={12} /> : i + 1}</div>
+            <div key={s.key} className="v2-head-step">
+              <div className={`v2-head-dot ${filled ? "is-filled" : ""}`}>
+                {filled ? <Icon name="check" size={12} /> : i + 1}
+              </div>
               {i < stepDefs.length - 1 && (
-                <div style={{
-                  flex: 1, height: 2, borderRadius: 2,
-                  background: filled ? PINK : "#f0e2e8",
-                  transition: "background .25s",
-                }} />
+                <div className={`v2-head-line ${filled ? "is-filled" : ""}`} />
               )}
             </div>
           );
         })}
       </div>
 
-      {/* History link */}
-      <Link
-        href={`/${lang}/account/events`}
-        style={{
-          display: "inline-flex", alignItems: "center", gap: 6,
-          padding: "7px 12px", borderRadius: 999,
-          background: "#fff", border: "1px solid #ebd5dd",
-          color: "#1a0a14", fontSize: 12.5, fontWeight: 600, textDecoration: "none",
-        }}
-        title={lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}
+      {/* New chat */}
+      <button
+        type="button"
+        onClick={onNewChat}
+        className="v2-head-new"
+        title={lang === "ru" ? "Новый чат" : lang === "hy" ? "Նոր չատ" : "New chat"}
       >
-        <Icon name="history" size={14} />
-        <span>{lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}</span>
-      </Link>
+        <Icon name="plus" size={14} />
+        <span>{lang === "ru" ? "Новый" : lang === "hy" ? "Նոր" : "New"}</span>
+      </button>
 
-      {/* Close chat (back to homepage) */}
+      {/* Close (minimize back to landing) */}
       {onClose && (
         <button
           type="button"
           onClick={onClose}
           aria-label={lang === "ru" ? "Закрыть" : lang === "hy" ? "Փակել" : "Close"}
-          title={lang === "ru" ? "Закрыть чат" : lang === "hy" ? "Փակել չատը" : "Close chat"}
-          style={{
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            width: 34, height: 34, borderRadius: "50%",
-            background: "#fff", border: "1px solid #ebd5dd",
-            color: "#1a0a14", cursor: "pointer",
-            transition: "all .18s",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = "#fdf2f5"; e.currentTarget.style.color = PINK; e.currentTarget.style.borderColor = PINK; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#1a0a14"; e.currentTarget.style.borderColor = "#ebd5dd"; }}
+          title={lang === "ru" ? "Свернуть" : lang === "hy" ? "Թաքցնել" : "Minimize"}
+          className="v2-head-close"
         >
-          <Icon name="x" size={14} />
+          <Icon name="x" size={15} />
         </button>
       )}
-
-      {/* Save plan */}
-      <button
-        type="button"
-        onClick={onSave}
-        disabled={saving}
-        style={{
-          display: "inline-flex", alignItems: "center", gap: 7,
-          padding: "8px 14px", borderRadius: 999,
-          background: savedTick ? "#16a34a" : `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
-          color: "#fff", border: "none", cursor: saving ? "default" : "pointer",
-          fontSize: 12.5, fontWeight: 700, letterSpacing: ".1px",
-          boxShadow: "0 6px 18px rgba(225,29,92,.28)",
-          opacity: saving ? .7 : 1, transition: "all .2s",
-        }}
-      >
-        <Icon name={savedTick ? "check" : "heart"} size={14} />
-        {savedTick
-          ? (lang === "ru" ? "Сохранено" : lang === "hy" ? "Պահպանված է" : "Saved")
-          : sessionId
-            ? (lang === "ru" ? "Обновить" : lang === "hy" ? "Թարմացնել" : "Update")
-            : (lang === "ru" ? "Сохранить" : lang === "hy" ? "Պահպանել" : "Save plan")}
-      </button>
     </div>
+  );
+}
+
+// ── Sidebar — ChatGPT-style history list ──────────────────────────
+function ChatSidebar({ lang, history, currentId, onPick, onNew, onDelete, open, onClose }) {
+  const fmtTime = (ts) => {
+    if (!ts) return "";
+    const d = new Date(ts);
+    const today = new Date();
+    const isToday = d.toDateString() === today.toDateString();
+    if (isToday) return d.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit" });
+    return d.toLocaleDateString(lang, { day: "numeric", month: "short" });
+  };
+
+  return (
+    <>
+      <aside className={`v2-sidebar ${open ? "is-open" : ""}`}>
+        <div className="v2-sidebar-top">
+          <button type="button" onClick={onNew} className="v2-sidebar-new">
+            <Icon name="plus" size={15} />
+            {lang === "ru" ? "Новый чат" : lang === "hy" ? "Նոր չատ" : "New chat"}
+          </button>
+          <button type="button" onClick={onClose} className="v2-sidebar-close" aria-label="Close menu">
+            <Icon name="x" size={15} />
+          </button>
+        </div>
+
+        <div className="v2-sidebar-label">
+          {lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}
+        </div>
+
+        <div className="v2-sidebar-list">
+          {history.length === 0 ? (
+            <p className="v2-sidebar-empty">
+              {lang === "ru" ? "Пусто. Начните разговор."
+                : lang === "hy" ? "Դատարկ է։ Սկսեք զրույց։"
+                : "No chats yet. Start a conversation."}
+            </p>
+          ) : history.map(s => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => onPick(s.id)}
+              className={`v2-sidebar-row ${s.id === currentId ? "is-active" : ""}`}
+            >
+              <div className="v2-sidebar-row-main">
+                <Icon name="sparkle" size={13} />
+                <span className="v2-sidebar-row-title">{s.title || "Untitled"}</span>
+              </div>
+              <div className="v2-sidebar-row-meta">
+                <span>{fmtTime(s.updatedAt)}</span>
+                <span
+                  role="button"
+                  tabIndex={0}
+                  className="v2-sidebar-del"
+                  onClick={(e) => { e.stopPropagation(); onDelete(s.id); }}
+                  onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); onDelete(s.id); } }}
+                  aria-label="Delete"
+                >
+                  <Icon name="x" size={11} />
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </aside>
+      {open && <div className="v2-sidebar-scrim" onClick={onClose} />}
+    </>
   );
 }
 
@@ -1279,6 +1255,9 @@ export default function AIAssistantV2Client({ lang }) {
   const [chatState, setChatState] = useState({});
   const [popup, setPopup] = useState(null);
   const [sessionId, setSessionId] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const timersRef = useRef([]);
@@ -1288,6 +1267,107 @@ export default function AIAssistantV2Client({ lang }) {
   }, [messages, typing]);
 
   useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
+
+  // Hydrate history + last session from localStorage
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("salooote_v2_history");
+      if (raw) {
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) setHistory(arr);
+        const lastId = localStorage.getItem("salooote_v2_current_id");
+        if (lastId) {
+          const last = arr.find(s => s.id === lastId);
+          if (last && Array.isArray(last.messages) && last.messages.length) {
+            setMessages(last.messages);
+            setChatState(last.chatState || {});
+            setSessionId(lastId);
+          }
+        }
+      }
+    } catch {}
+    setHydrated(true);
+  }, []);
+
+  // Lock body scroll while chat overlay is open
+  useEffect(() => {
+    if (phase === "chat") {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = prev; };
+    }
+  }, [phase]);
+
+  // Auto-save current chat (debounced)
+  useEffect(() => {
+    if (!hydrated || !messages.length) return;
+    const t = setTimeout(() => {
+      try {
+        let id = sessionId;
+        if (!id) {
+          id = `c${Date.now()}`;
+          setSessionId(id);
+        }
+        const firstUser = messages.find(m => m.role === "user");
+        const title = (firstUser?.text || "New chat").slice(0, 60);
+        const raw = localStorage.getItem("salooote_v2_history");
+        const arr = raw ? (JSON.parse(raw) || []) : [];
+        const slim = messages.map(m => ({
+          id: m.id, role: m.role, type: m.type, text: m.text,
+          event_type: m.event_type, block: m.block,
+        }));
+        const entry = { id, title, messages: slim, chatState, updatedAt: Date.now() };
+        const idx = arr.findIndex(s => s.id === id);
+        if (idx >= 0) arr[idx] = entry; else arr.unshift(entry);
+        const trimmed = arr.slice(0, 50);
+        localStorage.setItem("salooote_v2_history", JSON.stringify(trimmed));
+        localStorage.setItem("salooote_v2_current_id", id);
+        setHistory(trimmed);
+      } catch {}
+    }, 700);
+    return () => clearTimeout(t);
+  }, [messages, chatState, sessionId, hydrated]);
+
+  const handleNewChat = useCallback(() => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setMessages([]);
+    setChatState({});
+    setSessionId(null);
+    setTyping(false);
+    setInput("");
+    try { localStorage.removeItem("salooote_v2_current_id"); } catch {}
+    setSidebarOpen(false);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  }, []);
+
+  const handlePickHistory = useCallback((id) => {
+    const item = history.find(s => s.id === id);
+    if (!item) return;
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setMessages(item.messages || []);
+    setChatState(item.chatState || {});
+    setSessionId(id);
+    setTyping(false);
+    setPhase("chat");
+    setSidebarOpen(false);
+    try { localStorage.setItem("salooote_v2_current_id", id); } catch {}
+  }, [history]);
+
+  const handleDeleteHistory = useCallback((id) => {
+    setHistory(prev => {
+      const next = prev.filter(s => s.id !== id);
+      try { localStorage.setItem("salooote_v2_history", JSON.stringify(next)); } catch {}
+      return next;
+    });
+    if (id === sessionId) {
+      setMessages([]);
+      setChatState({});
+      setSessionId(null);
+      try { localStorage.removeItem("salooote_v2_current_id"); } catch {}
+    }
+  }, [sessionId]);
 
   const revealItems = useCallback((items) => {
     if (!items.length) return;
@@ -1501,77 +1581,108 @@ export default function AIAssistantV2Client({ lang }) {
 
         .v2-right{display:flex;align-items:center;justify-content:center}
 
-        /* ── 3D glassy orb ── */
-        .v2-orb-stage{
-          position:relative;width:100%;max-width:480px;aspect-ratio:1/1;
+        /* ── Floating event card stack (replaces orb) ── */
+        .v2-stack-stage{
+          position:relative;width:100%;max-width:460px;aspect-ratio:1/1;
+          perspective:1200px;
         }
-        .v2-orb-halo{
-          position:absolute;inset:-10%;border-radius:50%;
+        .v2-stack-halo{
+          position:absolute;inset:-8%;border-radius:50%;
           background:
-            radial-gradient(circle at 30% 30%, rgba(255,228,236,.85) 0%, transparent 55%),
-            radial-gradient(circle at 70% 70%, rgba(214,228,255,.6) 0%, transparent 55%),
-            radial-gradient(circle at 50% 50%, rgba(255,213,229,.5) 0%, transparent 65%);
-          filter:blur(36px);
-          animation:v2-halo-spin 14s linear infinite;
+            radial-gradient(circle at 28% 30%, rgba(255,210,222,.85) 0%, transparent 50%),
+            radial-gradient(circle at 72% 70%, rgba(255,228,236,.55) 0%, transparent 55%),
+            radial-gradient(circle at 50% 50%, rgba(245,200,225,.4) 0%, transparent 65%);
+          filter:blur(40px);animation:v2-halo-spin 18s linear infinite;
+          pointer-events:none;z-index:0;
         }
-        .v2-orb{
-          position:absolute;inset:18%;border-radius:50%;
-          animation:v2-orb-float 6s ease-in-out infinite;
-          filter:drop-shadow(0 30px 50px rgba(225,29,92,.22));
-        }
-        .v2-orb-core{
-          position:absolute;inset:0;border-radius:50%;
-          background:
-            radial-gradient(circle at 32% 26%, #fff 0%, rgba(255,255,255,0) 22%),
-            radial-gradient(circle at 30% 30%, #ffd9e6 0%, #f8a5c2 25%, #d56fa3 55%, #6b3a8a 100%),
-            linear-gradient(135deg, #ffd1e0 0%, #c0e8ff 50%, #e0d5ff 100%);
-          background-blend-mode:normal,screen,normal;
+        .v2-stack-card{
+          position:absolute;border-radius:24px;background:#fff;
           box-shadow:
-            inset 0 -22px 40px rgba(72,16,52,.45),
-            inset 18px -10px 50px rgba(255,170,210,.45),
-            inset -18px 8px 50px rgba(140,200,255,.5),
-            inset 0 18px 32px rgba(255,255,255,.55);
+            0 32px 64px rgba(225,29,92,.18),
+            0 8px 20px rgba(20,5,12,.08),
+            inset 0 0 0 1px rgba(255,255,255,.6);
+          overflow:hidden;
+          transition:transform .4s cubic-bezier(.2,.8,.2,1);
         }
-        .v2-orb-glow{
-          position:absolute;inset:0;border-radius:50%;
-          background:radial-gradient(circle at 70% 80%, rgba(125,200,255,.7) 0%, transparent 35%);
-          mix-blend-mode:screen;opacity:.85;
+        .v2-stack-card-1{
+          width:60%;aspect-ratio:4/5;
+          left:18%;top:14%;
+          transform:rotate(-4deg);
+          z-index:3;animation:v2-card-float-a 7s ease-in-out infinite;
         }
-        .v2-orb-highlight{
-          position:absolute;top:8%;left:18%;width:35%;height:25%;
-          background:radial-gradient(ellipse, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 65%);
-          border-radius:50%;filter:blur(2px);transform:rotate(-22deg);
+        .v2-stack-card-2{
+          width:48%;aspect-ratio:1/1;
+          right:4%;top:8%;
+          transform:rotate(7deg);
+          z-index:2;animation:v2-card-float-b 8s ease-in-out infinite;
+          opacity:.95;
         }
-        .v2-orb-rim{
-          position:absolute;inset:0;border-radius:50%;
-          box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
-          background:
-            conic-gradient(from 200deg at 50% 50%,
-              rgba(255,255,255,0) 0deg,
-              rgba(255,180,210,.3) 60deg,
-              rgba(160,210,255,.4) 180deg,
-              rgba(220,180,255,.3) 270deg,
-              rgba(255,255,255,0) 360deg);
-          mix-blend-mode:screen;opacity:.75;animation:v2-orb-spin 18s linear infinite;
+        .v2-stack-card-3{
+          width:42%;aspect-ratio:1/1;
+          left:2%;bottom:8%;
+          transform:rotate(-9deg);
+          z-index:1;animation:v2-card-float-c 9s ease-in-out infinite;
+          opacity:.9;
         }
-        .v2-orb-reflection{
-          position:absolute;left:10%;right:10%;bottom:-2%;height:28%;
-          background:radial-gradient(ellipse at 50% 0%, rgba(225,150,190,.4) 0%, rgba(225,150,190,0) 60%);
-          filter:blur(8px);transform:scaleY(.55);opacity:.55;
+        .v2-stack-img{
+          position:relative;width:100%;height:100%;border-radius:inherit;overflow:hidden;
         }
-        .v2-orb-chip{
-          position:absolute;width:38px;height:38px;border-radius:14px;
-          background:rgba(255,255,255,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-          border:1px solid rgba(225,29,92,.15);
+        .v2-stack-tag{
+          position:absolute;left:10px;bottom:10px;z-index:2;
+          display:inline-flex;align-items:center;gap:5px;
+          padding:5px 10px;border-radius:999px;
+          background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+          color:#1a0a14;font-size:11px;font-weight:700;letter-spacing:.2px;
+          border:1px solid rgba(255,255,255,.7);
+          box-shadow:0 4px 12px rgba(20,5,12,.14);
+        }
+        .v2-stack-tag svg{color:${PINK}}
+        .v2-stack-success{
+          position:absolute;top:12px;right:12px;z-index:3;
+          display:inline-flex;align-items:center;gap:6px;
+          padding:5px 11px 5px 5px;border-radius:999px;
+          background:rgba(255,255,255,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+          font-size:11.5px;font-weight:700;color:#1a0a14;
+          box-shadow:0 8px 20px rgba(22,163,74,.2);
+          animation:v2-card-pop 6s ease-in-out infinite;
+        }
+        .v2-stack-success-dot{
+          width:20px;height:20px;border-radius:50%;
+          background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;
           display:flex;align-items:center;justify-content:center;
-          color:${PINK};box-shadow:0 8px 18px rgba(225,29,92,.16);
-          animation:v2-orb-chip-float 5s ease-in-out infinite;
-          z-index:2;
         }
-        @keyframes v2-orb-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-        @keyframes v2-orb-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+        .v2-stack-sali{
+          position:absolute;left:-4%;bottom:14%;z-index:5;
+          display:inline-flex;align-items:center;gap:9px;
+          padding:7px 14px 7px 7px;border-radius:999px;
+          background:#fff;
+          box-shadow:0 18px 40px rgba(225,29,92,.24),0 4px 12px rgba(20,5,12,.08);
+          animation:v2-card-float-a 7s ease-in-out infinite;
+        }
+        .v2-stack-sali-text p{
+          margin:0;font-size:13px;font-weight:800;color:#1a0a14;letter-spacing:-.2px;line-height:1;
+        }
+        .v2-stack-sali-text span{
+          font-size:10px;font-weight:700;color:${PINK};letter-spacing:.6px;
+        }
+        .v2-stack-spark{
+          position:absolute;width:6px;height:6px;border-radius:50%;
+          background:radial-gradient(circle,#fff 0%,${PINK} 100%);
+          box-shadow:0 0 10px rgba(225,29,92,.7);pointer-events:none;
+          opacity:.6;
+        }
+        .v2-stack-spark-0{top:6%;left:50%;animation:v2-spark 4s ease-in-out infinite}
+        .v2-stack-spark-1{top:20%;right:6%;animation:v2-spark 5s ease-in-out .6s infinite}
+        .v2-stack-spark-2{bottom:8%;right:14%;animation:v2-spark 4.5s ease-in-out 1.2s infinite}
+        .v2-stack-spark-3{bottom:30%;left:6%;animation:v2-spark 5.5s ease-in-out .3s infinite}
+        .v2-stack-spark-4{top:42%;right:32%;animation:v2-spark 4.2s ease-in-out 1.8s infinite}
+        .v2-stack-spark-5{top:58%;left:30%;animation:v2-spark 6s ease-in-out 2.4s infinite}
+        @keyframes v2-card-float-a{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(-3deg) translateY(-10px)}}
+        @keyframes v2-card-float-b{0%,100%{transform:rotate(7deg) translateY(0)}50%{transform:rotate(8deg) translateY(-12px)}}
+        @keyframes v2-card-float-c{0%,100%{transform:rotate(-9deg) translateY(0)}50%{transform:rotate(-10deg) translateY(-8px)}}
+        @keyframes v2-card-pop{0%,90%,100%{transform:scale(1)}45%{transform:scale(1.06)}}
+        @keyframes v2-spark{0%,100%{opacity:.2;transform:scale(.8)}50%{opacity:1;transform:scale(1.4)}}
         @keyframes v2-halo-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-        @keyframes v2-orb-chip-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
         /* ── Browse by Category ── */
         .v2-browse{
@@ -1845,6 +1956,145 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-occ-arrow{color:#c8adb8;transition:all .22s}
 
+        /* ── Landing wrap (no fixed height to avoid clipping) ── */
+        .v2-landing-wrap{
+          background:#fff;position:relative;
+        }
+
+        /* ── Fullscreen chat overlay ── */
+        .v2-overlay{
+          position:fixed;inset:0;z-index:9999;
+          display:grid;grid-template-columns:280px 1fr;
+          background:linear-gradient(180deg,#fffcfb 0%,#fdf6f8 40%,#fceaef 100%);
+          background-image:radial-gradient(circle, rgba(225,29,92,.04) 1px, transparent 1px);
+          background-size:28px 28px;
+          animation:v2fade .25s ease;
+        }
+        .v2-overlay-main{
+          position:relative;display:flex;flex-direction:column;min-width:0;
+          height:100vh;overflow:hidden;
+        }
+        .v2-overlay-scroll{
+          flex:1;overflow-y:auto;padding:24px 16px 18px;
+          display:flex;flex-direction:column;gap:14px;
+        }
+
+        /* ── Sidebar ── */
+        .v2-sidebar{
+          display:flex;flex-direction:column;
+          background:rgba(255,253,254,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+          border-right:1px solid rgba(240,218,228,.6);
+          height:100vh;overflow:hidden;
+        }
+        .v2-sidebar-top{
+          display:flex;align-items:center;gap:8px;padding:14px 14px 10px;
+          border-bottom:1px solid rgba(240,218,228,.5);
+        }
+        .v2-sidebar-new{
+          flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+          padding:10px 14px;border-radius:14px;border:1.5px solid rgba(240,218,228,.9);
+          background:#fff;color:#1a0a14;font-family:inherit;
+          font-size:13.5px;font-weight:700;letter-spacing:-.1px;cursor:pointer;
+          transition:all .18s;
+        }
+        .v2-sidebar-new:hover{border-color:${PINK};color:${PINK};box-shadow:0 4px 12px rgba(225,29,92,.12)}
+        .v2-sidebar-new svg{color:${PINK}}
+        .v2-sidebar-close{
+          display:none;width:36px;height:36px;border-radius:12px;border:1px solid rgba(240,218,228,.9);
+          background:#fff;color:#1a0a14;cursor:pointer;align-items:center;justify-content:center;
+        }
+        .v2-sidebar-label{
+          padding:14px 16px 8px;font-size:11px;font-weight:800;
+          color:#b09aa6;letter-spacing:1.2px;text-transform:uppercase;
+        }
+        .v2-sidebar-list{
+          flex:1;overflow-y:auto;padding:0 8px 14px;display:flex;flex-direction:column;gap:2px;
+        }
+        .v2-sidebar-list::-webkit-scrollbar{width:4px}
+        .v2-sidebar-list::-webkit-scrollbar-thumb{background:rgba(225,29,92,.18);border-radius:4px}
+        .v2-sidebar-empty{
+          margin:0;padding:18px 12px;font-size:12.5px;color:#a08596;line-height:1.55;
+        }
+        .v2-sidebar-row{
+          display:flex;flex-direction:column;gap:4px;padding:10px 12px;
+          border-radius:12px;background:transparent;border:none;cursor:pointer;
+          font-family:inherit;text-align:left;color:#1a0a14;
+          transition:background .15s;
+        }
+        .v2-sidebar-row:hover{background:rgba(225,29,92,.07)}
+        .v2-sidebar-row.is-active{background:rgba(225,29,92,.12)}
+        .v2-sidebar-row-main{
+          display:flex;align-items:center;gap:8px;min-width:0;
+          font-size:13.5px;font-weight:600;letter-spacing:-.1px;
+        }
+        .v2-sidebar-row-main svg{flex-shrink:0;color:${PINK}}
+        .v2-sidebar-row-title{
+          overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;
+        }
+        .v2-sidebar-row-meta{
+          display:flex;align-items:center;justify-content:space-between;
+          padding-left:21px;font-size:10.5px;color:#a08596;font-weight:600;
+        }
+        .v2-sidebar-del{
+          width:20px;height:20px;border-radius:6px;display:none;
+          align-items:center;justify-content:center;color:#a08596;cursor:pointer;
+        }
+        .v2-sidebar-row:hover .v2-sidebar-del{display:inline-flex}
+        .v2-sidebar-del:hover{background:rgba(225,29,92,.12);color:${PINK}}
+        .v2-sidebar-scrim{display:none}
+
+        /* ── Chat header (overlay) ── */
+        .v2-chat-head{
+          display:flex;align-items:center;gap:12px;
+          padding:12px 18px;background:rgba(255,255,255,.94);
+          backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+          border-bottom:1px solid rgba(240,218,228,.6);
+          flex-shrink:0;
+        }
+        .v2-head-icon-btn{
+          width:36px;height:36px;border-radius:12px;border:1px solid rgba(240,218,228,.9);
+          background:#fff;color:#1a0a14;cursor:pointer;display:flex;align-items:center;justify-content:center;
+          transition:all .15s;
+        }
+        .v2-head-icon-btn:hover{border-color:${PINK};color:${PINK}}
+        .v2-sidebar-toggle{display:none}
+        .v2-head-brand{display:flex;align-items:center;gap:10px;min-width:0}
+        .v2-head-avatar{position:relative;display:flex;align-items:center;justify-content:center}
+        .v2-head-halo{
+          position:absolute;inset:-6px;border-radius:50%;
+          background:radial-gradient(circle,rgba(225,29,92,.28) 0%,transparent 70%);
+          animation:halo 3s ease-in-out infinite;
+        }
+        .v2-head-titles p{margin:0}
+        .v2-head-name{font-weight:800;font-size:16px;color:#1a0a14;letter-spacing:-.4px;line-height:1.1}
+        .v2-head-role{font-size:11.5px;color:#b09aa6;font-weight:500;margin-top:1px!important}
+        .v2-head-steps{display:flex;align-items:center;gap:6px;flex:1;min-width:0;margin:0 8px}
+        .v2-head-step{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+        .v2-head-dot{
+          width:22px;height:22px;border-radius:50%;background:#fff;
+          border:1.5px solid #ebd5dd;color:#c4a5b3;
+          display:flex;align-items:center;justify-content:center;
+          font-size:11px;font-weight:700;flex-shrink:0;transition:all .25s;
+        }
+        .v2-head-dot.is-filled{background:${PINK};border-color:${PINK};color:#fff}
+        .v2-head-line{flex:1;height:2px;border-radius:2px;background:#f0e2e8;transition:background .25s}
+        .v2-head-line.is-filled{background:${PINK}}
+        .v2-head-new{
+          display:inline-flex;align-items:center;gap:6px;
+          padding:8px 14px;border-radius:999px;
+          background:#fff;border:1px solid #ebd5dd;color:#1a0a14;
+          font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
+          transition:all .18s;
+        }
+        .v2-head-new:hover{border-color:${PINK};color:${PINK};box-shadow:0 4px 12px rgba(225,29,92,.14)}
+        .v2-head-new svg{color:${PINK}}
+        .v2-head-close{
+          width:36px;height:36px;border-radius:50%;border:1px solid #ebd5dd;
+          background:#fff;color:#1a0a14;cursor:pointer;display:flex;align-items:center;justify-content:center;
+          transition:all .18s;
+        }
+        .v2-head-close:hover{background:#fdf2f5;color:${PINK};border-color:${PINK};transform:scale(1.04)}
+
         /* ── Reopen-chat floating pill ── */
         .v2-reopen{
           position:fixed;right:22px;bottom:22px;z-index:90;
@@ -1875,24 +2125,6 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-msg-link:hover{border-bottom-color:${PINK};background:rgba(225,29,92,.06)}
 
-        /* ── Orb image ── */
-        .v2-orb-photo{
-          position:absolute;inset:18%;border-radius:50%;overflow:hidden;
-          z-index:1;
-          box-shadow:
-            inset 0 -22px 40px rgba(72,16,52,.4),
-            inset 0 18px 32px rgba(255,255,255,.35),
-            0 30px 50px rgba(225,29,92,.22);
-          animation:v2-orb-float 6s ease-in-out infinite;
-        }
-        .v2-orb-photo::after{
-          content:"";position:absolute;inset:0;border-radius:50%;
-          background:
-            radial-gradient(circle at 32% 26%, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 28%),
-            linear-gradient(135deg, rgba(255,209,224,.28) 0%, rgba(192,232,255,.18) 50%, rgba(224,213,255,.22) 100%);
-          mix-blend-mode:screen;pointer-events:none;
-        }
-
         /* Mobile / tablet */
         @media (max-width:1100px){
           .v2-occ-grid{grid-template-columns:repeat(3,1fr)}
@@ -1902,7 +2134,7 @@ export default function AIAssistantV2Client({ lang }) {
         @media (max-width:920px){
           .v2-landing-grid{grid-template-columns:1fr;gap:32px;padding:32px 22px;min-height:auto}
           .v2-right{order:-1}
-          .v2-orb-stage{max-width:340px;margin:0 auto}
+          .v2-stack-stage{max-width:360px;margin:0 auto}
           .v2-headline{font-size:clamp(36px,9vw,52px)}
           .v2-browse,.v2-trending,.v2-occ{padding-left:22px;padding-right:22px}
           .v2-cat-grid{grid-template-columns:repeat(3,1fr)}
@@ -1911,65 +2143,72 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-how{padding:56px 22px}
           .v2-reopen{right:14px;bottom:14px;padding:6px 14px 6px 6px;font-size:13px}
           .v2-reopen-label{display:none}
+
+          /* Sidebar becomes slide-in panel */
+          .v2-overlay{grid-template-columns:1fr}
+          .v2-sidebar{
+            position:fixed;left:0;top:0;bottom:0;width:84%;max-width:320px;
+            transform:translateX(-100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);
+            z-index:10001;box-shadow:0 24px 60px rgba(20,5,12,.3);
+          }
+          .v2-sidebar.is-open{transform:none}
+          .v2-sidebar-close{display:inline-flex}
+          .v2-sidebar-scrim{
+            display:block;position:fixed;inset:0;z-index:10000;
+            background:rgba(20,5,12,.4);backdrop-filter:blur(2px);
+          }
+          .v2-sidebar-toggle{display:inline-flex}
+          .v2-head-steps{display:none}
         }
         @media (max-width:520px){
           .v2-landing-grid{padding:24px 18px;gap:24px}
-          .v2-orb-stage{max-width:280px}
+          .v2-stack-stage{max-width:300px}
           .v2-chat-card{padding:12px 12px 8px}
           .v2-cat-grid{grid-template-columns:repeat(2,1fr);gap:10px}
           .v2-trend-grid{grid-template-columns:repeat(2,1fr);gap:12px}
           .v2-occ-grid{grid-template-columns:1fr 1fr;gap:10px}
           .v2-browse-headline{font-size:30px}
+          .v2-head-new span{display:none}
+          .v2-chat-head{padding:10px 12px;gap:8px}
         }
       `}</style>
 
-      <div lang={lang} style={{
-        height: phase === "landing" ? "auto" : "calc(100vh - 65px)",
-        minHeight: phase === "landing" ? "calc(100vh - 65px)" : undefined,
-        display: "flex", flexDirection: "column",
-        background: phase === "landing"
-          ? "#fff"
-          : "linear-gradient(180deg,#fffcfb 0%,#fdf6f8 40%,#fceaef 100%)",
-        backgroundImage: phase === "landing"
-          ? "none"
-          : "radial-gradient(circle, rgba(225,29,92,.04) 1px, transparent 1px)",
-        backgroundSize: phase === "landing" ? undefined : "28px 28px",
-        position: "relative",
-        overflow: phase === "landing" ? "visible" : "hidden",
-      }}>
+      <div lang={lang} className="v2-landing-wrap">
+        <Landing
+          lang={lang}
+          onSend={send}
+          input={input}
+          setInput={setInput}
+          inputRef={inputRef}
+        />
+      </div>
 
-        {phase === "landing" && (
-          <Landing
+      {/* Fullscreen chat overlay — covers site header/footer */}
+      {phase === "chat" && (
+        <div lang={lang} className="v2-overlay">
+          <ChatSidebar
             lang={lang}
-            onSend={send}
-            input={input}
-            setInput={setInput}
-            inputRef={inputRef}
+            history={history}
+            currentId={sessionId}
+            onPick={handlePickHistory}
+            onNew={handleNewChat}
+            onDelete={handleDeleteHistory}
+            open={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
           />
-        )}
 
-        {phase === "chat" && (
-          <>
+          <div className="v2-overlay-main">
             <ChatHeader
               lang={lang}
               chatState={chatState}
-              messages={messages}
-              sessionId={sessionId}
-              setSessionId={setSessionId}
+              onToggleSidebar={() => setSidebarOpen(s => !s)}
+              onNewChat={handleNewChat}
               onClose={() => setPhase("landing")}
             />
 
             <StateBar state={chatState} lang={lang} />
 
-            <div
-              ref={scrollRef}
-              className="v2-scroll"
-              style={{
-                flex: 1, overflowY: "auto",
-                padding: "22px 16px",
-                display: "flex", flexDirection: "column", gap: 14,
-              }}
-            >
+            <div ref={scrollRef} className="v2-scroll v2-overlay-scroll">
               {messages.map(msg => {
                 if (msg.type === "block") {
                   return (
@@ -1995,9 +2234,9 @@ export default function AIAssistantV2Client({ lang }) {
               typing={typing}
               inputRef={inputRef}
             />
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
 
       {popup && (
         <Popup
@@ -2008,7 +2247,8 @@ export default function AIAssistantV2Client({ lang }) {
         />
       )}
 
-      {phase === "landing" && messages.length > 0 && (
+      {/* Continue pill — always visible whenever there is any chat history, in any phase */}
+      {phase !== "chat" && messages.length > 0 && (
         <button
           type="button"
           onClick={() => setPhase("chat")}
