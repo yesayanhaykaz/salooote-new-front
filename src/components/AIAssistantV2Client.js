@@ -1234,15 +1234,16 @@ function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
           onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSend(); } }}
           onInput={e => {
             e.target.style.height = "auto";
-            e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+            e.target.style.height = Math.min(e.target.scrollHeight, 140) + "px";
           }}
           placeholder={tx(T.placeholder, lang)}
           rows={1}
           style={{
             flex: 1, border: "none", outline: "none", background: "transparent",
-            padding: "11px 13px", fontSize: 14, color: "#1a0a14",
-            resize: "none", lineHeight: 1.55, fontFamily: "inherit",
-            maxHeight: 120, overflowY: "auto",
+            padding: "12px 14px", fontSize: 14.5, color: "#1a0a14",
+            resize: "none", lineHeight: 1.7, fontFamily: "inherit",
+            minHeight: 44, maxHeight: 140, overflowY: "auto",
+            display: "block",
           }}
         />
         <button
@@ -1458,8 +1459,9 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-chat-textarea{
           width:100%;border:none;outline:none;background:transparent;
-          font-family:inherit;font-size:15.5px;line-height:1.55;color:#1a0a14;
-          padding:8px 6px;resize:none;min-height:56px;max-height:140px;letter-spacing:.05px;
+          font-family:inherit;font-size:15.5px;line-height:1.7;color:#1a0a14;
+          padding:10px 8px;resize:none;min-height:64px;max-height:160px;letter-spacing:.05px;
+          display:block;
         }
         .v2-chat-actions{display:flex;align-items:center;gap:8px;padding:6px 4px 0}
         .v2-icon-btn{
