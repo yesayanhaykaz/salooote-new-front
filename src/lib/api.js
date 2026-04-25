@@ -160,6 +160,17 @@ export const productsAPI = {
     request(`/products/by-slug?vendor_id=${vendorId}&slug=${slug}`),
 };
 
+// Public — Reviews
+export const reviewsAPI = {
+  list: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return request(`/reviews${q ? "?" + q : ""}`);
+  },
+  stats: () => request(`/reviews/stats`),
+  create: (data) =>
+    request("/user/reviews", { method: "POST", body: JSON.stringify(data) }),
+};
+
 // Public - Vendors
 export const vendorsAPI = {
   list: (params = {}) => {

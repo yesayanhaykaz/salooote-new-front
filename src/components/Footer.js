@@ -8,10 +8,9 @@ import {
 
 // Real social URLs — update once accounts are confirmed
 const SOCIALS = [
-  { Icon: Facebook,  label: "Facebook",  href: "https://facebook.com/salooote" },
-  { Icon: Instagram, label: "Instagram", href: "https://instagram.com/salooote" },
-  { Icon: Youtube,   label: "YouTube",   href: "https://youtube.com/@salooote" },
-  // TikTok (no lucide icon — render as text fallback below if added)
+  { Icon: Facebook,  label: "Facebook",  href: "https://www.facebook.com/salooote.am" },
+  { Icon: Instagram, label: "Instagram", href: "https://instagram.com/salooote_co" },
+  { Icon: Youtube,   label: "YouTube",   href: "https://www.youtube.com/@salooote1278" },
 ];
 
 // Payment brand SVG icons (kept inline for crispness, no external deps)
@@ -160,17 +159,23 @@ export default function Footer({ lang = "en", dict }) {
 
             {/* Contact */}
             <div className="space-y-2.5 mb-6">
-              <a href={`tel:${(f.contact?.phone || "+374 99 000 000").replace(/\s/g, "")}`} className="flex items-center gap-2.5 text-sm text-surface-600 hover:text-brand-600 transition-colors no-underline">
+              <a href={`tel:${(f.contact?.phone || "+374 60 72 77 17").replace(/\s/g, "")}`} className="flex items-center gap-2.5 text-sm text-surface-600 hover:text-brand-600 transition-colors no-underline">
                 <Phone size={14} className="text-brand-500 flex-shrink-0" />
-                <span>{f.contact?.phone || "+374 99 000 000"}</span>
+                <span>{f.contact?.phone || "+374 60 72 77 17"}</span>
               </a>
+              {f.contact?.phone2 && (
+                <a href={`tel:${f.contact.phone2.replace(/\s/g, "")}`} className="flex items-center gap-2.5 text-sm text-surface-600 hover:text-brand-600 transition-colors no-underline">
+                  <Phone size={14} className="text-brand-500 flex-shrink-0" />
+                  <span>{f.contact.phone2}</span>
+                </a>
+              )}
               <a href={`mailto:${f.contact?.email || "hello@salooote.am"}`} className="flex items-center gap-2.5 text-sm text-surface-600 hover:text-brand-600 transition-colors no-underline">
                 <Mail size={14} className="text-brand-500 flex-shrink-0" />
                 <span>{f.contact?.email || "hello@salooote.am"}</span>
               </a>
-              <div className="flex items-center gap-2.5 text-sm text-surface-600">
-                <MapPin size={14} className="text-brand-500 flex-shrink-0" />
-                <span>{f.contact?.address || "Yerevan, Armenia"}</span>
+              <div className="flex items-start gap-2.5 text-sm text-surface-600">
+                <MapPin size={14} className="text-brand-500 flex-shrink-0 mt-0.5" />
+                <span>{f.contact?.address || "Yerevanyan 22, Yerevan, Armenia"}</span>
               </div>
             </div>
 

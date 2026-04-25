@@ -251,7 +251,8 @@ const FALLBACK_NAV = [
   { label: "Gifts & Souvenirs",    slug: "gifts-souvenirs",          icon: Gift },
 ];
 
-export default function Header({ lang: langProp = "en" }) {
+export default function Header({ lang: langProp = "en", dict }) {
+  const searchPlaceholder = dict?.search?.placeholder || "Search products, vendors, events…";
   const router = useRouter();
   const pathname = usePathname();
   const { cartCount } = useCart();
@@ -450,7 +451,7 @@ export default function Header({ lang: langProp = "en" }) {
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchSubmit}
                 onFocus={() => searchQuery.length >= 2 && setShowLive(true)}
-                placeholder="Search products, vendors, events…"
+                placeholder={searchPlaceholder}
                 className="flex-1 bg-transparent border-none outline-none text-sm text-surface-700 placeholder:text-surface-400"
               />
               {searchQuery && (
@@ -622,7 +623,7 @@ export default function Header({ lang: langProp = "en" }) {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={handleSearchSubmit}
-                placeholder="Search products, vendors, events…"
+                placeholder={searchPlaceholder}
                 className="flex-1 bg-transparent border-none outline-none text-sm text-surface-700 placeholder:text-surface-400"
               />
               <button onClick={closeSearch} className="border-none bg-transparent cursor-pointer p-0">
