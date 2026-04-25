@@ -107,6 +107,53 @@ const T = {
       { key: "party",    label: "Вечеринка" },
     ],
   },
+  occEyebrow: {
+    en: "Plan Any Occasion",
+    hy: "Պլանավորեք ցանկացած տոն",
+    ru: "Планируйте любое событие",
+  },
+  occHeadline: {
+    en: "What are you celebrating?",
+    hy: "Ի՞նչ եք տոնում",
+    ru: "Что вы празднуете?",
+  },
+  occSub: {
+    en: "Find trusted vendors for every event type — from intimate birthdays to grand weddings.",
+    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար — ինտիմ ծնունդից մինչև շքեղ հարսանիք։",
+    ru: "Найдите проверенных поставщиков для любого события — от уютных дней рождения до пышных свадеб.",
+  },
+  occCards: {
+    en: [
+      { slug: "wedding",     icon: "ring",    label: "Wedding" },
+      { slug: "birthday",    icon: "cake",    label: "Birthday" },
+      { slug: "anniversary", icon: "glass",   label: "Anniversary" },
+      { slug: "engagement",  icon: "ring",    label: "Engagement" },
+      { slug: "baby_shower", icon: "baby",    label: "Baby Shower" },
+      { slug: "christening", icon: "church",  label: "Christening" },
+      { slug: "kids_party",  icon: "balloon", label: "Kids Party" },
+      { slug: "corporate",   icon: "business",label: "Corporate" },
+    ],
+    hy: [
+      { slug: "wedding",     icon: "ring",    label: "Հարսանիք" },
+      { slug: "birthday",    icon: "cake",    label: "Ծնունդ" },
+      { slug: "anniversary", icon: "glass",   label: "Տարելից" },
+      { slug: "engagement",  icon: "ring",    label: "Նշանադրություն" },
+      { slug: "baby_shower", icon: "baby",    label: "Baby Shower" },
+      { slug: "christening", icon: "church",  label: "Մկրտություն" },
+      { slug: "kids_party",  icon: "balloon", label: "Մանկական" },
+      { slug: "corporate",   icon: "business",label: "Կորպորատիվ" },
+    ],
+    ru: [
+      { slug: "wedding",     icon: "ring",    label: "Свадьба" },
+      { slug: "birthday",    icon: "cake",    label: "День рождения" },
+      { slug: "anniversary", icon: "glass",   label: "Годовщина" },
+      { slug: "engagement",  icon: "ring",    label: "Помолвка" },
+      { slug: "baby_shower", icon: "baby",    label: "Baby Shower" },
+      { slug: "christening", icon: "church",  label: "Крестины" },
+      { slug: "kids_party",  icon: "balloon", label: "Детский" },
+      { slug: "corporate",   icon: "business",label: "Корпоратив" },
+    ],
+  },
 };
 
 const tx = (obj, lang) => obj[lang] || obj.en;
@@ -170,11 +217,41 @@ const fmt = (p) => { const n = parseFloat(p); return isNaN(n) ? "" : n.toLocaleS
 function BoldText({ text }) {
   return <>{text.split(/\*\*(.*?)\*\*/g).map((s, i) => i % 2 === 1 ? <strong key={i} style={{ color: PINK_DARK }}>{s}</strong> : s)}</>;
 }
+// Renders text with **bold**, newlines, and inline links.
+// Recognizes:
+//   - Markdown [label](url)
+//   - Bare URLs (https://… or relative /en/events/…, /hy/category/…)
+function renderInline(text) {
+  const out = [];
+  const re = /\[([^\]]+)\]\((\S+?)\)|(\bhttps?:\/\/[^\s<>"]+|\B\/(?:en|hy|ru)\/(?:events|category|vendor|product)\/[A-Za-z0-9_\-/]+)/g;
+  let last = 0;
+  let m;
+  let key = 0;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) out.push(<BoldText key={`t${key++}`} text={text.slice(last, m.index)} />);
+    const label = m[1] || m[2] || m[3];
+    const url = m[2] || m[3];
+    const isExternal = url.startsWith("http");
+    out.push(
+      <a
+        key={`l${key++}`}
+        href={url}
+        target={isExternal ? "_blank" : "_self"}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        className="v2-msg-link"
+      >{label}</a>
+    );
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push(<BoldText key={`t${key++}`} text={text.slice(last)} />);
+  return out;
+}
+
 function MsgText({ text }) {
   return (
     <span style={{ whiteSpace: "pre-wrap", lineHeight: 1.75 }}>
       {text.split("\n").map((line, i, a) => (
-        <span key={i}><BoldText text={line} />{i < a.length - 1 && <br />}</span>
+        <span key={i}>{renderInline(line)}{i < a.length - 1 && <br />}</span>
       ))}
     </span>
   );
@@ -575,7 +652,7 @@ function Popup({ item, type, lang, onClose }) {
                   : (lang === "ru" ? "В корзину" : lang === "hy" ? "Զամբյուղ" : "Add to cart")}
               </button>
             )}
-            <Link href={href} className="v2-pop-view">
+            <Link href={href} target="_blank" rel="noopener noreferrer" className="v2-pop-view">
               {type === "product" ? tx(T.viewProduct, lang) : tx(T.viewStore, lang)}
               <Icon name="arrowRight" size={14} style={{ marginLeft: 6 }} />
             </Link>
@@ -586,15 +663,47 @@ function Popup({ item, type, lang, onClose }) {
   );
 }
 
+const ORB_PHOTOS = [
+  "/images/wedding-arch-beach.jpg",
+  "/images/wedding-cake.jpg",
+  "/images/party-balloons.jpg",
+  "/images/event-dinner.jpg",
+  "/images/wedding-dance.jpg",
+  "/images/cupcakes.jpg",
+];
+
 function OrbVisual() {
-  // Glassy 3D iridescent orb hero — pure CSS / SVG, no emoji
+  // Glassy 3D iridescent orb hero with rotating event photo inside
+  const [photoIdx, setPhotoIdx] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setPhotoIdx(i => (i + 1) % ORB_PHOTOS.length), 4500);
+    return () => clearInterval(t);
+  }, []);
+
   return (
     <div className="v2-orb-stage">
       {/* Soft ambient halo */}
       <div className="v2-orb-halo" />
-      {/* Main orb */}
+      {/* Photo orb */}
+      <div className="v2-orb-photo">
+        {ORB_PHOTOS.map((src, i) => (
+          <Image
+            key={src}
+            src={src}
+            alt=""
+            fill
+            sizes="(max-width:920px) 340px, 420px"
+            priority={i === 0}
+            style={{
+              objectFit: "cover",
+              opacity: i === photoIdx ? 1 : 0,
+              transition: "opacity 1.2s ease",
+            }}
+          />
+        ))}
+      </div>
+      {/* Glassy iridescent overlay */}
       <div className="v2-orb">
-        <div className="v2-orb-core" />
         <div className="v2-orb-glow" />
         <div className="v2-orb-highlight" />
         <div className="v2-orb-rim" />
@@ -711,6 +820,9 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
 
       {/* Trending Now */}
       <TrendingNow lang={lang} />
+
+      {/* Plan Any Occasion */}
+      <PlanAnyOccasion lang={lang} />
 
       {/* "How it works" anchor section below the fold */}
       <section id="v2-howitworks" className="v2-how">
@@ -901,8 +1013,31 @@ function TrendingNow({ lang }) {
   );
 }
 
+// ── Plan Any Occasion ──────────────────────────────────────────────
+function PlanAnyOccasion({ lang }) {
+  const cards = tx(T.occCards, lang);
+  return (
+    <section className="v2-occ">
+      <div className="v2-occ-head">
+        <p className="v2-browse-eyebrow">{tx(T.occEyebrow, lang)}</p>
+        <h2 className="v2-browse-headline v2-occ-headline">{tx(T.occHeadline, lang)}</h2>
+        <p className="v2-occ-sub">{tx(T.occSub, lang)}</p>
+      </div>
+      <div className="v2-occ-grid">
+        {cards.map(c => (
+          <Link key={c.slug} href={`/${lang}/events/${c.slug}`} className="v2-occ-card">
+            <span className="v2-occ-icon"><Icon name={c.icon} size={24} /></span>
+            <span className="v2-occ-label">{c.label}</span>
+            <span className="v2-occ-arrow"><Icon name="arrowRight" size={14} /></span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 // ── Chat header with step progress + Save + History ────────────────
-function ChatHeader({ lang, chatState, messages, sessionId, setSessionId }) {
+function ChatHeader({ lang, chatState, messages, sessionId, setSessionId, onClose }) {
   const [saving, setSaving] = useState(false);
   const [savedTick, setSavedTick] = useState(false);
 
@@ -1028,6 +1163,27 @@ function ChatHeader({ lang, chatState, messages, sessionId, setSessionId }) {
         <Icon name="history" size={14} />
         <span>{lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}</span>
       </Link>
+
+      {/* Close chat (back to homepage) */}
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={lang === "ru" ? "Закрыть" : lang === "hy" ? "Փակել" : "Close"}
+          title={lang === "ru" ? "Закрыть чат" : lang === "hy" ? "Փակել չատը" : "Close chat"}
+          style={{
+            display: "inline-flex", alignItems: "center", justifyContent: "center",
+            width: 34, height: 34, borderRadius: "50%",
+            background: "#fff", border: "1px solid #ebd5dd",
+            color: "#1a0a14", cursor: "pointer",
+            transition: "all .18s",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "#fdf2f5"; e.currentTarget.style.color = PINK; e.currentTarget.style.borderColor = PINK; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#1a0a14"; e.currentTarget.style.borderColor = "#ebd5dd"; }}
+        >
+          <Icon name="x" size={14} />
+        </button>
+      )}
 
       {/* Save plan */}
       <button
@@ -1223,6 +1379,25 @@ export default function AIAssistantV2Client({ lang }) {
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap');
+        @font-face{
+          font-family:'SHK Dzeragir';
+          src:url('/fonts/SHK_Dzeragir.otf') format('opentype');
+          font-weight:400 900;font-style:normal;font-display:swap;
+          unicode-range:U+0530-058F,U+FB13-FB17;
+        }
+        :lang(hy) .v2-headline,
+        :lang(hy) .v2-browse-headline,
+        :lang(hy) .v2-how-title,
+        :lang(hy) .v2-occ-headline{
+          font-family:'SHK Dzeragir','Fraunces',Georgia,serif!important;
+          letter-spacing:-.4px;
+          font-style:normal!important;
+          line-height:1.15;
+        }
+        :lang(hy) .v2-h-line2{
+          background:linear-gradient(135deg,${PINK} 0%,#9f1239 100%);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
         @keyframes v2dot{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-6px);opacity:1}}
         @keyframes orbPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.18);opacity:.25}}
         @keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -1633,8 +1808,92 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-pop-price{font-size:19px}
         }
 
+        /* ── Plan Any Occasion ── */
+        .v2-occ{max-width:1180px;margin:0 auto;padding:64px 32px 16px}
+        .v2-occ-head{text-align:center;margin-bottom:34px}
+        .v2-occ-head .v2-browse-eyebrow{display:block;text-align:center}
+        .v2-occ-headline{margin:6px auto 12px;text-align:center}
+        .v2-occ-sub{
+          margin:0 auto;max-width:560px;
+          font-size:15.5px;line-height:1.65;color:#7c5566;text-align:center;
+        }
+        .v2-occ-grid{
+          display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+        }
+        .v2-occ-card{
+          display:flex;align-items:center;gap:14px;
+          padding:18px 20px;border-radius:18px;
+          background:#fff;border:1px solid #f3e8ee;text-decoration:none;
+          transition:all .22s cubic-bezier(.2,.8,.2,1);position:relative;
+        }
+        .v2-occ-card:hover{
+          transform:translateY(-3px);
+          border-color:rgba(225,29,92,.3);
+          box-shadow:0 14px 32px rgba(225,29,92,.12);
+        }
+        .v2-occ-card:hover .v2-occ-arrow{transform:translateX(3px);color:${PINK}}
+        .v2-occ-icon{
+          width:46px;height:46px;border-radius:14px;
+          background:linear-gradient(135deg,#fce7ef 0%,#fbcfe8 100%);
+          display:flex;align-items:center;justify-content:center;color:${PINK_DARK};
+          flex-shrink:0;
+        }
+        .v2-occ-label{
+          flex:1;font-size:14.5px;font-weight:700;color:#1a0a14;letter-spacing:-.1px;
+        }
+        .v2-occ-arrow{color:#c8adb8;transition:all .22s}
+
+        /* ── Reopen-chat floating pill ── */
+        .v2-reopen{
+          position:fixed;right:22px;bottom:22px;z-index:90;
+          display:inline-flex;align-items:center;gap:10px;
+          padding:8px 18px 8px 8px;border-radius:999px;border:none;
+          background:#fff;cursor:pointer;
+          box-shadow:0 12px 32px rgba(225,29,92,.28),0 4px 12px rgba(225,29,92,.16);
+          color:#1a0a14;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.1px;
+          transition:all .22s cubic-bezier(.2,.8,.2,1);
+          animation:v2-reopen-in .35s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-reopen:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(225,29,92,.36)}
+        .v2-reopen-pulse{
+          position:absolute;inset:-4px;border-radius:999px;
+          background:radial-gradient(circle,rgba(225,29,92,.22) 0%,transparent 70%);
+          animation:v2-reopen-pulse 2.4s ease-in-out infinite;pointer-events:none;
+        }
+        .v2-reopen-icon{position:relative;display:flex;align-items:center;justify-content:center}
+        .v2-reopen-label{position:relative}
+        @keyframes v2-reopen-in{from{opacity:0;transform:translateY(20px) scale(.9)}to{opacity:1;transform:none}}
+        @keyframes v2-reopen-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:0;transform:scale(1.25)}}
+
+        /* ── Inline links inside bot messages ── */
+        .v2-msg-link{
+          color:${PINK};text-decoration:none;font-weight:700;
+          border-bottom:1.5px solid rgba(225,29,92,.35);
+          transition:all .15s;
+        }
+        .v2-msg-link:hover{border-bottom-color:${PINK};background:rgba(225,29,92,.06)}
+
+        /* ── Orb image ── */
+        .v2-orb-photo{
+          position:absolute;inset:18%;border-radius:50%;overflow:hidden;
+          z-index:1;
+          box-shadow:
+            inset 0 -22px 40px rgba(72,16,52,.4),
+            inset 0 18px 32px rgba(255,255,255,.35),
+            0 30px 50px rgba(225,29,92,.22);
+          animation:v2-orb-float 6s ease-in-out infinite;
+        }
+        .v2-orb-photo::after{
+          content:"";position:absolute;inset:0;border-radius:50%;
+          background:
+            radial-gradient(circle at 32% 26%, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 28%),
+            linear-gradient(135deg, rgba(255,209,224,.28) 0%, rgba(192,232,255,.18) 50%, rgba(224,213,255,.22) 100%);
+          mix-blend-mode:screen;pointer-events:none;
+        }
+
         /* Mobile / tablet */
         @media (max-width:1100px){
+          .v2-occ-grid{grid-template-columns:repeat(3,1fr)}
           .v2-cat-grid{grid-template-columns:repeat(4,1fr)}
           .v2-trend-grid{grid-template-columns:repeat(3,1fr)}
         }
@@ -1643,10 +1902,13 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-right{order:-1}
           .v2-orb-stage{max-width:340px;margin:0 auto}
           .v2-headline{font-size:clamp(36px,9vw,52px)}
-          .v2-browse,.v2-trending{padding-left:22px;padding-right:22px}
+          .v2-browse,.v2-trending,.v2-occ{padding-left:22px;padding-right:22px}
           .v2-cat-grid{grid-template-columns:repeat(3,1fr)}
           .v2-trend-grid{grid-template-columns:repeat(2,1fr)}
+          .v2-occ-grid{grid-template-columns:repeat(2,1fr)}
           .v2-how{padding:56px 22px}
+          .v2-reopen{right:14px;bottom:14px;padding:6px 14px 6px 6px;font-size:13px}
+          .v2-reopen-label{display:none}
         }
         @media (max-width:520px){
           .v2-landing-grid{padding:24px 18px;gap:24px}
@@ -1654,11 +1916,12 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-chat-card{padding:12px 12px 8px}
           .v2-cat-grid{grid-template-columns:repeat(2,1fr);gap:10px}
           .v2-trend-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+          .v2-occ-grid{grid-template-columns:1fr 1fr;gap:10px}
           .v2-browse-headline{font-size:30px}
         }
       `}</style>
 
-      <div style={{
+      <div lang={lang} style={{
         height: phase === "landing" ? "auto" : "calc(100vh - 65px)",
         minHeight: phase === "landing" ? "calc(100vh - 65px)" : undefined,
         display: "flex", flexDirection: "column",
@@ -1691,6 +1954,7 @@ export default function AIAssistantV2Client({ lang }) {
               messages={messages}
               sessionId={sessionId}
               setSessionId={setSessionId}
+              onClose={() => setPhase("landing")}
             />
 
             <StateBar state={chatState} lang={lang} />
@@ -1740,6 +2004,23 @@ export default function AIAssistantV2Client({ lang }) {
           lang={lang}
           onClose={() => setPopup(null)}
         />
+      )}
+
+      {phase === "landing" && messages.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setPhase("chat")}
+          className="v2-reopen"
+          aria-label={lang === "ru" ? "Открыть чат" : lang === "hy" ? "Բացել չատը" : "Open chat"}
+        >
+          <span className="v2-reopen-pulse" />
+          <span className="v2-reopen-icon">
+            <Avatar size={28} />
+          </span>
+          <span className="v2-reopen-label">
+            {lang === "ru" ? "Продолжить" : lang === "hy" ? "Շարունակել" : "Continue"}
+          </span>
+        </button>
       )}
     </>
   );
