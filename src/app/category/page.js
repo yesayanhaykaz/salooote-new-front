@@ -27,6 +27,9 @@ const T = {
     sortPriceHigh: "Price: High–Low",
     sortRating: "Highest Rated",
     searchIn: (name) => `Search in ${name}…`,
+    loadingMore: "Loading more…",
+    allLoaded: (n) => `All ${n} products loaded`,
+    allCategories: "All Categories",
   },
   hy: {
     home: "Գլխ.",
@@ -48,6 +51,9 @@ const T = {
     sortPriceHigh: "Գին՝ բարձրից ցածր",
     sortRating: "Ամենաբարձր վարկ.",
     searchIn: (name) => `Որոնել ${name}–ում…`,
+    loadingMore: "Բեռնվում է…",
+    allLoaded: (n) => `Բոլոր ${n} ապրանքները բեռնված են`,
+    allCategories: "Բոլոր կատեգորիաները",
   },
   ru: {
     home: "Главная",
@@ -69,6 +75,9 @@ const T = {
     sortPriceHigh: "Цена: по убыванию",
     sortRating: "Высший рейтинг",
     searchIn: (name) => `Поиск в ${name}…`,
+    loadingMore: "Загрузка…",
+    allLoaded: (n) => `Все ${n} товаров загружены`,
+    allCategories: "Все категории",
   },
 };
 
@@ -231,7 +240,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   const fetchKeyRef               = useRef(0);
 
   const categoryName = categoryInfo?.name ||
-    (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : "All Categories");
+    (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, " ") : t.allCategories);
   const parentName = parentInfo?.name ||
     (parentSlug ? parentSlug.charAt(0).toUpperCase() + parentSlug.slice(1).replace(/-/g, " ") : "");
 
@@ -266,7 +275,6 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   // Step 2: fetch products — supports pagination
   const fetchProducts = useCallback(async (pageNum = 1) => {
     if (slug && !categoryID) return;
-    if (!slug && !categoryID) { setLoading(false); return; }
 
     const myKey = ++fetchKeyRef.current;
     if (pageNum === 1) { setLoading(true); setProducts([]); }
@@ -625,13 +633,13 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
                       <div className="flex justify-center py-4">
                         <div className="flex items-center gap-2 text-sm text-surface-400">
                           <div className="w-4 h-4 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
-                          {lang === "hy" ? "Բեռնվում է..." : lang === "ru" ? "Загрузка..." : "Loading more..."}
+                          {t.loadingMore}
                         </div>
                       </div>
                     )}
                     {!hasMore && filtered.length > 0 && (
                       <p className="text-center text-xs text-surface-300 py-4">
-                        {lang === "hy" ? `Բոլոր ${total} ապранknery ցуцваdz` : lang === "ru" ? `Все ${total} товаров загружены` : `All ${total} products loaded`}
+                        {t.allLoaded(total)}
                       </p>
                     )}
                   </>

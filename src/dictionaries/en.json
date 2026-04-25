@@ -119,23 +119,70 @@
     "submitButton": "Submit Application"
   },
   "footer": {
-    "tagline": "Armenia's premier event planning marketplace",
-    "copyright": "© 2025 Salooote.am. All rights reserved.",
-    "links": {
-      "about": "About Us",
-      "contact": "Contact",
-      "terms": "Terms of Service",
-      "privacy": "Privacy Policy",
-      "blog": "Blog",
-      "faq": "FAQ",
-      "vendors": "For Vendors",
-      "careers": "Careers"
+    "brandTagline": "Armenia's premier event planning marketplace — cakes, flowers, venues, photography, and more, all in one place.",
+    "aiCta": {
+      "eyebrow": "AI Assistant",
+      "title": "Plan your perfect event with AI",
+      "subtitle": "Tell Sali what you need — she'll find vendors, build your event plan, and stay on budget.",
+      "button": "Chat with AI"
+    },
+    "contact": {
+      "title": "Get in touch",
+      "phoneLabel": "Phone",
+      "emailLabel": "Email",
+      "addressLabel": "Address",
+      "phone": "+374 99 000 000",
+      "email": "hello@salooote.am",
+      "address": "Yerevan, Armenia"
     },
     "sections": {
-      "platform": "Platform",
+      "products": "Shop",
       "support": "Support",
-      "legal": "Legal"
-    }
+      "company": "Company",
+      "partners": "Partners",
+      "app": "Get the app"
+    },
+    "products": {
+      "cakes": "Cakes & Desserts",
+      "catering": "Catering",
+      "balloons": "Balloons & Decor",
+      "flowers": "Flowers",
+      "djMusic": "DJ & Music",
+      "venues": "Venues"
+    },
+    "support": {
+      "trackOrder": "Track Order",
+      "helpCenter": "Help Center",
+      "faqs": "FAQs",
+      "returns": "Return Policy",
+      "contact": "Contact Us"
+    },
+    "company": {
+      "story": "Our Story",
+      "reviews": "Reviews",
+      "careers": "Careers",
+      "press": "Press",
+      "blog": "Blog"
+    },
+    "partners": {
+      "policy": "Partner Policy",
+      "apply": "Apply Now",
+      "resources": "Vendor Resources"
+    },
+    "newsletter": {
+      "title": "Stay in the loop",
+      "subtitle": "New vendors, seasonal deals, and event-planning tips — straight to your inbox.",
+      "placeholder": "Enter your email",
+      "submit": "Subscribe"
+    },
+    "appStore": "Download on the",
+    "playStore": "Get it on",
+    "copyright": "© {year} Salooote, Inc. All rights reserved.",
+    "legal": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "social": "Follow us"
   },
   "product": {
     "quickView": "Quick View",

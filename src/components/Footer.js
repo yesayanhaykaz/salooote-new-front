@@ -1,19 +1,31 @@
 "use client";
 import Link from "next/link";
-import { Facebook, Instagram, Twitter, Youtube, Apple, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import {
+  Facebook, Instagram, Youtube, ArrowRight, Sparkles,
+  Phone, Mail, MapPin, Apple,
+} from "lucide-react";
 
-// Payment brand SVG icons
+// Real social URLs — update once accounts are confirmed
+const SOCIALS = [
+  { Icon: Facebook,  label: "Facebook",  href: "https://facebook.com/salooote" },
+  { Icon: Instagram, label: "Instagram", href: "https://instagram.com/salooote" },
+  { Icon: Youtube,   label: "YouTube",   href: "https://youtube.com/@salooote" },
+  // TikTok (no lucide icon — render as text fallback below if added)
+];
+
+// Payment brand SVG icons (kept inline for crispness, no external deps)
 function VisaIcon() {
   return (
-    <svg width="46" height="28" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="26" viewBox="0 0 46 28" xmlns="http://www.w3.org/2000/svg">
       <rect width="46" height="28" rx="4" fill="#1A1F71"/>
-      <text x="23" y="20" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="14" fill="#FFFFFF" fontStyle="italic" letterSpacing="-0.5">VISA</text>
+      <text x="23" y="20" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="14" fill="#FFF" fontStyle="italic" letterSpacing="-0.5">VISA</text>
     </svg>
   );
 }
 function MastercardIcon() {
   return (
-    <svg width="46" height="28" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="26" viewBox="0 0 46 28" xmlns="http://www.w3.org/2000/svg">
       <rect width="46" height="28" rx="4" fill="#fff" stroke="#e5e7eb"/>
       <circle cx="17" cy="14" r="8" fill="#EB001B"/>
       <circle cx="29" cy="14" r="8" fill="#F79E1B"/>
@@ -23,25 +35,15 @@ function MastercardIcon() {
 }
 function AmexIcon() {
   return (
-    <svg width="46" height="28" viewBox="0 0 46 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="26" viewBox="0 0 46 28" xmlns="http://www.w3.org/2000/svg">
       <rect width="46" height="28" rx="4" fill="#007BC1"/>
-      <text x="23" y="19" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="11" fill="#FFFFFF" letterSpacing="1.5">AMEX</text>
+      <text x="23" y="19" textAnchor="middle" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="11" fill="#FFF" letterSpacing="1.5">AMEX</text>
     </svg>
   );
 }
-function PayPalIcon() {
-  return (
-    <svg width="54" height="28" viewBox="0 0 54 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="54" height="28" rx="4" fill="#fff" stroke="#e5e7eb"/>
-      <text x="8" y="19" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="13" fill="#003087">Pay</text>
-      <text x="28" y="19" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="13" fill="#009cde">Pal</text>
-    </svg>
-  );
-}
-// Google Play icon
 function GooglePlayIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path d="M2.5 1.5L13.5 10L2.5 18.5V1.5Z" fill="url(#gp_grad1)"/>
       <path d="M2.5 1.5L10.5 9.5L13.5 6.5L4.5 1.5H2.5Z" fill="#00BCD4"/>
       <path d="M2.5 18.5L10.5 10.5L13.5 13.5L4.5 18.5H2.5Z" fill="#FF3D00"/>
@@ -60,67 +62,122 @@ const PAYMENT_ICONS = [
   { label: "Visa",       Icon: VisaIcon },
   { label: "Mastercard", Icon: MastercardIcon },
   { label: "Amex",       Icon: AmexIcon },
-  { label: "PayPal",     Icon: PayPalIcon },
 ];
 
-function getColumns(lang) {
-  return [
-    { title: "Products", links: [
-      { label: "Cakes", href: `/${lang}/category` },
-      { label: "Catering", href: `/${lang}/category` },
-      { label: "Balloons", href: `/${lang}/category` },
-      { label: "Flowers", href: `/${lang}/category` },
-      { label: "DJ & Music", href: `/${lang}/category` },
-      { label: "Venues", href: `/${lang}/category` },
-    ]},
-    { title: "Support", links: [
-      { label: "Track Order", href: `/${lang}/track-order` },
-      { label: "Help Center", href: `/${lang}/help` },
-      { label: "FAQs", href: `/${lang}/faq` },
-      { label: "Return Policy", href: `/${lang}/returns` },
-      { label: "Contact Us", href: `/${lang}/contact` },
-    ]},
-    { title: "Company", links: [
-      { label: "Our Story", href: `/${lang}/about` },
-      { label: "Reviews", href: `/${lang}/reviews` },
-      { label: "Careers", href: `/${lang}/careers` },
-      { label: "Press", href: `/${lang}/press` },
-      { label: "Blog", href: `/${lang}/blog` },
-    ]},
-    { title: "Partners", links: [
-      { label: "Partner Policy", href: `/${lang}/partner-policy` },
-      { label: "Apply Now", href: `/${lang}/apply` },
-      { label: "Vendor Resources", href: `/${lang}/vendor-resources` },
-    ]},
-  ];
+function openAIChat() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("salooote:openChat"));
+  }
 }
 
-const socials = [
-  { icon: Facebook,  label: "Facebook" },
-  { icon: Instagram, label: "Instagram" },
-  { icon: Twitter,   label: "Twitter" },
-  { icon: Youtube,   label: "YouTube" },
-];
+export default function Footer({ lang = "en", dict }) {
+  const f = dict?.footer || {};
+  const year = new Date().getFullYear();
 
-export default function Footer({ lang = "en" }) {
-  const columns = getColumns(lang);
+  // Link group definitions — labels come from dict, hrefs are static
+  const shopLinks = [
+    { key: "cakes",    href: `/${lang}/category/cakes-desserts` },
+    { key: "catering", href: `/${lang}/category/catering-food` },
+    { key: "balloons", href: `/${lang}/category/flowers-decor` },
+    { key: "flowers",  href: `/${lang}/category/flowers-decor` },
+    { key: "djMusic",  href: `/${lang}/category/music-entertainment` },
+    { key: "venues",   href: `/${lang}/category/venues-halls` },
+  ];
+  const supportLinks = [
+    { key: "trackOrder", href: `/${lang}/track-order` },
+    { key: "helpCenter", href: `/${lang}/help` },
+    { key: "faqs",       href: `/${lang}/faq` },
+    { key: "returns",    href: `/${lang}/returns` },
+    { key: "contact",    href: `/${lang}/contact` },
+  ];
+  const companyLinks = [
+    { key: "story",   href: `/${lang}/about` },
+    { key: "reviews", href: `/${lang}/reviews` },
+    { key: "careers", href: `/${lang}/careers` },
+    { key: "press",   href: `/${lang}/press` },
+    { key: "blog",    href: `/${lang}/blog` },
+  ];
+  const partnerLinks = [
+    { key: "policy",    href: `/${lang}/partner-policy` },
+    { key: "apply",     href: `/${lang}/apply` },
+    { key: "resources", href: `/${lang}/vendor-resources` },
+  ];
 
   return (
     <footer className="bg-white border-t border-surface-200">
-      <div className="max-w-container mx-auto px-6 md:px-8 pt-16 pb-0">
 
-        {/* Top row */}
-        <div className="flex justify-between flex-wrap gap-12 pb-12 border-b border-surface-200">
+      {/* ── AI CTA Banner ── */}
+      <div className="max-w-container mx-auto px-6 md:px-8 pt-12">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-500 to-rose-500 px-8 md:px-12 py-10 md:py-12 shadow-xl shadow-brand-500/20">
+          {/* Decorative blobs */}
+          <div className="absolute -top-12 -right-10 w-48 h-48 rounded-full bg-white/10 blur-2xl" />
+          <div className="absolute -bottom-16 -left-12 w-56 h-56 rounded-full bg-rose-300/30 blur-3xl" />
+          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="max-w-[560px]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold tracking-wide uppercase">
+                <Sparkles size={13} className="text-white" />
+                {f.aiCta?.eyebrow || "AI Assistant"}
+              </span>
+              <h3 className="mt-3 text-2xl md:text-3xl font-bold text-white leading-tight">
+                {f.aiCta?.title || "Plan your perfect event with AI"}
+              </h3>
+              <p className="mt-2 text-white/90 text-sm md:text-base leading-relaxed">
+                {f.aiCta?.subtitle || "Tell Sali what you need — she'll find vendors, build your event plan, and stay on budget."}
+              </p>
+            </div>
+            <button
+              onClick={openAIChat}
+              className="self-start md:self-auto flex items-center gap-2 bg-white text-brand-700 font-semibold rounded-2xl px-6 md:px-7 py-3.5 text-sm md:text-base shadow-lg shadow-brand-700/20 hover:shadow-xl hover:-translate-y-0.5 transition-all border-none cursor-pointer whitespace-nowrap"
+            >
+              <Sparkles size={16} className="text-brand-600" />
+              {f.aiCta?.button || "Chat with AI"}
+              <ArrowRight size={15} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-container mx-auto px-6 md:px-8 pt-12 pb-0">
+
+        {/* ── Top: brand + 4 link columns + app ── */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-10 pb-12 border-b border-surface-200">
 
           {/* Brand */}
-          <div className="max-w-[240px]">
-            <Link href={`/${lang}`} className="text-xl font-bold mb-4 block no-underline text-surface-900">Salooote</Link>
+          <div className="col-span-2 md:col-span-3 lg:col-span-2 max-w-[300px]">
+            <Link href={`/${lang}`} className="inline-flex items-center mb-5 no-underline">
+              <Image
+                src="/images/logo.png"
+                alt="Salooote"
+                width={140}
+                height={40}
+                className="h-10 w-auto"
+                priority={false}
+              />
+            </Link>
             <p className="text-surface-500 text-sm leading-relaxed mb-6">
-              Your one-stop destination for seamless event planning — cakes, catering, flowers, and more.
+              {f.brandTagline || "Armenia's premier event planning marketplace — cakes, flowers, venues, photography, and more, all in one place."}
             </p>
+
+            {/* Contact */}
+            <div className="space-y-2.5 mb-6">
+              <a href={`tel:${(f.contact?.phone || "+374 99 000 000").replace(/\s/g, "")}`} className="flex items-center gap-2.5 text-sm text-surface-600 hover:text-brand-600 transition-colors no-underline">
+                <Phone size={14} className="text-brand-500 flex-shrink-0" />
+                <span>{f.contact?.phone || "+374 99 000 000"}</span>
+              </a>
+              <a href={`mailto:${f.contact?.email || "hello@salooote.am"}`} className="flex items-center gap-2.5 text-sm text-surface-600 hover:text-brand-600 transition-colors no-underline">
+                <Mail size={14} className="text-brand-500 flex-shrink-0" />
+                <span>{f.contact?.email || "hello@salooote.am"}</span>
+              </a>
+              <div className="flex items-center gap-2.5 text-sm text-surface-600">
+                <MapPin size={14} className="text-brand-500 flex-shrink-0" />
+                <span>{f.contact?.address || "Yerevan, Armenia"}</span>
+              </div>
+            </div>
+
+            {/* Socials */}
             <div className="flex gap-2">
-              {socials.map(({ icon: Icon, label }, i) => (
-                <a key={i} href="#" aria-label={label}
+              {SOCIALS.map(({ Icon, label, href }) => (
+                <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
                    className="w-9 h-9 rounded-xl bg-surface-100 flex items-center justify-center hover:bg-brand-600 hover:text-white transition-all group">
                   <Icon size={15} className="text-surface-500 group-hover:text-white" />
                 </a>
@@ -128,69 +185,114 @@ export default function Footer({ lang = "en" }) {
             </div>
           </div>
 
-          {/* Columns */}
-          {columns.map((col, i) => (
-            <div key={i}>
-              <p className="font-semibold text-sm mb-4 text-surface-900">{col.title}</p>
-              {col.links.map((link, j) => (
-                <Link key={j} href={link.href}
-                   className="block text-surface-500 no-underline text-sm leading-[2] hover:text-surface-900 transition-colors">
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          ))}
-
-          {/* App */}
+          {/* Shop */}
           <div>
-            <p className="font-semibold text-sm mb-4 text-surface-900">Get the App</p>
-            <a href="#"
-               className="flex items-center gap-3 bg-black rounded-xl px-4 py-2.5 mb-3 hover:bg-gray-900 transition-colors no-underline">
-              <Apple size={20} className="text-white flex-shrink-0" />
-              <div>
-                <div className="text-[9px] text-gray-400 leading-tight font-medium">Download on the</div>
-                <div className="text-sm font-semibold text-white leading-tight">App Store</div>
-              </div>
-            </a>
-            <a href="#"
-               className="flex items-center gap-3 bg-black rounded-xl px-4 py-2.5 hover:bg-gray-900 transition-colors no-underline">
-              <GooglePlayIcon />
-              <div>
-                <div className="text-[9px] text-gray-400 leading-tight font-medium">Get it on</div>
-                <div className="text-sm font-semibold text-white leading-tight">Google Play</div>
-              </div>
-            </a>
+            <p className="font-semibold text-sm mb-4 text-surface-900">{f.sections?.products || "Shop"}</p>
+            <ul className="space-y-2.5">
+              {shopLinks.map(l => (
+                <li key={l.key}>
+                  <Link href={l.href} className="text-surface-500 no-underline text-sm hover:text-brand-600 transition-colors">
+                    {f.products?.[l.key] || l.key}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <p className="font-semibold text-sm mb-4 text-surface-900">{f.sections?.support || "Support"}</p>
+            <ul className="space-y-2.5">
+              {supportLinks.map(l => (
+                <li key={l.key}>
+                  <Link href={l.href} className="text-surface-500 no-underline text-sm hover:text-brand-600 transition-colors">
+                    {f.support?.[l.key] || l.key}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <p className="font-semibold text-sm mb-4 text-surface-900">{f.sections?.company || "Company"}</p>
+            <ul className="space-y-2.5">
+              {companyLinks.map(l => (
+                <li key={l.key}>
+                  <Link href={l.href} className="text-surface-500 no-underline text-sm hover:text-brand-600 transition-colors">
+                    {f.company?.[l.key] || l.key}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Partners + App */}
+          <div>
+            <p className="font-semibold text-sm mb-4 text-surface-900">{f.sections?.partners || "Partners"}</p>
+            <ul className="space-y-2.5 mb-6">
+              {partnerLinks.map(l => (
+                <li key={l.key}>
+                  <Link href={l.href} className="text-surface-500 no-underline text-sm hover:text-brand-600 transition-colors">
+                    {f.partners?.[l.key] || l.key}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <p className="font-semibold text-sm mb-3 text-surface-900">{f.sections?.app || "Get the app"}</p>
+            <div className="flex flex-col gap-2">
+              <a href="#" className="flex items-center gap-2.5 bg-surface-900 hover:bg-black rounded-xl px-3 py-2 transition-colors no-underline">
+                <Apple size={18} className="text-white flex-shrink-0" />
+                <div>
+                  <div className="text-[8px] text-white/60 leading-tight font-medium uppercase tracking-wider">{f.appStore || "Download on the"}</div>
+                  <div className="text-xs font-semibold text-white leading-tight">App Store</div>
+                </div>
+              </a>
+              <a href="#" className="flex items-center gap-2.5 bg-surface-900 hover:bg-black rounded-xl px-3 py-2 transition-colors no-underline">
+                <GooglePlayIcon />
+                <div>
+                  <div className="text-[8px] text-white/60 leading-tight font-medium uppercase tracking-wider">{f.playStore || "Get it on"}</div>
+                  <div className="text-xs font-semibold text-white leading-tight">Google Play</div>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
 
-        {/* Newsletter */}
+        {/* ── Newsletter ── */}
         <div className="py-8 border-b border-surface-200">
           <div className="flex items-center justify-between flex-wrap gap-6">
-            <div>
-              <p className="font-semibold text-base mb-1 text-surface-900">Stay in the loop</p>
-              <p className="text-surface-500 text-sm">Get products, deals, and event planning tips.</p>
+            <div className="max-w-[400px]">
+              <p className="font-semibold text-base mb-1 text-surface-900">{f.newsletter?.title || "Stay in the loop"}</p>
+              <p className="text-surface-500 text-sm leading-relaxed">{f.newsletter?.subtitle || "New vendors, seasonal deals, and event-planning tips — straight to your inbox."}</p>
             </div>
-            <div className="flex gap-3 w-full md:w-auto">
-              <div className="flex-1 md:w-[280px] flex items-center bg-white rounded-xl px-4 border border-surface-200 focus-within:border-brand-500 transition-colors">
+            <form onSubmit={(e) => e.preventDefault()} className="flex gap-3 w-full md:w-auto">
+              <div className="flex-1 md:w-[300px] flex items-center bg-white rounded-2xl px-4 border border-surface-200 focus-within:border-brand-500 focus-within:ring-2 focus-within:ring-brand-100 transition-all">
+                <Mail size={15} className="text-surface-400 mr-2" />
                 <input
-                  type="email" placeholder="Enter your email"
+                  type="email"
+                  required
+                  placeholder={f.newsletter?.placeholder || "Enter your email"}
                   className="flex-1 bg-transparent border-none outline-none text-sm text-surface-900 placeholder:text-surface-400 py-3"
                 />
               </div>
-              <button className="bg-brand-600 text-white border-none rounded-xl px-5 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 hover:bg-brand-700 transition-colors flex-shrink-0">
-                Subscribe <ArrowRight size={14} />
+              <button type="submit" className="bg-brand-600 text-white border-none rounded-2xl px-5 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 hover:bg-brand-700 hover:-translate-y-0.5 transition-all flex-shrink-0 shadow-md shadow-brand-500/20">
+                {f.newsletter?.submit || "Subscribe"} <ArrowRight size={14} />
               </button>
-            </div>
+            </form>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="flex justify-between items-center py-5 flex-wrap gap-4">
-          <p className="text-xs text-surface-400">&copy; {new Date().getFullYear()} Salooote, Inc. All rights reserved.</p>
-          <div className="flex items-center gap-4 text-xs text-surface-400">
-            <Link href={`/${lang}/privacy`} className="hover:text-surface-700 transition-colors no-underline text-surface-400">Privacy Policy</Link>
+        {/* ── Bottom ── */}
+        <div className="flex justify-between items-center py-6 flex-wrap gap-4">
+          <p className="text-xs text-surface-400">
+            {(f.copyright || "© {year} Salooote, Inc. All rights reserved.").replace("{year}", year)}
+          </p>
+          <div className="flex items-center gap-4 text-xs">
+            <Link href={`/${lang}/privacy`} className="text-surface-400 hover:text-surface-700 transition-colors no-underline">{f.legal?.privacy || "Privacy Policy"}</Link>
             <span className="text-surface-300">·</span>
-            <Link href={`/${lang}/terms`} className="hover:text-surface-700 transition-colors no-underline text-surface-400">Terms of Service</Link>
+            <Link href={`/${lang}/terms`} className="text-surface-400 hover:text-surface-700 transition-colors no-underline">{f.legal?.terms || "Terms of Service"}</Link>
           </div>
           <div className="flex gap-2 items-center">
             {PAYMENT_ICONS.map(({ label, Icon }) => (

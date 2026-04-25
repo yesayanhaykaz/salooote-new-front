@@ -119,23 +119,70 @@
     "submitButton": "Ուղարկել Դիմումը"
   },
   "footer": {
-    "tagline": "Հայաստանի առաջատար միջոցառումների պլանավորման հարթակ",
-    "copyright": "© 2025 Salooote.am. Բոլոր իրավունքները պաշտպանված են։",
-    "links": {
-      "about": "Մեր Մասին",
-      "contact": "Կոնտակտ",
-      "terms": "Օգտագործման Պայմաններ",
-      "privacy": "Գաղտնիության Քաղաքականություն",
-      "blog": "Բլոգ",
-      "faq": "Հաճախ Տրվող Հարցեր",
-      "vendors": "Վաճառողների Համար",
-      "careers": "Աշխատանք"
+    "brandTagline": "Հայաստանի առաջատար միջոցառումների պլանավորման հարթակ — տորթեր, ծաղիկներ, սրահներ, լուսանկարչություն և ավելին, ամեն ինչ մեկ տեղում։",
+    "aiCta": {
+      "eyebrow": "AI Օգնական",
+      "title": "Plan your perfect event with AI",
+      "subtitle": "Tell Sali what you need — she'll find vendors, build your event plan, and stay on budget.",
+      "button": "Chat with AI"
+    },
+    "contact": {
+      "title": "Կապ մեզ հետ",
+      "phoneLabel": "Հեռախոս",
+      "emailLabel": "Էլ. փոստ",
+      "addressLabel": "Հասցե",
+      "phone": "+374 99 000 000",
+      "email": "hello@salooote.am",
+      "address": "Երևան, Հայաստան"
     },
     "sections": {
-      "platform": "Հարթակ",
+      "products": "Խանութ",
       "support": "Աջակցություն",
-      "legal": "Իրավական"
-    }
+      "company": "Ընկերություն",
+      "partners": "Գործընկերներ",
+      "app": "Ստացեք հավելվածը"
+    },
+    "products": {
+      "cakes": "Տորթեր և Քաղցրավենիք",
+      "catering": "Քեյթրինգ",
+      "balloons": "Փուչիկներ և Դեկոր",
+      "flowers": "Ծաղիկներ",
+      "djMusic": "DJ և Երաժշտություն",
+      "venues": "Սրահներ"
+    },
+    "support": {
+      "trackOrder": "Հետևել Պատվերին",
+      "helpCenter": "Օգնության Կենտրոն",
+      "faqs": "Հաճախ Տրվող Հարցեր",
+      "returns": "Վերադարձի Քաղաքականություն",
+      "contact": "Կապ Մեզ Հետ"
+    },
+    "company": {
+      "story": "Մեր Պատմությունը",
+      "reviews": "Կարծիքներ",
+      "careers": "Աշխատանք",
+      "press": "Մամուլ",
+      "blog": "Բլոգ"
+    },
+    "partners": {
+      "policy": "Գործընկերության Քաղաքականություն",
+      "apply": "Դիմել Հիմա",
+      "resources": "Վաճառողի Ռեսուրսներ"
+    },
+    "newsletter": {
+      "title": "Մնացեք կապի մեջ",
+      "subtitle": "Նոր վաճառողներ, սեզոնային առաջարկներ և միջոցառման պլանավորման խորհուրդներ — ուղիղ ձեր էլ. փոստին։",
+      "placeholder": "Մուտքագրեք ձեր էլ. փոստը",
+      "submit": "Բաժանորդագրվել"
+    },
+    "appStore": "Ներբեռնեք",
+    "playStore": "Ստացեք",
+    "copyright": "© {year} Salooote, Inc. Բոլոր իրավունքները պաշտպանված են։",
+    "legal": {
+      "privacy": "Գաղտնիության Քաղաքականություն",
+      "terms": "Օգտագործման Պայմաններ"
+    },
+    "social": "Հետևեք մեզ"
   },
   "product": {
     "quickView": "Արագ Դիտում",

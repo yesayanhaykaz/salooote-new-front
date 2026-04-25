@@ -119,23 +119,70 @@
     "submitButton": "Отправить Заявку"
   },
   "footer": {
-    "tagline": "Ведущий маркетплейс для планирования мероприятий в Армении",
-    "copyright": "© 2025 Salooote.am. Все права защищены.",
-    "links": {
-      "about": "О Нас",
-      "contact": "Контакты",
-      "terms": "Условия Использования",
-      "privacy": "Политика Конфиденциальности",
-      "blog": "Блог",
-      "faq": "Частые Вопросы",
-      "vendors": "Для Поставщиков",
-      "careers": "Карьера"
+    "brandTagline": "Ведущий маркетплейс для планирования мероприятий в Армении — торты, цветы, площадки, фотография и многое другое в одном месте.",
+    "aiCta": {
+      "eyebrow": "AI Помощник",
+      "title": "Plan your perfect event with AI",
+      "subtitle": "Tell Sali what you need — she'll find vendors, build your event plan, and stay on budget.",
+      "button": "Chat with AI"
+    },
+    "contact": {
+      "title": "Свяжитесь с нами",
+      "phoneLabel": "Телефон",
+      "emailLabel": "Email",
+      "addressLabel": "Адрес",
+      "phone": "+374 99 000 000",
+      "email": "hello@salooote.am",
+      "address": "Ереван, Армения"
     },
     "sections": {
-      "platform": "Платформа",
+      "products": "Магазин",
       "support": "Поддержка",
-      "legal": "Правовой"
-    }
+      "company": "Компания",
+      "partners": "Партнёры",
+      "app": "Скачать приложение"
+    },
+    "products": {
+      "cakes": "Торты и Десерты",
+      "catering": "Кейтеринг",
+      "balloons": "Шары и Декор",
+      "flowers": "Цветы",
+      "djMusic": "DJ и Музыка",
+      "venues": "Площадки"
+    },
+    "support": {
+      "trackOrder": "Отследить Заказ",
+      "helpCenter": "Центр Помощи",
+      "faqs": "Частые Вопросы",
+      "returns": "Политика Возврата",
+      "contact": "Связаться с Нами"
+    },
+    "company": {
+      "story": "О Нас",
+      "reviews": "Отзывы",
+      "careers": "Карьера",
+      "press": "Пресса",
+      "blog": "Блог"
+    },
+    "partners": {
+      "policy": "Партнёрская Политика",
+      "apply": "Подать Заявку",
+      "resources": "Ресурсы для Поставщиков"
+    },
+    "newsletter": {
+      "title": "Будьте в курсе",
+      "subtitle": "Новые поставщики, сезонные предложения и советы по планированию — прямо на ваш email.",
+      "placeholder": "Введите ваш email",
+      "submit": "Подписаться"
+    },
+    "appStore": "Скачать в",
+    "playStore": "Доступно в",
+    "copyright": "© {year} Salooote, Inc. Все права защищены.",
+    "legal": {
+      "privacy": "Политика Конфиденциальности",
+      "terms": "Условия Использования"
+    },
+    "social": "Подписывайтесь"
   },
   "product": {
     "quickView": "Быстрый Просмотр",

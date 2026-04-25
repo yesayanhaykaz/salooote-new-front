@@ -25,6 +25,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function CategoryPage() {
-  return <CategoryClient />;
+export default async function CategoryPage({ params }) {
+  const { lang } = await params;
+  return <CategoryClient lang={lang} />;
 }
