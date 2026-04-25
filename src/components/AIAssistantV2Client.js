@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
@@ -361,18 +361,8 @@ function Avatar({ size = 30 }) {
   return (
     <div className="v2-avatar" style={{ width: size, height: size, minWidth: size }}>
       <span className="v2-avatar-ring" />
-      <span className="v2-avatar-core">
-        <svg width={Math.round(size * 0.55)} height={Math.round(size * 0.55)} viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path d="M12 3.5c1.4 3.6 2.7 4.9 6.3 6.3-3.6 1.4-4.9 2.7-6.3 6.3-1.4-3.6-2.7-4.9-6.3-6.3 3.6-1.4 4.9-2.7 6.3-6.3z" fill="url(#sg)" />
-          <circle cx="18" cy="18" r="1.6" fill="url(#sg)" opacity=".85" />
-          <circle cx="5.4" cy="17.5" r="1.1" fill="url(#sg)" opacity=".7" />
-          <defs>
-            <linearGradient id="sg" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stopColor="#fff" />
-              <stop offset="1" stopColor="#ffe4ee" />
-            </linearGradient>
-          </defs>
-        </svg>
+      <span className="v2-avatar-core" style={{ padding: 2 }}>
+        <BotMascot size={Math.round(size * 0.78)} />
       </span>
     </div>
   );
@@ -1316,6 +1306,10 @@ function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
 
 export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
+  const pathname = usePathname() || "";
+  const onAIPage = pathname.includes("/newhomepage2nd");
+  const HIDE_ON = ["/login", "/signup", "/forgot-password", "/checkout", "/payment"];
+  const hideEverything = HIDE_ON.some(p => pathname.includes(p));
   const [phase, setPhase] = useState("landing");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -1550,6 +1544,8 @@ export default function AIAssistantV2Client({ lang }) {
   }, [lang, router]);
 
   const openPopup = useCallback((item, type) => setPopup({ item, type }), []);
+
+  if (hideEverything) return null;
 
   return (
     <>
@@ -2229,6 +2225,17 @@ export default function AIAssistantV2Client({ lang }) {
         @keyframes v2-reopen-in{from{opacity:0;transform:translateY(20px) scale(.9)}to{opacity:1;transform:none}}
         @keyframes v2-reopen-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:0;transform:scale(1.25)}}
 
+        .v2-reopen-mini{
+          position:fixed;right:22px;bottom:22px;z-index:90;
+          width:60px;height:60px;border-radius:50%;border:none;
+          background:linear-gradient(135deg,#fff 0%,#ffeef4 100%);
+          cursor:pointer;display:flex;align-items:center;justify-content:center;
+          box-shadow:0 12px 32px rgba(225,29,92,.32),0 4px 12px rgba(225,29,92,.18);
+          transition:all .22s cubic-bezier(.2,.8,.2,1);
+          animation:v2-reopen-in .35s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-reopen-mini:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 16px 40px rgba(225,29,92,.4)}
+
         /* ── Inline links inside bot messages ── */
         .v2-msg-link{
           color:${PINK};text-decoration:none;font-weight:700;
@@ -2253,8 +2260,9 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-trend-grid{grid-template-columns:repeat(2,1fr)}
           .v2-occ-grid{grid-template-columns:repeat(2,1fr)}
           .v2-how{padding:56px 22px}
-          .v2-reopen{right:14px;bottom:14px;padding:6px 14px 6px 6px;font-size:13px}
+          .v2-reopen{right:14px;bottom:78px;padding:6px 14px 6px 6px;font-size:13px}
           .v2-reopen-label{display:none}
+          .v2-reopen-mini{right:14px;bottom:78px;width:54px;height:54px}
 
           /* Sidebar becomes slide-in panel */
           .v2-overlay{grid-template-columns:1fr}
@@ -2285,15 +2293,17 @@ export default function AIAssistantV2Client({ lang }) {
         }
       `}</style>
 
-      <div lang={lang} className="v2-landing-wrap">
-        <Landing
-          lang={lang}
-          onSend={send}
-          input={input}
-          setInput={setInput}
-          inputRef={inputRef}
-        />
-      </div>
+      {onAIPage && (
+        <div lang={lang} className="v2-landing-wrap">
+          <Landing
+            lang={lang}
+            onSend={send}
+            input={input}
+            setInput={setInput}
+            inputRef={inputRef}
+          />
+        </div>
+      )}
 
       {/* Fullscreen chat overlay — covers site header/footer */}
       {phase === "chat" && (
@@ -2362,22 +2372,35 @@ export default function AIAssistantV2Client({ lang }) {
         />
       )}
 
-      {/* Continue pill — always visible whenever there is any chat history, in any phase */}
-      {phase !== "chat" && messages.length > 0 && (
-        <button
-          type="button"
-          onClick={() => setPhase("chat")}
-          className="v2-reopen"
-          aria-label={lang === "ru" ? "Открыть чат" : lang === "hy" ? "Բացել չատը" : "Open chat"}
-        >
-          <span className="v2-reopen-pulse" />
-          <span className="v2-reopen-icon">
-            <Avatar size={28} />
-          </span>
-          <span className="v2-reopen-label">
-            {lang === "ru" ? "Продолжить" : lang === "hy" ? "Շարունակել" : "Continue"}
-          </span>
-        </button>
+      {/* Continue pill / mini launcher — visible on every page when chat is closed.
+          On the AI page itself, only show if there's history (the landing already has its own input). */}
+      {phase !== "chat" && (!onAIPage || messages.length > 0) && (
+        messages.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setPhase("chat")}
+            className="v2-reopen"
+            aria-label={lang === "ru" ? "Открыть чат" : lang === "hy" ? "Բացել չատը" : "Open chat"}
+          >
+            <span className="v2-reopen-pulse" />
+            <span className="v2-reopen-icon">
+              <BotMascot size={32} />
+            </span>
+            <span className="v2-reopen-label">
+              {lang === "ru" ? "Продолжить" : lang === "hy" ? "Շարունակել" : "Continue"}
+            </span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPhase("chat")}
+            className="v2-reopen-mini"
+            aria-label={lang === "ru" ? "Открыть Sali AI" : lang === "hy" ? "Բացել Sali AI" : "Open Sali AI"}
+            title={lang === "ru" ? "Sali AI помощник" : lang === "hy" ? "Sali AI օգնական" : "Sali AI assistant"}
+          >
+            <BotMascot size={36} />
+          </button>
+        )
       )}
     </>
   );
