@@ -9,73 +9,48 @@ const PINK = "#e11d5c";
 const PINK_DARK = "#9f1239";
 
 const T = {
-  eyebrow: {
-    en: "AI CONCIERGE · SALOOOTE",
-    hy: "AI OGНAKAN · SALOOOTE",
-    ru: "AI-КОНСЬЕРЖ · SALOOOTE",
-  },
   hero: {
-    en: ["Plan beautifully.", "Find effortlessly."],
-    hy: ["Планавorer", "Gtеq hеshтutyamb."],
-    ru: ["Планируйте красиво.", "Находите легко."],
+    en: ["Your event.", "Planned in minutes."],
+    hy: ["Dzеr tonе.", "Planavorvats rоpееrоm."],
+    ru: ["Ваш праздник.", "Спланирован за минуты."],
   },
   sub: {
-    en: "Tell Sali what your moment needs — a cake, a venue, a photographer, or the whole celebration. She'll handpick the right options for you.",
-    hy: "Аsеq Sali-in inч е pеtq dzеr tonin — torт, srаh, fotоgraф kam amboglj tonаkаtаrutуunе: Nа yntrаd klinе lavаguyin tаrbernaknеrе:",
-    ru: "Расскажите Sali, что нужно для вашего момента — торт, площадка, фотограф или вся вечеринка. Она подберёт лучшие варианты.",
+    en: "Balloons, cakes, venues, gifts, photographers — tell Salooote AI what you need and we'll plan it, find vendors, and estimate the budget.",
+    hy: "Пучikner, torтеr, srаhner, nverner, fotоgraфner — аsеq Salooote AI-in inч е pеtq, nа klinе planе еv klgnе lavаguyin tаrbernaknеrе:",
+    ru: "Шары, торты, площадки, подарки, фотографы — расскажите Salooote AI что нужно, мы спланируем, найдём поставщиков и оценим бюджет.",
   },
   placeholder: {
-    en: "Cake for my daughter's 7th birthday in Yerevan…",
-    hy: "Aghkаs tsnnаdyan torт Еrevannum…",
-    ru: "Торт на день рождения дочки в Ереване…",
+    en: "Help me plan my daughter's 5th birthday tomorrow…",
+    hy: "Оgnеq planavоrеl аghkаs 5-аmyа tsnnund vаghе…",
+    ru: "Помогите спланировать день рождения дочки на 5 лет завтра…",
   },
   chips: {
     en: [
-      { icon: "🎂", label: "Birthday cake" },
-      { icon: "💐", label: "Flower bouquet" },
-      { icon: "🎈", label: "Balloon decor" },
-      { icon: "🎁", label: "Gift for my wife" },
-      { icon: "📸", label: "Photographer" },
-      { icon: "✨", label: "Plan a birthday party" },
+      { icon: "🎂", label: "Plan a birthday" },
+      { icon: "🎈", label: "Find balloons" },
+      { icon: "🎁", label: "Send a gift" },
+      { icon: "💍", label: "Plan a wedding" },
+      { icon: "⚡", label: "Last-minute event" },
     ],
     hy: [
-      { icon: "🎂", label: "Tsnnаdyan torт" },
-      { icon: "💐", label: "Tsаghkерunj" },
-      { icon: "🎈", label: "Puchikner" },
-      { icon: "🎁", label: "Nver knojs" },
-      { icon: "📸", label: "Fotogrаf" },
-      { icon: "✨", label: "Planavorel tsnnund" },
+      { icon: "🎂", label: "Planavorel tsnnund" },
+      { icon: "🎈", label: "Gtnel puchikner" },
+      { icon: "🎁", label: "Ugharkel nver" },
+      { icon: "💍", label: "Planavorel hаrsаniq" },
+      { icon: "⚡", label: "Verjin pаhi miJоtsаrum" },
     ],
     ru: [
-      { icon: "🎂", label: "Торт на день рождения" },
-      { icon: "💐", label: "Букет цветов" },
-      { icon: "🎈", label: "Шары и декор" },
-      { icon: "🎁", label: "Подарок жене" },
-      { icon: "📸", label: "Фотограф" },
-      { icon: "✨", label: "Планировать праздник" },
+      { icon: "🎂", label: "Спланировать день рождения" },
+      { icon: "🎈", label: "Найти шары" },
+      { icon: "🎁", label: "Отправить подарок" },
+      { icon: "💍", label: "Спланировать свадьбу" },
+      { icon: "⚡", label: "Срочное мероприятие" },
     ],
   },
-  trust: {
-    en: [
-      { num: "500+", label: "Local vendors" },
-      { num: "2,000+", label: "Curated products" },
-      { num: "24/7", label: "AI concierge" },
-    ],
-    hy: [
-      { num: "500+", label: "Mаtаkаrаrner" },
-      { num: "2,000+", label: "Yntrаd аpranq" },
-      { num: "24/7", label: "AI ognaкan" },
-    ],
-    ru: [
-      { num: "500+", label: "Поставщиков" },
-      { num: "2,000+", label: "Товаров" },
-      { num: "24/7", label: "AI-помощь" },
-    ],
-  },
-  examples: {
-    en: "Try asking",
-    hy: "Pordzеq hartsnel",
-    ru: "Попробуйте спросить",
+  scrollCue: {
+    en: "See how Salooote can help you ↓",
+    hy: "Tеsnеl inчpеs kаrоgh е оgnеl Salooote-е ↓",
+    ru: "Узнать, как Salooote может помочь ↓",
   },
   welcome: {
     en: "Hi, I'm **Sali** ✨\n\nTell me what you're looking for — an occasion, a gift, or something specific — and I'll find the right options for you.",
@@ -500,197 +475,166 @@ function Popup({ item, type, lang, onClose }) {
   );
 }
 
+function FlowerVisual() {
+  return (
+    <div className="v2-visual">
+      {/* SVG defs for flower clip-path */}
+      <svg width="0" height="0" style={{ position: "absolute" }}>
+        <defs>
+          <clipPath id="flowerClip" clipPathUnits="objectBoundingBox">
+            <circle cx="0.5" cy="0.28" r="0.28" />
+            <circle cx="0.72" cy="0.5" r="0.28" />
+            <circle cx="0.5" cy="0.72" r="0.28" />
+            <circle cx="0.28" cy="0.5" r="0.28" />
+            <circle cx="0.5" cy="0.5" r="0.32" />
+          </clipPath>
+        </defs>
+      </svg>
+
+      <div className="v2-flower-shape">
+        {/* Gradient image background */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: `
+            radial-gradient(circle at 22% 28%, #fbcfe8 0%, transparent 45%),
+            radial-gradient(circle at 78% 25%, #fde0ea 0%, transparent 50%),
+            radial-gradient(circle at 70% 78%, #fda4af 0%, transparent 45%),
+            radial-gradient(circle at 25% 75%, #fce7ef 0%, transparent 50%),
+            linear-gradient(135deg, #fff1f5 0%, #fbe2e9 50%, #fbc9d8 100%)
+          `,
+        }} />
+
+        {/* Floating decorative emoji */}
+        <div className="float-emoji" style={{ top: "18%", left: "30%", fontSize: 48, animationDelay: "0s" }}>🎂</div>
+        <div className="float-emoji" style={{ top: "22%", right: "20%", fontSize: 38, animationDelay: ".4s" }}>🎈</div>
+        <div className="float-emoji" style={{ top: "48%", left: "16%", fontSize: 42, animationDelay: ".8s" }}>💐</div>
+        <div className="float-emoji" style={{ top: "44%", right: "14%", fontSize: 44, animationDelay: "1.2s" }}>🎁</div>
+        <div className="float-emoji" style={{ bottom: "20%", left: "32%", fontSize: 40, animationDelay: "1.6s" }}>🥂</div>
+        <div className="float-emoji" style={{ bottom: "18%", right: "30%", fontSize: 36, animationDelay: "2s" }}>✨</div>
+        <div className="float-emoji" style={{ top: "38%", left: "44%", fontSize: 30, animationDelay: "2.4s" }}>🎉</div>
+      </div>
+    </div>
+  );
+}
+
 function Landing({ lang, onSend, input, setInput, inputRef }) {
   const chips = tx(T.chips, lang);
   const [heroLine1, heroLine2] = tx(T.hero, lang);
-  const trust = tx(T.trust, lang);
+  const canSend = input.trim().length > 0;
+
   return (
-    <div style={{
-      flex: 1, overflowY: "auto", overflowX: "hidden",
-      display: "flex", flexDirection: "column", alignItems: "center",
-      padding: "40px 20px 56px",
-      position: "relative",
-    }}>
-      {/* Background orbs */}
-      <div style={{ position: "absolute", top: -60, right: -140, width: 420, height: 420, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,63,94,.17) 0%,transparent 70%)", pointerEvents: "none", filter: "blur(32px)" }} />
-      <div style={{ position: "absolute", top: 180, left: -160, width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle,rgba(251,209,216,.5) 0%,transparent 70%)", pointerEvents: "none", filter: "blur(28px)" }} />
-      <div style={{ position: "absolute", bottom: 80, right: 20, width: 240, height: 240, borderRadius: "50%", background: "radial-gradient(circle,rgba(253,164,175,.28) 0%,transparent 70%)", pointerEvents: "none", filter: "blur(20px)" }} />
+    <div className="v2-landing">
+      <div className="v2-landing-grid">
+        {/* LEFT: text + chat input + chips */}
+        <div className="v2-left">
+          <h1 className="v2-headline">
+            <span className="v2-h-line1">{heroLine1}</span>
+            <br />
+            <span className="v2-h-line2">{heroLine2}</span>
+          </h1>
 
-      <div style={{
-        position: "relative", zIndex: 1, width: "100%", maxWidth: 640,
-        display: "flex", flexDirection: "column", alignItems: "center",
-      }}>
-        {/* Eyebrow */}
-        <div style={{
-          display: "inline-flex", alignItems: "center", gap: 8,
-          padding: "6px 16px", borderRadius: 100,
-          background: "rgba(255,255,255,.82)", backdropFilter: "blur(14px)",
-          border: "1px solid rgba(225,29,92,.13)",
-          boxShadow: "0 2px 14px rgba(225,29,92,.07)",
-          marginBottom: 32, animation: "v2In .5s cubic-bezier(.2,.8,.2,1)",
-        }}>
-          <span style={{
-            width: 6, height: 6, borderRadius: "50%", background: "#22c55e",
-            boxShadow: "0 0 0 3px rgba(34,197,94,.2)",
-          }} />
-          <span style={{
-            fontSize: 10.5, fontWeight: 800, color: PINK_DARK,
-            letterSpacing: 1.4,
-          }}>
-            {tx(T.eyebrow, lang)}
-          </span>
-        </div>
+          <p className="v2-sub">{tx(T.sub, lang)}</p>
 
-        {/* Hero orb */}
-        <div style={{ marginBottom: 32, animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .1s both" }}>
-          <HeroOrb />
-        </div>
+          {/* Big chat card */}
+          <div className="v2-chat-card">
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  onSend();
+                }
+              }}
+              placeholder={tx(T.placeholder, lang)}
+              rows={2}
+              className="v2-chat-textarea"
+            />
+            <div className="v2-chat-actions">
+              <button type="button" className="v2-icon-btn" aria-label="attach" title="Attach inspiration">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
+              </button>
+              <div style={{ flex: 1 }} />
+              <button type="button" className="v2-icon-btn" aria-label="mic" title="Voice input">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" /><path d="M19 10v2a7 7 0 01-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>
+              </button>
+              <button
+                type="button"
+                onClick={() => onSend()}
+                disabled={!canSend}
+                className="v2-send-btn"
+                aria-label="send"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
+              </button>
+            </div>
+          </div>
 
-        {/* Hero text */}
-        <h1 style={{
-          margin: "0 0 20px",
-          textAlign: "center", maxWidth: 560,
-          animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .18s both",
-        }}>
-          <span style={{
-            display: "block",
-            fontSize: "clamp(36px, 7.5vw, 62px)",
-            fontWeight: 800, lineHeight: 1.03, letterSpacing: -1.5,
-            background: "linear-gradient(135deg,#1a0a14 0%,#4a1828 100%)",
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}>
-            {heroLine1}
-          </span>
-          <span style={{
-            display: "block",
-            fontSize: "clamp(36px, 7.5vw, 62px)",
-            fontWeight: 700, lineHeight: 1.03, letterSpacing: -1.5,
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontStyle: "italic",
-            background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 55%,#fb7185 100%)`,
-            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}>
-            {heroLine2}
-          </span>
-        </h1>
+          {/* Prompt pills */}
+          <div className="v2-pills">
+            {chips.map((chip, i) => (
+              <button
+                key={i}
+                className="v2-pill"
+                onClick={() => onSend(chip.label)}
+              >
+                <span style={{ fontSize: 14, marginRight: 6 }}>{chip.icon}</span>
+                {chip.label}
+              </button>
+            ))}
+          </div>
 
-        <p style={{
-          margin: "0 0 40px", fontSize: 16.5, color: "#6b4654",
-          lineHeight: 1.65, maxWidth: 460, textAlign: "center", letterSpacing: 0.05,
-          animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .26s both",
-        }}>
-          {tx(T.sub, lang)}
-        </p>
-
-        {/* Input */}
-        <div
-          className="v2-input-wrap"
-          style={{
-            display: "flex", width: "100%", maxWidth: 560,
-            background: "#fff", border: "1.5px solid rgba(240,218,228,.95)",
-            borderRadius: 24, overflow: "hidden",
-            boxShadow: "0 16px 48px rgba(225,29,92,.1), 0 2px 8px rgba(0,0,0,.04)",
-            transition: "all .25s cubic-bezier(.2,.8,.2,1)",
-            animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .32s both",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", paddingLeft: 20, color: PINK, fontSize: 18, flexShrink: 0 }}>✨</div>
-          <input
-            ref={inputRef}
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSend(); } }}
-            placeholder={tx(T.placeholder, lang)}
-            style={{
-              flex: 1, border: "none", outline: "none",
-              padding: "20px 14px", fontSize: 15.5,
-              color: "#1a0a14", background: "transparent",
-              fontFamily: "inherit", letterSpacing: 0.05,
-            }}
-          />
+          {/* Scroll cue */}
           <button
-            onClick={() => onSend()}
-            style={{
-              margin: 8, padding: "13px 24px", borderRadius: 18,
-              border: "none",
-              background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
-              color: "#fff", fontWeight: 700, fontSize: 14.5,
-              cursor: "pointer", letterSpacing: 0.1,
-              boxShadow: "0 6px 20px rgba(225,29,92,.38)",
-              whiteSpace: "nowrap", transition: "all .18s cubic-bezier(.2,.8,.2,1)",
+            type="button"
+            className="v2-scroll-cue"
+            onClick={() => {
+              const el = document.getElementById("v2-howitworks");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 10px 26px rgba(225,29,92,.48)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(225,29,92,.38)"; }}
           >
-            {tx(T.sendBtn, lang)} →
+            {tx(T.scrollCue, lang)}
           </button>
         </div>
 
-        {/* Examples label */}
-        <p style={{
-          margin: "30px 0 14px", fontSize: 10.5, color: "#b09aa8",
-          fontWeight: 800, letterSpacing: 1.1, textTransform: "uppercase",
-          animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .38s both",
-        }}>
-          {tx(T.examples, lang)}
-        </p>
-
-        {/* Chips */}
-        <div style={{
-          display: "flex", flexWrap: "wrap", gap: 8,
-          justifyContent: "center", maxWidth: 560,
-          animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .44s both",
-        }}>
-          {chips.map((chip, i) => (
-            <button
-              key={i}
-              className="v2-chip"
-              onClick={() => onSend(chip.label)}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "9px 17px", borderRadius: 26,
-                border: "1.5px solid rgba(240,218,228,.95)",
-                background: "rgba(255,255,255,.9)",
-                backdropFilter: "blur(8px)",
-                color: "#3a1825", fontSize: 13, fontWeight: 500,
-                cursor: "pointer", letterSpacing: 0.1,
-                boxShadow: "0 1px 4px rgba(225,29,92,.05)",
-                transition: "all .2s cubic-bezier(.2,.8,.2,1)",
-              }}
-            >
-              <span style={{ fontSize: 14 }}>{chip.icon}</span>
-              {chip.label}
-            </button>
-          ))}
+        {/* RIGHT: organic flower visual */}
+        <div className="v2-right">
+          <FlowerVisual />
         </div>
+      </div>
 
-        {/* Trust strip */}
-        <div style={{
-          marginTop: 52,
-          display: "flex", alignItems: "center",
-          gap: 0,
-          animation: "v2In .5s cubic-bezier(.2,.8,.2,1) .52s both",
-        }}>
-          {trust.map((t, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center" }}>
-              <div style={{ textAlign: "center", padding: "0 28px" }}>
-                <div style={{
-                  fontSize: 24, fontWeight: 800, letterSpacing: -0.6, lineHeight: 1,
-                  background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}>{t.num}</div>
-                <div style={{ fontSize: 12, color: "#7c5566", marginTop: 4, fontWeight: 500, letterSpacing: 0.1 }}>{t.label}</div>
-              </div>
-              {i < trust.length - 1 && (
-                <div style={{ width: 1, height: 36, background: "rgba(225,29,92,.12)" }} />
-              )}
+      {/* "How it works" anchor section below the fold */}
+      <section id="v2-howitworks" className="v2-how">
+        <h2 className="v2-how-title">
+          {lang === "ru" ? "Как Salooote планирует ваш праздник"
+            : lang === "hy" ? "Inчpеs Salooote-е planavorum е dzеr tonе"
+            : "How Salooote plans your event"}
+        </h2>
+        <p className="v2-how-sub">
+          {lang === "ru" ? "Скажите, что нужно — мы найдём поставщиков, цены и составим план."
+            : lang === "hy" ? "Аsеq inч е pеtq — mеnq klgnеnq matakararnerin, gnеrе еv klkazmеnq planе."
+            : "Tell us what you need — we find vendors, prices, and build a plan."}
+        </p>
+        <div className="v2-how-grid">
+          {[
+            { icon: "✨", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Аsеq" : "Describe",
+              desc: lang === "ru" ? "Тип события, дата, бюджет, гости." : lang === "hy" ? "Mijotsarman tеsаk, аmsаt'iv, byudje." : "Event type, date, budget, guests." },
+            { icon: "🔍", title: lang === "ru" ? "Найдём" : lang === "hy" ? "Klgnеnq" : "Find",
+              desc: lang === "ru" ? "Подберём поставщиков и продукты." : lang === "hy" ? "Klgnеnq matakararnerin еv apranqner." : "We match vendors and products." },
+            { icon: "📋", title: lang === "ru" ? "План" : lang === "hy" ? "Plan" : "Plan",
+              desc: lang === "ru" ? "Сравните цены, фото, отзывы." : lang === "hy" ? "Hаmеmаt'еq gnеrе, lusankarnerе." : "Compare prices, photos, reviews." },
+            { icon: "✅", title: lang === "ru" ? "Бронь" : lang === "hy" ? "Аmrаgrum" : "Book",
+              desc: lang === "ru" ? "Запросите цитату или забронируйте." : lang === "hy" ? "Patverеq kam аmrаgrеq." : "Request a quote or book directly." },
+          ].map((card, i) => (
+            <div key={i} className="v2-how-card">
+              <div className="v2-how-icon">{card.icon}</div>
+              <h3 className="v2-how-card-title">{card.title}</h3>
+              <p className="v2-how-card-desc">{card.desc}</p>
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 }
@@ -878,15 +822,169 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-input-bar:focus-within{border-color:rgba(225,29,92,.5)!important;box-shadow:0 0 0 4px rgba(225,29,92,.07),0 4px 16px rgba(225,29,92,.1)!important}
         .v2-chip:hover{background:#fff!important;border-color:rgba(225,29,92,.4)!important;color:${PINK}!important;transform:translateY(-2px);box-shadow:0 6px 18px rgba(225,29,92,.16)!important}
         .v2-msg{animation:v2In .3s cubic-bezier(.2,.8,.2,1)}
+
+        /* ── Layla-style landing ── */
+        .v2-landing{flex:1;overflow-y:auto;overflow-x:hidden;background:#fff;-webkit-overflow-scrolling:touch}
+        .v2-landing::-webkit-scrollbar{width:6px}
+        .v2-landing::-webkit-scrollbar-thumb{background:#f0e0e6;border-radius:6px}
+
+        .v2-landing-grid{
+          min-height:calc(100vh - 65px);
+          display:grid;grid-template-columns:1.1fr 1fr;gap:48px;
+          align-items:center;padding:24px 64px;
+          max-width:1280px;margin:0 auto;width:100%;
+        }
+        .v2-left{display:flex;flex-direction:column;gap:18px;animation:v2In .55s cubic-bezier(.2,.8,.2,1)}
+
+        .v2-headline{
+          margin:0;font-family:'Cormorant Garamond',Georgia,serif;
+          font-size:clamp(40px,5vw,68px);font-weight:700;
+          line-height:1.02;letter-spacing:-1.6px;color:#1a0a14;
+        }
+        .v2-h-line1{font-style:italic}
+        .v2-h-line2{
+          font-style:italic;
+          background:linear-gradient(135deg,#1a0a14 0%,#5a1a2f 100%);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+        }
+
+        .v2-sub{
+          margin:6px 0 8px;max-width:520px;
+          font-size:16px;line-height:1.6;color:#6b4654;letter-spacing:.05px;
+        }
+
+        .v2-chat-card{
+          background:#fff;border:1.5px solid #ece2e7;border-radius:22px;
+          padding:14px 14px 10px;max-width:560px;
+          box-shadow:0 16px 44px rgba(225,29,92,.08),0 2px 6px rgba(0,0,0,.03);
+          transition:all .22s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-chat-card:focus-within{
+          border-color:rgba(225,29,92,.4);
+          box-shadow:0 18px 52px rgba(225,29,92,.18),0 0 0 5px rgba(225,29,92,.06);
+        }
+        .v2-chat-textarea{
+          width:100%;border:none;outline:none;background:transparent;
+          font-family:inherit;font-size:15.5px;line-height:1.55;color:#1a0a14;
+          padding:8px 6px;resize:none;min-height:56px;max-height:140px;letter-spacing:.05px;
+        }
+        .v2-chat-actions{display:flex;align-items:center;gap:8px;padding:6px 4px 0}
+        .v2-icon-btn{
+          width:36px;height:36px;border:none;border-radius:50%;background:transparent;
+          color:#9b8390;cursor:pointer;display:flex;align-items:center;justify-content:center;
+          transition:all .15s;
+        }
+        .v2-icon-btn:hover{background:#fdf2f5;color:${PINK}}
+        .v2-send-btn{
+          width:42px;height:42px;border:none;border-radius:50%;
+          background:#1a0a14;color:#fff;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 6px 16px rgba(26,10,20,.25);
+          transition:all .18s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-send-btn:hover:not(:disabled){background:${PINK};transform:translateY(-1px) scale(1.04);box-shadow:0 8px 22px rgba(225,29,92,.4)}
+        .v2-send-btn:disabled{background:#e5d8df;color:#fff;cursor:default;box-shadow:none}
+
+        .v2-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+        .v2-pill{
+          display:inline-flex;align-items:center;
+          padding:9px 16px;border-radius:24px;
+          background:#fdf2f5;border:1px solid transparent;
+          color:#5a1a2f;font-size:13px;font-weight:500;letter-spacing:.05px;
+          cursor:pointer;transition:all .18s cubic-bezier(.2,.8,.2,1);
+          font-family:inherit;
+        }
+        .v2-pill:hover{background:#fff;border-color:${PINK};color:${PINK};transform:translateY(-1px);box-shadow:0 6px 16px rgba(225,29,92,.16)}
+
+        .v2-scroll-cue{
+          margin-top:18px;padding:6px 0;border:none;background:transparent;
+          color:#a08596;font-size:13px;font-weight:500;cursor:pointer;
+          align-self:flex-start;font-family:inherit;letter-spacing:.05px;
+          transition:color .15s;
+        }
+        .v2-scroll-cue:hover{color:${PINK}}
+
+        .v2-right{display:flex;align-items:center;justify-content:center}
+        .v2-visual{position:relative;width:100%;max-width:520px;aspect-ratio:1/1}
+        .v2-flower-shape{
+          position:absolute;inset:0;
+          clip-path:url(#flowerClip);
+          -webkit-clip-path:url(#flowerClip);
+          overflow:hidden;
+          filter:drop-shadow(0 30px 60px rgba(225,29,92,.18));
+        }
+        .float-emoji{
+          position:absolute;
+          animation:floatY 5s ease-in-out infinite;
+          filter:drop-shadow(0 4px 10px rgba(159,18,57,.2));
+        }
+        @keyframes floatY{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(3deg)}}
+
+        /* "How it works" section */
+        .v2-how{
+          padding:80px 32px;max-width:1180px;margin:0 auto;
+          border-top:1px solid #f5e9ee;
+        }
+        .v2-how-title{
+          margin:0 0 12px;font-family:'Cormorant Garamond',Georgia,serif;
+          font-size:clamp(28px,3.6vw,42px);font-style:italic;font-weight:700;
+          color:#1a0a14;letter-spacing:-.8px;text-align:center;
+        }
+        .v2-how-sub{
+          margin:0 auto 48px;max-width:540px;text-align:center;
+          font-size:15.5px;color:#7c5566;line-height:1.6;
+        }
+        .v2-how-grid{
+          display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+          gap:18px;
+        }
+        .v2-how-card{
+          padding:28px 22px 24px;border:1px solid #f0e2e8;border-radius:20px;
+          background:linear-gradient(180deg,#fff 0%,#fff8fa 100%);
+          transition:all .22s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-how-card:hover{border-color:rgba(225,29,92,.3);transform:translateY(-2px);box-shadow:0 14px 32px rgba(225,29,92,.1)}
+        .v2-how-icon{
+          width:44px;height:44px;border-radius:14px;
+          background:linear-gradient(135deg,#fce7ef 0%,#fbcfe8 100%);
+          display:flex;align-items:center;justify-content:center;
+          font-size:22px;margin-bottom:14px;
+        }
+        .v2-how-card-title{
+          margin:0 0 6px;font-size:17px;font-weight:700;color:#1a0a14;letter-spacing:-.2px;
+        }
+        .v2-how-card-desc{
+          margin:0;font-size:13.5px;line-height:1.55;color:#7c5566;
+        }
+
+        /* Mobile / tablet */
+        @media (max-width:920px){
+          .v2-landing-grid{grid-template-columns:1fr;gap:32px;padding:32px 22px;min-height:auto}
+          .v2-right{order:-1}
+          .v2-visual{max-width:340px;margin:0 auto}
+          .v2-headline{font-size:clamp(36px,9vw,52px)}
+          .v2-how{padding:56px 22px}
+        }
+        @media (max-width:520px){
+          .v2-landing-grid{padding:24px 18px;gap:24px}
+          .v2-visual{max-width:280px}
+          .v2-chat-card{padding:12px 12px 8px}
+        }
       `}</style>
 
       <div style={{
-        height: "calc(100vh - 65px)",
+        height: phase === "landing" ? "auto" : "calc(100vh - 65px)",
+        minHeight: phase === "landing" ? "calc(100vh - 65px)" : undefined,
         display: "flex", flexDirection: "column",
-        background: "linear-gradient(180deg,#fffcfb 0%,#fdf6f8 40%,#fceaef 100%)",
-        backgroundImage: "radial-gradient(circle, rgba(225,29,92,.04) 1px, transparent 1px)",
-        backgroundSize: "28px 28px",
-        position: "relative", overflow: "hidden",
+        background: phase === "landing"
+          ? "#fff"
+          : "linear-gradient(180deg,#fffcfb 0%,#fdf6f8 40%,#fceaef 100%)",
+        backgroundImage: phase === "landing"
+          ? "none"
+          : "radial-gradient(circle, rgba(225,29,92,.04) 1px, transparent 1px)",
+        backgroundSize: phase === "landing" ? undefined : "28px 28px",
+        position: "relative",
+        overflow: phase === "landing" ? "visible" : "hidden",
       }}>
 
         {phase === "landing" && (
