@@ -11,61 +11,150 @@ const PINK_DARK = "#9f1239";
 const T = {
   hero: {
     en: ["Your event.", "Planned in minutes."],
-    hy: ["Dzеr tonе.", "Planavorvats rоpееrоm."],
+    hy: ["Ձեր տոնը.", "Պլանավորված րոպեներում."],
     ru: ["Ваш праздник.", "Спланирован за минуты."],
   },
   sub: {
     en: "Balloons, cakes, venues, gifts, photographers — tell Salooote AI what you need and we'll plan it, find vendors, and estimate the budget.",
-    hy: "Пучikner, torтеr, srаhner, nverner, fotоgraфner — аsеq Salooote AI-in inч е pеtq, nа klinе planе еv klgnе lavаguyin tаrbernaknеrе:",
+    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, ֆոտոգրաֆներ — ասեք Salooote AI-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
     ru: "Шары, торты, площадки, подарки, фотографы — расскажите Salooote AI что нужно, мы спланируем, найдём поставщиков и оценим бюджет.",
   },
   placeholder: {
     en: "Help me plan my daughter's 5th birthday tomorrow…",
-    hy: "Оgnеq planavоrеl аghkаs 5-аmyа tsnnund vаghе…",
+    hy: "Օգնեք պլանավորել աղջկաս 5-ամյա ծնունդը վաղը…",
     ru: "Помогите спланировать день рождения дочки на 5 лет завтра…",
   },
   chips: {
     en: [
-      { icon: "🎂", label: "Plan a birthday" },
-      { icon: "🎈", label: "Find balloons" },
-      { icon: "🎁", label: "Send a gift" },
-      { icon: "💍", label: "Plan a wedding" },
-      { icon: "⚡", label: "Last-minute event" },
+      { icon: "cake",     label: "Plan a birthday" },
+      { icon: "balloon",  label: "Find balloons" },
+      { icon: "gift",     label: "Send a gift" },
+      { icon: "ring",     label: "Plan a wedding" },
+      { icon: "bolt",     label: "Last-minute event" },
     ],
     hy: [
-      { icon: "🎂", label: "Planavorel tsnnund" },
-      { icon: "🎈", label: "Gtnel puchikner" },
-      { icon: "🎁", label: "Ugharkel nver" },
-      { icon: "💍", label: "Planavorel hаrsаniq" },
-      { icon: "⚡", label: "Verjin pаhi miJоtsаrum" },
+      { icon: "cake",     label: "Պլանավորել ծնունդ" },
+      { icon: "balloon",  label: "Գտնել փուչիկներ" },
+      { icon: "gift",     label: "Ուղարկել նվեր" },
+      { icon: "ring",     label: "Պլանավորել հարսանիք" },
+      { icon: "bolt",     label: "Վերջին պահի միջոցառում" },
     ],
     ru: [
-      { icon: "🎂", label: "Спланировать день рождения" },
-      { icon: "🎈", label: "Найти шары" },
-      { icon: "🎁", label: "Отправить подарок" },
-      { icon: "💍", label: "Спланировать свадьбу" },
-      { icon: "⚡", label: "Срочное мероприятие" },
+      { icon: "cake",     label: "Спланировать день рождения" },
+      { icon: "balloon",  label: "Найти шары" },
+      { icon: "gift",     label: "Отправить подарок" },
+      { icon: "ring",     label: "Спланировать свадьбу" },
+      { icon: "bolt",     label: "Срочное мероприятие" },
     ],
   },
   scrollCue: {
-    en: "See how Salooote can help you ↓",
-    hy: "Tеsnеl inчpеs kаrоgh е оgnеl Salooote-е ↓",
-    ru: "Узнать, как Salooote может помочь ↓",
+    en: "See how Salooote can help you",
+    hy: "Տեսեք ինչպես կարող է օգնել Salooote-ը",
+    ru: "Узнать, как Salooote может помочь",
   },
   welcome: {
-    en: "Hi, I'm **Sali** ✨\n\nTell me what you're looking for — an occasion, a gift, or something specific — and I'll find the right options for you.",
-    hy: "Bаrev, es **Sali**-n еm ✨\n\nАsеq inч еq pntrum — аṙit, nver kam inch-or konkrеt ban — еs yntrаd klinеm lavаguyin tаrbernaknеrе:",
-    ru: "Привет, я **Sali** ✨\n\nРасскажите, что ищете — праздник, подарок или что-то конкретное — я подберу варианты.",
+    en: "Hi, I'm **Sali**.\n\nTell me what you're looking for — an occasion, a gift, or something specific — and I'll find the right options for you.",
+    hy: "Բարև, ես **Sali**-ն եմ։\n\nԱսեք ինչ եք փնտրում — առիթ, նվեր կամ ինչ-որ կոնկրետ բան — ես կընտրեմ լավագույն տարբերակները։",
+    ru: "Привет, я **Sali**.\n\nРасскажите, что ищете — праздник, подарок или что-то конкретное — я подберу варианты.",
   },
-  planBtn: { en: "Plan this event →", hy: "Planavorel →", ru: "Планировать →" },
-  sendBtn: { en: "Ask Sali", hy: "Hаrtsnel", ru: "Спросить" },
-  saliKnows: { en: "Sali knows", hy: "Sali giti", ru: "Sali помнит" },
-  online: { en: "Online", hy: "Aṙcank", ru: "Онлайн" },
-  viewProduct: { en: "View product →", hy: "Tesnel →", ru: "Открыть →" },
-  viewStore: { en: "View store →", hy: "Tesnel →", ru: "Открыть →" },
+  planBtn:  { en: "Plan this event",  hy: "Պլանավորել",   ru: "Планировать" },
+  sendBtn:  { en: "Ask Sali",         hy: "Հարցնել",     ru: "Спросить" },
+  saliKnows:{ en: "Sali knows",       hy: "Sali գիտի",   ru: "Sali помнит" },
+  online:   { en: "Online",           hy: "Առցանց",      ru: "Онлайн" },
+  viewProduct: { en: "View product", hy: "Տեսնել",     ru: "Открыть" },
+  viewStore:   { en: "View store",   hy: "Տեսնել",     ru: "Открыть" },
+
+  browseTitle: {
+    en: "Browse by Category",
+    hy: "Թերթեք ըստ կատեգորիայի",
+    ru: "По категориям",
+  },
+  browseHeadline: {
+    en: "Everything you need",
+    hy: "Ամեն ինչ, ինչ պետք է",
+    ru: "Всё, что нужно",
+  },
+  allCategories: {
+    en: "All categories",
+    hy: "Բոլոր կատեգորիաները",
+    ru: "Все категории",
+  },
+  trendingTitle: {
+    en: "Hand-picked for you",
+    hy: "Ընտրված է հատուկ ձեզ համար",
+    ru: "Подобрано для вас",
+  },
+  trendingHeadline: {
+    en: "Trending Now",
+    hy: "Հայտնի հիմա",
+    ru: "Популярные сейчас",
+  },
+  trendingTabs: {
+    en: [
+      { key: "birthday", label: "Birthday" },
+      { key: "wedding",  label: "Wedding" },
+      { key: "party",    label: "Party" },
+    ],
+    hy: [
+      { key: "birthday", label: "Ծնունդ" },
+      { key: "wedding",  label: "Հարսանիք" },
+      { key: "party",    label: "Միջոցառում" },
+    ],
+    ru: [
+      { key: "birthday", label: "День рождения" },
+      { key: "wedding",  label: "Свадьба" },
+      { key: "party",    label: "Вечеринка" },
+    ],
+  },
 };
 
 const tx = (obj, lang) => obj[lang] || obj.en;
+
+// ── Icon set (replaces all emoji) ─────────────────────────────────
+const ICON_PATHS = {
+  cake:     <><path d="M20 21V11a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v10"/><path d="M4 16h16"/><path d="M12 9V6"/><path d="M12 4v0"/><path d="M2 21h20"/></>,
+  balloon:  <><path d="M12 16c3.5 0 6-3.5 6-7a6 6 0 1 0-12 0c0 3.5 2.5 7 6 7Z"/><path d="M12 16v3"/><path d="M10.5 19h3"/></>,
+  gift:     <><rect x="3" y="8" width="18" height="13" rx="1.5"/><path d="M3 12h18"/><path d="M12 8v13"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 5 12 8c0-3 2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></>,
+  ring:     <><circle cx="12" cy="14" r="6"/><path d="m9 8 1.5-4h3L15 8"/></>,
+  bolt:     <><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></>,
+  sparkle:  <><path d="M12 3 14 9l6 2-6 2-2 6-2-6-6-2 6-2 2-6Z"/><path d="M19 14l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z"/></>,
+  search:   <><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></>,
+  check:    <><path d="m5 12 5 5 9-11"/></>,
+  heart:    <><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"/></>,
+  pin:      <><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></>,
+  calendar: <><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/></>,
+  users:    <><circle cx="9" cy="8" r="3.5"/><path d="M3 21c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 14.5a4.5 4.5 0 0 1 6 4.5"/></>,
+  user:     <><circle cx="12" cy="8" r="3.5"/><path d="M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7"/></>,
+  dollar:   <><path d="M12 2v20"/><path d="M16 7h-5a3 3 0 0 0 0 6h2a3 3 0 0 1 0 6H7"/></>,
+  palette:  <><path d="M12 3a9 9 0 0 0 0 18c1.5 0 2.5-1 2.5-2.3 0-1.4-1-2.4-2.5-2.4-1 0-1.7-.5-1.7-1.4 0-1 .8-1.4 2-1.4H14a4 4 0 0 0 0-8 9 9 0 0 0-2-1.5Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="11" cy="7.5" r="1"/><circle cx="16" cy="9" r="1"/></>,
+  attach:   <><path d="M21.4 11 12.2 20.2a6 6 0 1 1-8.5-8.5l9.2-9.2a4 4 0 0 1 5.7 5.7l-9.2 9.2a2 2 0 1 1-2.8-2.8l8.5-8.5"/></>,
+  mic:      <><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1"/><path d="M12 19v3"/><path d="M8 22h8"/></>,
+  send:     <><path d="m3 11 18-8-8 18-2-8-8-2Z"/></>,
+  arrowRight: <><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></>,
+  arrowDown:  <><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></>,
+  history:  <><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></>,
+  clock:    <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+  flower:   <><circle cx="12" cy="12" r="2.5"/><path d="M12 9.5C12 6 9.5 4 7 5s-2 4 0 5.5"/><path d="M14.5 12c3.5 0 5.5-2.5 4.5-5s-4-2-5.5 0"/><path d="M12 14.5c0 3.5 2.5 5.5 5 4.5s2-4 0-5.5"/><path d="M9.5 12c-3.5 0-5.5 2.5-4.5 5s4 2 5.5 0"/></>,
+  glass:    <><path d="M5 4h14l-1.5 8a5 5 0 0 1-4.5 3.5h-2A5 5 0 0 1 6.5 12L5 4Z"/><path d="M12 15.5V21"/><path d="M9 21h6"/></>,
+  party:    <><path d="m4 20 4-13 9 9-13 4Z"/><path d="M9 8c2-2 4-4 7-4"/><path d="M16 14c-1.5 1-2 2.5-2 4"/></>,
+  business: <><rect x="3" y="6" width="18" height="14" rx="1.5"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M3 12h18"/></>,
+  baby:     <><circle cx="12" cy="11" r="4.5"/><path d="M9 18a4 4 0 0 0 6 0"/><path d="M9.5 8.5h.01"/><path d="M14.5 8.5h.01"/></>,
+  church:   <><path d="M12 2v6"/><path d="M9 5h6"/><path d="M5 21V11l7-4 7 4v10"/><path d="M9 21v-5h6v5"/></>,
+  x:        <><path d="M6 6l12 12"/><path d="M18 6 6 18"/></>,
+  grid:     <><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></>,
+  flame:    <><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-5 0 2 1 3 2 3 0-3 0-5 2-8z"/></>,
+};
+function Icon({ name, size = 18, className = "", style }) {
+  const path = ICON_PATHS[name] || ICON_PATHS.sparkle;
+  return (
+    <svg
+      width={size} height={size} viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="1.7"
+      strokeLinecap="round" strokeLinejoin="round"
+      className={className} style={style} aria-hidden
+    >{path}</svg>
+  );
+}
 
 function imgSrc(url) {
   if (!url) return null;
@@ -89,21 +178,21 @@ function MsgText({ text }) {
 }
 
 const EVENT_ICONS = {
-  birthday: "🎂", kids_party: "🎈", wedding: "💍", corporate: "🏢",
-  engagement: "💍", anniversary: "🥂", baby_shower: "🍼", christening: "⛪",
+  birthday: "cake", kids_party: "balloon", wedding: "ring", corporate: "business",
+  engagement: "ring", anniversary: "glass", baby_shower: "baby", christening: "church",
 };
 
 function StateBar({ state, lang }) {
   const pills = [];
-  if (state.event_type) pills.push({ icon: EVENT_ICONS[state.event_type] || "🎉", label: state.event_type.replace(/_/g, " ") });
+  if (state.event_type) pills.push({ icon: EVENT_ICONS[state.event_type] || "party", label: state.event_type.replace(/_/g, " ") });
   if (state.recipient) {
     let label = state.recipient;
     if (state.age != null) label += ` · ${state.age}`;
-    pills.push({ icon: "👤", label });
+    pills.push({ icon: "user", label });
   }
-  if (state.deadline) pills.push({ icon: "⏰", label: state.deadline });
-  if (state.city) pills.push({ icon: "📍", label: state.city });
-  if (state.style) pills.push({ icon: "✨", label: state.style });
+  if (state.deadline) pills.push({ icon: "clock", label: state.deadline });
+  if (state.city) pills.push({ icon: "pin", label: state.city });
+  if (state.style) pills.push({ icon: "sparkle", label: state.style });
   if (!pills.length) return null;
 
   return (
@@ -122,13 +211,13 @@ function StateBar({ state, lang }) {
       </span>
       {pills.map((p, i) => (
         <div key={i} style={{
-          display: "flex", alignItems: "center", gap: 5,
-          padding: "4px 11px 4px 8px", borderRadius: 22,
+          display: "flex", alignItems: "center", gap: 6,
+          padding: "4px 12px 4px 9px", borderRadius: 22,
           background: "#fff", border: "1px solid rgba(240,218,228,.9)",
           fontSize: 11.5, color: "#5a1a2f", fontWeight: 600,
           boxShadow: "0 1px 4px rgba(225,29,92,.07)",
         }}>
-          <span style={{ fontSize: 12 }}>{p.icon}</span>
+          <Icon name={p.icon} size={13} style={{ color: PINK }} />
           {p.label}
         </div>
       ))}
@@ -142,42 +231,10 @@ function Avatar({ size = 30 }) {
       width: size, height: size, minWidth: size, borderRadius: "50%",
       background: "radial-gradient(circle at 30% 25%, #ffd1dc 0%, #f43f5e 55%, #9f1239 100%)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: Math.round(size * 0.44), color: "#fff",
+      color: "#fff",
       boxShadow: "0 3px 10px rgba(225,29,92,.3)",
-    }}>✨</div>
-  );
-}
-
-function HeroOrb() {
-  return (
-    <div style={{ position: "relative", width: 108, height: 108 }}>
-      {/* Outermost ring */}
-      <div style={{
-        position: "absolute", inset: -32, borderRadius: "50%",
-        background: "radial-gradient(circle,rgba(244,63,94,.22) 0%,transparent 65%)",
-        animation: "orbFloat 4s ease-in-out infinite", filter: "blur(10px)",
-      }} />
-      {/* Middle ring */}
-      <div style={{
-        position: "absolute", inset: -16, borderRadius: "50%",
-        background: "radial-gradient(circle,rgba(225,29,92,.18) 0%,transparent 60%)",
-        animation: "orbFloat 4s ease-in-out infinite .6s", filter: "blur(5px)",
-      }} />
-      {/* Thin crisp ring */}
-      <div style={{
-        position: "absolute", inset: -3, borderRadius: "50%",
-        border: "1px solid rgba(225,29,92,.2)",
-        animation: "orbPulse 3.5s ease-in-out infinite",
-      }} />
-      {/* Core orb */}
-      <div style={{
-        position: "relative", width: 108, height: 108, borderRadius: "50%",
-        background: "radial-gradient(circle at 32% 28%, #ffd1dc 0%, #f43f5e 48%, #9f1239 100%)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 46, color: "#fff",
-        boxShadow: "0 20px 50px rgba(225,29,92,.45), inset 0 -6px 20px rgba(159,18,57,.5), inset 0 6px 20px rgba(255,255,255,.25)",
-        animation: "orbFloat 4s ease-in-out infinite .3s",
-      }}>✨</div>
+    }}>
+      <Icon name="sparkle" size={Math.round(size * 0.5)} />
     </div>
   );
 }
@@ -227,7 +284,7 @@ function ProductCard({ p, lang, onOpen }) {
       <div style={{ width: "100%", aspectRatio: "1/1", background: "linear-gradient(145deg,#fdf3f6,#fbe8ed)", position: "relative", overflow: "hidden" }}>
         {img
           ? <Image src={img} alt={name} fill style={{ objectFit: "cover", transform: hover ? "scale(1.07)" : "none", transition: "transform .4s ease" }} sizes="152px" />
-          : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, opacity: .3 }}>🎁</div>}
+          : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#e0c0cb" }}><Icon name="gift" size={32} /></div>}
       </div>
       <div style={{ padding: "11px 13px 13px" }}>
         <p style={{
@@ -276,7 +333,7 @@ function VendorCard({ v, onOpen }) {
         <p style={{ margin: 0, fontSize: 12.5, fontWeight: 700, color: "#1a0a14", letterSpacing: -0.1 }}>
           {v.business_name || "Store"}
         </p>
-        {v.city && <p style={{ margin: "3px 0 0", fontSize: 11, color: "#b09aa6" }}>📍 {v.city}</p>}
+        {v.city && <p style={{ margin: "3px 0 0", fontSize: 11, color: "#b09aa6", display: "inline-flex", alignItems: "center", gap: 4 }}><Icon name="pin" size={11} />{v.city}</p>}
         {v.short_bio && (
           <p style={{
             margin: "5px 0 0", fontSize: 11, color: "#7c6571", lineHeight: 1.45,
@@ -420,12 +477,12 @@ function Popup({ item, type, lang, onClose }) {
         <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: "#f5eff2", flexShrink: 0 }}>
           {imgs[idx]
             ? <Image src={imgs[idx]} alt={name} fill style={{ objectFit: "cover" }} sizes="480px" />
-            : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 60, opacity: .2 }}>🎁</div>}
+            : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "#d8c3ce" }}><Icon name="gift" size={60} /></div>}
           <button onClick={onClose} style={{
             position: "absolute", top: 14, right: 14, width: 38, height: 38, borderRadius: "50%",
             background: "rgba(0,0,0,.48)", backdropFilter: "blur(10px)", border: "none", color: "#fff", fontSize: 15,
             cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
-          }}>✕</button>
+          }} aria-label="Close"><Icon name="x" size={16} /></button>
           {imgs.length > 1 && (
             <div style={{ position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5 }}>
               {imgs.map((_, i) => (
@@ -443,7 +500,7 @@ function Popup({ item, type, lang, onClose }) {
             <p style={{ margin: "8px 0 0", fontSize: 21, fontWeight: 800, color: PINK, letterSpacing: -0.4 }}>{fmt(item.price)}</p>
           )}
           {type === "vendor" && item.city && (
-            <p style={{ margin: "8px 0 0", fontSize: 13, color: "#9b8390" }}>📍 {item.city}</p>
+            <p style={{ margin: "8px 0 0", fontSize: 13, color: "#9b8390", display: "inline-flex", alignItems: "center", gap: 5 }}><Icon name="pin" size={13} />{item.city}</p>
           )}
           {desc && (
             <p style={{ margin: "14px 0 0", fontSize: 14.5, color: "#5a4452", lineHeight: 1.75 }}>
@@ -475,44 +532,34 @@ function Popup({ item, type, lang, onClose }) {
   );
 }
 
-function FlowerVisual() {
+function OrbVisual() {
+  // Glassy 3D iridescent orb hero — pure CSS / SVG, no emoji
   return (
-    <div className="v2-visual">
-      {/* SVG defs for flower clip-path */}
-      <svg width="0" height="0" style={{ position: "absolute" }}>
-        <defs>
-          <clipPath id="flowerClip" clipPathUnits="objectBoundingBox">
-            <circle cx="0.5" cy="0.28" r="0.28" />
-            <circle cx="0.72" cy="0.5" r="0.28" />
-            <circle cx="0.5" cy="0.72" r="0.28" />
-            <circle cx="0.28" cy="0.5" r="0.28" />
-            <circle cx="0.5" cy="0.5" r="0.32" />
-          </clipPath>
-        </defs>
-      </svg>
-
-      <div className="v2-flower-shape">
-        {/* Gradient image background */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: `
-            radial-gradient(circle at 22% 28%, #fbcfe8 0%, transparent 45%),
-            radial-gradient(circle at 78% 25%, #fde0ea 0%, transparent 50%),
-            radial-gradient(circle at 70% 78%, #fda4af 0%, transparent 45%),
-            radial-gradient(circle at 25% 75%, #fce7ef 0%, transparent 50%),
-            linear-gradient(135deg, #fff1f5 0%, #fbe2e9 50%, #fbc9d8 100%)
-          `,
-        }} />
-
-        {/* Floating decorative emoji */}
-        <div className="float-emoji" style={{ top: "18%", left: "30%", fontSize: 48, animationDelay: "0s" }}>🎂</div>
-        <div className="float-emoji" style={{ top: "22%", right: "20%", fontSize: 38, animationDelay: ".4s" }}>🎈</div>
-        <div className="float-emoji" style={{ top: "48%", left: "16%", fontSize: 42, animationDelay: ".8s" }}>💐</div>
-        <div className="float-emoji" style={{ top: "44%", right: "14%", fontSize: 44, animationDelay: "1.2s" }}>🎁</div>
-        <div className="float-emoji" style={{ bottom: "20%", left: "32%", fontSize: 40, animationDelay: "1.6s" }}>🥂</div>
-        <div className="float-emoji" style={{ bottom: "18%", right: "30%", fontSize: 36, animationDelay: "2s" }}>✨</div>
-        <div className="float-emoji" style={{ top: "38%", left: "44%", fontSize: 30, animationDelay: "2.4s" }}>🎉</div>
+    <div className="v2-orb-stage">
+      {/* Soft ambient halo */}
+      <div className="v2-orb-halo" />
+      {/* Main orb */}
+      <div className="v2-orb">
+        <div className="v2-orb-core" />
+        <div className="v2-orb-glow" />
+        <div className="v2-orb-highlight" />
+        <div className="v2-orb-rim" />
       </div>
+      {/* Reflection */}
+      <div className="v2-orb-reflection" />
+      {/* Floating icon chips around the orb */}
+      {[
+        { icon: "cake",    style: { top: "8%",  left: "12%" }, delay: "0s"   },
+        { icon: "balloon", style: { top: "14%", right: "10%" }, delay: ".5s" },
+        { icon: "gift",    style: { top: "55%", left: "4%" },  delay: "1s"   },
+        { icon: "ring",    style: { top: "52%", right: "2%" }, delay: "1.5s" },
+        { icon: "flower",  style: { bottom: "8%", left: "26%" }, delay: "2s" },
+        { icon: "glass",   style: { bottom: "12%", right: "22%" }, delay: "2.5s" },
+      ].map((c, i) => (
+        <div key={i} className="v2-orb-chip" style={{ ...c.style, animationDelay: c.delay }}>
+          <Icon name={c.icon} size={18} />
+        </div>
+      ))}
     </div>
   );
 }
@@ -552,21 +599,21 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
               className="v2-chat-textarea"
             />
             <div className="v2-chat-actions">
-              <button type="button" className="v2-icon-btn" aria-label="attach" title="Attach inspiration">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" /></svg>
+              <button type="button" className="v2-icon-btn" aria-label="Attach">
+                <Icon name="attach" size={18} />
               </button>
               <div style={{ flex: 1 }} />
-              <button type="button" className="v2-icon-btn" aria-label="mic" title="Voice input">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z" /><path d="M19 10v2a7 7 0 01-14 0v-2" /><line x1="12" y1="19" x2="12" y2="23" /><line x1="8" y1="23" x2="16" y2="23" /></svg>
+              <button type="button" className="v2-icon-btn" aria-label="Voice input">
+                <Icon name="mic" size={18} />
               </button>
               <button
                 type="button"
                 onClick={() => onSend()}
                 disabled={!canSend}
                 className="v2-send-btn"
-                aria-label="send"
+                aria-label="Send"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" /></svg>
+                <Icon name="send" size={17} />
               </button>
             </div>
           </div>
@@ -579,7 +626,7 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
                 className="v2-pill"
                 onClick={() => onSend(chip.label)}
               >
-                <span style={{ fontSize: 14, marginRight: 6 }}>{chip.icon}</span>
+                <Icon name={chip.icon} size={14} style={{ marginRight: 7, color: PINK }} />
                 {chip.label}
               </button>
             ))}
@@ -590,51 +637,366 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
             type="button"
             className="v2-scroll-cue"
             onClick={() => {
-              const el = document.getElementById("v2-howitworks");
+              const el = document.getElementById("v2-browse");
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
           >
             {tx(T.scrollCue, lang)}
+            <Icon name="arrowDown" size={14} style={{ marginLeft: 6 }} />
           </button>
         </div>
 
-        {/* RIGHT: organic flower visual */}
+        {/* RIGHT: 3D glassy orb visual */}
         <div className="v2-right">
-          <FlowerVisual />
+          <OrbVisual />
         </div>
       </div>
+
+      {/* Browse by Category */}
+      <BrowseByCategory lang={lang} />
+
+      {/* Trending Now */}
+      <TrendingNow lang={lang} />
 
       {/* "How it works" anchor section below the fold */}
       <section id="v2-howitworks" className="v2-how">
         <h2 className="v2-how-title">
           {lang === "ru" ? "Как Salooote планирует ваш праздник"
-            : lang === "hy" ? "Inчpеs Salooote-е planavorum е dzеr tonе"
+            : lang === "hy" ? "Ինչպես Salooote-ը պլանավորում է ձեր տոնը"
             : "How Salooote plans your event"}
         </h2>
         <p className="v2-how-sub">
           {lang === "ru" ? "Скажите, что нужно — мы найдём поставщиков, цены и составим план."
-            : lang === "hy" ? "Аsеq inч е pеtq — mеnq klgnеnq matakararnerin, gnеrе еv klkazmеnq planе."
+            : lang === "hy" ? "Ասեք ինչ է պետք — մենք կգտնենք մատակարարներին, գները և կկազմենք պլանը։"
             : "Tell us what you need — we find vendors, prices, and build a plan."}
         </p>
         <div className="v2-how-grid">
           {[
-            { icon: "✨", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Аsеq" : "Describe",
-              desc: lang === "ru" ? "Тип события, дата, бюджет, гости." : lang === "hy" ? "Mijotsarman tеsаk, аmsаt'iv, byudje." : "Event type, date, budget, guests." },
-            { icon: "🔍", title: lang === "ru" ? "Найдём" : lang === "hy" ? "Klgnеnq" : "Find",
-              desc: lang === "ru" ? "Подберём поставщиков и продукты." : lang === "hy" ? "Klgnеnq matakararnerin еv apranqner." : "We match vendors and products." },
-            { icon: "📋", title: lang === "ru" ? "План" : lang === "hy" ? "Plan" : "Plan",
-              desc: lang === "ru" ? "Сравните цены, фото, отзывы." : lang === "hy" ? "Hаmеmаt'еq gnеrе, lusankarnerе." : "Compare prices, photos, reviews." },
-            { icon: "✅", title: lang === "ru" ? "Бронь" : lang === "hy" ? "Аmrаgrum" : "Book",
-              desc: lang === "ru" ? "Запросите цитату или забронируйте." : lang === "hy" ? "Patverеq kam аmrаgrеq." : "Request a quote or book directly." },
+            { icon: "sparkle", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Ասեք" : "Describe",
+              desc: lang === "ru" ? "Тип события, дата, бюджет, гости." : lang === "hy" ? "Միջոցառման տեսակը, ամսաթիվ, բյուջե։" : "Event type, date, budget, guests." },
+            { icon: "search", title: lang === "ru" ? "Найдём" : lang === "hy" ? "Կգտնենք" : "Find",
+              desc: lang === "ru" ? "Подберём поставщиков и продукты." : lang === "hy" ? "Կգտնենք մատակարարների և ապրանքներ։" : "We match vendors and products." },
+            { icon: "calendar", title: lang === "ru" ? "План" : lang === "hy" ? "Պլան" : "Plan",
+              desc: lang === "ru" ? "Сравните цены, фото, отзывы." : lang === "hy" ? "Համեմատեք գները, լուսանկարները, գնահատականները։" : "Compare prices, photos, reviews." },
+            { icon: "check", title: lang === "ru" ? "Бронь" : lang === "hy" ? "Ամրագրում" : "Book",
+              desc: lang === "ru" ? "Запросите цитату или забронируйте." : lang === "hy" ? "Պատվերեք կամ ամրագրեք ուղիղ։" : "Request a quote or book directly." },
           ].map((card, i) => (
             <div key={i} className="v2-how-card">
-              <div className="v2-how-icon">{card.icon}</div>
+              <div className="v2-how-icon"><Icon name={card.icon} size={22} /></div>
               <h3 className="v2-how-card-title">{card.title}</h3>
               <p className="v2-how-card-desc">{card.desc}</p>
             </div>
           ))}
         </div>
       </section>
+    </div>
+  );
+}
+
+// ── Browse by Category ─────────────────────────────────────────────
+function BrowseByCategory({ lang }) {
+  const [cats, setCats] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`${API}/categories?locale=${lang}`)
+      .then(r => r.json())
+      .then(j => {
+        if (!cancelled) {
+          setCats(Array.isArray(j?.data) ? j.data.slice(0, 12) : []);
+          setLoading(false);
+        }
+      })
+      .catch(() => !cancelled && setLoading(false));
+    return () => { cancelled = true; };
+  }, [lang]);
+
+  if (loading) return null;
+  if (!cats.length) return null;
+
+  return (
+    <section id="v2-browse" className="v2-browse">
+      <div className="v2-browse-head">
+        <div>
+          <p className="v2-browse-eyebrow">{tx(T.browseTitle, lang)}</p>
+          <h2 className="v2-browse-headline">{tx(T.browseHeadline, lang)}</h2>
+        </div>
+        <Link href={`/${lang}/category`} className="v2-browse-all">
+          {tx(T.allCategories, lang)}
+          <Icon name="arrowRight" size={14} style={{ marginLeft: 6 }} />
+        </Link>
+      </div>
+      <div className="v2-cat-grid">
+        {cats.map(c => {
+          const img = imgSrc(c.image_url);
+          return (
+            <Link
+              key={c.id}
+              href={`/${lang}/category/${c.slug}`}
+              className="v2-cat-card"
+            >
+              <div className="v2-cat-thumb">
+                {img ? (
+                  <Image src={img} alt={c.name} fill style={{ objectFit: "cover" }} sizes="(max-width:520px) 50vw, 200px" />
+                ) : (
+                  <div className="v2-cat-fallback"><Icon name="grid" size={26} /></div>
+                )}
+              </div>
+              <div className="v2-cat-meta">
+                <p className="v2-cat-name">{c.name}</p>
+                {typeof c.product_count === "number" && (
+                  <p className="v2-cat-count">{c.product_count}</p>
+                )}
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+// ── Trending Now ────────────────────────────────────────────────────
+function TrendingNow({ lang }) {
+  const tabs = tx(T.trendingTabs, lang);
+  const [active, setActive] = useState(tabs[0].key);
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    const q = encodeURIComponent(active);
+    fetch(`${API}/products?limit=8&search=${q}&locale=${lang}`)
+      .then(r => r.json())
+      .then(j => {
+        if (!cancelled) {
+          let arr = Array.isArray(j?.data) ? j.data : [];
+          if (!arr.length) {
+            // Fallback: any products
+            return fetch(`${API}/products?limit=8&locale=${lang}`)
+              .then(r2 => r2.json())
+              .then(j2 => {
+                if (!cancelled) setItems(Array.isArray(j2?.data) ? j2.data : []);
+                setLoading(false);
+              });
+          }
+          setItems(arr);
+          setLoading(false);
+        }
+      })
+      .catch(() => !cancelled && setLoading(false));
+    return () => { cancelled = true; };
+  }, [active, lang]);
+
+  return (
+    <section className="v2-trending">
+      <div className="v2-trending-head">
+        <p className="v2-browse-eyebrow">{tx(T.trendingTitle, lang)}</p>
+        <h2 className="v2-browse-headline">
+          <Icon name="flame" size={26} style={{ marginRight: 8, color: PINK, verticalAlign: -3 }} />
+          {tx(T.trendingHeadline, lang)}
+        </h2>
+        <div className="v2-trend-tabs">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              className={`v2-trend-tab ${active === t.key ? "is-active" : ""}`}
+              onClick={() => setActive(t.key)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      {loading ? (
+        <div className="v2-trend-grid">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="v2-trend-card v2-skeleton" />
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <p className="v2-trend-empty">
+          {lang === "ru" ? "Скоро появится" : lang === "hy" ? "Շուտով" : "Coming soon"}
+        </p>
+      ) : (
+        <div className="v2-trend-grid">
+          {items.slice(0, 8).map(p => {
+            const img = imgSrc(p.thumbnail_url || p.images?.[0]?.url);
+            const name = (lang !== "en" && p[`name_${lang}`]) || p.name || "Product";
+            return (
+              <Link key={p.id} href={`/${lang}/product/${p.id}`} className="v2-trend-card">
+                <div className="v2-trend-thumb">
+                  {img ? (
+                    <Image src={img} alt={name} fill style={{ objectFit: "cover" }} sizes="(max-width:920px) 50vw, 240px" />
+                  ) : (
+                    <div className="v2-trend-fallback"><Icon name="gift" size={32} /></div>
+                  )}
+                </div>
+                <div className="v2-trend-meta">
+                  <p className="v2-trend-name">{name}</p>
+                  {p.price > 0 && <p className="v2-trend-price">{fmt(p.price)}</p>}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
+// ── Chat header with step progress + Save + History ────────────────
+function ChatHeader({ lang, chatState, messages, sessionId, setSessionId }) {
+  const [saving, setSaving] = useState(false);
+  const [savedTick, setSavedTick] = useState(false);
+
+  // Compute progress steps based on what we know about the event.
+  const stepDefs = [
+    { key: "event_type", label: lang === "ru" ? "Тип" : lang === "hy" ? "Տեսակ" : "Type" },
+    { key: "deadline",   label: lang === "ru" ? "Дата" : lang === "hy" ? "Ամսաթիվ" : "Date" },
+    { key: "city",       label: lang === "ru" ? "Город" : lang === "hy" ? "Քաղաք" : "City" },
+    { key: "guest_count",label: lang === "ru" ? "Гости" : lang === "hy" ? "Հյուրեր" : "Guests" },
+    { key: "budget",     label: lang === "ru" ? "Бюджет" : lang === "hy" ? "Բյուջե" : "Budget" },
+    { key: "style",      label: lang === "ru" ? "Стиль" : lang === "hy" ? "Ոճ" : "Style" },
+  ];
+
+  const isLoggedIn = typeof window !== "undefined" && !!localStorage.getItem("access_token");
+
+  const onSave = async () => {
+    if (!isLoggedIn) {
+      window.location.href = `/${lang}/login?next=/${lang}/newhomepage2nd`;
+      return;
+    }
+    if (saving) return;
+    setSaving(true);
+    try {
+      const token = localStorage.getItem("access_token");
+      const title = chatState.event_type
+        ? `${chatState.event_type.replace(/_/g, " ")}${chatState.recipient ? ` — ${chatState.recipient}` : ""}`
+        : (lang === "ru" ? "Новый план" : lang === "hy" ? "Նոր պլան" : "New plan");
+      const body = {
+        title,
+        event_type: chatState.event_type || null,
+        event_date: chatState.deadline || null,
+        guest_count: chatState.guest_count || null,
+        budget: chatState.budget || null,
+        currency: "AMD",
+        location: chatState.city || null,
+        event_data: { ...chatState, _messages: messages.slice(-30) },
+      };
+      const url = sessionId
+        ? `${API}/user/planner/sessions/${sessionId}`
+        : `${API}/user/planner/sessions`;
+      const method = sessionId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      const j = await res.json();
+      if (j?.success && j?.data?.id && !sessionId) setSessionId(j.data.id);
+      setSavedTick(true);
+      setTimeout(() => setSavedTick(false), 1800);
+    } catch (e) {
+      // silent fail
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 14,
+      padding: "12px 22px",
+      background: "rgba(255,255,255,.92)",
+      backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
+      borderBottom: "1px solid rgba(240,218,228,.6)",
+      flexShrink: 0, flexWrap: "wrap",
+    }}>
+      <div style={{ position: "relative" }}>
+        <div style={{
+          position: "absolute", inset: -6, borderRadius: "50%",
+          background: "radial-gradient(circle,rgba(225,29,92,.26) 0%,transparent 70%)",
+          animation: "halo 3s ease-in-out infinite",
+        }} />
+        <Avatar size={38} />
+      </div>
+      <div style={{ minWidth: 0 }}>
+        <p style={{
+          margin: 0, fontWeight: 700, fontSize: 19, color: "#1a0a14", letterSpacing: -0.2,
+          fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: "italic", lineHeight: 1,
+        }}>Sali</p>
+        <p style={{ margin: "1px 0 0", fontSize: 11.5, color: "#b09aa6", fontWeight: 500 }}>
+          {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI օգնական" : "AI Concierge"}
+        </p>
+      </div>
+
+      {/* Step progress */}
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: 14, flex: 1, minWidth: 240 }}>
+        {stepDefs.map((s, i) => {
+          const filled = !!chatState[s.key];
+          return (
+            <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 6, flex: 1, minWidth: 0 }}>
+              <div style={{
+                width: 22, height: 22, borderRadius: "50%",
+                background: filled ? PINK : "#fff",
+                border: `1.5px solid ${filled ? PINK : "#ebd5dd"}`,
+                color: filled ? "#fff" : "#c4a5b3",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontSize: 11, fontWeight: 700, flexShrink: 0,
+                transition: "all .25s",
+              }}>{filled ? <Icon name="check" size={12} /> : i + 1}</div>
+              {i < stepDefs.length - 1 && (
+                <div style={{
+                  flex: 1, height: 2, borderRadius: 2,
+                  background: filled ? PINK : "#f0e2e8",
+                  transition: "background .25s",
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* History link */}
+      <Link
+        href={`/${lang}/account/events`}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          padding: "7px 12px", borderRadius: 999,
+          background: "#fff", border: "1px solid #ebd5dd",
+          color: "#1a0a14", fontSize: 12.5, fontWeight: 600, textDecoration: "none",
+        }}
+        title={lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}
+      >
+        <Icon name="history" size={14} />
+        <span>{lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}</span>
+      </Link>
+
+      {/* Save plan */}
+      <button
+        type="button"
+        onClick={onSave}
+        disabled={saving}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 7,
+          padding: "8px 14px", borderRadius: 999,
+          background: savedTick ? "#16a34a" : `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
+          color: "#fff", border: "none", cursor: saving ? "default" : "pointer",
+          fontSize: 12.5, fontWeight: 700, letterSpacing: ".1px",
+          boxShadow: "0 6px 18px rgba(225,29,92,.28)",
+          opacity: saving ? .7 : 1, transition: "all .2s",
+        }}
+      >
+        <Icon name={savedTick ? "check" : "heart"} size={14} />
+        {savedTick
+          ? (lang === "ru" ? "Сохранено" : lang === "hy" ? "Պահպանված է" : "Saved")
+          : sessionId
+            ? (lang === "ru" ? "Обновить" : lang === "hy" ? "Թարմացնել" : "Update")
+            : (lang === "ru" ? "Сохранить" : lang === "hy" ? "Պահպանել" : "Save plan")}
+      </button>
     </div>
   );
 }
@@ -690,7 +1052,8 @@ function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
           }}
           onMouseEnter={e => { if (input.trim() && !typing) { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 10px 24px rgba(225,29,92,.44)"; } }}
           onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = input.trim() && !typing ? "0 6px 18px rgba(225,29,92,.34)" : "none"; }}
-        >↑</button>
+          aria-label="Send"
+        ><Icon name="send" size={16} /></button>
       </div>
     </div>
   );
@@ -704,6 +1067,7 @@ export default function AIAssistantV2Client({ lang }) {
   const [typing, setTyping] = useState(false);
   const [chatState, setChatState] = useState({});
   const [popup, setPopup] = useState(null);
+  const [sessionId, setSessionId] = useState(null);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const timersRef = useRef([]);
@@ -905,20 +1269,150 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-scroll-cue:hover{color:${PINK}}
 
         .v2-right{display:flex;align-items:center;justify-content:center}
-        .v2-visual{position:relative;width:100%;max-width:520px;aspect-ratio:1/1}
-        .v2-flower-shape{
-          position:absolute;inset:0;
-          clip-path:url(#flowerClip);
-          -webkit-clip-path:url(#flowerClip);
-          overflow:hidden;
-          filter:drop-shadow(0 30px 60px rgba(225,29,92,.18));
+
+        /* ── 3D glassy orb ── */
+        .v2-orb-stage{
+          position:relative;width:100%;max-width:480px;aspect-ratio:1/1;
         }
-        .float-emoji{
-          position:absolute;
-          animation:floatY 5s ease-in-out infinite;
-          filter:drop-shadow(0 4px 10px rgba(159,18,57,.2));
+        .v2-orb-halo{
+          position:absolute;inset:-10%;border-radius:50%;
+          background:
+            radial-gradient(circle at 30% 30%, rgba(255,228,236,.85) 0%, transparent 55%),
+            radial-gradient(circle at 70% 70%, rgba(214,228,255,.6) 0%, transparent 55%),
+            radial-gradient(circle at 50% 50%, rgba(255,213,229,.5) 0%, transparent 65%);
+          filter:blur(36px);
+          animation:v2-halo-spin 14s linear infinite;
         }
-        @keyframes floatY{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(3deg)}}
+        .v2-orb{
+          position:absolute;inset:18%;border-radius:50%;
+          animation:v2-orb-float 6s ease-in-out infinite;
+          filter:drop-shadow(0 30px 50px rgba(225,29,92,.22));
+        }
+        .v2-orb-core{
+          position:absolute;inset:0;border-radius:50%;
+          background:
+            radial-gradient(circle at 32% 26%, #fff 0%, rgba(255,255,255,0) 22%),
+            radial-gradient(circle at 30% 30%, #ffd9e6 0%, #f8a5c2 25%, #d56fa3 55%, #6b3a8a 100%),
+            linear-gradient(135deg, #ffd1e0 0%, #c0e8ff 50%, #e0d5ff 100%);
+          background-blend-mode:normal,screen,normal;
+          box-shadow:
+            inset 0 -22px 40px rgba(72,16,52,.45),
+            inset 18px -10px 50px rgba(255,170,210,.45),
+            inset -18px 8px 50px rgba(140,200,255,.5),
+            inset 0 18px 32px rgba(255,255,255,.55);
+        }
+        .v2-orb-glow{
+          position:absolute;inset:0;border-radius:50%;
+          background:radial-gradient(circle at 70% 80%, rgba(125,200,255,.7) 0%, transparent 35%);
+          mix-blend-mode:screen;opacity:.85;
+        }
+        .v2-orb-highlight{
+          position:absolute;top:8%;left:18%;width:35%;height:25%;
+          background:radial-gradient(ellipse, rgba(255,255,255,.95) 0%, rgba(255,255,255,0) 65%);
+          border-radius:50%;filter:blur(2px);transform:rotate(-22deg);
+        }
+        .v2-orb-rim{
+          position:absolute;inset:0;border-radius:50%;
+          box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+          background:
+            conic-gradient(from 200deg at 50% 50%,
+              rgba(255,255,255,0) 0deg,
+              rgba(255,180,210,.3) 60deg,
+              rgba(160,210,255,.4) 180deg,
+              rgba(220,180,255,.3) 270deg,
+              rgba(255,255,255,0) 360deg);
+          mix-blend-mode:screen;opacity:.75;animation:v2-orb-spin 18s linear infinite;
+        }
+        .v2-orb-reflection{
+          position:absolute;left:10%;right:10%;bottom:-2%;height:28%;
+          background:radial-gradient(ellipse at 50% 0%, rgba(225,150,190,.4) 0%, rgba(225,150,190,0) 60%);
+          filter:blur(8px);transform:scaleY(.55);opacity:.55;
+        }
+        .v2-orb-chip{
+          position:absolute;width:38px;height:38px;border-radius:14px;
+          background:rgba(255,255,255,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+          border:1px solid rgba(225,29,92,.15);
+          display:flex;align-items:center;justify-content:center;
+          color:${PINK};box-shadow:0 8px 18px rgba(225,29,92,.16);
+          animation:v2-orb-chip-float 5s ease-in-out infinite;
+          z-index:2;
+        }
+        @keyframes v2-orb-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+        @keyframes v2-orb-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+        @keyframes v2-halo-spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+        @keyframes v2-orb-chip-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+        /* ── Browse by Category ── */
+        .v2-browse{
+          max-width:1180px;margin:0 auto;padding:88px 32px 16px;
+        }
+        .v2-browse-head{
+          display:flex;align-items:flex-end;justify-content:space-between;
+          gap:24px;margin-bottom:28px;flex-wrap:wrap;
+        }
+        .v2-browse-eyebrow{
+          margin:0;font-size:12px;font-weight:700;letter-spacing:1.4px;
+          text-transform:uppercase;color:${PINK};
+        }
+        .v2-browse-headline{
+          margin:6px 0 0;font-family:'Cormorant Garamond',Georgia,serif;
+          font-size:clamp(32px,4vw,46px);font-style:italic;font-weight:700;
+          color:#1a0a14;letter-spacing:-1px;line-height:1.05;
+        }
+        .v2-browse-all{
+          display:inline-flex;align-items:center;
+          padding:10px 18px;border-radius:999px;
+          background:#fff;border:1px solid #f0e2e8;
+          color:#1a0a14;font-size:14px;font-weight:600;
+          text-decoration:none;transition:all .2s;
+        }
+        .v2-browse-all:hover{border-color:${PINK};color:${PINK};transform:translateY(-1px);box-shadow:0 8px 20px rgba(225,29,92,.15)}
+        .v2-cat-grid{
+          display:grid;grid-template-columns:repeat(6,1fr);gap:14px;
+        }
+        .v2-cat-card{
+          display:flex;flex-direction:column;text-decoration:none;
+          background:#fff;border:1px solid #f3e8ee;border-radius:18px;
+          overflow:hidden;transition:all .22s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-cat-card:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(225,29,92,.12);border-color:rgba(225,29,92,.25)}
+        .v2-cat-thumb{position:relative;aspect-ratio:1/1;background:linear-gradient(145deg,#fdf3f6,#fbe8ed)}
+        .v2-cat-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#d9bfca}
+        .v2-cat-meta{padding:11px 12px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+        .v2-cat-name{margin:0;font-size:13px;font-weight:600;color:#1a0a14;letter-spacing:-.1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        .v2-cat-count{margin:0;font-size:11.5px;color:#a08596;font-weight:600}
+
+        /* ── Trending Now ── */
+        .v2-trending{
+          max-width:1180px;margin:0 auto;padding:64px 32px 16px;
+        }
+        .v2-trending-head{margin-bottom:28px}
+        .v2-trend-tabs{display:inline-flex;gap:6px;margin-top:18px;padding:5px;background:#f8edf1;border-radius:999px}
+        .v2-trend-tab{
+          padding:8px 18px;border:none;background:transparent;border-radius:999px;
+          font-size:13.5px;font-weight:600;color:#7c5566;cursor:pointer;
+          font-family:inherit;transition:all .18s;
+        }
+        .v2-trend-tab:hover{color:${PINK}}
+        .v2-trend-tab.is-active{background:#fff;color:${PINK};box-shadow:0 2px 8px rgba(225,29,92,.18)}
+        .v2-trend-grid{
+          display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+        }
+        .v2-trend-card{
+          display:flex;flex-direction:column;text-decoration:none;
+          background:#fff;border:1px solid #f3e8ee;border-radius:18px;
+          overflow:hidden;transition:all .22s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-trend-card:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(225,29,92,.14);border-color:rgba(225,29,92,.25)}
+        .v2-trend-thumb{position:relative;aspect-ratio:4/5;background:linear-gradient(145deg,#fdf3f6,#fbe8ed)}
+        .v2-trend-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#dabfca}
+        .v2-trend-meta{padding:14px 14px 16px}
+        .v2-trend-name{margin:0;font-size:14px;font-weight:600;color:#1a0a14;line-height:1.4;
+          overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+        .v2-trend-price{margin:6px 0 0;font-size:14px;font-weight:800;color:${PINK};letter-spacing:-.2px}
+        .v2-trend-empty{text-align:center;color:#9b8390;padding:48px 0}
+        .v2-skeleton{aspect-ratio:4/5;background:linear-gradient(110deg,#fbeef3 30%,#fff5f8 50%,#fbeef3 70%);background-size:200% 100%;animation:v2-skel 1.4s ease-in-out infinite}
+        @keyframes v2-skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
         /* "How it works" section */
         .v2-how{
@@ -945,10 +1439,10 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-how-card:hover{border-color:rgba(225,29,92,.3);transform:translateY(-2px);box-shadow:0 14px 32px rgba(225,29,92,.1)}
         .v2-how-icon{
-          width:44px;height:44px;border-radius:14px;
+          width:48px;height:48px;border-radius:14px;
           background:linear-gradient(135deg,#fce7ef 0%,#fbcfe8 100%);
           display:flex;align-items:center;justify-content:center;
-          font-size:22px;margin-bottom:14px;
+          color:${PINK_DARK};margin-bottom:14px;
         }
         .v2-how-card-title{
           margin:0 0 6px;font-size:17px;font-weight:700;color:#1a0a14;letter-spacing:-.2px;
@@ -958,17 +1452,27 @@ export default function AIAssistantV2Client({ lang }) {
         }
 
         /* Mobile / tablet */
+        @media (max-width:1100px){
+          .v2-cat-grid{grid-template-columns:repeat(4,1fr)}
+          .v2-trend-grid{grid-template-columns:repeat(3,1fr)}
+        }
         @media (max-width:920px){
           .v2-landing-grid{grid-template-columns:1fr;gap:32px;padding:32px 22px;min-height:auto}
           .v2-right{order:-1}
-          .v2-visual{max-width:340px;margin:0 auto}
+          .v2-orb-stage{max-width:340px;margin:0 auto}
           .v2-headline{font-size:clamp(36px,9vw,52px)}
+          .v2-browse,.v2-trending{padding-left:22px;padding-right:22px}
+          .v2-cat-grid{grid-template-columns:repeat(3,1fr)}
+          .v2-trend-grid{grid-template-columns:repeat(2,1fr)}
           .v2-how{padding:56px 22px}
         }
         @media (max-width:520px){
           .v2-landing-grid{padding:24px 18px;gap:24px}
-          .v2-visual{max-width:280px}
+          .v2-orb-stage{max-width:280px}
           .v2-chat-card{padding:12px 12px 8px}
+          .v2-cat-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+          .v2-trend-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+          .v2-browse-headline{font-size:30px}
         }
       `}</style>
 
@@ -999,47 +1503,13 @@ export default function AIAssistantV2Client({ lang }) {
 
         {phase === "chat" && (
           <>
-            {/* Chat header */}
-            <div style={{
-              display: "flex", alignItems: "center", gap: 12,
-              padding: "14px 22px",
-              background: "rgba(255,255,255,.88)",
-              backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-              borderBottom: "1px solid rgba(240,218,228,.6)",
-              flexShrink: 0,
-            }}>
-              <div style={{ position: "relative" }}>
-                <div style={{
-                  position: "absolute", inset: -6, borderRadius: "50%",
-                  background: "radial-gradient(circle,rgba(225,29,92,.26) 0%,transparent 70%)",
-                  animation: "halo 3s ease-in-out infinite",
-                }} />
-                <Avatar size={40} />
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={{
-                  margin: 0, fontWeight: 700, fontSize: 20, color: "#1a0a14", letterSpacing: -0.2,
-                  fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: "italic", lineHeight: 1,
-                }}>Sali</p>
-                <p style={{ margin: "1px 0 0", fontSize: 11.5, color: "#b09aa6", fontWeight: 500 }}>
-                  {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI ogнakan" : "AI Concierge"}
-                </p>
-              </div>
-              <div style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "5px 12px", borderRadius: 20,
-                background: "rgba(34,197,94,.07)", border: "1px solid rgba(34,197,94,.18)",
-              }}>
-                <div style={{
-                  width: 7, height: 7, borderRadius: "50%", background: "#22c55e",
-                  boxShadow: "0 0 0 3px rgba(34,197,94,.18)",
-                  animation: "breathe 2.5s ease-in-out infinite",
-                }} />
-                <span style={{ fontSize: 11, color: "#16a34a", fontWeight: 600 }}>
-                  {tx(T.online, lang)}
-                </span>
-              </div>
-            </div>
+            <ChatHeader
+              lang={lang}
+              chatState={chatState}
+              messages={messages}
+              sessionId={sessionId}
+              setSessionId={setSessionId}
+            />
 
             <StateBar state={chatState} lang={lang} />
 
