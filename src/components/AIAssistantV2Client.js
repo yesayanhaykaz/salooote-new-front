@@ -6,51 +6,102 @@ import { useRouter } from "next/navigation";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
+const PINK_DARK = "#9f1239";
 
-// ─── i18n ─────────────────────────────────────────────────────────────────────
 const T = {
+  eyebrow: {
+    en: "AI CONCIERGE · SALOOOTE",
+    hy: "AI ՕԳՆԱԿԱՆ · SALOOOTE",
+    ru: "AI-КОНСЬЕРЖ · SALOOOTE",
+  },
   hero: {
-    en: "What are you planning?",
-    hy: "Ի՞նչ եք պlanavorel:",
-    ru: "Что вы планируете?",
+    en: ["Plan beautifully.", "Find effortlessly."],
+    hy: ["Պլանավորեք", "Գտեք հեշտությամբ."],
+    ru: ["Планируйте красиво.", "Находите легко."],
   },
   sub: {
-    en: "Tell Sali what you need — she'll find the best options.",
-    hy: "Asus Sali-in, nա kaogni dzez.",
-    ru: "Расскажите Sali — она подберёт лучшее.",
+    en: "Tell Sali what your moment needs — a cake, a venue, a photographer, or the whole celebration. She'll handpick the right options for you.",
+    hy: "Ասեք Sali-ին ի՞նչ է պետք ձեր տոնին — տորթ, սրահ, ֆոտոգրաֆ կամ ամբողջ տոնակատարությունը: Նա ընտրած կլինի լավագույն տարբերակները:",
+    ru: "Расскажите Sali, что нужно для вашего момента — торт, площадка, фотограф или вся вечеринка. Она подберёт лучшие варианты.",
   },
   placeholder: {
-    en: "Type anything — flowers, cake, a birthday gift...",
-    hy: "Цaghikner, tort, nver...",
-    ru: "Цветы, торт, подарок на день рождения...",
+    en: "Cake for my daughter's 7th birthday in Yerevan…",
+    hy: "Աղջկաս ծննդյան տորթ Երևանում…",
+    ru: "Торт на день рождения дочки в Ереване…",
   },
   chips: {
-    en: ["Flowers for her birthday", "Birthday cake", "Balloons", "Gift for my wife", "Photographer", "Plan a birthday party"],
-    hy: ["Ծaghikner tsnndin", "Tort tsnndinva", "Փuchikner", "Nver karinn", "Lragrechi", "Planavorel tsnndin"],
-    ru: ["Цветы на день рождения", "Торт", "Шары", "Подарок жене", "Фотограф", "Планировать праздник"],
+    en: [
+      { icon: "🎂", label: "Birthday cake" },
+      { icon: "💐", label: "Flower bouquet" },
+      { icon: "🎈", label: "Balloon decor" },
+      { icon: "🎁", label: "Gift for my wife" },
+      { icon: "📸", label: "Photographer" },
+      { icon: "✨", label: "Plan a birthday party" },
+    ],
+    hy: [
+      { icon: "🎂", label: "Ծննդյան տորթ" },
+      { icon: "💐", label: "Ծաղկեփունջ" },
+      { icon: "🎈", label: "Փուչիկներ" },
+      { icon: "🎁", label: "Նվեր կնոջս" },
+      { icon: "📸", label: "Ֆոտոգրաֆ" },
+      { icon: "✨", label: "Պլանավորել ծնունդ" },
+    ],
+    ru: [
+      { icon: "🎂", label: "Торт на день рождения" },
+      { icon: "💐", label: "Букет цветов" },
+      { icon: "🎈", label: "Шары и декор" },
+      { icon: "🎁", label: "Подарок жене" },
+      { icon: "📸", label: "Фотограф" },
+      { icon: "✨", label: "Планировать праздник" },
+    ],
+  },
+  trust: {
+    en: [
+      { num: "500+", label: "Local vendors" },
+      { num: "2,000+", label: "Curated products" },
+      { num: "24/7", label: "AI concierge" },
+    ],
+    hy: [
+      { num: "500+", label: "Մատակարարներ" },
+      { num: "2,000+", label: "Ընտրված ապրանք" },
+      { num: "24/7", label: "AI օգնական" },
+    ],
+    ru: [
+      { num: "500+", label: "Поставщиков" },
+      { num: "2,000+", label: "Товаров" },
+      { num: "24/7", label: "AI-помощь" },
+    ],
+  },
+  examples: {
+    en: "Try asking",
+    hy: "Փորձեք հարցնել",
+    ru: "Попробуйте спросить",
   },
   welcome: {
-    en: "Hi, I'm **Sali**.\n\nTell me what you're looking for — an occasion, a gift, or just something specific — and I'll find the right options for you.",
-    hy: "Barev, yes em **Sali**.\n\nAseq inch eq petq — knes, nver, tsaghik — yes kgnem hamaryal tarbernakner dzez hamар.",
-    ru: "Привет, я **Sali**.\n\nРасскажите что нужно — праздник, подарок, что-то конкретное — я подберу лучшие варианты.",
+    en: "Hi, I'm **Sali** ✨\n\nTell me what you're looking for — an occasion, a gift, or something specific — and I'll find the right options for you.",
+    hy: "Բարև, ես **Sali**-ն եմ ✨\n\nԱսեք ի՞նչ եք փնտրում — առիթ, նվեր կամ ինչ-որ կոնկրետ բան — ես ընտրած կլինեմ լավագույն տարբերակները:",
+    ru: "Привет, я **Sali** ✨\n\nРасскажите, что ищете — праздник, подарок или что-то конкретное — я подберу варианты.",
   },
-  planBtn: { en: "Plan this event →", hy: "Planavovel →", ru: "Планировать →" },
-  sendBtn: { en: "Go →", hy: "Ugharkel", ru: "Найти" },
-  saliKnows: { en: "Sali remembers:", hy: "Sali gitce:", ru: "Sali помнит:" },
+  planBtn: { en: "Plan this event →", hy: "Պլանավորել →", ru: "Планировать →" },
+  sendBtn: { en: "Ask Sali", hy: "Հարցնել", ru: "Спросить" },
+  saliKnows: { en: "Sali knows", hy: "Sali գիտի", ru: "Sali помнит" },
+  online: { en: "Online", hy: "Առցանց", ru: "Онлайн" },
+  viewProduct: { en: "View product →", hy: "Տեսնել →", ru: "Открыть →" },
+  viewStore: { en: "View store →", hy: "Տեսնել →", ru: "Открыть →" },
 };
 
-function tx(obj, lang) { return obj[lang] || obj.en; }
+const tx = (obj, lang) => obj[lang] || obj.en;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 function imgSrc(url) {
   if (!url) return null;
   if (url.startsWith("http")) return url;
   const base = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1").replace("/api/v1", "");
   return `${base}${url}`;
 }
-function fmt(p) { const n = parseFloat(p); return isNaN(n) ? "" : n.toLocaleString() + " ֏"; }
+const fmt = (p) => { const n = parseFloat(p); return isNaN(n) ? "" : n.toLocaleString() + " ֏"; };
+
 function BoldText({ text }) {
-  return <>{text.split(/\*\*(.*?)\*\*/g).map((s, i) => i % 2 === 1 ? <strong key={i}>{s}</strong> : s)}</>;
+  return <>{text.split(/\*\*(.*?)\*\*/g).map((s, i) => i % 2 === 1 ? <strong key={i} style={{ color: PINK_DARK }}>{s}</strong> : s)}</>;
 }
 function MsgText({ text }) {
   return (
@@ -62,19 +113,17 @@ function MsgText({ text }) {
   );
 }
 
-// ─── State bar ────────────────────────────────────────────────────────────────
 const EVENT_ICONS = {
   birthday: "🎂", kids_party: "🎈", wedding: "💍", corporate: "🏢",
   engagement: "💍", anniversary: "🥂", baby_shower: "🍼", christening: "⛪",
 };
+
 function StateBar({ state, lang }) {
   const pills = [];
-  if (state.event_type) {
-    pills.push({ icon: EVENT_ICONS[state.event_type] || "🎉", label: state.event_type.replace(/_/g, " ") });
-  }
+  if (state.event_type) pills.push({ icon: EVENT_ICONS[state.event_type] || "🎉", label: state.event_type.replace(/_/g, " ") });
   if (state.recipient) {
     let label = state.recipient;
-    if (state.age != null) label += ` (${state.age})`;
+    if (state.age != null) label += ` · ${state.age}`;
     pills.push({ icon: "👤", label });
   }
   if (state.deadline) pills.push({ icon: "⏰", label: state.deadline });
@@ -84,24 +133,27 @@ function StateBar({ state, lang }) {
 
   return (
     <div style={{
-      display: "flex", alignItems: "center", gap: 6, padding: "7px 16px",
-      borderBottom: "1px solid #f3e3ea", background: "#fdf5f8", flexWrap: "wrap",
-      minHeight: 38,
+      display: "flex", alignItems: "center", gap: 7, padding: "10px 18px",
+      borderBottom: "1px solid rgba(240,220,230,.6)",
+      background: "linear-gradient(90deg,rgba(255,241,245,.7) 0%,rgba(253,245,248,.5) 100%)",
+      flexWrap: "wrap", minHeight: 44,
+      backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
     }}>
       <span style={{
-        fontSize: 10, color: "#cca8b8", fontWeight: 700,
-        letterSpacing: 0.6, textTransform: "uppercase", flexShrink: 0,
+        fontSize: 10, color: "#b88da0", fontWeight: 700,
+        letterSpacing: 0.8, textTransform: "uppercase", flexShrink: 0,
       }}>
         {tx(T.saliKnows, lang)}
       </span>
       {pills.map((p, i) => (
         <div key={i} style={{
-          display: "flex", alignItems: "center", gap: 4,
-          padding: "3px 10px 3px 7px", borderRadius: 20,
-          background: "#fff", border: "1px solid #f0dce6",
-          fontSize: 11, color: "#5a1a2f", fontWeight: 500,
+          display: "flex", alignItems: "center", gap: 5,
+          padding: "4px 11px 4px 8px", borderRadius: 22,
+          background: "#fff", border: "1px solid rgba(240,220,230,.8)",
+          fontSize: 11.5, color: "#5a1a2f", fontWeight: 600,
+          boxShadow: "0 1px 3px rgba(225,29,92,.06)",
         }}>
-          <span style={{ fontSize: 12 }}>{p.icon}</span>
+          <span style={{ fontSize: 12.5 }}>{p.icon}</span>
           {p.label}
         </div>
       ))}
@@ -109,33 +161,55 @@ function StateBar({ state, lang }) {
   );
 }
 
-// ─── Avatar ───────────────────────────────────────────────────────────────────
 function Avatar({ size = 30 }) {
   return (
     <div style={{
       width: size, height: size, minWidth: size, borderRadius: "50%",
-      background: "radial-gradient(circle at 35% 30%, #fda4af, #e11d5c 70%)",
+      background: "radial-gradient(circle at 30% 25%, #ffd1dc 0%, #f43f5e 55%, #9f1239 100%)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: Math.round(size * 0.44), boxShadow: "0 2px 8px rgba(225,29,92,.25)",
+      fontSize: Math.round(size * 0.46), color: "#fff",
+      boxShadow: "0 2px 8px rgba(225,29,92,.28)",
     }}>✨</div>
   );
 }
 
-// ─── Typing dots ──────────────────────────────────────────────────────────────
+function HeroOrb() {
+  return (
+    <div style={{ position: "relative", width: 120, height: 120 }}>
+      <div style={{
+        position: "absolute", inset: -24, borderRadius: "50%",
+        background: "radial-gradient(circle,rgba(244,63,94,.35) 0%,transparent 65%)",
+        animation: "orbPulse 3s ease-in-out infinite", filter: "blur(8px)",
+      }} />
+      <div style={{
+        position: "absolute", inset: -12, borderRadius: "50%",
+        background: "radial-gradient(circle,rgba(225,29,92,.25) 0%,transparent 60%)",
+        animation: "orbPulse 3s ease-in-out infinite .5s",
+      }} />
+      <div style={{
+        position: "relative", width: 120, height: 120, borderRadius: "50%",
+        background: "radial-gradient(circle at 32% 28%, #ffd1dc 0%, #f43f5e 50%, #9f1239 100%)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        fontSize: 52, color: "#fff",
+        boxShadow: "0 24px 48px rgba(225,29,92,.4), inset 0 -8px 24px rgba(159,18,57,.4), inset 0 8px 24px rgba(255,255,255,.2)",
+      }}>✨</div>
+    </div>
+  );
+}
+
 function TypingDots() {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
       <Avatar />
       <div style={{
-        display: "flex", gap: 5, padding: "11px 14px",
-        background: "#fff", borderRadius: "4px 16px 16px 16px",
-        border: "1px solid #efefef", boxShadow: "0 1px 5px rgba(0,0,0,.05)",
+        display: "flex", gap: 5, padding: "12px 16px",
+        background: "#fff", borderRadius: "6px 18px 18px 18px",
+        border: "1px solid #f0eaec", boxShadow: "0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.04)",
       }}>
         {[0, 1, 2].map(i => (
           <span key={i} style={{
-            width: 6, height: 6, borderRadius: "50%", background: PINK,
-            display: "block",
-            animation: `v2dot 1.2s ease-in-out ${i * 0.2}s infinite`,
+            width: 6, height: 6, borderRadius: "50%", background: PINK, display: "block",
+            animation: `v2dot 1.2s ease-in-out ${i * 0.18}s infinite`,
           }} />
         ))}
       </div>
@@ -143,7 +217,6 @@ function TypingDots() {
   );
 }
 
-// ─── Product card ─────────────────────────────────────────────────────────────
 function ProductCard({ p, lang, onOpen }) {
   const img = imgSrc(p.thumbnail_url || p.images?.[0]?.url);
   const name = (lang !== "en" && p[`name_${lang}`]) || p.name || "Product";
@@ -154,32 +227,33 @@ function ProductCard({ p, lang, onOpen }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        flexShrink: 0, width: 148, borderRadius: 16, padding: 0,
+        flexShrink: 0, width: 152, borderRadius: 18, padding: 0,
         background: "#fff", cursor: "pointer", textAlign: "left",
-        overflow: "hidden",
-        border: `1.5px solid ${hover ? "#fbc9d8" : "#f0f0f0"}`,
-        boxShadow: hover ? "0 8px 24px rgba(225,29,92,.15)" : "0 2px 8px rgba(0,0,0,.06)",
-        transform: hover ? "translateY(-3px)" : "none",
-        transition: "all .2s ease",
+        overflow: "hidden", position: "relative",
+        border: `1px solid ${hover ? "#fbc9d8" : "#f0eaec"}`,
+        boxShadow: hover
+          ? "0 14px 30px rgba(225,29,92,.18), 0 2px 8px rgba(225,29,92,.08)"
+          : "0 1px 3px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.05)",
+        transform: hover ? "translateY(-4px)" : "none",
+        transition: "all .25s cubic-bezier(.2,.8,.2,1)",
       }}
     >
-      <div style={{ width: "100%", aspectRatio: "1/1", background: "#faf5f7", position: "relative", overflow: "hidden" }}>
+      <div style={{ width: "100%", aspectRatio: "1/1", background: "linear-gradient(135deg,#fdf2f5,#fbe7ed)", position: "relative", overflow: "hidden" }}>
         {img
-          ? <Image src={img} alt={name} fill style={{ objectFit: "cover" }} sizes="148px" />
-          : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 30, opacity: .28 }}>🎁</div>}
+          ? <Image src={img} alt={name} fill style={{ objectFit: "cover", transform: hover ? "scale(1.06)" : "none", transition: "transform .35s" }} sizes="152px" />
+          : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32, opacity: .3 }}>🎁</div>}
       </div>
-      <div style={{ padding: "9px 11px 11px" }}>
+      <div style={{ padding: "10px 12px 12px" }}>
         <p style={{
-          margin: 0, fontSize: 12, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.35,
+          margin: 0, fontSize: 12.5, fontWeight: 600, color: "#1a0a14", lineHeight: 1.35,
           overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
         }}>{name}</p>
-        {p.price > 0 && <p style={{ margin: "5px 0 0", fontSize: 13, fontWeight: 700, color: PINK }}>{fmt(p.price)}</p>}
+        {p.price > 0 && <p style={{ margin: "6px 0 0", fontSize: 13, fontWeight: 800, color: PINK, letterSpacing: -0.2 }}>{fmt(p.price)}</p>}
       </div>
     </button>
   );
 }
 
-// ─── Vendor card ──────────────────────────────────────────────────────────────
 function VendorCard({ v, onOpen }) {
   const banner = imgSrc(v.banner_url || v.logo_url);
   const logo = imgSrc(v.logo_url);
@@ -190,32 +264,36 @@ function VendorCard({ v, onOpen }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
-        flexShrink: 0, width: 170, borderRadius: 16, padding: 0,
-        background: "#fff", cursor: "pointer", textAlign: "left",
-        overflow: "hidden",
-        border: `1.5px solid ${hover ? "#fbc9d8" : "#f0f0f0"}`,
-        boxShadow: hover ? "0 8px 24px rgba(225,29,92,.15)" : "0 2px 8px rgba(0,0,0,.06)",
-        transform: hover ? "translateY(-3px)" : "none",
-        transition: "all .2s ease",
+        flexShrink: 0, width: 176, borderRadius: 18, padding: 0,
+        background: "#fff", cursor: "pointer", textAlign: "left", overflow: "hidden",
+        border: `1px solid ${hover ? "#fbc9d8" : "#f0eaec"}`,
+        boxShadow: hover
+          ? "0 14px 30px rgba(225,29,92,.18), 0 2px 8px rgba(225,29,92,.08)"
+          : "0 1px 3px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.05)",
+        transform: hover ? "translateY(-4px)" : "none",
+        transition: "all .25s cubic-bezier(.2,.8,.2,1)",
       }}
     >
-      <div style={{ width: "100%", height: 72, background: "linear-gradient(135deg,#fce7ef,#fff1f5)", position: "relative", overflow: "hidden" }}>
-        {banner && <Image src={banner} alt="" fill style={{ objectFit: "cover" }} sizes="170px" />}
+      <div style={{ width: "100%", height: 78, background: "linear-gradient(135deg,#fce7ef 0%,#fde8ec 60%,#fff1f5 100%)", position: "relative", overflow: "hidden" }}>
+        {banner && <Image src={banner} alt="" fill style={{ objectFit: "cover" }} sizes="176px" />}
         {logo && (
           <div style={{
-            position: "absolute", bottom: -13, left: 10, width: 30, height: 30,
-            borderRadius: "50%", border: "2.5px solid #fff", overflow: "hidden", background: "#fff",
+            position: "absolute", bottom: -14, left: 12, width: 32, height: 32,
+            borderRadius: "50%", border: "3px solid #fff", overflow: "hidden", background: "#fff",
+            boxShadow: "0 2px 8px rgba(0,0,0,.12)",
           }}>
-            <Image src={logo} alt="" fill style={{ objectFit: "cover" }} sizes="30px" />
+            <Image src={logo} alt="" fill style={{ objectFit: "cover" }} sizes="32px" />
           </div>
         )}
       </div>
-      <div style={{ padding: "18px 11px 12px" }}>
-        <p style={{ margin: 0, fontSize: 12, fontWeight: 700, color: "#1a1a1a" }}>{v.business_name || "Store"}</p>
-        {v.city && <p style={{ margin: "2px 0 0", fontSize: 10, color: "#b0b0b0" }}>📍 {v.city}</p>}
+      <div style={{ padding: "20px 12px 12px" }}>
+        <p style={{ margin: 0, fontSize: 12.5, fontWeight: 700, color: "#1a0a14", letterSpacing: -0.1 }}>
+          {v.business_name || "Store"}
+        </p>
+        {v.city && <p style={{ margin: "3px 0 0", fontSize: 11, color: "#aa97a0" }}>📍 {v.city}</p>}
         {v.short_bio && (
           <p style={{
-            margin: "5px 0 0", fontSize: 11, color: "#888", lineHeight: 1.35,
+            margin: "5px 0 0", fontSize: 11, color: "#7c6571", lineHeight: 1.4,
             overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
           }}>{v.short_bio}</p>
         )}
@@ -224,7 +302,6 @@ function VendorCard({ v, onOpen }) {
   );
 }
 
-// ─── Block (product/vendor row with title) ────────────────────────────────────
 function Block({ block, lang, onOpen }) {
   const items = block.data;
   if (!items || (Array.isArray(items) && !items.length)) return null;
@@ -232,14 +309,13 @@ function Block({ block, lang, onOpen }) {
     <div>
       {block.title && (
         <p style={{
-          margin: "0 0 8px 39px", fontSize: 10.5, fontWeight: 700,
-          color: "#c0a0b0", letterSpacing: 0.5, textTransform: "uppercase",
+          margin: "0 0 9px 40px", fontSize: 10.5, fontWeight: 700,
+          color: "#c0a0b0", letterSpacing: 0.7, textTransform: "uppercase",
         }}>{block.title}</p>
       )}
-      <div style={{
-        display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4,
-        paddingLeft: 39, paddingRight: 16,
-        scrollbarWidth: "none", msOverflowStyle: "none",
+      <div className="v2-cards" style={{
+        display: "flex", gap: 12, overflowX: "auto", paddingBottom: 4,
+        paddingLeft: 40, paddingRight: 16,
         overscrollBehaviorX: "contain", WebkitOverflowScrolling: "touch",
       }}>
         {block.type === "products" && items.map((p, i) => (
@@ -253,16 +329,17 @@ function Block({ block, lang, onOpen }) {
   );
 }
 
-// ─── Message bubble ───────────────────────────────────────────────────────────
 function MsgBubble({ msg, lang, onPlanEvent }) {
   if (msg.role === "user") {
     return (
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
         <div style={{
-          maxWidth: "72%", padding: "11px 15px", fontSize: 13.5, lineHeight: 1.65,
-          borderRadius: "18px 18px 4px 18px",
-          background: PINK, color: "#fff",
-          boxShadow: "0 3px 14px rgba(225,29,92,.25)",
+          maxWidth: "72%", padding: "12px 16px", fontSize: 13.5, lineHeight: 1.65,
+          borderRadius: "20px 20px 6px 20px",
+          background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
+          color: "#fff",
+          boxShadow: "0 4px 16px rgba(225,29,92,.28)",
+          letterSpacing: 0.1,
         }}>
           <MsgText text={msg.text} />
         </div>
@@ -273,13 +350,14 @@ function MsgBubble({ msg, lang, onPlanEvent }) {
   if (msg.role === "bot") {
     if (msg.type === "text") {
       return (
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 9 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", gap: 10 }}>
           <Avatar />
           <div style={{
-            maxWidth: "84%", padding: "11px 15px", fontSize: 13.5, lineHeight: 1.75,
-            borderRadius: "4px 18px 18px 18px",
-            background: "#fff", color: "#1c1c1c",
-            border: "1px solid #efefef", boxShadow: "0 1px 5px rgba(0,0,0,.05)",
+            maxWidth: "84%", padding: "12px 16px", fontSize: 13.5, lineHeight: 1.75,
+            borderRadius: "6px 20px 20px 20px",
+            background: "#fff", color: "#1a0a14",
+            border: "1px solid #f0eaec", boxShadow: "0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.04)",
+            letterSpacing: 0.1,
           }}>
             <MsgText text={msg.text} />
           </div>
@@ -288,16 +366,19 @@ function MsgBubble({ msg, lang, onPlanEvent }) {
     }
     if (msg.type === "plan") {
       return (
-        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Avatar />
           <button
             onClick={() => onPlanEvent(msg.event_type)}
             style={{
-              padding: "12px 24px", borderRadius: 14, border: "none",
-              background: `linear-gradient(135deg,${PINK},#f43f5e)`,
-              color: "#fff", fontWeight: 700, fontSize: 14,
-              cursor: "pointer", boxShadow: "0 4px 16px rgba(225,29,92,.3)",
+              padding: "13px 26px", borderRadius: 16, border: "none",
+              background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
+              color: "#fff", fontWeight: 700, fontSize: 14, letterSpacing: 0.1,
+              cursor: "pointer", boxShadow: "0 8px 22px rgba(225,29,92,.34)",
+              transition: "transform .15s, box-shadow .15s",
             }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 10px 26px rgba(225,29,92,.42)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 8px 22px rgba(225,29,92,.34)"; }}
           >
             {tx(T.planBtn, lang)}
           </button>
@@ -308,7 +389,6 @@ function MsgBubble({ msg, lang, onPlanEvent }) {
   return null;
 }
 
-// ─── Popup ────────────────────────────────────────────────────────────────────
 function Popup({ item, type, lang, onClose }) {
   const [idx, setIdx] = useState(0);
   const imgs = [];
@@ -338,68 +418,68 @@ function Popup({ item, type, lang, onClose }) {
   return (
     <div onClick={onClose} style={{
       position: "fixed", inset: 0, zIndex: 9999,
-      background: "rgba(0,0,0,.65)", backdropFilter: "blur(8px)",
+      background: "rgba(20,5,12,.65)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
       display: "flex", alignItems: "center", justifyContent: "center", padding: 20,
+      animation: "v2fade .2s ease",
     }}>
       <div onClick={e => e.stopPropagation()} style={{
-        background: "#fff", borderRadius: 22, overflow: "hidden",
-        maxWidth: 460, width: "100%", maxHeight: "88vh",
+        background: "#fff", borderRadius: 24, overflow: "hidden",
+        maxWidth: 480, width: "100%", maxHeight: "88vh",
         display: "flex", flexDirection: "column",
-        boxShadow: "0 24px 64px rgba(0,0,0,.3)",
+        boxShadow: "0 32px 80px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.05)",
+        animation: "v2pop .3s cubic-bezier(.2,.8,.2,1)",
       }}>
         <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", background: "#f3f4f6", flexShrink: 0 }}>
           {imgs[idx]
-            ? <Image src={imgs[idx]} alt={name} fill style={{ objectFit: "cover" }} sizes="460px" />
-            : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 56, opacity: .2 }}>🎁</div>}
+            ? <Image src={imgs[idx]} alt={name} fill style={{ objectFit: "cover" }} sizes="480px" />
+            : <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 60, opacity: .25 }}>🎁</div>}
           <button onClick={onClose} style={{
-            position: "absolute", top: 12, right: 12, width: 32, height: 32, borderRadius: "50%",
-            background: "rgba(0,0,0,.4)", border: "none", color: "#fff", fontSize: 15,
+            position: "absolute", top: 14, right: 14, width: 36, height: 36, borderRadius: "50%",
+            background: "rgba(0,0,0,.45)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 16,
             cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
           }}>✕</button>
           {imgs.length > 1 && (
-            <div style={{ position: "absolute", bottom: 10, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5 }}>
+            <div style={{ position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 5 }}>
               {imgs.map((_, i) => (
                 <button key={i} onClick={() => setIdx(i)} style={{
-                  width: i === idx ? 18 : 7, height: 7, borderRadius: 4, border: "none",
-                  cursor: "pointer",
-                  background: i === idx ? "#fff" : "rgba(255,255,255,.45)",
-                  transition: "width .2s",
+                  width: i === idx ? 20 : 7, height: 7, borderRadius: 4, border: "none",
+                  cursor: "pointer", background: i === idx ? "#fff" : "rgba(255,255,255,.5)", transition: "width .2s",
                 }} />
               ))}
             </div>
           )}
         </div>
-        <div style={{ padding: "20px 24px 24px", overflowY: "auto" }}>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#111" }}>{name}</h2>
+        <div style={{ padding: "22px 26px 26px", overflowY: "auto" }}>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: "#1a0a14", letterSpacing: -0.5 }}>{name}</h2>
           {type === "product" && item.price > 0 && (
-            <p style={{ margin: "6px 0 0", fontSize: 18, fontWeight: 700, color: PINK }}>{fmt(item.price)}</p>
+            <p style={{ margin: "8px 0 0", fontSize: 20, fontWeight: 800, color: PINK, letterSpacing: -0.3 }}>{fmt(item.price)}</p>
           )}
           {type === "vendor" && item.city && (
-            <p style={{ margin: "6px 0 0", fontSize: 13, color: "#aaa" }}>📍 {item.city}</p>
+            <p style={{ margin: "8px 0 0", fontSize: 13, color: "#9b8390" }}>📍 {item.city}</p>
           )}
           {desc && (
-            <p style={{ margin: "14px 0 0", fontSize: 13, color: "#555", lineHeight: 1.7 }}>
+            <p style={{ margin: "14px 0 0", fontSize: 14, color: "#5a4452", lineHeight: 1.7 }}>
               {desc.slice(0, 280)}{desc.length > 280 ? "…" : ""}
             </p>
           )}
           {type === "product" && item.tags?.length > 0 && (
-            <div style={{ marginTop: 12, display: "flex", flexWrap: "wrap", gap: 5 }}>
+            <div style={{ marginTop: 14, display: "flex", flexWrap: "wrap", gap: 6 }}>
               {item.tags.slice(0, 5).map((tag, i) => (
                 <span key={i} style={{
-                  padding: "3px 11px", borderRadius: 20, fontSize: 11,
-                  background: "#fce7ef", color: PINK, fontWeight: 500,
+                  padding: "4px 12px", borderRadius: 20, fontSize: 11.5,
+                  background: "#fce7ef", color: PINK, fontWeight: 600, letterSpacing: 0.1,
                 }}>{tag}</span>
               ))}
             </div>
           )}
           <Link href={href} style={{
-            display: "block", marginTop: 20, padding: "13px", borderRadius: 14,
-            background: PINK, color: "#fff", textAlign: "center",
-            fontWeight: 700, fontSize: 14, textDecoration: "none",
+            display: "block", marginTop: 22, padding: "14px", borderRadius: 14,
+            background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
+            color: "#fff", textAlign: "center", fontWeight: 700, fontSize: 14.5,
+            textDecoration: "none", letterSpacing: 0.1,
+            boxShadow: "0 8px 20px rgba(225,29,92,.32)",
           }}>
-            {type === "product"
-              ? (lang === "hy" ? "Бacal" : lang === "ru" ? "Открыть →" : "View product →")
-              : (lang === "hy" ? "Бacal" : lang === "ru" ? "Открыть →" : "View store →")}
+            {type === "product" ? tx(T.viewProduct, lang) : tx(T.viewStore, lang)}
           </Link>
         </div>
       </div>
@@ -407,155 +487,233 @@ function Popup({ item, type, lang, onClose }) {
   );
 }
 
-// ─── Landing phase ────────────────────────────────────────────────────────────
 function Landing({ lang, onSend, input, setInput, inputRef }) {
   const chips = tx(T.chips, lang);
+  const [heroLine1, heroLine2] = tx(T.hero, lang);
+  const trust = tx(T.trust, lang);
   return (
     <div style={{
+      flex: 1, overflowY: "auto", overflowX: "hidden",
       display: "flex", flexDirection: "column", alignItems: "center",
-      justifyContent: "center", flex: 1,
-      padding: "40px 24px 100px", textAlign: "center",
+      padding: "32px 20px 48px",
+      position: "relative",
     }}>
-      {/* Sali identity */}
-      <div style={{ marginBottom: 28, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+      {/* Decorative orbs */}
+      <div style={{ position: "absolute", top: 40, right: -120, width: 360, height: 360, borderRadius: "50%", background: "radial-gradient(circle,rgba(244,63,94,.18) 0%,transparent 70%)", pointerEvents: "none", filter: "blur(20px)" }} />
+      <div style={{ position: "absolute", top: 200, left: -150, width: 380, height: 380, borderRadius: "50%", background: "radial-gradient(circle,rgba(251,201,216,.45) 0%,transparent 70%)", pointerEvents: "none", filter: "blur(24px)" }} />
+      <div style={{ position: "absolute", bottom: 100, right: 40, width: 200, height: 200, borderRadius: "50%", background: "radial-gradient(circle,rgba(253,164,175,.25) 0%,transparent 70%)", pointerEvents: "none", filter: "blur(16px)" }} />
+
+      <div style={{
+        position: "relative", zIndex: 1, width: "100%", maxWidth: 660,
+        display: "flex", flexDirection: "column", alignItems: "center",
+      }}>
+        {/* Eyebrow */}
         <div style={{
-          width: 76, height: 76, borderRadius: "50%",
-          background: "radial-gradient(circle at 35% 30%, #fda4af, #e11d5c 70%)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 34, boxShadow: "0 10px 32px rgba(225,29,92,.28)",
-        }}>✨</div>
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: PINK, letterSpacing: 2, textTransform: "uppercase" }}>SALI</div>
-          <div style={{ fontSize: 11, color: "#c0a8b5", marginTop: 2 }}>Salooote.am</div>
+          display: "inline-flex", alignItems: "center", gap: 8,
+          padding: "6px 14px", borderRadius: 100,
+          background: "rgba(255,255,255,.7)", backdropFilter: "blur(12px)",
+          border: "1px solid rgba(225,29,92,.15)",
+          boxShadow: "0 2px 12px rgba(225,29,92,.06)",
+          marginBottom: 28,
+        }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: "50%", background: "#22c55e",
+            boxShadow: "0 0 0 3px rgba(34,197,94,.2)",
+          }} />
+          <span style={{
+            fontSize: 10.5, fontWeight: 800, color: PINK_DARK,
+            letterSpacing: 1.2, fontFamily: "system-ui",
+          }}>
+            {tx(T.eyebrow, lang)}
+          </span>
+        </div>
+
+        {/* Hero orb */}
+        <div style={{ marginBottom: 28 }}><HeroOrb /></div>
+
+        {/* Hero text */}
+        <h1 style={{
+          margin: "0 0 18px",
+          fontSize: "clamp(34px, 7vw, 60px)",
+          fontWeight: 800, lineHeight: 1.04,
+          letterSpacing: -1.5,
+          textAlign: "center", maxWidth: 600,
+          background: "linear-gradient(135deg,#1a0a14 0%,#5a1a2f 100%)",
+          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}>
+          {heroLine1}
+          <br />
+          <span style={{
+            background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 60%,#fb7185 100%)`,
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}>{heroLine2}</span>
+        </h1>
+
+        <p style={{
+          margin: "0 0 36px", fontSize: 16, color: "#6b4654",
+          lineHeight: 1.6, maxWidth: 480, textAlign: "center", letterSpacing: 0.1,
+        }}>
+          {tx(T.sub, lang)}
+        </p>
+
+        {/* Input */}
+        <div className="v2-input-wrap" style={{
+          display: "flex", width: "100%", maxWidth: 580,
+          background: "#fff", border: "1.5px solid rgba(240,220,230,.9)",
+          borderRadius: 22, overflow: "hidden",
+          boxShadow: "0 12px 40px rgba(225,29,92,.1), 0 2px 8px rgba(0,0,0,.04)",
+          transition: "all .25s",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", paddingLeft: 18, color: PINK, fontSize: 18 }}>✨</div>
+          <input
+            ref={inputRef}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSend(); } }}
+            placeholder={tx(T.placeholder, lang)}
+            style={{
+              flex: 1, border: "none", outline: "none",
+              padding: "18px 14px", fontSize: 15,
+              color: "#1a0a14", background: "transparent",
+              fontFamily: "inherit", letterSpacing: 0.1,
+            }}
+          />
+          <button
+            onClick={() => onSend()}
+            style={{
+              margin: 7, padding: "12px 22px", borderRadius: 16,
+              border: "none",
+              background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
+              color: "#fff", fontWeight: 700, fontSize: 14,
+              cursor: "pointer", letterSpacing: 0.1,
+              boxShadow: "0 6px 18px rgba(225,29,92,.35)",
+              whiteSpace: "nowrap", transition: "all .15s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 8px 22px rgba(225,29,92,.45)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "0 6px 18px rgba(225,29,92,.35)"; }}
+          >
+            {tx(T.sendBtn, lang)} →
+          </button>
+        </div>
+
+        {/* Examples */}
+        <p style={{
+          margin: "26px 0 12px", fontSize: 11, color: "#a08596",
+          fontWeight: 700, letterSpacing: 1, textTransform: "uppercase",
+        }}>
+          {tx(T.examples, lang)}
+        </p>
+        <div style={{
+          display: "flex", flexWrap: "wrap", gap: 8,
+          justifyContent: "center", maxWidth: 600,
+        }}>
+          {chips.map((chip, i) => (
+            <button
+              key={i}
+              className="v2-chip"
+              onClick={() => onSend(chip.label)}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                padding: "9px 16px", borderRadius: 24,
+                border: "1px solid rgba(240,220,230,.9)",
+                background: "rgba(255,255,255,.85)",
+                backdropFilter: "blur(8px)",
+                color: "#3a1825", fontSize: 13, fontWeight: 500,
+                cursor: "pointer", letterSpacing: 0.1,
+                boxShadow: "0 1px 3px rgba(225,29,92,.04)",
+                transition: "all .18s ease",
+              }}
+            >
+              <span style={{ fontSize: 14 }}>{chip.icon}</span>
+              {chip.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Trust strip */}
+        <div style={{
+          marginTop: 48, display: "flex", gap: 32,
+          padding: "20px 28px", borderRadius: 20,
+          background: "rgba(255,255,255,.65)", backdropFilter: "blur(16px)",
+          border: "1px solid rgba(240,220,230,.6)",
+          boxShadow: "0 4px 24px rgba(225,29,92,.06)",
+          flexWrap: "wrap", justifyContent: "center",
+        }}>
+          {trust.map((t, i) => (
+            <div key={i} style={{ textAlign: "center" }}>
+              <div style={{
+                fontSize: 22, fontWeight: 800, letterSpacing: -0.5,
+                background: `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`,
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}>{t.num}</div>
+              <div style={{ fontSize: 11.5, color: "#6b4654", marginTop: 2, fontWeight: 500, letterSpacing: 0.2 }}>{t.label}</div>
+            </div>
+          ))}
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Hero text */}
-      <h1 style={{
-        margin: "0 0 12px",
-        fontSize: "clamp(26px, 5.5vw, 44px)",
-        fontWeight: 800, color: "#1a0a0f", lineHeight: 1.12,
-        letterSpacing: -0.8, maxWidth: 500,
+function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
+  return (
+    <div style={{
+      padding: "12px 18px 18px",
+      background: "rgba(255,255,255,.85)",
+      backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+      borderTop: "1px solid rgba(240,220,230,.5)",
+      flexShrink: 0,
+    }}>
+      <div className="v2-input-bar" style={{
+        display: "flex", alignItems: "flex-end", gap: 8,
+        border: "1.5px solid #f0dce6", borderRadius: 18,
+        padding: 5, background: "#fff",
+        transition: "all .2s",
       }}>
-        {tx(T.hero, lang)}
-      </h1>
-      <p style={{ margin: "0 0 36px", fontSize: 15, color: "#9e7080", maxWidth: 380 }}>
-        {tx(T.sub, lang)}
-      </p>
-
-      {/* Input */}
-      <div style={{
-        display: "flex", width: "100%", maxWidth: 560,
-        background: "#fff", border: "2px solid #f0dce6",
-        borderRadius: 20, overflow: "hidden",
-        boxShadow: "0 6px 28px rgba(225,29,92,.1)",
-      }}>
-        <input
+        <textarea
           ref={inputRef}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSend(); } }}
+          onInput={e => {
+            e.target.style.height = "auto";
+            e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+          }}
           placeholder={tx(T.placeholder, lang)}
+          rows={1}
           style={{
-            flex: 1, border: "none", outline: "none",
-            padding: "16px 18px", fontSize: 14,
-            color: "#1a0a0f", background: "transparent",
-            fontFamily: "inherit",
+            flex: 1, border: "none", outline: "none", background: "transparent",
+            padding: "10px 12px", fontSize: 14, color: "#1a0a14",
+            resize: "none", lineHeight: 1.5, fontFamily: "inherit",
+            maxHeight: 120, overflowY: "auto",
           }}
         />
         <button
           onClick={() => onSend()}
+          disabled={!input.trim() || typing}
           style={{
-            margin: 7, padding: "10px 22px", borderRadius: 14,
-            border: "none", background: PINK, color: "#fff",
-            fontWeight: 700, fontSize: 14, cursor: "pointer",
-            boxShadow: "0 2px 10px rgba(225,29,92,.3)", whiteSpace: "nowrap",
+            width: 42, height: 42, borderRadius: 14, border: "none",
+            background: input.trim() && !typing
+              ? `linear-gradient(135deg,${PINK} 0%,#f43f5e 100%)`
+              : "#f5e6ed",
+            color: input.trim() && !typing ? "#fff" : "#cca8b8",
+            fontSize: 18, cursor: input.trim() && !typing ? "pointer" : "default",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: input.trim() && !typing ? "0 4px 14px rgba(225,29,92,.32)" : "none",
+            transition: "all .18s", flexShrink: 0,
           }}
-        >
-          {tx(T.sendBtn, lang)}
-        </button>
-      </div>
-
-      {/* Quick chips */}
-      <div style={{
-        display: "flex", flexWrap: "wrap", gap: 8,
-        justifyContent: "center", marginTop: 22, maxWidth: 580,
-      }}>
-        {chips.map((chip, i) => (
-          <button
-            key={i}
-            onClick={() => onSend(chip)}
-            style={{
-              padding: "8px 16px", borderRadius: 20,
-              border: "1.5px solid #f0dce6", background: "#fdf5f8",
-              color: "#7a2540", fontSize: 13, fontWeight: 500, cursor: "pointer",
-              transition: "all .15s",
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = PINK;
-              e.currentTarget.style.color = "#fff";
-              e.currentTarget.style.borderColor = PINK;
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = "#fdf5f8";
-              e.currentTarget.style.color = "#7a2540";
-              e.currentTarget.style.borderColor = "#f0dce6";
-            }}
-          >
-            {chip}
-          </button>
-        ))}
+        >↑</button>
       </div>
     </div>
   );
 }
 
-// ─── Chat input bar ───────────────────────────────────────────────────────────
-function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
-  return (
-    <div style={{
-      padding: "12px 16px", borderTop: "1px solid #f3e3ea",
-      background: "#fff", display: "flex", gap: 10, alignItems: "flex-end",
-    }}>
-      <textarea
-        ref={inputRef}
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); onSend(); } }}
-        onInput={e => {
-          e.target.style.height = "auto";
-          e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-        }}
-        placeholder={tx(T.placeholder, lang)}
-        rows={1}
-        style={{
-          flex: 1, border: "1.5px solid #f0dce6", borderRadius: 14,
-          padding: "10px 14px", fontSize: 13.5, color: "#1a0a0f",
-          outline: "none", resize: "none", lineHeight: 1.5,
-          fontFamily: "inherit", background: "#fdf8fa",
-          maxHeight: 120, overflowY: "auto",
-        }}
-      />
-      <button
-        onClick={() => onSend()}
-        disabled={!input.trim() || typing}
-        style={{
-          width: 44, height: 44, borderRadius: 13, border: "none",
-          background: input.trim() && !typing ? PINK : "#f0dce6",
-          color: input.trim() && !typing ? "#fff" : "#cca8b8",
-          fontSize: 20, cursor: input.trim() && !typing ? "pointer" : "default",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          transition: "all .15s", flexShrink: 0,
-        }}
-      >↑</button>
-    </div>
-  );
-}
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
 export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
-  const [phase, setPhase] = useState("landing"); // "landing" | "chat"
+  const [phase, setPhase] = useState("landing");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
@@ -571,7 +729,6 @@ export default function AIAssistantV2Client({ lang }) {
 
   useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
 
-  // Sequential reveal with typing dots between items
   const revealItems = useCallback((items) => {
     if (!items.length) return;
     const DELAY = 750;
@@ -594,11 +751,9 @@ export default function AIAssistantV2Client({ lang }) {
     timersRef.current = [];
     setTyping(false);
 
-    // Transition to chat on first send
     const isFirstMessage = phase === "landing";
     if (isFirstMessage) setPhase("chat");
 
-    // Welcome message on first turn
     const welcomeEntry = isFirstMessage
       ? [{ id: "w", role: "bot", type: "text", text: tx(T.welcome, lang) }]
       : [];
@@ -609,7 +764,6 @@ export default function AIAssistantV2Client({ lang }) {
     setInput("");
     setTyping(true);
 
-    // History for API: only text messages
     const allMsgs = [...messages, ...welcomeEntry, userEntry];
     const history = allMsgs
       .filter(m => (m.role === "user" || (m.role === "bot" && m.type === "text")) && m.id !== "w")
@@ -626,7 +780,6 @@ export default function AIAssistantV2Client({ lang }) {
       const d = json?.data || {};
       setTyping(false);
 
-      // Update conversation state
       if (d.state) setChatState(d.state);
 
       const base = Date.now() + 1;
@@ -636,13 +789,11 @@ export default function AIAssistantV2Client({ lang }) {
         if (d.message) seq.push({ id: base, role: "bot", type: "text", text: d.message });
         seq.push({ id: base + 1, role: "bot", type: "plan", event_type: d.event_type });
       } else {
-        // Show blocks first (products/vendors appear while user reads context)
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) {
             seq.push({ id: base + i, role: "bot", type: "block", block });
           }
         });
-        // Message comes after blocks
         if (d.message) {
           seq.push({ id: base + 100, role: "bot", type: "text", text: d.message });
         }
@@ -668,23 +819,29 @@ export default function AIAssistantV2Client({ lang }) {
   return (
     <>
       <style>{`
-        @keyframes v2dot {
-          0%, 80%, 100% { transform: translateY(0); opacity: .35; }
-          40% { transform: translateY(-5px); opacity: 1; }
-        }
-        .v2-scroll::-webkit-scrollbar { display: none; }
-        .v2-cards::-webkit-scrollbar { display: none; }
+        @keyframes v2dot{0%,80%,100%{transform:translateY(0);opacity:.35}40%{transform:translateY(-5px);opacity:1}}
+        @keyframes orbPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:.3}}
+        @keyframes v2fade{from{opacity:0}to{opacity:1}}
+        @keyframes v2pop{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+        @keyframes v2In{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+        .v2-scroll::-webkit-scrollbar{width:4px}
+        .v2-scroll::-webkit-scrollbar-thumb{background:#f0dde4;border-radius:4px}
+        .v2-cards::-webkit-scrollbar{height:3px}
+        .v2-cards::-webkit-scrollbar-thumb{background:#f5dde4;border-radius:3px}
+        .v2-input-wrap:focus-within{border-color:${PINK}!important;box-shadow:0 12px 40px rgba(225,29,92,.18),0 0 0 5px rgba(225,29,92,.08)!important}
+        .v2-input-bar:focus-within{border-color:${PINK}!important;box-shadow:0 0 0 4px rgba(225,29,92,.08),0 4px 16px rgba(225,29,92,.1)!important}
+        .v2-chip:hover{background:#fff!important;border-color:${PINK}!important;color:${PINK}!important;transform:translateY(-1px);box-shadow:0 6px 16px rgba(225,29,92,.18)!important}
+        .v2-msg{animation:v2In .25s cubic-bezier(.2,.8,.2,1)}
       `}</style>
 
       <div style={{
         height: "calc(100vh - 65px)",
         display: "flex", flexDirection: "column",
-        background: "#fdf8fa",
+        background: "linear-gradient(180deg,#fffaf8 0%,#fdf2f5 50%,#fbe7ed 100%)",
         fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif",
-        position: "relative",
+        position: "relative", overflow: "hidden",
       }}>
 
-        {/* ── LANDING ── */}
         {phase === "landing" && (
           <Landing
             lang={lang}
@@ -695,41 +852,64 @@ export default function AIAssistantV2Client({ lang }) {
           />
         )}
 
-        {/* ── CHAT ── */}
         {phase === "chat" && (
           <>
-            {/* State context bar */}
+            {/* Refined chat header */}
+            <div style={{
+              display: "flex", alignItems: "center", gap: 12,
+              padding: "14px 22px",
+              background: "rgba(255,255,255,.85)",
+              backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+              borderBottom: "1px solid rgba(240,220,230,.5)",
+              flexShrink: 0,
+            }}>
+              <Avatar size={38} />
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <p style={{ margin: 0, fontWeight: 800, fontSize: 16, color: "#1a0a14", letterSpacing: -0.3 }}>Sali</p>
+                <p style={{ margin: 0, fontSize: 11.5, color: "#a08596", fontWeight: 500 }}>
+                  {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI օգնական" : "AI Concierge"}
+                </p>
+              </div>
+              <div style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "5px 11px", borderRadius: 20,
+                background: "rgba(34,197,94,.08)", border: "1px solid rgba(34,197,94,.2)",
+              }}>
+                <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 0 3px rgba(34,197,94,.2)" }} />
+                <span style={{ fontSize: 11, color: "#16a34a", fontWeight: 600 }}>
+                  {tx(T.online, lang)}
+                </span>
+              </div>
+            </div>
+
             <StateBar state={chatState} lang={lang} />
 
-            {/* Messages scroll area */}
             <div
               ref={scrollRef}
               className="v2-scroll"
               style={{
                 flex: 1, overflowY: "auto",
-                padding: "20px 16px",
+                padding: "22px 16px",
                 display: "flex", flexDirection: "column", gap: 14,
               }}
             >
               {messages.map(msg => {
                 if (msg.type === "block") {
                   return (
-                    <Block key={msg.id} block={msg.block} lang={lang} onOpen={openPopup} />
+                    <div key={msg.id} className="v2-msg">
+                      <Block block={msg.block} lang={lang} onOpen={openPopup} />
+                    </div>
                   );
                 }
                 return (
-                  <MsgBubble
-                    key={msg.id}
-                    msg={msg}
-                    lang={lang}
-                    onPlanEvent={handlePlanEvent}
-                  />
+                  <div key={msg.id} className="v2-msg">
+                    <MsgBubble msg={msg} lang={lang} onPlanEvent={handlePlanEvent} />
+                  </div>
                 );
               })}
-              {typing && <TypingDots />}
+              {typing && <div className="v2-msg"><TypingDots /></div>}
             </div>
 
-            {/* Input */}
             <ChatInput
               lang={lang}
               input={input}
@@ -742,7 +922,6 @@ export default function AIAssistantV2Client({ lang }) {
         )}
       </div>
 
-      {/* Detail popup */}
       {popup && (
         <Popup
           item={popup.item}
