@@ -3,6 +3,7 @@ import { SavedProvider } from "@/lib/saved-context";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
+import FloatingAILauncher from "@/components/FloatingAILauncher";
 import { DictionaryProvider } from "@/lib/DictionaryContext";
 import { getDictionary, LOCALES } from "@/lib/getDictionary";
 import { OrganizationJsonLd, WebsiteJsonLd } from "@/components/JsonLd";
@@ -77,6 +78,7 @@ export default async function LangLayout({ children, params }) {
           <Header lang={lang} dict={dict} />
           <main className="min-h-screen pb-16 md:pb-0">{children}</main>
           <Footer lang={lang} dict={dict} />
+          <FloatingAILauncher />
           <OrganizationJsonLd />
           <WebsiteJsonLd lang={lang} />
         </SavedProvider>

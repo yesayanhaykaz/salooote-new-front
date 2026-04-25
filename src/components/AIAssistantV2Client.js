@@ -305,6 +305,57 @@ function StateBar({ state, lang }) {
   );
 }
 
+// ── Happy Sali mascot — friendly robot with party hat ──────────────
+function BotMascot({ size = 44 }) {
+  return (
+    <svg
+      width={size} height={size} viewBox="0 0 64 64" fill="none"
+      xmlns="http://www.w3.org/2000/svg" aria-hidden
+    >
+      <defs>
+        <linearGradient id="bm-body" x1="16" y1="20" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#fff7fa" />
+          <stop offset="1" stopColor="#ffe1ec" />
+        </linearGradient>
+        <linearGradient id="bm-hat" x1="36" y1="6" x2="50" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#f43f5e" />
+          <stop offset="1" stopColor="#9f1239" />
+        </linearGradient>
+        <linearGradient id="bm-screen" x1="20" y1="28" x2="44" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#1a0a14" />
+          <stop offset="1" stopColor="#3a1424" />
+        </linearGradient>
+      </defs>
+      {/* Soft cheek glow */}
+      <circle cx="20" cy="46" r="3.6" fill="#ffd5e2" opacity=".9" />
+      <circle cx="44" cy="46" r="3.6" fill="#ffd5e2" opacity=".9" />
+      {/* Head body */}
+      <path
+        d="M16 28c0-6.6 5.4-12 12-12h8c6.6 0 12 5.4 12 12v14c0 4.4-3.6 8-8 8H24c-4.4 0-8-3.6-8-8V28Z"
+        fill="url(#bm-body)" stroke="#1a0a14" strokeWidth="2.2" strokeLinejoin="round"
+      />
+      {/* Ears */}
+      <rect x="10" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
+      <rect x="48" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
+      {/* Antenna dot */}
+      <circle cx="32" cy="13" r="2.4" fill="#e11d5c" />
+      {/* Screen face */}
+      <rect x="20" y="28" width="24" height="14" rx="6" fill="url(#bm-screen)" />
+      {/* Eyes — happy curves */}
+      <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#7be0a6" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#7be0a6" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      {/* Smile */}
+      <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#1a0a14" strokeWidth="2" strokeLinecap="round" fill="none" />
+      {/* Party hat */}
+      <path d="M30 16 L40 16 L37 4 Z" fill="url(#bm-hat)" stroke="#1a0a14" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M31 12 L39 12" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M30.5 9 L38.5 9" stroke="#ffd5e2" strokeWidth="1.2" strokeLinecap="round" opacity=".9" />
+      {/* Hat star */}
+      <path d="M37 3.5 L37.7 5.3 L39.6 5.3 L38.1 6.4 L38.7 8.3 L37 7.1 L35.3 8.3 L35.9 6.4 L34.4 5.3 L36.3 5.3 Z" fill="#ffd5e2" />
+    </svg>
+  );
+}
+
 function Avatar({ size = 30 }) {
   return (
     <div className="v2-avatar" style={{ width: size, height: size, minWidth: size }}>
@@ -1040,7 +1091,7 @@ function PlanAnyOccasion({ lang }) {
 }
 
 // ── Chat header — slim, ChatGPT-style ──────────────────────────────
-function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose }) {
+function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose, sidebarCollapsed }) {
   const stepDefs = [
     { key: "event_type", label: lang === "ru" ? "Тип" : lang === "hy" ? "Տեսակ" : "Type" },
     { key: "deadline",   label: lang === "ru" ? "Дата" : lang === "hy" ? "Ամսաթիվ" : "Date" },
@@ -1052,10 +1103,10 @@ function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose }) {
 
   return (
     <div className="v2-chat-head">
-      {/* Sidebar toggle (mobile) */}
+      {/* Sidebar toggle — visible always when sidebar is hidden, otherwise only mobile */}
       <button
         type="button"
-        className="v2-head-icon-btn v2-sidebar-toggle"
+        className={`v2-head-icon-btn v2-sidebar-toggle ${sidebarCollapsed ? "is-always" : ""}`}
         onClick={onToggleSidebar}
         aria-label={lang === "ru" ? "История" : lang === "hy" ? "Պատմություն" : "History"}
       >
@@ -1063,14 +1114,17 @@ function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose }) {
       </button>
 
       <div className="v2-head-brand">
-        <div className="v2-head-avatar">
-          <span className="v2-head-halo" />
-          <Avatar size={34} />
+        <div className="v2-head-mascot">
+          <BotMascot size={42} />
         </div>
         <div className="v2-head-titles">
-          <p className="v2-head-name">Sali</p>
+          <p className="v2-head-name">
+            Sali <span className="v2-head-spark"><Icon name="sparkle" size={11} /></span>
+          </p>
           <p className="v2-head-role">
-            {lang === "ru" ? "AI-консьерж" : lang === "hy" ? "AI օգնական" : "AI Concierge"}
+            {lang === "ru" ? "Ваш помощник по событиям"
+              : lang === "hy" ? "Ձեր տոնի օգնականը"
+              : "Your party planner"}
           </p>
         </div>
       </div>
@@ -1120,7 +1174,7 @@ function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose }) {
 }
 
 // ── Sidebar — ChatGPT-style history list ──────────────────────────
-function ChatSidebar({ lang, history, currentId, onPick, onNew, onDelete, open, onClose }) {
+function ChatSidebar({ lang, history, currentId, onPick, onNew, onDelete, open, onClose, onCollapse, collapsed }) {
   const fmtTime = (ts) => {
     if (!ts) return "";
     const d = new Date(ts);
@@ -1130,6 +1184,10 @@ function ChatSidebar({ lang, history, currentId, onPick, onNew, onDelete, open, 
     return d.toLocaleDateString(lang, { day: "numeric", month: "short" });
   };
 
+  if (collapsed) {
+    // Sidebar fully hidden on desktop — only the scrim+slide-in on mobile triggered by toggle
+    return null;
+  }
   return (
     <>
       <aside className={`v2-sidebar ${open ? "is-open" : ""}`}>
@@ -1137,6 +1195,15 @@ function ChatSidebar({ lang, history, currentId, onPick, onNew, onDelete, open, 
           <button type="button" onClick={onNew} className="v2-sidebar-new">
             <Icon name="plus" size={15} />
             {lang === "ru" ? "Новый чат" : lang === "hy" ? "Նոր չատ" : "New chat"}
+          </button>
+          <button
+            type="button"
+            onClick={onCollapse}
+            className="v2-sidebar-collapse"
+            aria-label={lang === "ru" ? "Скрыть" : lang === "hy" ? "Թաքցնել" : "Hide"}
+            title={lang === "ru" ? "Скрыть боковую панель" : lang === "hy" ? "Թաքցնել" : "Hide sidebar"}
+          >
+            <Icon name="arrowRight" size={15} style={{ transform: "rotate(180deg)" }} />
           </button>
           <button type="button" onClick={onClose} className="v2-sidebar-close" aria-label="Close menu">
             <Icon name="x" size={15} />
@@ -1257,6 +1324,7 @@ export default function AIAssistantV2Client({ lang }) {
   const [sessionId, setSessionId] = useState(null);
   const [history, setHistory] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
@@ -1285,8 +1353,34 @@ export default function AIAssistantV2Client({ lang }) {
           }
         }
       }
+      const sb = localStorage.getItem("salooote_v2_sidebar_collapsed");
+      if (sb === "1") setSidebarCollapsed(true);
     } catch {}
     setHydrated(true);
+  }, []);
+
+  // Auto-open chat if URL has ?continue=1 (from global launcher) or custom event
+  useEffect(() => {
+    if (!hydrated) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("continue") === "1" && messages.length > 0) {
+      setPhase("chat");
+      // Clean URL
+      const url = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, "", url);
+    }
+    const onOpen = () => setPhase("chat");
+    window.addEventListener("salooote:openChat", onOpen);
+    return () => window.removeEventListener("salooote:openChat", onOpen);
+  }, [hydrated, messages.length]);
+
+  const toggleSidebarCollapsed = useCallback(() => {
+    setSidebarCollapsed(c => {
+      const next = !c;
+      try { localStorage.setItem("salooote_v2_sidebar_collapsed", next ? "1" : "0"); } catch {}
+      return next;
+    });
   }, []);
 
   // Lock body scroll while chat overlay is open
@@ -1965,11 +2059,15 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-overlay{
           position:fixed;inset:0;z-index:9999;
           display:grid;grid-template-columns:280px 1fr;
-          background:linear-gradient(180deg,#fffcfb 0%,#fdf6f8 40%,#fceaef 100%);
-          background-image:radial-gradient(circle, rgba(225,29,92,.04) 1px, transparent 1px);
-          background-size:28px 28px;
+          background-color:#fff;
+          background-image:
+            radial-gradient(circle, rgba(225,29,92,.05) 1px, transparent 1px),
+            linear-gradient(180deg,#fffcfb 0%,#fdf6f8 40%,#fceaef 100%);
+          background-size:28px 28px, 100% 100%;
+          background-repeat:repeat, no-repeat;
           animation:v2fade .25s ease;
         }
+        .v2-overlay.is-collapsed{grid-template-columns:0 1fr}
         .v2-overlay-main{
           position:relative;display:flex;flex-direction:column;min-width:0;
           height:100vh;overflow:hidden;
@@ -2003,6 +2101,12 @@ export default function AIAssistantV2Client({ lang }) {
           display:none;width:36px;height:36px;border-radius:12px;border:1px solid rgba(240,218,228,.9);
           background:#fff;color:#1a0a14;cursor:pointer;align-items:center;justify-content:center;
         }
+        .v2-sidebar-collapse{
+          display:inline-flex;width:36px;height:36px;border-radius:12px;
+          border:1px solid rgba(240,218,228,.9);background:#fff;color:#1a0a14;
+          cursor:pointer;align-items:center;justify-content:center;transition:all .15s;
+        }
+        .v2-sidebar-collapse:hover{border-color:${PINK};color:${PINK}}
         .v2-sidebar-label{
           padding:14px 16px 8px;font-size:11px;font-weight:800;
           color:#b09aa6;letter-spacing:1.2px;text-transform:uppercase;
@@ -2058,16 +2162,23 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-head-icon-btn:hover{border-color:${PINK};color:${PINK}}
         .v2-sidebar-toggle{display:none}
-        .v2-head-brand{display:flex;align-items:center;gap:10px;min-width:0}
-        .v2-head-avatar{position:relative;display:flex;align-items:center;justify-content:center}
-        .v2-head-halo{
-          position:absolute;inset:-6px;border-radius:50%;
-          background:radial-gradient(circle,rgba(225,29,92,.28) 0%,transparent 70%);
-          animation:halo 3s ease-in-out infinite;
+        .v2-sidebar-toggle.is-always{display:inline-flex}
+        .v2-head-brand{display:flex;align-items:center;gap:11px;min-width:0}
+        .v2-head-mascot{
+          position:relative;display:flex;align-items:center;justify-content:center;
+          width:46px;height:46px;border-radius:14px;flex-shrink:0;
+          background:linear-gradient(135deg,#fff 0%,#ffeef4 100%);
+          box-shadow:0 6px 18px rgba(225,29,92,.18),inset 0 0 0 1px rgba(225,29,92,.1);
+          animation:v2-mascot-bob 3.6s ease-in-out infinite;
         }
+        @keyframes v2-mascot-bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-2px) rotate(-2deg)}}
         .v2-head-titles p{margin:0}
-        .v2-head-name{font-weight:800;font-size:16px;color:#1a0a14;letter-spacing:-.4px;line-height:1.1}
-        .v2-head-role{font-size:11.5px;color:#b09aa6;font-weight:500;margin-top:1px!important}
+        .v2-head-name{
+          font-weight:800;font-size:17px;color:#1a0a14;letter-spacing:-.4px;line-height:1.1;
+          display:inline-flex;align-items:center;gap:5px;
+        }
+        .v2-head-spark{color:${PINK};display:inline-flex;animation:v2-spark 2.4s ease-in-out infinite}
+        .v2-head-role{font-size:11.5px;color:${PINK_DARK};font-weight:600;margin-top:2px!important;letter-spacing:.1px}
         .v2-head-steps{display:flex;align-items:center;gap:6px;flex:1;min-width:0;margin:0 8px}
         .v2-head-step{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
         .v2-head-dot{
@@ -2185,7 +2296,7 @@ export default function AIAssistantV2Client({ lang }) {
 
       {/* Fullscreen chat overlay — covers site header/footer */}
       {phase === "chat" && (
-        <div lang={lang} className="v2-overlay">
+        <div lang={lang} className={`v2-overlay ${sidebarCollapsed ? "is-collapsed" : ""}`}>
           <ChatSidebar
             lang={lang}
             history={history}
@@ -2195,15 +2306,18 @@ export default function AIAssistantV2Client({ lang }) {
             onDelete={handleDeleteHistory}
             open={sidebarOpen}
             onClose={() => setSidebarOpen(false)}
+            onCollapse={toggleSidebarCollapsed}
+            collapsed={sidebarCollapsed}
           />
 
           <div className="v2-overlay-main">
             <ChatHeader
               lang={lang}
               chatState={chatState}
-              onToggleSidebar={() => setSidebarOpen(s => !s)}
+              onToggleSidebar={() => sidebarCollapsed ? toggleSidebarCollapsed() : setSidebarOpen(s => !s)}
               onNewChat={handleNewChat}
               onClose={() => setPhase("landing")}
+              sidebarCollapsed={sidebarCollapsed}
             />
 
             <StateBar state={chatState} lang={lang} />
