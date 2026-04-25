@@ -621,7 +621,7 @@ function Popup({ item, type, lang, onClose }) {
     ? ((lang !== "en" && item[`short_description_${lang}`]) || item.short_description || item.description?.replace(/<[^>]+>/g, "") || "")
     : (item.short_bio || item.description?.replace(/<[^>]+>/g, "") || "");
   const href = type === "product"
-    ? `/${lang}/product/${item.slug || item.id}`
+    ? `/${lang}/product/${item.id}`
     : `/${lang}/vendor/${item.slug || item.id}`;
 
   useEffect(() => {
@@ -1924,7 +1924,7 @@ export default function AIAssistantV2Client({ lang }) {
 
         /* ── Popup (gift / vendor detail) ── */
         .v2-pop-back{
-          position:fixed;inset:0;z-index:1000;
+          position:fixed;inset:0;z-index:10001;
           background:rgba(20,5,12,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
           display:flex;align-items:center;justify-content:center;
           padding:16px;animation:v2fade .22s ease;

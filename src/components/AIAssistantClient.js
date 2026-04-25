@@ -58,15 +58,45 @@ function MsgText({ text }) {
 function Avatar({ size = 32, glow = false }) {
   return (
     <div style={{
-      width: size, height: size, minWidth: size, borderRadius: "50%",
-      background: "radial-gradient(circle at 30% 25%, #ffd1dc 0%, #f43f5e 55%, #9f1239 100%)",
+      width: size, height: size, minWidth: size, borderRadius: 14,
+      background: "linear-gradient(135deg,#fff 0%,#ffeef4 100%)",
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: Math.round(size * 0.44), color: "#fff",
       boxShadow: glow
         ? "0 0 0 3px rgba(255,255,255,.9), 0 0 0 5px rgba(225,29,92,.2), 0 8px 24px rgba(225,29,92,.32)"
-        : "0 2px 10px rgba(225,29,92,.3)",
-      flexShrink: 0,
-    }}>✨</div>
+        : "inset 0 0 0 1px rgba(225,29,92,.15), 0 4px 12px rgba(225,29,92,.18)",
+      flexShrink: 0, padding: 2,
+    }}>
+      <svg width={size - 4} height={size - 4} viewBox="0 0 64 64" fill="none" aria-hidden>
+        <defs>
+          <linearGradient id={`av1-body-${size}`} x1="16" y1="20" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#fff7fa" />
+            <stop offset="1" stopColor="#ffe1ec" />
+          </linearGradient>
+          <linearGradient id={`av1-hat-${size}`} x1="36" y1="6" x2="50" y2="22" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#f43f5e" />
+            <stop offset="1" stopColor="#9f1239" />
+          </linearGradient>
+          <linearGradient id={`av1-screen-${size}`} x1="20" y1="28" x2="44" y2="42" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#1a0a14" />
+            <stop offset="1" stopColor="#3a1424" />
+          </linearGradient>
+        </defs>
+        <circle cx="20" cy="46" r="3.6" fill="#ffd5e2" opacity=".9" />
+        <circle cx="44" cy="46" r="3.6" fill="#ffd5e2" opacity=".9" />
+        <path d="M16 28c0-6.6 5.4-12 12-12h8c6.6 0 12 5.4 12 12v14c0 4.4-3.6 8-8 8H24c-4.4 0-8-3.6-8-8V28Z"
+          fill={`url(#av1-body-${size})`} stroke="#1a0a14" strokeWidth="2.2" strokeLinejoin="round" />
+        <rect x="10" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
+        <rect x="48" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
+        <circle cx="32" cy="13" r="2.4" fill="#e11d5c" />
+        <rect x="20" y="28" width="24" height="14" rx="6" fill={`url(#av1-screen-${size})`} />
+        <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+        <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+        <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#e11d5c" strokeWidth="2" strokeLinecap="round" fill="none" />
+        <path d="M30 16 L40 16 L37 4 Z" fill={`url(#av1-hat-${size})`} stroke="#1a0a14" strokeWidth="2" strokeLinejoin="round" />
+        <path d="M31 12 L39 12" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M37 3.5 L37.7 5.3 L39.6 5.3 L38.1 6.4 L38.7 8.3 L37 7.1 L35.3 8.3 L35.9 6.4 L34.4 5.3 L36.3 5.3 Z" fill="#ffd5e2" />
+      </svg>
+    </div>
   );
 }
 
