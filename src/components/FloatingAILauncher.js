@@ -31,9 +31,9 @@ function MascotIcon({ size = 32 }) {
       <rect x="48" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
       <circle cx="32" cy="13" r="2.4" fill="#e11d5c" />
       <rect x="20" y="28" width="24" height="14" rx="6" fill="url(#fl-screen)" />
-      <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#7be0a6" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-      <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#7be0a6" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-      <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#1a0a14" strokeWidth="2" strokeLinecap="round" fill="none" />
+      <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#e11d5c" strokeWidth="2" strokeLinecap="round" fill="none" />
       <path d="M30 16 L40 16 L37 4 Z" fill="url(#fl-hat)" stroke="#1a0a14" strokeWidth="2" strokeLinejoin="round" />
       <path d="M31 12 L39 12" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
       <path d="M37 3.5 L37.7 5.3 L39.6 5.3 L38.1 6.4 L38.7 8.3 L37 7.1 L35.3 8.3 L35.9 6.4 L34.4 5.3 L36.3 5.3 Z" fill="#ffd5e2" />

@@ -193,6 +193,7 @@ const ICON_PATHS = {
   flame:    <><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-5 0 2 1 3 2 3 0-3 0-5 2-8z"/></>,
   plus:     <><path d="M12 5v14"/><path d="M5 12h14"/></>,
   cart:     <><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></>,
+  minimize: <><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="m4 20 6-6"/><path d="m20 4-6 6"/></>,
 };
 function Icon({ name, size = 18, className = "", style }) {
   const path = ICON_PATHS[name] || ICON_PATHS.sparkle;
@@ -341,11 +342,11 @@ function BotMascot({ size = 44 }) {
       <circle cx="32" cy="13" r="2.4" fill="#e11d5c" />
       {/* Screen face */}
       <rect x="20" y="28" width="24" height="14" rx="6" fill="url(#bm-screen)" />
-      {/* Eyes — happy curves */}
-      <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#7be0a6" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-      <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#7be0a6" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-      {/* Smile */}
-      <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#1a0a14" strokeWidth="2" strokeLinecap="round" fill="none" />
+      {/* Eyes — happy curves in brand pink */}
+      <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      {/* Smile in brand pink */}
+      <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#e11d5c" strokeWidth="2" strokeLinecap="round" fill="none" />
       {/* Party hat */}
       <path d="M30 16 L40 16 L37 4 Z" fill="url(#bm-hat)" stroke="#1a0a14" strokeWidth="2" strokeLinejoin="round" />
       <path d="M31 12 L39 12" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
@@ -1162,11 +1163,11 @@ function ChatHeader({ lang, chatState, onToggleSidebar, onNewChat, onClose, side
         <button
           type="button"
           onClick={onClose}
-          aria-label={lang === "ru" ? "Закрыть" : lang === "hy" ? "Փակել" : "Close"}
+          aria-label={lang === "ru" ? "Свернуть" : lang === "hy" ? "Թաքցնել" : "Minimize"}
           title={lang === "ru" ? "Свернуть" : lang === "hy" ? "Թաքցնել" : "Minimize"}
           className="v2-head-close"
         >
-          <Icon name="x" size={15} />
+          <Icon name="minimize" size={15} />
         </button>
       )}
     </div>
@@ -2067,7 +2068,7 @@ export default function AIAssistantV2Client({ lang }) {
           background-repeat:repeat, no-repeat;
           animation:v2fade .25s ease;
         }
-        .v2-overlay.is-collapsed{grid-template-columns:0 1fr}
+        .v2-overlay.is-collapsed{grid-template-columns:1fr}
         .v2-overlay-main{
           position:relative;display:flex;flex-direction:column;min-width:0;
           height:100vh;overflow:hidden;
