@@ -15,14 +15,14 @@ export async function generateMetadata({ params }) {
       description: "Learn about Salooote's 30-day return policy, eligible items, and refund timeline.",
       url: `https://salooote.am/${lang}/returns`,
       siteName: "Salooote.am",
-      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "Return Policy — Salooote",
       description: "Learn about Salooote's 30-day return policy, eligible items, and refund timeline.",
-      images: ["/og-default.jpg"],
+      images: ["/images/hero-dj.jpg"],
     },
   };
 }

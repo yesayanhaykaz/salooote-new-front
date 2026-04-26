@@ -24,14 +24,14 @@ export async function generateMetadata({ params }) {
       description: dict.contactPage?.subtitle || "Get in touch with the Salooote team.",
       url: `https://salooote.am/${lang}/contact`,
       siteName: "Salooote.am",
-      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: `${dict.contactPage?.title || "Contact Us"} — Salooote.am`,
       description: dict.contactPage?.subtitle || "Get in touch with the Salooote team.",
-      images: ["/og-default.jpg"],
+      images: ["/images/hero-dj.jpg"],
     },
   };
 }

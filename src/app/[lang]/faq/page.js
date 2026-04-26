@@ -18,14 +18,14 @@ export async function generateMetadata({ params }) {
       description: "Find answers to the most common questions about Salooote — orders, payments, vendors, and more.",
       url: `https://salooote.am/${lang}/faq`,
       siteName: "Salooote.am",
-      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "Frequently Asked Questions — Salooote.am",
       description: "Find answers to the most common questions about Salooote — orders, payments, vendors, and more.",
-      images: ["/og-default.jpg"],
+      images: ["/images/hero-dj.jpg"],
     },
   };
 }

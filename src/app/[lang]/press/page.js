@@ -16,14 +16,14 @@ export async function generateMetadata({ params }) {
       description: "Press kit, media coverage, and brand assets for Salooote.",
       url: `https://salooote.am/${lang}/press`,
       siteName: "Salooote.am",
-      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "Press & Media — Salooote",
       description: "Press kit, media coverage, and brand assets for Salooote.",
-      images: ["/og-default.jpg"],
+      images: ["/images/hero-dj.jpg"],
     },
   };
 }

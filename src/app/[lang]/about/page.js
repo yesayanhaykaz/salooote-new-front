@@ -18,14 +18,14 @@ export async function generateMetadata({ params }) {
       description: "Learn how Salooote was founded to make event planning in Armenia effortless.",
       url: `https://salooote.am/${lang}/about`,
       siteName: "Salooote.am",
-      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title: "Our Story — Salooote.am",
       description: "Learn how Salooote was founded to make event planning in Armenia effortless.",
-      images: ["/og-default.jpg"],
+      images: ["/images/hero-dj.jpg"],
     },
   };
 }
