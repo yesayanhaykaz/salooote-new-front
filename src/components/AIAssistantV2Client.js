@@ -1459,14 +1459,14 @@ function ChatSidebar({ lang, history, currentId, onPick, onNew, onDelete, open, 
 
 function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
   return (
-    <div style={{
-      padding: "12px 18px 18px",
-      background: "rgba(255,255,255,.9)",
+    <div className="v2-input-wrap" style={{
+      padding: "12px 18px max(18px, env(safe-area-inset-bottom))",
+      background: "rgba(255,255,255,.92)",
       backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
       borderTop: "1px solid rgba(240,218,228,.5)",
       flexShrink: 0,
     }}>
-      <div className="v2-input-bar" style={{
+      <div className="v2-overlay-foot-inner v2-input-bar" style={{
         display: "flex", alignItems: "flex-end", gap: 8,
         border: "1.5px solid rgba(240,218,228,.9)", borderRadius: 20,
         padding: "5px 6px 5px 6px", background: "#fff",
@@ -2517,7 +2517,7 @@ export default function AIAssistantV2Client({ lang }) {
         /* ── Fullscreen chat overlay ── */
         .v2-overlay{
           position:fixed;inset:0;z-index:9999;
-          display:grid;grid-template-columns:280px 1fr;
+          display:grid;grid-template-columns:300px 1fr;
           background-color:#fff;
           background-image:
             radial-gradient(circle, rgba(225,29,92,.05) 1px, transparent 1px),
@@ -2529,11 +2529,20 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-overlay.is-collapsed{grid-template-columns:1fr}
         .v2-overlay-main{
           position:relative;display:flex;flex-direction:column;min-width:0;
-          height:100vh;overflow:hidden;
+          height:100vh;height:100dvh;overflow:hidden;
         }
         .v2-overlay-scroll{
-          flex:1;overflow-y:auto;padding:24px 16px 18px;
+          flex:1;overflow-y:auto;
+          padding:28px 24px 22px;
+          display:flex;flex-direction:column;
+        }
+        /* Centered conversation column for readability on big screens */
+        .v2-overlay-inner{
+          width:100%;max-width:780px;margin:0 auto;
           display:flex;flex-direction:column;gap:14px;
+        }
+        .v2-overlay-foot-inner{
+          width:100%;max-width:780px;margin:0 auto;
         }
 
         /* ── Sidebar ── */
@@ -2541,7 +2550,7 @@ export default function AIAssistantV2Client({ lang }) {
           display:flex;flex-direction:column;
           background:rgba(255,253,254,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
           border-right:1px solid rgba(240,218,228,.6);
-          height:100vh;overflow:hidden;
+          height:100vh;height:100dvh;overflow:hidden;
         }
         .v2-sidebar-top{
           display:flex;align-items:center;gap:8px;padding:14px 14px 10px;
@@ -2609,10 +2618,11 @@ export default function AIAssistantV2Client({ lang }) {
         /* ── Chat header (overlay) ── */
         .v2-chat-head{
           display:flex;align-items:center;gap:12px;
-          padding:12px 18px;background:rgba(255,255,255,.94);
+          padding:14px 22px;background:rgba(255,255,255,.94);
           backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
           border-bottom:1px solid rgba(240,218,228,.6);
           flex-shrink:0;
+          padding-top:max(14px, env(safe-area-inset-top));
         }
         .v2-head-icon-btn{
           width:36px;height:36px;border-radius:12px;border:1px solid rgba(240,218,228,.9);
@@ -2667,7 +2677,7 @@ export default function AIAssistantV2Client({ lang }) {
 
         /* ── Reopen-chat floating pill ── */
         .v2-reopen{
-          position:fixed;right:22px;bottom:22px;z-index:90;
+          position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:90;
           display:inline-flex;align-items:center;gap:10px;
           padding:8px 18px 8px 8px;border-radius:999px;border:none;
           background:#fff;cursor:pointer;
@@ -2688,7 +2698,7 @@ export default function AIAssistantV2Client({ lang }) {
         @keyframes v2-reopen-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:0;transform:scale(1.25)}}
 
         .v2-reopen-mini{
-          position:fixed;right:22px;bottom:22px;z-index:90;
+          position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:90;
           width:60px;height:60px;border-radius:50%;border:none;
           background:linear-gradient(135deg,#fff 0%,#ffeef4 100%);
           cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -2714,6 +2724,24 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-moments-grid{grid-template-columns:repeat(2,1fr)}
           .v2-moment-feature{grid-column:span 2;grid-row:auto;aspect-ratio:16/10}
         }
+        /* Big screens — give the conversation room to breathe */
+        @media (min-width:1280px){
+          .v2-overlay-scroll{padding:36px 32px 24px}
+          .v2-overlay-inner{max-width:820px;gap:16px}
+          .v2-chat-head{padding:16px 28px}
+        }
+        @media (min-width:1600px){
+          .v2-overlay-inner{max-width:880px}
+        }
+
+        /* Mobile / tablet */
+        @media (max-width:1100px){
+          .v2-occ-grid{grid-template-columns:repeat(3,1fr)}
+          .v2-cat-grid{grid-template-columns:repeat(4,1fr)}
+          .v2-trend-grid{grid-template-columns:repeat(3,1fr)}
+          .v2-moments-grid{grid-template-columns:repeat(2,1fr)}
+          .v2-moment-feature{grid-column:span 2;grid-row:auto;aspect-ratio:16/10}
+        }
         @media (max-width:920px){
           .v2-landing-grid{grid-template-columns:1fr;gap:32px;padding:32px 22px;min-height:auto}
           .v2-right{order:-1}
@@ -2729,12 +2757,13 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-hero2-search-btn-label{display:none}
           .v2-hero2-search-btn{padding:11px 14px}
           .v2-moments-head{flex-direction:column;align-items:flex-start;gap:8px}
-          .v2-reopen{right:14px;bottom:78px;padding:6px 14px 6px 6px;font-size:13px}
+          .v2-reopen{right:14px;bottom:calc(78px + env(safe-area-inset-bottom));padding:6px 14px 6px 6px;font-size:13px}
           .v2-reopen-label{display:none}
-          .v2-reopen-mini{right:14px;bottom:78px;width:54px;height:54px}
+          .v2-reopen-mini{right:14px;bottom:calc(78px + env(safe-area-inset-bottom));width:54px;height:54px}
 
           /* Sidebar becomes slide-in panel */
           .v2-overlay{grid-template-columns:1fr}
+          .v2-overlay-scroll{padding:18px 14px 14px}
           .v2-sidebar{
             position:fixed;left:0;top:0;bottom:0;width:84%;max-width:320px;
             transform:translateX(-100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);
@@ -2748,6 +2777,10 @@ export default function AIAssistantV2Client({ lang }) {
           }
           .v2-sidebar-toggle{display:inline-flex}
           .v2-head-steps{display:none}
+          .v2-chat-head{padding:12px 16px;gap:10px}
+          .v2-head-mascot{width:42px;height:42px;border-radius:12px}
+          .v2-head-name{font-size:16px}
+          .v2-head-role{font-size:11px}
         }
         @media (max-width:520px){
           .v2-landing-grid{padding:24px 18px;gap:24px}
@@ -2757,8 +2790,16 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-trend-grid{grid-template-columns:repeat(2,1fr);gap:12px}
           .v2-occ-grid{grid-template-columns:1fr 1fr;gap:10px}
           .v2-browse-headline{font-size:30px}
+          .v2-head-new{padding:7px 10px}
           .v2-head-new span{display:none}
           .v2-chat-head{padding:10px 12px;gap:8px}
+          .v2-overlay-scroll{padding:14px 12px 12px;gap:10px}
+          .v2-head-mascot{width:38px;height:38px;border-radius:11px}
+          .v2-head-titles{min-width:0}
+          .v2-head-name{font-size:15.5px;letter-spacing:-.3px}
+          .v2-head-role{font-size:10.5px}
+          .v2-head-icon-btn{width:34px;height:34px;border-radius:11px}
+          .v2-head-close{width:34px;height:34px}
           .v2-hero2{padding:30px 18px 0}
           .v2-hero2-inner{padding:18px 0 36px}
           .v2-hero2-headline{font-size:clamp(34px,11vw,48px)}
@@ -2816,21 +2857,23 @@ export default function AIAssistantV2Client({ lang }) {
             <StateBar state={chatState} lang={lang} />
 
             <div ref={scrollRef} className="v2-scroll v2-overlay-scroll">
-              {messages.map(msg => {
-                if (msg.type === "block") {
+              <div className="v2-overlay-inner">
+                {messages.map(msg => {
+                  if (msg.type === "block") {
+                    return (
+                      <div key={msg.id} className="v2-msg">
+                        <Block block={msg.block} lang={lang} onOpen={openPopup} />
+                      </div>
+                    );
+                  }
                   return (
                     <div key={msg.id} className="v2-msg">
-                      <Block block={msg.block} lang={lang} onOpen={openPopup} />
+                      <MsgBubble msg={msg} lang={lang} onPlanEvent={handlePlanEvent} />
                     </div>
                   );
-                }
-                return (
-                  <div key={msg.id} className="v2-msg">
-                    <MsgBubble msg={msg} lang={lang} onPlanEvent={handlePlanEvent} />
-                  </div>
-                );
-              })}
-              {typing && <div className="v2-msg"><TypingDots /></div>}
+                })}
+                {typing && <div className="v2-msg"><TypingDots /></div>}
+              </div>
             </div>
 
             <ChatInput
