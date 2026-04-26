@@ -2,11 +2,7 @@ import { getDictionary } from "@/lib/getDictionary";
 import { headers } from "next/headers";
 import VendorProductClient from "@/app/vendor/[slug]/product/[productSlug]/page";
 
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  return [{ lang: "en" }, { lang: "hy" }, { lang: "ru" }];
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { lang, vendor, product } = await params;
@@ -14,7 +10,7 @@ export async function generateMetadata({ params }) {
   const fallbackVendor = decodeURIComponent(vendor).replace(/-/g, " ");
 
   // Use actual request host so og:url matches what was shared (iMessage follows og:url)
-  const headersList = await headers();
+  const headersList = headers();
   const host = headersList.get("x-forwarded-host") || headersList.get("host") || "salooote.am";
   const proto = "https";
   const pageUrl = `${proto}://${host}/${lang}/${vendor}/${product}`;

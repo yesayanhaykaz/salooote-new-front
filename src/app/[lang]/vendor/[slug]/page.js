@@ -2,22 +2,13 @@ import { getDictionary } from "@/lib/getDictionary";
 import { headers } from "next/headers";
 import VendorProfileClient from "@/app/vendor/[slug]/page";
 
-export async function generateStaticParams() {
-  return [{ lang: "en" }, { lang: "hy" }, { lang: "ru" }].flatMap(l =>
-    ["salooote", "royal-bakes", "yerevan-flowers"].map(slug => ({
-      lang: l.lang,
-      slug,
-    }))
-  );
-}
-
-export const dynamicParams = true;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { lang, slug } = await params;
   const fallbackName = slug.replace(/-/g, " ");
 
-  const headersList = await headers();
+  const headersList = headers();
   const host = headersList.get("x-forwarded-host") || headersList.get("host") || "salooote.am";
   const pageUrl = `https://${host}/${lang}/vendor/${slug}`;
 
