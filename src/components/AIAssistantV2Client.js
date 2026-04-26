@@ -1520,8 +1520,9 @@ export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
   const pathname = usePathname() || "";
   const onAIPage = /^\/(en|hy|ru)\/?$/.test(pathname);
-  // Pages where Sali is already the main UI — no need for the floating button
-  const onAIDestination = onAIPage || /\/planner(\/|$|\?)/.test(pathname);
+  // Pages where Sali IS the page itself — only the planner. The home page
+  // shows AI in the hero, but users still expect a launcher to come back to.
+  const onAIDestination = /\/planner(\/|$|\?)/.test(pathname);
   const HIDE_ON = ["/login", "/signup", "/forgot-password", "/checkout", "/payment"];
   const hideEverything = HIDE_ON.some(p => pathname.includes(p));
   const [phase, setPhase] = useState("landing");
