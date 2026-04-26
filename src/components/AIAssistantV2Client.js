@@ -154,6 +154,119 @@ const T = {
       { slug: "corporate",   icon: "business",label: "Корпоратив" },
     ],
   },
+
+  /* ── New centered hero (vibrant) ─────────────── */
+  aiBadge: {
+    en: "New — AI Planner is live in Armenian, Russian & English",
+    hy: "Նորույթ — AI Պլանավորիչը հասանելի է հայերեն, ռուսերեն և անգլերեն",
+    ru: "Новинка — AI-планировщик доступен на армянском, русском и английском",
+  },
+  heroPart1: {
+    en: "Make every",
+    hy: "Դարձրեք յուրաքանչյուր",
+    ru: "Сделайте каждый",
+  },
+  heroPart2: {
+    en: "unforgettable.",
+    hy: "անմոռանալի։",
+    ru: "незабываемым.",
+  },
+  heroRotateWords: {
+    en: ["birthday", "wedding", "baby shower", "engagement", "anniversary"],
+    hy: ["ծնունդ", "հարսանիք", "baby shower", "նշանադրություն", "տարելից"],
+    ru: ["день рождения", "свадьбу", "baby shower", "помолвку", "годовщину"],
+  },
+  heroSubtitle: {
+    en: "Armenia's most beautiful celebrations start here. Cakes, flowers, venues, photographers — all in one place, with an AI that plans alongside you.",
+    hy: "Հայաստանի ամենագեղեցիկ տոները սկսվում են այստեղ։ Տորթեր, ծաղիկներ, սրահներ, ֆոտոգրաֆներ — մեկ տեղում, AI օգնականով։",
+    ru: "Самые красивые торжества Армении начинаются здесь. Торты, цветы, площадки, фотографы — всё в одном месте, с AI-помощником рядом.",
+  },
+  heroPlaceholder: {
+    en: "What are you celebrating?",
+    hy: "Ի՞նչ եք տոնում",
+    ru: "Что вы празднуете?",
+  },
+  askAI: { en: "Ask AI", hy: "Հարցնել AI", ru: "Спросить AI" },
+
+  quickChips: {
+    en: [
+      { icon: "cake",     name: "Cakes" },
+      { icon: "flower",   name: "Flowers" },
+      { icon: "balloon",  name: "Balloons" },
+      { icon: "camera",   name: "Photography" },
+      { icon: "music",    name: "DJ & Music" },
+      { icon: "utensils", name: "Catering" },
+      { icon: "gift",     name: "Gifts" },
+    ],
+    hy: [
+      { icon: "cake",     name: "Տորթեր" },
+      { icon: "flower",   name: "Ծաղիկներ" },
+      { icon: "balloon",  name: "Փուչիկներ" },
+      { icon: "camera",   name: "Ֆոտո" },
+      { icon: "music",    name: "DJ" },
+      { icon: "utensils", name: "Քեյթերինգ" },
+      { icon: "gift",     name: "Նվերներ" },
+    ],
+    ru: [
+      { icon: "cake",     name: "Торты" },
+      { icon: "flower",   name: "Цветы" },
+      { icon: "balloon",  name: "Шары" },
+      { icon: "camera",   name: "Фото" },
+      { icon: "music",    name: "DJ" },
+      { icon: "utensils", name: "Кейтеринг" },
+      { icon: "gift",     name: "Подарки" },
+    ],
+  },
+
+  trust: {
+    en: ["850+ verified vendors", "4.9 from 6,400+ reviews", "15K+ events planned"],
+    hy: ["850+ հաստատված մատակարար", "4.9 6,400+ կարծիքներից", "15K+ պլանավորված միջոցառում"],
+    ru: ["850+ проверенных поставщиков", "4.9 из 6,400+ отзывов", "15K+ спланированных событий"],
+  },
+
+  marquee: {
+    en: ["Birthday", "Wedding", "Baby Shower", "Anniversary", "Corporate", "Engagement", "Kids Party", "Christmas", "Baptism"],
+    hy: ["Ծնունդ", "Հարսանիք", "Baby Shower", "Տարելից", "Կորպորատիվ", "Նշանադրություն", "Մանկական", "Ամանոր", "Մկրտություն"],
+    ru: ["День рождения", "Свадьба", "Baby Shower", "Годовщина", "Корпоратив", "Помолвка", "Детский", "Новый год", "Крестины"],
+  },
+
+  /* ── Browse Moments (replaces Plan Any Occasion) ── */
+  momentsEyebrow:   { en: "Browse moments", hy: "Թերթեք պահերը", ru: "Просмотрите моменты" },
+  momentsHeadline: {
+    en: "Pick the moment. We'll bring it to life.",
+    hy: "Ընտրեք պահը։ Մենք կկյանքի կոչենք։",
+    ru: "Выберите момент. Мы воплотим его в жизнь.",
+  },
+  momentsAllEvents: { en: "All events", hy: "Բոլորը", ru: "Все события" },
+  momentsPlan:      { en: "Plan it",    hy: "Պլանավորել", ru: "Планировать" },
+  momentsExplore:   { en: "Explore",    hy: "Տեսնել",     ru: "Открыть" },
+
+  moments: {
+    en: [
+      { slug: "wedding",     name: "Weddings",     img: "/images/wedding-arch-beach.jpg", grad: "rose-brand",   icon: "heart"    },
+      { slug: "birthday",    name: "Birthdays",    img: "/images/cupcakes.jpg",           grad: "amber-rose",   icon: "cake"     },
+      { slug: "baby_shower", name: "Baby Showers", img: "/images/balloons-blue.jpg",      grad: "sky-violet",   icon: "balloon"  },
+      { slug: "corporate",   name: "Corporate",    img: "/images/event-dinner.jpg",       grad: "slate",        icon: "business" },
+      { slug: "engagement",  name: "Engagements",  img: "/images/wedding-dance.jpg",      grad: "fuchsia-rose", icon: "ring"     },
+      { slug: "kids_party",  name: "Kids Parties", img: "/images/party-balloons.jpg",     grad: "emerald-cyan", icon: "gift"     },
+    ],
+    hy: [
+      { slug: "wedding",     name: "Հարսանիք",     img: "/images/wedding-arch-beach.jpg", grad: "rose-brand",   icon: "heart"    },
+      { slug: "birthday",    name: "Ծնունդներ",    img: "/images/cupcakes.jpg",           grad: "amber-rose",   icon: "cake"     },
+      { slug: "baby_shower", name: "Baby Shower",  img: "/images/balloons-blue.jpg",      grad: "sky-violet",   icon: "balloon"  },
+      { slug: "corporate",   name: "Կորպորատիվ",   img: "/images/event-dinner.jpg",       grad: "slate",        icon: "business" },
+      { slug: "engagement",  name: "Նշանադրություն",img: "/images/wedding-dance.jpg",     grad: "fuchsia-rose", icon: "ring"     },
+      { slug: "kids_party",  name: "Մանկական",     img: "/images/party-balloons.jpg",     grad: "emerald-cyan", icon: "gift"     },
+    ],
+    ru: [
+      { slug: "wedding",     name: "Свадьбы",        img: "/images/wedding-arch-beach.jpg", grad: "rose-brand",   icon: "heart"    },
+      { slug: "birthday",    name: "Дни рождения",   img: "/images/cupcakes.jpg",           grad: "amber-rose",   icon: "cake"     },
+      { slug: "baby_shower", name: "Baby Shower",    img: "/images/balloons-blue.jpg",      grad: "sky-violet",   icon: "balloon"  },
+      { slug: "corporate",   name: "Корпоратив",     img: "/images/event-dinner.jpg",       grad: "slate",        icon: "business" },
+      { slug: "engagement",  name: "Помолвки",       img: "/images/wedding-dance.jpg",      grad: "fuchsia-rose", icon: "ring"     },
+      { slug: "kids_party",  name: "Детские",        img: "/images/party-balloons.jpg",     grad: "emerald-cyan", icon: "gift"     },
+    ],
+  },
 };
 
 const tx = (obj, lang) => obj[lang] || obj.en;
@@ -194,6 +307,11 @@ const ICON_PATHS = {
   plus:     <><path d="M12 5v14"/><path d="M5 12h14"/></>,
   cart:     <><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l3 12h12l2-8H6"/></>,
   minimize: <><path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="m4 20 6-6"/><path d="m20 4-6 6"/></>,
+  camera:   <><path d="M3 7h4l2-3h6l2 3h4v13H3z"/><circle cx="12" cy="13" r="4"/></>,
+  music:    <><path d="M9 17V5l11-2v12"/><circle cx="6" cy="17" r="3"/><circle cx="17" cy="15" r="3"/></>,
+  utensils: <><path d="M5 3v8a2 2 0 0 0 2 2v8"/><path d="M9 3v8a2 2 0 0 1-2 2"/><path d="M14 3v18"/><path d="M18 3c2 1 3 3 3 6s-1 5-3 6v6"/></>,
+  star:     <><path d="m12 3 2.5 5.5L20 10l-4.5 4 1.5 6L12 17l-5 3 1.5-6L4 10l5.5-1.5z"/></>,
+  zap:      <><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></>,
 };
 function Icon({ name, size = 18, className = "", style }) {
   const path = ICON_PATHS[name] || ICON_PATHS.sparkle;
@@ -773,92 +891,137 @@ function OrbVisual({ lang }) {
 }
 
 function Landing({ lang, onSend, input, setInput, inputRef }) {
-  const chips = tx(T.chips, lang);
-  const [heroLine1, heroLine2] = tx(T.hero, lang);
+  const quickChips = tx(T.quickChips, lang);
+  const heroPart1 = tx(T.heroPart1, lang);
+  const heroPart2 = tx(T.heroPart2, lang);
+  const rotateWords = tx(T.heroRotateWords, lang);
+  const trustItems = tx(T.trust, lang);
+  const marqueeItems = tx(T.marquee, lang);
   const canSend = input.trim().length > 0;
+
+  // Rotating word
+  const [wordIdx, setWordIdx] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => {
+      setWordIdx(i => (i + 1) % rotateWords.length);
+    }, 2400);
+    return () => clearInterval(id);
+  }, [rotateWords.length]);
 
   return (
     <div className="v2-landing">
-      <div className="v2-landing-grid">
-        {/* LEFT: text + chat input + chips */}
-        <div className="v2-left">
-          <h1 className="v2-headline">
-            <span className="v2-h-line1">{heroLine1}</span>
+      {/* ── Centered hero ─────────────────────────── */}
+      <section className="v2-hero2">
+        {/* aurora background */}
+        <div className="v2-hero2-aurora" aria-hidden>
+          <div className="v2-hero2-glow v2-hero2-glow-rose" />
+          <div className="v2-hero2-glow v2-hero2-glow-amber" />
+          <div className="v2-hero2-glow v2-hero2-glow-fuchsia" />
+        </div>
+
+        <div className="v2-hero2-inner">
+          {/* AI live chip */}
+          <div className="v2-hero2-chip">
+            <span className="v2-hero2-chip-dot">
+              <span className="v2-hero2-chip-ping" />
+              <span className="v2-hero2-chip-core" />
+            </span>
+            <span>{tx(T.aiBadge, lang)}</span>
+          </div>
+
+          {/* Headline */}
+          <h1 className="v2-hero2-headline">
+            <span className="v2-hero2-static">{heroPart1}</span>{" "}
+            <span className="v2-hero2-rotate-wrap">
+              <span key={wordIdx} className="v2-hero2-rotate">
+                {rotateWords[wordIdx]}
+              </span>
+            </span>
             <br />
-            <span className="v2-h-line2">{heroLine2}</span>
+            <span className="v2-hero2-static">{heroPart2}</span>
           </h1>
 
-          <p className="v2-sub">{tx(T.sub, lang)}</p>
+          <p className="v2-hero2-sub">{tx(T.heroSubtitle, lang)}</p>
 
-          {/* Big chat card */}
-          <div className="v2-chat-card">
-            <textarea
+          {/* Floating glass search → routes to AI */}
+          <div className="v2-hero2-search">
+            <span className="v2-hero2-search-icon">
+              <Icon name="search" size={18} />
+            </span>
+            <input
               ref={inputRef}
+              type="text"
               value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => {
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   onSend();
                 }
               }}
-              placeholder={tx(T.placeholder, lang)}
-              rows={2}
-              className="v2-chat-textarea"
+              placeholder={tx(T.heroPlaceholder, lang)}
+              className="v2-hero2-search-input"
             />
-            <div className="v2-chat-actions">
-              <button type="button" className="v2-icon-btn" aria-label="Attach">
-                <Icon name="attach" size={18} />
-              </button>
-              <div style={{ flex: 1 }} />
-              <button type="button" className="v2-icon-btn" aria-label="Voice input">
-                <Icon name="mic" size={18} />
-              </button>
-              <button
-                type="button"
-                onClick={() => onSend()}
-                disabled={!canSend}
-                className="v2-send-btn"
-                aria-label="Send"
-              >
-                <Icon name="send" size={17} />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => onSend()}
+              disabled={!canSend}
+              className="v2-hero2-search-btn"
+              aria-label={tx(T.askAI, lang)}
+            >
+              <Icon name="sparkle" size={15} />
+              <span className="v2-hero2-search-btn-label">{tx(T.askAI, lang)}</span>
+            </button>
           </div>
 
-          {/* Prompt pills */}
-          <div className="v2-pills">
-            {chips.map((chip, i) => (
+          {/* Quick chips → also send to AI */}
+          <div className="v2-hero2-chips">
+            {quickChips.map((c, i) => (
               <button
                 key={i}
-                className="v2-pill"
-                onClick={() => onSend(chip.label)}
+                type="button"
+                onClick={() => onSend(c.name)}
+                className="v2-hero2-chip-btn"
               >
-                <Icon name={chip.icon} size={14} style={{ marginRight: 7, color: PINK }} />
-                {chip.label}
+                <Icon name={c.icon} size={13} style={{ color: PINK }} />
+                {c.name}
               </button>
             ))}
           </div>
 
-          {/* Scroll cue */}
-          <button
-            type="button"
-            className="v2-scroll-cue"
-            onClick={() => {
-              const el = document.getElementById("v2-browse");
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            {tx(T.scrollCue, lang)}
-            <Icon name="arrowDown" size={14} style={{ marginLeft: 6 }} />
-          </button>
+          {/* Trust strip */}
+          <div className="v2-hero2-trust">
+            <span className="v2-hero2-trust-item">
+              <Icon name="zap" size={14} style={{ color: "#f59e0b" }} />
+              {trustItems[0]}
+            </span>
+            <span className="v2-hero2-trust-sep" />
+            <span className="v2-hero2-trust-item">
+              <Icon name="star" size={14} style={{ color: PINK, fill: PINK }} />
+              {trustItems[1]}
+            </span>
+            <span className="v2-hero2-trust-sep" />
+            <span className="v2-hero2-trust-item">
+              <Icon name="calendar" size={14} style={{ color: "#059669" }} />
+              {trustItems[2]}
+            </span>
+          </div>
         </div>
 
-        {/* RIGHT: floating event card stack */}
-        <div className="v2-right">
-          <OrbVisual lang={lang} />
+        {/* Marquee */}
+        <div className="v2-hero2-marquee">
+          <div className="v2-hero2-marquee-track">
+            {[0, 1].map((rep) =>
+              marqueeItems.map((m, i) => (
+                <span key={`${rep}-${i}`} className="v2-hero2-marquee-item">
+                  <Icon name="sparkle" size={13} style={{ color: "#f9a8d4" }} />
+                  {m}
+                </span>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Browse by Category */}
       <BrowseByCategory lang={lang} />
@@ -866,8 +1029,8 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
       {/* Trending Now */}
       <TrendingNow lang={lang} />
 
-      {/* Plan Any Occasion */}
-      <PlanAnyOccasion lang={lang} />
+      {/* Browse Moments (replaces Plan Any Occasion) */}
+      <BrowseMoments lang={lang} />
 
       {/* "How it works" anchor section below the fold */}
       <section id="v2-howitworks" className="v2-how">
@@ -1054,6 +1217,55 @@ function TrendingNow({ lang }) {
           })}
         </div>
       )}
+    </section>
+  );
+}
+
+// ── Browse Moments (poster-style grid) ─────────────────────────────
+function BrowseMoments({ lang }) {
+  const items = tx(T.moments, lang);
+  return (
+    <section className="v2-moments">
+      <div className="v2-moments-head">
+        <div>
+          <p className="v2-browse-eyebrow">{tx(T.momentsEyebrow, lang)}</p>
+          <h2 className="v2-browse-headline v2-moments-headline">{tx(T.momentsHeadline, lang)}</h2>
+        </div>
+        <Link href={`/${lang}/events`} className="v2-moments-all">
+          {tx(T.momentsAllEvents, lang)}
+          <Icon name="arrowRight" size={14} />
+        </Link>
+      </div>
+
+      <div className="v2-moments-grid">
+        {items.map((m, i) => (
+          <Link
+            key={m.slug}
+            href={`/${lang}/events/${m.slug}`}
+            className={`v2-moment-card v2-moment-grad-${m.grad} ${i === 0 ? "v2-moment-feature" : ""}`}
+          >
+            <Image
+              src={m.img}
+              alt={m.name}
+              fill
+              className="v2-moment-img"
+              sizes={i === 0 ? "(max-width:1024px) 100vw, 66vw" : "(max-width:640px) 50vw, 25vw"}
+            />
+            <div className="v2-moment-overlay" />
+            <div className="v2-moment-body">
+              <span className="v2-moment-pill">
+                <Icon name={m.icon} size={12} />
+                {tx(T.momentsExplore, lang)}
+              </span>
+              <h3 className="v2-moment-title">{m.name}</h3>
+              <span className="v2-moment-cta">
+                {tx(T.momentsPlan, lang)}
+                <Icon name="arrowRight" size={14} />
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 }
@@ -1560,11 +1772,17 @@ export default function AIAssistantV2Client({ lang }) {
         :lang(hy) .v2-headline,
         :lang(hy) .v2-browse-headline,
         :lang(hy) .v2-how-title,
-        :lang(hy) .v2-occ-headline{
+        :lang(hy) .v2-occ-headline,
+        :lang(hy) .v2-hero2-headline,
+        :lang(hy) .v2-moments-headline,
+        :lang(hy) .v2-moment-title{
           font-family:'SHK Dzeragir','Fraunces',Georgia,serif!important;
           letter-spacing:-.4px;
           font-style:normal!important;
           line-height:1.15;
+        }
+        :lang(hy) .v2-hero2-rotate{
+          font-style:normal!important;
         }
         :lang(hy) .v2-h-line2{
           background:linear-gradient(135deg,${PINK} 0%,#9f1239 100%);
@@ -1671,6 +1889,250 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-scroll-cue:hover{color:${PINK}}
 
         .v2-right{display:flex;align-items:center;justify-content:center}
+
+        /* ── Centered Vibrant Hero (new) ─────────────────────── */
+        .v2-hero2{
+          position:relative;
+          padding:64px 28px 0;
+          max-width:1280px;margin:0 auto;width:100%;
+          overflow:hidden;
+        }
+        .v2-hero2-aurora{position:absolute;inset:-40px 0 0;z-index:0;pointer-events:none}
+        .v2-hero2-glow{position:absolute;border-radius:50%;filter:blur(80px);opacity:.55}
+        .v2-hero2-glow-rose{
+          top:-60px;left:50%;transform:translateX(-50%);
+          width:1100px;height:520px;
+          background:radial-gradient(circle, rgba(254,205,211,.95), transparent 70%);
+        }
+        .v2-hero2-glow-amber{
+          top:80px;left:14%;width:380px;height:380px;
+          background:radial-gradient(circle, rgba(254,243,199,.7), transparent 70%);
+        }
+        .v2-hero2-glow-fuchsia{
+          top:40px;right:10%;width:340px;height:340px;
+          background:radial-gradient(circle, rgba(245,208,254,.6), transparent 70%);
+        }
+
+        .v2-hero2-inner{
+          position:relative;z-index:1;text-align:center;
+          padding:30px 0 50px;
+          animation:v2In .55s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-hero2-chip{
+          display:inline-flex;align-items:center;gap:10px;
+          background:rgba(255,255,255,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+          border:1px solid rgba(254,205,211,.85);
+          color:#5a1a2f;
+          padding:7px 14px;border-radius:999px;
+          font-size:12.5px;font-weight:600;letter-spacing:.05px;
+          box-shadow:0 4px 14px rgba(225,29,92,.08);
+          margin-bottom:26px;
+        }
+        .v2-hero2-chip-dot{position:relative;display:inline-flex;width:8px;height:8px}
+        .v2-hero2-chip-ping{
+          position:absolute;inset:0;border-radius:50%;background:#fb7185;opacity:.75;
+          animation:v2-ping 1.6s cubic-bezier(0,0,.2,1) infinite;
+        }
+        .v2-hero2-chip-core{
+          position:relative;display:inline-flex;width:8px;height:8px;border-radius:50%;background:${PINK};
+        }
+        @keyframes v2-ping{
+          75%,100%{transform:scale(2);opacity:0}
+        }
+
+        .v2-hero2-headline{
+          margin:0 auto;max-width:980px;
+          font-family:'Fraunces',Georgia,serif;font-weight:600;
+          font-size:clamp(40px,7vw,84px);line-height:1.02;letter-spacing:-2px;
+          color:#1a0a14;font-variation-settings:"opsz" 144;
+        }
+        .v2-hero2-static{display:inline}
+        .v2-hero2-rotate-wrap{
+          display:inline-block;position:relative;min-width:0;
+        }
+        .v2-hero2-rotate{
+          display:inline-block;
+          background:linear-gradient(135deg,${PINK} 0%,${PINK_DARK} 70%,#831843 100%);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          font-style:italic;
+          animation:v2-rotateIn .45s cubic-bezier(.2,.8,.2,1);
+        }
+        @keyframes v2-rotateIn{
+          from{transform:translateY(18px);opacity:0}
+          to{transform:translateY(0);opacity:1}
+        }
+
+        .v2-hero2-sub{
+          margin:24px auto 0;max-width:640px;
+          font-size:clamp(15px,1.4vw,19px);line-height:1.55;
+          color:#6b4654;letter-spacing:.05px;
+        }
+
+        .v2-hero2-search{
+          margin:36px auto 0;max-width:640px;
+          display:flex;align-items:center;gap:8px;
+          background:#fff;border:1.5px solid #ece2e7;border-radius:999px;
+          padding:6px 6px 6px 22px;
+          box-shadow:0 24px 60px -20px rgba(225,29,92,.25),0 2px 6px rgba(0,0,0,.04);
+          transition:all .22s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-hero2-search:focus-within{
+          border-color:rgba(225,29,92,.45);
+          box-shadow:0 28px 70px -18px rgba(225,29,92,.35),0 0 0 5px rgba(225,29,92,.06);
+        }
+        .v2-hero2-search-icon{display:inline-flex;color:#9b8390;flex-shrink:0}
+        .v2-hero2-search-input{
+          flex:1;border:none;outline:none;background:transparent;
+          font-family:inherit;font-size:15.5px;color:#1a0a14;letter-spacing:.05px;
+          padding:13px 4px;
+        }
+        .v2-hero2-search-input::placeholder{color:#a08596}
+        .v2-hero2-search-btn{
+          flex-shrink:0;display:inline-flex;align-items:center;gap:7px;
+          padding:11px 22px;border:none;border-radius:999px;cursor:pointer;
+          background:linear-gradient(135deg,${PINK},${PINK_DARK});
+          color:#fff;font-family:inherit;font-size:14px;font-weight:600;letter-spacing:.05px;
+          box-shadow:0 8px 22px rgba(225,29,92,.35);
+          transition:all .18s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-hero2-search-btn:hover:not(:disabled){transform:translateY(-1px) scale(1.02);box-shadow:0 12px 28px rgba(225,29,92,.45)}
+        .v2-hero2-search-btn:disabled{opacity:.55;cursor:default;box-shadow:none}
+
+        .v2-hero2-chips{
+          margin:22px auto 0;
+          display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+          max-width:760px;
+        }
+        .v2-hero2-chip-btn{
+          display:inline-flex;align-items:center;gap:7px;
+          padding:9px 16px;border-radius:999px;cursor:pointer;
+          background:rgba(255,255,255,.7);
+          border:1px solid #efe3e9;
+          color:#5a1a2f;font-family:inherit;font-size:13px;font-weight:500;
+          backdrop-filter:blur(6px);
+          transition:all .18s cubic-bezier(.2,.8,.2,1);
+        }
+        .v2-hero2-chip-btn:hover{
+          background:#fff;border-color:#fecdd3;color:${PINK};
+          transform:translateY(-1px);
+          box-shadow:0 6px 16px rgba(225,29,92,.16);
+        }
+
+        .v2-hero2-trust{
+          margin:36px auto 0;
+          display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+          column-gap:28px;row-gap:10px;
+          color:#7c5566;font-size:13.5px;
+        }
+        .v2-hero2-trust-item{display:inline-flex;align-items:center;gap:7px}
+        .v2-hero2-trust-sep{
+          width:4px;height:4px;border-radius:50%;background:#e5d8df;
+          display:inline-block;
+        }
+
+        /* ── Marquee strip ─────────────────────────── */
+        .v2-hero2-marquee{
+          margin-top:34px;
+          padding:14px 0;
+          border-top:1px solid #f0e0e6;border-bottom:1px solid #f0e0e6;
+          background:rgba(255,255,255,.55);backdrop-filter:blur(4px);
+          overflow:hidden;
+          position:relative;z-index:1;
+        }
+        .v2-hero2-marquee::before,
+        .v2-hero2-marquee::after{
+          content:"";position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
+        }
+        .v2-hero2-marquee::before{left:0;background:linear-gradient(to right,#fff,transparent)}
+        .v2-hero2-marquee::after{right:0;background:linear-gradient(to left,#fff,transparent)}
+        .v2-hero2-marquee-track{
+          display:flex;gap:48px;white-space:nowrap;
+          animation:v2-marquee 32s linear infinite;
+          width:max-content;
+        }
+        .v2-hero2-marquee-item{
+          display:inline-flex;align-items:center;gap:10px;
+          font-family:'Fraunces',Georgia,serif;font-size:16px;font-weight:500;
+          color:#a08596;letter-spacing:.05px;
+        }
+        @keyframes v2-marquee{
+          from{transform:translateX(0)}
+          to{transform:translateX(-50%)}
+        }
+
+        /* ── Browse Moments grid ─────────────────────── */
+        .v2-moments{max-width:1280px;margin:0 auto;padding:64px 32px 16px}
+        .v2-moments-head{
+          display:flex;align-items:flex-end;justify-content:space-between;
+          gap:16px;margin-bottom:36px;
+        }
+        .v2-moments-headline{margin:6px 0 0;text-align:left}
+        .v2-moments-all{
+          display:inline-flex;align-items:center;gap:6px;
+          font-size:14px;font-weight:600;color:#1a0a14;
+          text-decoration:none;
+          transition:color .15s;
+        }
+        .v2-moments-all:hover{color:${PINK}}
+        .v2-moments-grid{
+          display:grid;grid-template-columns:repeat(3,1fr);
+          grid-auto-rows:1fr;
+          gap:18px;
+        }
+        .v2-moment-card{
+          position:relative;display:block;overflow:hidden;
+          aspect-ratio:4/5;
+          border-radius:28px;background:#f5e6ec;
+          text-decoration:none;
+          transition:transform .35s cubic-bezier(.2,.8,.2,1);
+          box-shadow:0 8px 24px rgba(20,5,12,.06);
+        }
+        .v2-moment-feature{
+          grid-column:span 2;grid-row:span 2;
+          aspect-ratio:auto;
+        }
+        .v2-moment-card:hover{transform:translateY(-4px)}
+        .v2-moment-img{object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+        .v2-moment-card:hover .v2-moment-img{transform:scale(1.08)}
+        .v2-moment-overlay{
+          position:absolute;inset:0;
+          background:linear-gradient(to top, rgba(20,5,12,.65), rgba(20,5,12,.18) 50%, transparent);
+          mix-blend-mode:multiply;
+        }
+        .v2-moment-grad-rose-brand .v2-moment-overlay{background:linear-gradient(to top, rgba(225,29,92,.78), rgba(159,18,57,.18) 55%, transparent)}
+        .v2-moment-grad-amber-rose .v2-moment-overlay{background:linear-gradient(to top, rgba(245,158,11,.72), rgba(225,29,92,.22) 55%, transparent)}
+        .v2-moment-grad-sky-violet .v2-moment-overlay{background:linear-gradient(to top, rgba(14,165,233,.72), rgba(124,58,237,.25) 55%, transparent)}
+        .v2-moment-grad-slate      .v2-moment-overlay{background:linear-gradient(to top, rgba(15,23,42,.85), rgba(30,41,59,.45) 55%, transparent)}
+        .v2-moment-grad-fuchsia-rose .v2-moment-overlay{background:linear-gradient(to top, rgba(192,38,211,.7), rgba(225,29,92,.25) 55%, transparent)}
+        .v2-moment-grad-emerald-cyan .v2-moment-overlay{background:linear-gradient(to top, rgba(16,185,129,.72), rgba(6,182,212,.25) 55%, transparent)}
+
+        .v2-moment-body{
+          position:absolute;left:0;right:0;bottom:0;
+          padding:22px 22px 24px;color:#fff;
+          z-index:2;
+        }
+        .v2-moment-pill{
+          display:inline-flex;align-items:center;gap:6px;
+          background:rgba(255,255,255,.22);backdrop-filter:blur(6px);
+          border:1px solid rgba(255,255,255,.32);
+          padding:5px 11px;border-radius:999px;
+          font-size:11.5px;font-weight:600;letter-spacing:.04px;
+          margin-bottom:12px;
+        }
+        .v2-moment-title{
+          margin:0;
+          font-family:'Fraunces',Georgia,serif;font-weight:600;
+          letter-spacing:-1px;line-height:1.05;
+          font-size:clamp(20px,2.4vw,30px);
+          font-variation-settings:"opsz" 144;
+        }
+        .v2-moment-feature .v2-moment-title{font-size:clamp(32px,4.5vw,52px)}
+        .v2-moment-cta{
+          display:inline-flex;align-items:center;gap:6px;
+          margin-top:10px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.92);
+          transition:transform .22s;
+        }
+        .v2-moment-card:hover .v2-moment-cta{transform:translateX(3px)}
 
         /* ── Floating event card stack (replaces orb) ── */
         .v2-stack-stage{
@@ -2249,17 +2711,24 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-occ-grid{grid-template-columns:repeat(3,1fr)}
           .v2-cat-grid{grid-template-columns:repeat(4,1fr)}
           .v2-trend-grid{grid-template-columns:repeat(3,1fr)}
+          .v2-moments-grid{grid-template-columns:repeat(2,1fr)}
+          .v2-moment-feature{grid-column:span 2;grid-row:auto;aspect-ratio:16/10}
         }
         @media (max-width:920px){
           .v2-landing-grid{grid-template-columns:1fr;gap:32px;padding:32px 22px;min-height:auto}
           .v2-right{order:-1}
           .v2-stack-stage{max-width:360px;margin:0 auto}
           .v2-headline{font-size:clamp(36px,9vw,52px)}
-          .v2-browse,.v2-trending,.v2-occ{padding-left:22px;padding-right:22px}
+          .v2-browse,.v2-trending,.v2-occ,.v2-moments{padding-left:22px;padding-right:22px}
           .v2-cat-grid{grid-template-columns:repeat(3,1fr)}
           .v2-trend-grid{grid-template-columns:repeat(2,1fr)}
           .v2-occ-grid{grid-template-columns:repeat(2,1fr)}
           .v2-how{padding:56px 22px}
+          .v2-hero2{padding:42px 22px 0}
+          .v2-hero2-headline{font-size:clamp(36px,9vw,56px);letter-spacing:-1.4px}
+          .v2-hero2-search-btn-label{display:none}
+          .v2-hero2-search-btn{padding:11px 14px}
+          .v2-moments-head{flex-direction:column;align-items:flex-start;gap:8px}
           .v2-reopen{right:14px;bottom:78px;padding:6px 14px 6px 6px;font-size:13px}
           .v2-reopen-label{display:none}
           .v2-reopen-mini{right:14px;bottom:78px;width:54px;height:54px}
@@ -2290,6 +2759,19 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-browse-headline{font-size:30px}
           .v2-head-new span{display:none}
           .v2-chat-head{padding:10px 12px;gap:8px}
+          .v2-hero2{padding:30px 18px 0}
+          .v2-hero2-inner{padding:18px 0 36px}
+          .v2-hero2-headline{font-size:clamp(34px,11vw,48px)}
+          .v2-hero2-sub{font-size:14.5px;margin-top:18px}
+          .v2-hero2-search{padding:5px 5px 5px 16px}
+          .v2-hero2-search-input{font-size:14.5px;padding:11px 4px}
+          .v2-hero2-trust{column-gap:14px;font-size:12.5px}
+          .v2-hero2-trust-sep{display:none}
+          .v2-hero2-marquee-item{font-size:14px}
+          .v2-moments{padding:48px 18px 16px}
+          .v2-moments-grid{grid-template-columns:1fr 1fr;gap:10px}
+          .v2-moment-feature{grid-column:span 2;aspect-ratio:5/4}
+          .v2-moment-body{padding:16px 16px 18px}
         }
       `}</style>
 
