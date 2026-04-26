@@ -13,6 +13,20 @@ export async function generateMetadata({ params }) {
       canonical: `https://salooote.am/${lang}/apply`,
       languages: { en: "https://salooote.am/en/apply", hy: "https://salooote.am/hy/apply", ru: "https://salooote.am/ru/apply" },
     },
+    openGraph: {
+      title: "Apply to Become a Vendor — Salooote.am",
+      description: "Join Salooote's marketplace as a vendor. Apply in minutes and reach thousands of event planners.",
+      url: `https://salooote.am/${lang}/apply`,
+      siteName: "Salooote.am",
+      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Apply to Become a Vendor — Salooote.am",
+      description: "Join Salooote's marketplace as a vendor. Apply in minutes and reach thousands of event planners.",
+      images: ["/og-default.jpg"],
+    },
   };
 }
 

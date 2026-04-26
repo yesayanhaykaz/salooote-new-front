@@ -38,6 +38,14 @@ export async function generateMetadata({ params }) {
       description: dict.meta.categoryDesc,
       url: `https://salooote.am/${lang}/category/${slug}`,
       siteName: "Salooote.am",
+      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: dict.meta.categoryDesc,
+      images: ["/og-default.jpg"],
     },
     alternates: {
       canonical: `https://salooote.am/${lang}/category/${slug}`,

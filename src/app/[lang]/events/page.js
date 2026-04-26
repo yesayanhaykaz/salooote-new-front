@@ -17,10 +17,26 @@ export async function generateMetadata({ params }) {
     hy: "Հարսանիքներ, ծնունդներ, մկրտություններ, մանկական տոներ և շատ ավելին՝ Salooote հարթակում։",
     ru: "Свадьбы, дни рождения, крещения, детские праздники и многое другое — найдите подходящих поставщиков на Salooote.",
   };
+  const title = titles[lang] || titles.en;
+  const description = descs[lang] || descs.en;
   return {
-    title: titles[lang] || titles.en,
-    description: descs[lang] || descs.en,
+    title,
+    description,
     alternates: { canonical: `https://salooote.am/${lang}/events` },
+    openGraph: {
+      title,
+      description,
+      url: `https://salooote.am/${lang}/events`,
+      siteName: "Salooote.am",
+      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-default.jpg"],
+    },
   };
 }
 

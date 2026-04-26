@@ -10,6 +10,7 @@ export async function generateMetadata({ params }) {
   const dict = await getDictionary(lang);
   return {
     title: dict.meta.cartTitle,
+    robots: { index: false },
     alternates: {
       canonical: `https://salooote.am/${lang}/cart`,
       languages: { en: "https://salooote.am/en/cart", hy: "https://salooote.am/hy/cart", ru: "https://salooote.am/ru/cart" },

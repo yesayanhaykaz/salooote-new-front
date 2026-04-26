@@ -10,6 +10,21 @@ export async function generateMetadata({ params }) {
   return {
     title: "Careers at Salooote",
     description: "Join Salooote and help build Armenia's event economy. View open positions.",
+    alternates: { canonical: `https://salooote.am/${lang}/careers` },
+    openGraph: {
+      title: "Careers at Salooote",
+      description: "Join Salooote and help build Armenia's event economy. View open positions.",
+      url: `https://salooote.am/${lang}/careers`,
+      siteName: "Salooote.am",
+      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Careers at Salooote",
+      description: "Join Salooote and help build Armenia's event economy. View open positions.",
+      images: ["/og-default.jpg"],
+    },
   };
 }
 

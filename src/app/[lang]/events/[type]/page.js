@@ -20,9 +20,26 @@ export async function generateMetadata({ params }) {
     "kids-party": "Kids' Parties",
   };
   const name = labels[type] || type.replace(/-/g, " ");
+  const title = `${name} — Salooote.am`;
+  const description = `Find the best vendors for your ${name.toLowerCase()} in Armenia. Cakes, flowers, catering, music and more on Salooote.am`;
   return {
-    title: `${name} — Salooote.am`,
-    description: `Find the best vendors for your ${name.toLowerCase()} in Armenia. Cakes, flowers, catering, music and more on Salooote.am`,
+    title,
+    description,
+    alternates: { canonical: `https://salooote.am/${lang}/events/${type}` },
+    openGraph: {
+      title,
+      description,
+      url: `https://salooote.am/${lang}/events/${type}`,
+      siteName: "Salooote.am",
+      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-default.jpg"],
+    },
   };
 }
 

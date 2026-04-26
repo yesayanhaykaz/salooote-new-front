@@ -32,7 +32,7 @@ const T = {
     allCategories: "All Categories",
   },
   hy: {
-    home: "Գլխ.",
+    home: "Գլխավոր",
     products: "Ապրանքներ", vendors: "Վաճառողներ",
     filters: "Ֆիլտրեր", clearAll: "Մաքրել", clearFilters: "Մաքրել ֆիլտրերը",
     priceRange: "Գնի միջակայք", tags: "Թեգեր",

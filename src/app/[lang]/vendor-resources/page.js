@@ -10,6 +10,21 @@ export async function generateMetadata({ params }) {
   return {
     title: "Vendor Resources — Salooote",
     description: "Guides, tools, and webinars to help Salooote vendors grow their business.",
+    alternates: { canonical: `https://salooote.am/${lang}/vendor-resources` },
+    openGraph: {
+      title: "Vendor Resources — Salooote",
+      description: "Guides, tools, and webinars to help Salooote vendors grow their business.",
+      url: `https://salooote.am/${lang}/vendor-resources`,
+      siteName: "Salooote.am",
+      images: [{ url: "/og-default.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Vendor Resources — Salooote",
+      description: "Guides, tools, and webinars to help Salooote vendors grow their business.",
+      images: ["/og-default.jpg"],
+    },
   };
 }
 
