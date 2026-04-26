@@ -16,6 +16,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function AboutPage() {
-  return <AboutPageClient />;
+export default async function AboutPage({ params }) {
+  const { lang } = await params;
+  return <AboutPageClient lang={lang} />;
 }

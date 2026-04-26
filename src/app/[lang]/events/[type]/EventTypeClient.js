@@ -568,10 +568,10 @@ export default function EventTypeClient({ lang, type, dict }) {
   const doneCount = Object.values(checked).filter(Boolean).length;
   const progressPct = checklist.length > 0 ? (doneCount / checklist.length) * 100 : 0;
 
-  // Related events: pick 4 other event types
+  // Related events: only true "occasions" (not service categories like balloons, cakes, gifts)
+  const REAL_EVENTS = ["wedding", "birthday", "engagement", "anniversary", "kids-party", "corporate", "baptism", "baby-tooth", "christmas"];
   const related = useMemo(() => {
-    const all = Object.keys(EVENT_META).filter(k => k !== type);
-    return all.slice(0, 6).map(k => ({
+    return REAL_EVENTS.filter(k => k !== type && EVENT_META[k]).slice(0, 6).map(k => ({
       slug: k,
       label: lang === "hy" ? EVENT_META[k].labelHy : lang === "ru" ? EVENT_META[k].labelRu : EVENT_META[k].label,
       image: EVENT_META[k].image,

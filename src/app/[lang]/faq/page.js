@@ -16,6 +16,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function FAQPage() {
-  return <FAQPageClient />;
+export default async function FAQPage({ params }) {
+  const { lang } = await params;
+  return <FAQPageClient lang={lang} />;
 }

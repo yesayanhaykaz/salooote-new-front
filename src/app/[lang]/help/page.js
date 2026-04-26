@@ -16,6 +16,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function HelpPage() {
-  return <HelpPageClient />;
+export default async function HelpPage({ params }) {
+  const { lang } = await params;
+  return <HelpPageClient lang={lang} />;
 }

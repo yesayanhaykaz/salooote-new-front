@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-  Facebook, Instagram, Youtube, ArrowRight, Sparkles,
+  Facebook, Instagram, Youtube, ArrowRight,
   Phone, Mail, MapPin, Apple,
 } from "lucide-react";
 
@@ -63,12 +63,6 @@ const PAYMENT_ICONS = [
   { label: "Amex",       Icon: AmexIcon },
 ];
 
-function openAIChat() {
-  if (typeof window !== "undefined") {
-    window.dispatchEvent(new CustomEvent("salooote:openChat"));
-  }
-}
-
 export default function Footer({ lang = "en", dict }) {
   const f = dict?.footer || {};
   const year = new Date().getFullYear();
@@ -104,37 +98,6 @@ export default function Footer({ lang = "en", dict }) {
 
   return (
     <footer className="bg-white border-t border-surface-200">
-
-      {/* ── AI CTA Banner ── */}
-      <div className="max-w-container mx-auto px-6 md:px-8 pt-12">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-500 to-rose-500 px-8 md:px-12 py-10 md:py-12 shadow-xl shadow-brand-500/20">
-          {/* Decorative blobs */}
-          <div className="absolute -top-12 -right-10 w-48 h-48 rounded-full bg-white/10 blur-2xl" />
-          <div className="absolute -bottom-16 -left-12 w-56 h-56 rounded-full bg-rose-300/30 blur-3xl" />
-          <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="max-w-[560px]">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-xs font-semibold tracking-wide uppercase">
-                <Sparkles size={13} className="text-white" />
-                {f.aiCta?.eyebrow || "AI Assistant"}
-              </span>
-              <h3 className="mt-3 text-2xl md:text-3xl font-bold text-white leading-tight">
-                {f.aiCta?.title || "Plan your perfect event with AI"}
-              </h3>
-              <p className="mt-2 text-white/90 text-sm md:text-base leading-relaxed">
-                {f.aiCta?.subtitle || "Tell Sali what you need — she'll find vendors, build your event plan, and stay on budget."}
-              </p>
-            </div>
-            <button
-              onClick={openAIChat}
-              className="self-start md:self-auto flex items-center gap-2 bg-white text-brand-700 font-semibold rounded-2xl px-6 md:px-7 py-3.5 text-sm md:text-base shadow-lg shadow-brand-700/20 hover:shadow-xl hover:-translate-y-0.5 transition-all border-none cursor-pointer whitespace-nowrap"
-            >
-              <Sparkles size={16} className="text-brand-600" />
-              {f.aiCta?.button || "Chat with AI"}
-              <ArrowRight size={15} />
-            </button>
-          </div>
-        </div>
-      </div>
 
       <div className="max-w-container mx-auto px-6 md:px-8 pt-12 pb-0">
 
