@@ -1,3 +1,4 @@
+import { getDictionary } from "@/lib/getDictionary";
 import VendorProductClient from "@/app/vendor/[slug]/product/[productSlug]/page";
 
 export const dynamicParams = true;
@@ -21,5 +22,6 @@ export async function generateMetadata({ params }) {
 
 export default async function VendorProductPage({ params }) {
   const { lang, vendor, product } = await params;
-  return <VendorProductClient lang={lang} vendorSlug={vendor} productSlug={product} />;
+  const dict = await getDictionary(lang);
+  return <VendorProductClient lang={lang} vendorSlug={vendor} productSlug={product} dict={dict} />;
 }

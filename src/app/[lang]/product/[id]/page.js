@@ -1,3 +1,4 @@
+import { getDictionary } from "@/lib/getDictionary";
 import ProductDetailClient from "@/app/product/[id]/page";
 
 export const dynamicParams = true;
@@ -18,5 +19,6 @@ export async function generateMetadata({ params }) {
 
 export default async function ProductIdPage({ params }) {
   const { lang, id } = await params;
-  return <ProductDetailClient productId={id} lang={lang} />;
+  const dict = await getDictionary(lang);
+  return <ProductDetailClient productId={id} lang={lang} dict={dict} />;
 }

@@ -2,7 +2,6 @@ import { getDictionary } from "@/lib/getDictionary";
 import VendorProfileClient from "@/app/vendor/[slug]/page";
 
 export async function generateStaticParams() {
-  // Pre-render common language variants; additional slugs resolved at runtime
   return [{ lang: "en" }, { lang: "hy" }, { lang: "ru" }].flatMap(l =>
     ["salooote", "royal-bakes", "yerevan-flowers"].map(slug => ({
       lang: l.lang,
@@ -27,5 +26,6 @@ export async function generateMetadata({ params }) {
 
 export default async function VendorSlugPage({ params }) {
   const { lang, slug } = await params;
-  return <VendorProfileClient lang={lang} slug={slug} />;
+  const dict = await getDictionary(lang);
+  return <VendorProfileClient lang={lang} slug={slug} dict={dict} />;
 }

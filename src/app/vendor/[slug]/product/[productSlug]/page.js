@@ -4,7 +4,8 @@ import { Search } from "lucide-react";
 import { vendorsAPI, productsAPI } from "@/lib/api";
 import ProductDetailPage from "@/app/product/[id]/page";
 
-export default function VendorProductClient({ lang = "en", vendorSlug, productSlug }) {
+export default function VendorProductClient({ lang = "en", vendorSlug, productSlug, dict }) {
+  const p = dict?.product || {};
   const [productId, setProductId] = useState(null);
   const [error, setError]         = useState(false);
   const [loading, setLoading]     = useState(true);
@@ -16,7 +17,6 @@ export default function VendorProductClient({ lang = "en", vendorSlug, productSl
       return;
     }
 
-    // Resolve vendor slug → vendor id, then fetch product by vendor_id + slug directly
     vendorsAPI.getBySlug(vendorSlug)
       .then(vRes => {
         const vendorId = vRes?.data?.id;
@@ -36,8 +36,8 @@ export default function VendorProductClient({ lang = "en", vendorSlug, productSl
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-sm text-surface-400">Loading product…</p>
+          <div className="w-9 h-9 border-2 border-brand-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-surface-400">{p.loading || "Loading product…"}</p>
         </div>
       </div>
     );
@@ -45,15 +45,15 @@ export default function VendorProductClient({ lang = "en", vendorSlug, productSl
 
   if (error || !productId) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center px-4">
         <div className="text-center">
           <Search size={40} className="text-surface-300 mx-auto mb-4" />
-          <p className="text-lg font-semibold text-surface-700 mb-2">Product not found</p>
-          <p className="text-sm text-surface-400">This product may have been removed or the link is incorrect.</p>
+          <p className="text-lg font-semibold text-surface-700 mb-2">{p.notFound || "Product not found"}</p>
+          <p className="text-sm text-surface-400">{p.notFoundDesc || "This product may have been removed or doesn't exist."}</p>
         </div>
       </div>
     );
   }
 
-  return <ProductDetailPage productId={productId} lang={lang} />;
+  return <ProductDetailPage productId={productId} lang={lang} dict={dict} />;
 }
