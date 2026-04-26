@@ -1520,6 +1520,8 @@ export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
   const pathname = usePathname() || "";
   const onAIPage = /^\/(en|hy|ru)\/?$/.test(pathname);
+  // Pages where Sali is already the main UI — no need for the floating button
+  const onAIDestination = onAIPage || /\/planner(\/|$|\?)/.test(pathname);
   const HIDE_ON = ["/login", "/signup", "/forgot-password", "/checkout", "/payment"];
   const hideEverything = HIDE_ON.some(p => pathname.includes(p));
   const [phase, setPhase] = useState("landing");
@@ -1533,9 +1535,87 @@ export default function AIAssistantV2Client({ lang }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  // FAB UX state
+  const [fabDismissed, setFabDismissed] = useState(false);
+  const [fabPos, setFabPos] = useState(null);     // { right, bottom } in px, or null = default
+  const fabDragRef = useRef({ dragging: false, startX: 0, startY: 0, startRight: 0, startBottom: 0, moved: false });
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
   const timersRef = useRef([]);
+
+  // Hydrate FAB preferences from localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const dismissed = sessionStorage.getItem("salooote_fab_dismissed");
+      if (dismissed === "1") setFabDismissed(true);
+      const posRaw = localStorage.getItem("salooote_fab_pos");
+      if (posRaw) {
+        const p = JSON.parse(posRaw);
+        if (p && typeof p.right === "number" && typeof p.bottom === "number") setFabPos(p);
+      }
+    } catch {}
+  }, []);
+
+  const handleFabDismiss = useCallback((e) => {
+    e?.stopPropagation();
+    setFabDismissed(true);
+    try { sessionStorage.setItem("salooote_fab_dismissed", "1"); } catch {}
+  }, []);
+
+  // Drag handlers — track movement, on mouseup save position. Click only fires
+  // if the pointer didn't actually move beyond a small threshold.
+  const onFabPointerDown = useCallback((e) => {
+    if (typeof window === "undefined") return;
+    if (e.button != null && e.button !== 0) return;
+    const pt = e.touches?.[0] || e;
+    const right = fabPos?.right ?? 22;
+    const bottom = fabPos?.bottom ?? 22;
+    fabDragRef.current = {
+      dragging: true,
+      startX: pt.clientX,
+      startY: pt.clientY,
+      startRight: right,
+      startBottom: bottom,
+      moved: false,
+    };
+    const onMove = (ev) => {
+      const m = ev.touches?.[0] || ev;
+      const dx = m.clientX - fabDragRef.current.startX;
+      const dy = m.clientY - fabDragRef.current.startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) fabDragRef.current.moved = true;
+      // right/bottom decrease as cursor moves right/down (anchor is bottom-right)
+      const newRight = Math.max(8, Math.min(window.innerWidth - 60, fabDragRef.current.startRight - dx));
+      const newBottom = Math.max(8, Math.min(window.innerHeight - 60, fabDragRef.current.startBottom - dy));
+      setFabPos({ right: newRight, bottom: newBottom });
+    };
+    const onEnd = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onEnd);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onEnd);
+      if (fabDragRef.current.moved) {
+        try { localStorage.setItem("salooote_fab_pos", JSON.stringify(fabPos)); } catch {}
+      }
+      // brief delay before clearing dragging so the click handler can read it
+      setTimeout(() => { fabDragRef.current.dragging = false; }, 0);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onEnd);
+    window.addEventListener("touchmove", onMove, { passive: true });
+    window.addEventListener("touchend", onEnd);
+  }, [fabPos]);
+
+  const onFabClick = useCallback((e) => {
+    if (fabDragRef.current.moved) {
+      // suppress click triggered by drag
+      e.preventDefault();
+      e.stopPropagation();
+      fabDragRef.current.moved = false;
+      return;
+    }
+    setPhase("chat");
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -2675,38 +2755,60 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-head-close:hover{background:#fdf2f5;color:${PINK};border-color:${PINK};transform:scale(1.04)}
 
+        /* ── Floating launcher wrapper (drag anchor) ── */
+        .v2-fab-wrap{
+          position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:90;
+          touch-action:none;
+        }
+        .v2-fab-dismiss{
+          position:absolute;top:-6px;right:-6px;
+          width:22px;height:22px;border-radius:50%;border:1px solid rgba(240,218,228,.95);
+          background:#fff;color:#9c5b71;cursor:pointer;
+          display:flex;align-items:center;justify-content:center;
+          box-shadow:0 4px 10px rgba(20,5,12,.18);
+          opacity:0;transition:opacity .18s,transform .15s,color .15s,background .15s;
+          padding:0;
+        }
+        .v2-fab-wrap:hover .v2-fab-dismiss,
+        .v2-fab-dismiss:focus-visible{opacity:1}
+        .v2-fab-dismiss:hover{background:${PINK};color:#fff;border-color:${PINK};transform:scale(1.06)}
+
         /* ── Reopen-chat floating pill ── */
         .v2-reopen{
-          position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:90;
+          position:relative;
           display:inline-flex;align-items:center;gap:10px;
           padding:8px 18px 8px 8px;border-radius:999px;border:none;
-          background:#fff;cursor:pointer;
+          background:#fff;cursor:grab;
           box-shadow:0 12px 32px rgba(225,29,92,.28),0 4px 12px rgba(225,29,92,.16);
           color:#1a0a14;font-family:inherit;font-size:14px;font-weight:700;letter-spacing:.1px;
-          transition:all .22s cubic-bezier(.2,.8,.2,1);
+          transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s cubic-bezier(.2,.8,.2,1);
           animation:v2-reopen-in .35s cubic-bezier(.2,.8,.2,1);
+          user-select:none;-webkit-user-select:none;
         }
         .v2-reopen:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(225,29,92,.36)}
+        .v2-reopen:active{cursor:grabbing}
         .v2-reopen-pulse{
           position:absolute;inset:-4px;border-radius:999px;
           background:radial-gradient(circle,rgba(225,29,92,.22) 0%,transparent 70%);
           animation:v2-reopen-pulse 2.4s ease-in-out infinite;pointer-events:none;
         }
-        .v2-reopen-icon{position:relative;display:flex;align-items:center;justify-content:center}
-        .v2-reopen-label{position:relative}
+        .v2-reopen-icon{position:relative;display:flex;align-items:center;justify-content:center;pointer-events:none}
+        .v2-reopen-label{position:relative;pointer-events:none}
         @keyframes v2-reopen-in{from{opacity:0;transform:translateY(20px) scale(.9)}to{opacity:1;transform:none}}
         @keyframes v2-reopen-pulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:0;transform:scale(1.25)}}
 
         .v2-reopen-mini{
-          position:fixed;right:22px;bottom:calc(22px + env(safe-area-inset-bottom));z-index:90;
+          position:relative;
           width:60px;height:60px;border-radius:50%;border:none;
           background:linear-gradient(135deg,#fff 0%,#ffeef4 100%);
-          cursor:pointer;display:flex;align-items:center;justify-content:center;
+          cursor:grab;display:flex;align-items:center;justify-content:center;
           box-shadow:0 12px 32px rgba(225,29,92,.32),0 4px 12px rgba(225,29,92,.18);
-          transition:all .22s cubic-bezier(.2,.8,.2,1);
+          transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s cubic-bezier(.2,.8,.2,1);
           animation:v2-reopen-in .35s cubic-bezier(.2,.8,.2,1);
+          user-select:none;-webkit-user-select:none;
         }
         .v2-reopen-mini:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 16px 40px rgba(225,29,92,.4)}
+        .v2-reopen-mini:active{cursor:grabbing}
 
         /* ── Inline links inside bot messages ── */
         .v2-msg-link{
@@ -2757,9 +2859,11 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-hero2-search-btn-label{display:none}
           .v2-hero2-search-btn{padding:11px 14px}
           .v2-moments-head{flex-direction:column;align-items:flex-start;gap:8px}
-          .v2-reopen{right:14px;bottom:calc(78px + env(safe-area-inset-bottom));padding:6px 14px 6px 6px;font-size:13px}
+          .v2-fab-wrap{right:14px;bottom:calc(78px + env(safe-area-inset-bottom))}
+          .v2-reopen{padding:6px 14px 6px 6px;font-size:13px}
           .v2-reopen-label{display:none}
-          .v2-reopen-mini{right:14px;bottom:calc(78px + env(safe-area-inset-bottom));width:54px;height:54px}
+          .v2-reopen-mini{width:54px;height:54px}
+          .v2-fab-dismiss{opacity:1;width:24px;height:24px;top:-8px;right:-8px}
 
           /* Sidebar becomes slide-in panel */
           .v2-overlay{grid-template-columns:1fr}
@@ -2897,35 +3001,53 @@ export default function AIAssistantV2Client({ lang }) {
         />
       )}
 
-      {/* Continue pill / mini launcher — visible on every page when chat is closed.
-          On the AI page itself, only show if there's history (the landing already has its own input). */}
-      {phase !== "chat" && (!onAIPage || messages.length > 0) && (
-        messages.length > 0 ? (
-          <button
-            type="button"
-            onClick={() => setPhase("chat")}
-            className="v2-reopen"
-            aria-label={lang === "ru" ? "Открыть чат" : lang === "hy" ? "Բացել չատը" : "Open chat"}
-          >
-            <span className="v2-reopen-pulse" />
-            <span className="v2-reopen-icon">
-              <BotMascot size={32} />
-            </span>
-            <span className="v2-reopen-label">
-              {lang === "ru" ? "Продолжить" : lang === "hy" ? "Շարունակել" : "Continue"}
-            </span>
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setPhase("chat")}
-            className="v2-reopen-mini"
-            aria-label={lang === "ru" ? "Открыть Sali AI" : lang === "hy" ? "Բացել Sali AI" : "Open Sali AI"}
-            title={lang === "ru" ? "Sali AI помощник" : lang === "hy" ? "Sali AI օգնական" : "Sali AI assistant"}
-          >
-            <BotMascot size={36} />
-          </button>
-        )
+      {/* Floating launcher — hidden on AI pages (landing/planner already have their own input)
+          and when the user has dismissed it for the session.
+          Drag-and-drop to reposition; position persists in localStorage.
+          A small × button hides it for the rest of the session. */}
+      {phase !== "chat" && !onAIDestination && !fabDismissed && (
+        (() => {
+          const hasHistory = messages.length > 0;
+          const fabStyle = fabPos
+            ? { right: `${fabPos.right}px`, bottom: `${fabPos.bottom}px` }
+            : undefined;
+          return (
+            <div className="v2-fab-wrap" style={fabStyle}>
+              <button
+                type="button"
+                onMouseDown={onFabPointerDown}
+                onTouchStart={onFabPointerDown}
+                onClick={onFabClick}
+                className={hasHistory ? "v2-reopen" : "v2-reopen-mini"}
+                aria-label={lang === "ru" ? "Открыть Sali AI" : lang === "hy" ? "Բացել Sali AI" : "Open Sali AI"}
+                title={lang === "ru"
+                  ? "Sali AI помощник — перетащите чтобы переместить"
+                  : lang === "hy"
+                  ? "Sali AI օգնական — տեղափոխելու համար քաշիր"
+                  : "Sali AI assistant — drag to move"}
+              >
+                {hasHistory && <span className="v2-reopen-pulse" />}
+                <span className="v2-reopen-icon">
+                  <BotMascot size={hasHistory ? 32 : 36} />
+                </span>
+                {hasHistory && (
+                  <span className="v2-reopen-label">
+                    {lang === "ru" ? "Продолжить" : lang === "hy" ? "Շարունակել" : "Continue"}
+                  </span>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={handleFabDismiss}
+                className="v2-fab-dismiss"
+                aria-label={lang === "ru" ? "Скрыть" : lang === "hy" ? "Թաքցնել" : "Hide"}
+                title={lang === "ru" ? "Скрыть до перезагрузки" : lang === "hy" ? "Թաքցնել մինչ վերաբեռնում" : "Hide until reload"}
+              >
+                <Icon name="x" size={11} />
+              </button>
+            </div>
+          );
+        })()
       )}
     </>
   );
