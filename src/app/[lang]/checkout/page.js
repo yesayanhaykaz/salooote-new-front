@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
@@ -7,7 +7,7 @@ import { userAPI, isLoggedIn } from "@/lib/api";
 import {
   ArrowLeft, MapPin, Phone, User, FileText, Calendar,
   CheckCircle2, Loader2, ShoppingBag, Shield, ChevronRight,
-  Package, AlertCircle, Truck,
+  Package, AlertCircle, Truck, ChevronLeft,
 } from "lucide-react";
 
 const T = {
@@ -21,7 +21,7 @@ const T = {
     phonePh: "+374 XX XXX XXX",
     address: "Delivery address", addressRequired: "Delivery address *",
     addressPh: "Street address",
-    city: "City", cityPh: "Yerevan",
+    city: "City *", cityPh: "Yerevan",
     deliveryDate: "Delivery date *",
     deliveryDateHint: "Choose your preferred delivery / event date",
     notes: "Order notes (optional)",
@@ -43,7 +43,7 @@ const T = {
     successHint: "You'll get a notification when your order is confirmed.",
     trackOrders: "Track my orders",
     continueShopping: "Continue shopping",
-    errorMissing: "Please fill in your name, phone, delivery address, and delivery date.",
+    errorMissing: "Please fill in your name, phone, delivery address, city, and delivery date.",
     errorVendorless: "Some items are missing vendor information. Please remove them and try again.",
     errorGeneric: "Failed to place order. Please try again.",
     deliveryFee: "Delivery fee",
@@ -58,7 +58,7 @@ const T = {
     phonePh: "+374 XX XXX XXX",
     address: "Առաքման հասցե", addressRequired: "Առաքման հասցե *",
     addressPh: "Փողոց, շենք",
-    city: "Քաղաք", cityPh: "Երևան",
+    city: "Քաղաք *", cityPh: "Երևան",
     deliveryDate: "Առաքման ամսաթիվ *",
     deliveryDateHint: "Ընտրեք առաքման / միջոցառման ցանկալի օրը",
     notes: "Նշումներ (ոչ պարտադիր)",
@@ -80,7 +80,7 @@ const T = {
     successHint: "Կստանաք ծանուցում, երբ պատվերը հաստատվի։",
     trackOrders: "Տեսնել իմ պատվերները",
     continueShopping: "Շարունակել գնումները",
-    errorMissing: "Խնդրում ենք լրացնել անուն, հեռախոս, հասցե և ամսաթիվ։",
+    errorMissing: "Խնդրում ենք լրացնել անուն, հեռախոս, հասցե, քաղաք և ամսաթիվ։",
     errorVendorless: "Որոշ ապրանքներ չունեն վաճառողի տվյալներ։ Հեռացրեք դրանք և կրկին փորձեք։",
     errorGeneric: "Չհաջողվեց պատվիրել։ Կրկին փորձեք։",
     deliveryFee: "Առաքման վճար",
@@ -95,7 +95,7 @@ const T = {
     phonePh: "+374 XX XXX XXX",
     address: "Адрес доставки", addressRequired: "Адрес доставки *",
     addressPh: "Улица, дом",
-    city: "Город", cityPh: "Ереван",
+    city: "Город *", cityPh: "Ереван",
     deliveryDate: "Дата доставки *",
     deliveryDateHint: "Выберите желаемую дату доставки / события",
     notes: "Комментарии (необязательно)",
@@ -117,7 +117,7 @@ const T = {
     successHint: "Вы получите уведомление, когда заказ подтвердят.",
     trackOrders: "Мои заказы",
     continueShopping: "Продолжить покупки",
-    errorMissing: "Пожалуйста, заполните имя, телефон, адрес и дату доставки.",
+    errorMissing: "Пожалуйста, заполните имя, телефон, адрес, город и дату доставки.",
     errorVendorless: "У некоторых товаров нет данных продавца. Удалите их и попробуйте снова.",
     errorGeneric: "Не удалось оформить заказ. Попробуйте ещё раз.",
     deliveryFee: "Стоимость доставки",
@@ -146,6 +146,153 @@ function minDeliveryDate() {
   const d = new Date();
   d.setDate(d.getDate() + 1);
   return d.toISOString().slice(0, 10);
+}
+
+const MONTH_NAMES = {
+  en: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+  hy: ["Հունվար","Փետրվար","Մարտ","Ապրիլ","Մայիս","Հունիս","Հուլիս","Օգոստոս","Սեպտեմբեր","Հոկտեմբեր","Նոյեմբեր","Դեկտեմբեր"],
+  ru: ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+};
+const DAY_NAMES = {
+  en: ["Su","Mo","Tu","We","Th","Fr","Sa"],
+  hy: ["Կ","Ե","Ե","Չ","Հ","Ու","Շ"],
+  ru: ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+};
+
+function formatDisplayDate(iso, lang) {
+  if (!iso) return "";
+  const [y, m, d] = iso.split("-").map(Number);
+  const months = MONTH_NAMES[lang] || MONTH_NAMES.en;
+  return `${d} ${months[m - 1]} ${y}`;
+}
+
+function DatePicker({ value, onChange, minDate, lang, hint, label }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  const today = new Date();
+  const initDate = value ? new Date(value + "T00:00:00") : null;
+  const [viewYear, setViewYear] = useState((initDate || today).getFullYear());
+  const [viewMonth, setViewMonth] = useState((initDate || today).getMonth());
+
+  const minParts = minDate.split("-").map(Number);
+  const minTs = new Date(minParts[0], minParts[1] - 1, minParts[2]).getTime();
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const months = MONTH_NAMES[lang] || MONTH_NAMES.en;
+  const days   = DAY_NAMES[lang]   || DAY_NAMES.en;
+
+  function prevMonth() {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
+    else setViewMonth(m => m - 1);
+  }
+  function nextMonth() {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
+    else setViewMonth(m => m + 1);
+  }
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+  function selectDay(day) {
+    const iso = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    onChange(iso);
+    setOpen(false);
+  }
+
+  function isDayDisabled(day) {
+    const ts = new Date(viewYear, viewMonth, day).getTime();
+    return ts < minTs;
+  }
+
+  function isSelected(day) {
+    const iso = `${viewYear}-${String(viewMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    return iso === value;
+  }
+
+  function isToday(day) {
+    return viewYear === today.getFullYear() && viewMonth === today.getMonth() && day === today.getDate();
+  }
+
+  const cells = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className={`w-full px-4 py-3 text-sm border rounded-xl outline-none transition-all bg-white flex items-center gap-3 text-left cursor-pointer ${
+          open ? "border-brand-400 ring-2 ring-brand-100" : "border-surface-200 hover:border-surface-300"
+        } ${!value ? "text-surface-300" : "text-surface-900"}`}
+      >
+        <Calendar size={14} className="text-surface-300 flex-shrink-0" />
+        <span className="flex-1">{value ? formatDisplayDate(value, lang) : label}</span>
+        <ChevronRight size={14} className={`text-surface-300 flex-shrink-0 transition-transform ${open ? "rotate-90" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="absolute z-50 mt-2 bg-white rounded-2xl border border-surface-200 shadow-xl p-4 w-[300px]">
+          {/* Month nav */}
+          <div className="flex items-center justify-between mb-4">
+            <button type="button" onClick={prevMonth} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-100 transition-colors border-none bg-transparent cursor-pointer">
+              <ChevronLeft size={16} className="text-surface-600" />
+            </button>
+            <span className="text-sm font-bold text-surface-900">{months[viewMonth]} {viewYear}</span>
+            <button type="button" onClick={nextMonth} className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-100 transition-colors border-none bg-transparent cursor-pointer">
+              <ChevronRight size={16} className="text-surface-600" />
+            </button>
+          </div>
+
+          {/* Day headers */}
+          <div className="grid grid-cols-7 mb-2">
+            {days.map((d, i) => (
+              <div key={i} className="text-center text-[10px] font-bold text-surface-400 py-1">{d}</div>
+            ))}
+          </div>
+
+          {/* Day cells */}
+          <div className="grid grid-cols-7 gap-y-1">
+            {cells.map((day, i) => {
+              if (!day) return <div key={i} />;
+              const disabled = isDayDisabled(day);
+              const selected = isSelected(day);
+              const todayMark = isToday(day);
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => selectDay(day)}
+                  className={`h-8 w-8 mx-auto rounded-full text-xs font-medium transition-all border-none cursor-pointer flex items-center justify-center ${
+                    selected
+                      ? "bg-brand-600 text-white font-bold shadow-sm"
+                      : disabled
+                      ? "text-surface-200 cursor-not-allowed bg-transparent"
+                      : todayMark
+                      ? "bg-brand-50 text-brand-600 font-bold hover:bg-brand-100"
+                      : "text-surface-700 bg-transparent hover:bg-surface-100"
+                  }`}
+                >
+                  {day}
+                </button>
+              );
+            })}
+          </div>
+
+          {hint && <p className="text-[11px] text-surface-400 mt-3 text-center">{hint}</p>}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function CheckoutPage() {
@@ -188,7 +335,7 @@ export default function CheckoutPage() {
   const grandTotal = cartTotal + deliveryFee;
 
   const handlePlaceOrder = async () => {
-    if (!form.full_name.trim() || !form.phone.trim() || !form.address.trim() || !form.delivery_date) {
+    if (!form.full_name.trim() || !form.phone.trim() || !form.address.trim() || !form.city.trim() || !form.delivery_date) {
       setError(t.errorMissing);
       return;
     }
@@ -360,21 +507,17 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                {/* Delivery date — NEW (CC3) */}
+                {/* Delivery date */}
                 <div>
                   <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.deliveryDate}</label>
-                  <div className="relative">
-                    <Calendar size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-300 pointer-events-none" />
-                    <input
-                      type="date"
-                      name="delivery_date"
-                      value={form.delivery_date}
-                      onChange={set}
-                      min={minDate}
-                      className={`${inputCls} pl-10`}
-                    />
-                  </div>
-                  <p className="text-[11px] text-surface-400 mt-1">{t.deliveryDateHint}</p>
+                  <DatePicker
+                    value={form.delivery_date}
+                    onChange={(iso) => setForm(p => ({ ...p, delivery_date: iso }))}
+                    minDate={minDate}
+                    lang={lang || "en"}
+                    hint={t.deliveryDateHint}
+                    label={t.deliveryDateHint}
+                  />
                 </div>
 
                 {/* Notes */}

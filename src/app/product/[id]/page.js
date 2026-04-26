@@ -107,12 +107,12 @@ export default function ProductDetailPage({ productId, lang = "en", dict }) {
 
           {/* Images */}
           <div className="w-full">
-            <div className="rounded-2xl overflow-hidden h-[280px] sm:h-[360px] md:h-[420px] relative mb-4 bg-surface-100">
+            <div className="rounded-2xl overflow-hidden aspect-[4/5] relative mb-4 bg-surface-100">
               <Image
                 src={product.images[activeImg] || "/images/wedding-cake.jpg"}
                 alt={product.name}
                 fill
-                className="object-cover"
+                className="object-contain"
                 priority
               />
               {discount && !product.tag && (
