@@ -1,12 +1,13 @@
 import "@/styles/globals.css";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://salooote.am";
-const OG_IMAGE = `${SITE}/images/hero-dj.jpg`;
+// Update SITE_URL when domain switches from development to production
+const SITE_URL = "https://development.salooote.am";
+const OG_IMAGE = `${SITE_URL}/images/hero-dj.jpg`;
 
 export const metadata = {
   title: "Salooote.am — Plan Your Dream Events, Easily",
   description: "Armenia's #1 event planning marketplace.",
-  metadataBase: new URL(SITE),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "Salooote.am — Plan Your Dream Events, Easily",
     description: "Armenia's #1 event planning marketplace.",
