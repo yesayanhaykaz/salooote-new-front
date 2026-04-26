@@ -36,6 +36,18 @@ const slugIcon = (slug = "") => {
 
 const PILL_ALL_LABEL = { en: "All Products", hy: "Բոլոր Ապրանքներ", ru: "Все Товары" };
 
+/* User-menu translations */
+const USER_MENU_T = {
+  myProfile:  { en: "My Profile",   hy: "Իմ պրոֆիլը",        ru: "Мой профиль" },
+  myOrders:   { en: "My Orders",    hy: "Իմ պատվերները",     ru: "Мои заказы" },
+  savedItems: { en: "Saved Items",  hy: "Պահպանված",         ru: "Избранное" },
+  settings:   { en: "Settings",     hy: "Կարգավորումներ",    ru: "Настройки" },
+  signOut:    { en: "Sign Out",     hy: "Դուրս գալ",         ru: "Выйти" },
+  logIn:      { en: "Log in",       hy: "Մուտք",             ru: "Войти" },
+  signUp:     { en: "Sign up",      hy: "Գրանցվել",          ru: "Регистрация" },
+  browse:     { en: "Browse",       hy: "Կատեգորիաներ",       ru: "Категории" },
+};
+
 /* ─── Type badge colours ─── */
 const TYPE_STYLES = {
   product:  { bg: "rgba(225,29,92,0.08)",  color: "#e11d5c",  label: "Product"  },
@@ -555,11 +567,11 @@ export default function Header({ lang: langProp = "en", dict }) {
 
                     {/* Menu items */}
                     {[
-                      { icon: User,     label: "My Profile",    href: `/${lang}/account` },
-                      { icon: Package,  label: "My Orders",     href: `/${lang}/account/orders` },
-                      { icon: Bookmark, label: "Saved Items",   href: `/${lang}/account/saved` },
-                      { icon: Settings, label: "Settings",      href: `/${lang}/account/settings` },
-                    ].map(({ icon: Icon, label, href }) => (
+                      { icon: User,     key: "myProfile",  href: `/${lang}/account` },
+                      { icon: Package,  key: "myOrders",   href: `/${lang}/account/orders` },
+                      { icon: Bookmark, key: "savedItems", href: `/${lang}/account/saved` },
+                      { icon: Settings, key: "settings",   href: `/${lang}/account/settings` },
+                    ].map(({ icon: Icon, key, href }) => (
                       <Link
                         key={href}
                         href={href}
@@ -567,7 +579,7 @@ export default function Header({ lang: langProp = "en", dict }) {
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-surface-700 hover:bg-surface-50 hover:text-brand-600 no-underline transition-colors"
                       >
                         <Icon size={15} className="text-surface-400" />
-                        {label}
+                        {USER_MENU_T[key]?.[lang] || USER_MENU_T[key]?.en}
                       </Link>
                     ))}
 
@@ -577,7 +589,7 @@ export default function Header({ lang: langProp = "en", dict }) {
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 w-full text-left border-none bg-transparent cursor-pointer transition-colors"
                       >
                         <LogOut size={15} />
-                        Sign Out
+                        {USER_MENU_T.signOut[lang] || USER_MENU_T.signOut.en}
                       </button>
                     </div>
                   </div>
@@ -588,12 +600,12 @@ export default function Header({ lang: langProp = "en", dict }) {
               <div className="hidden md:flex items-center gap-1">
                 <Link href={`/${lang}/login`} className="no-underline">
                   <span className="text-surface-600 text-sm font-medium px-3 py-2 rounded-xl hover:bg-surface-100 transition-colors">
-                    Log in
+                    {USER_MENU_T.logIn[lang] || USER_MENU_T.logIn.en}
                   </span>
                 </Link>
                 <Link href={`/${lang}/signup`} className="no-underline">
                   <button className="bg-brand-600 text-white border-none rounded-xl px-4 py-2 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
-                    Sign up
+                    {USER_MENU_T.signUp[lang] || USER_MENU_T.signUp.en}
                   </button>
                 </Link>
               </div>
@@ -735,10 +747,10 @@ export default function Header({ lang: langProp = "en", dict }) {
                   </div>
                 </div>
                 {[
-                  { icon: User,     label: "My Profile",  href: `/${lang}/account` },
-                  { icon: Package,  label: "My Orders",   href: `/${lang}/account/orders` },
-                  { icon: Bookmark, label: "Saved Items", href: `/${lang}/account/saved` },
-                ].map(({ icon: Icon, label, href }) => (
+                  { icon: User,     key: "myProfile",  href: `/${lang}/account` },
+                  { icon: Package,  key: "myOrders",   href: `/${lang}/account/orders` },
+                  { icon: Bookmark, key: "savedItems", href: `/${lang}/account/saved` },
+                ].map(({ icon: Icon, key, href }) => (
                   <Link
                     key={href}
                     href={href}
@@ -746,7 +758,7 @@ export default function Header({ lang: langProp = "en", dict }) {
                     className="flex items-center gap-3 py-2 text-sm text-surface-700 hover:text-brand-600 no-underline transition-colors"
                   >
                     <Icon size={15} className="text-surface-400" />
-                    {label}
+                    {USER_MENU_T[key]?.[lang] || USER_MENU_T[key]?.en}
                   </Link>
                 ))}
                 <button
@@ -754,19 +766,19 @@ export default function Header({ lang: langProp = "en", dict }) {
                   className="flex items-center gap-3 mt-2 text-sm text-red-500 border-none bg-transparent cursor-pointer p-0 hover:text-red-600 transition-colors"
                 >
                   <LogOut size={15} />
-                  Sign Out
+                  {USER_MENU_T.signOut[lang] || USER_MENU_T.signOut.en}
                 </button>
               </div>
             ) : (
               <div className="px-5 py-4 border-b border-surface-100 flex gap-2">
                 <Link href={`/${lang}/login`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
                   <button className="w-full py-2.5 rounded-xl border border-surface-200 text-surface-700 font-semibold text-sm bg-transparent cursor-pointer hover:bg-surface-50 transition-colors">
-                    Log in
+                    {USER_MENU_T.logIn[lang] || USER_MENU_T.logIn.en}
                   </button>
                 </Link>
                 <Link href={`/${lang}/signup`} className="no-underline flex-1" onClick={() => setMenuOpen(false)}>
                   <button className="w-full py-2.5 rounded-xl bg-brand-600 text-white font-semibold text-sm border-none cursor-pointer hover:bg-brand-700 transition-colors">
-                    Sign up
+                    {USER_MENU_T.signUp[lang] || USER_MENU_T.signUp.en}
                   </button>
                 </Link>
               </div>
@@ -774,7 +786,9 @@ export default function Header({ lang: langProp = "en", dict }) {
 
             {/* Categories */}
             <div className="px-5 pt-4 pb-2">
-              <p className="text-xs font-semibold text-surface-400 uppercase tracking-widest mb-3">Browse</p>
+              <p className="text-xs font-semibold text-surface-400 uppercase tracking-widest mb-3">
+                {USER_MENU_T.browse[lang] || USER_MENU_T.browse.en}
+              </p>
               {navCategories.map((item, i) => {
                 const Icon = item.icon;
                 return (

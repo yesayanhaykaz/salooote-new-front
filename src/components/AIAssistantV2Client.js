@@ -929,15 +929,15 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
             <span>{tx(T.aiBadge, lang)}</span>
           </div>
 
-          {/* Headline */}
+          {/* Headline — rotating word locked to line 2 so layout never jumps */}
           <h1 className="v2-hero2-headline">
-            <span className="v2-hero2-static">{heroPart1}</span>{" "}
+            <span className="v2-hero2-static">{heroPart1}</span>
+            <br />
             <span className="v2-hero2-rotate-wrap">
               <span key={wordIdx} className="v2-hero2-rotate">
                 {rotateWords[wordIdx]}
               </span>
-            </span>
-            <br />
+            </span>{" "}
             <span className="v2-hero2-static">{heroPart2}</span>
           </h1>
 
@@ -1030,7 +1030,15 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
       <TrendingNow lang={lang} />
 
       {/* Browse Moments (replaces Plan Any Occasion) */}
-      <BrowseMoments lang={lang} />
+      <BrowseMoments
+        lang={lang}
+        onPlanAI={() => {
+          if (typeof window !== "undefined") {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            setTimeout(() => inputRef?.current?.focus(), 600);
+          }
+        }}
+      />
 
       {/* "How it works" anchor section below the fold */}
       <section id="v2-howitworks" className="v2-how">
@@ -1222,8 +1230,11 @@ function TrendingNow({ lang }) {
 }
 
 // ── Browse Moments (poster-style grid) ─────────────────────────────
-function BrowseMoments({ lang }) {
+function BrowseMoments({ lang, onPlanAI }) {
   const items = tx(T.moments, lang);
+  const planLabel = lang === "hy" ? "Պլանավորիր AI-ով"
+                   : lang === "ru" ? "Спланировать с AI"
+                   : "Plan with AI";
   return (
     <section className="v2-moments">
       <div className="v2-moments-head">
@@ -1231,10 +1242,21 @@ function BrowseMoments({ lang }) {
           <p className="v2-browse-eyebrow">{tx(T.momentsEyebrow, lang)}</p>
           <h2 className="v2-browse-headline v2-moments-headline">{tx(T.momentsHeadline, lang)}</h2>
         </div>
-        <Link href={`/${lang}/events`} className="v2-moments-all">
-          {tx(T.momentsAllEvents, lang)}
-          <Icon name="arrowRight" size={14} />
-        </Link>
+        <div className="v2-moments-actions">
+          <button
+            type="button"
+            onClick={() => onPlanAI?.()}
+            className="v2-moments-plan-cta"
+            aria-label={planLabel}
+          >
+            <Icon name="sparkle" size={14} />
+            <span>{planLabel}</span>
+          </button>
+          <Link href={`/${lang}/events`} className="v2-moments-all">
+            {tx(T.momentsAllEvents, lang)}
+            <Icon name="arrowRight" size={14} />
+          </Link>
+        </div>
       </div>
 
       <div className="v2-moments-grid">
@@ -2148,6 +2170,23 @@ export default function AIAssistantV2Client({ lang }) {
           gap:16px;margin-bottom:36px;
         }
         .v2-moments-headline{margin:6px 0 0;text-align:left}
+        .v2-moments-actions{
+          display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;
+        }
+        .v2-moments-plan-cta{
+          display:inline-flex;align-items:center;gap:7px;
+          padding:10px 18px;border-radius:999px;
+          background:linear-gradient(135deg,${PINK} 0%,#f43f5e 100%);
+          color:#fff;border:none;cursor:pointer;
+          font-family:inherit;font-size:13.5px;font-weight:700;letter-spacing:.1px;
+          box-shadow:0 8px 22px rgba(225,29,92,.32);
+          transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .18s;
+        }
+        .v2-moments-plan-cta:hover{
+          transform:translateY(-2px);
+          box-shadow:0 14px 32px rgba(225,29,92,.44);
+        }
+        .v2-moments-plan-cta:active{transform:translateY(0)}
         .v2-moments-all{
           display:inline-flex;align-items:center;gap:6px;
           font-size:14px;font-weight:600;color:#1a0a14;

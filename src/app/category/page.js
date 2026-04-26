@@ -379,19 +379,39 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
         )}
         <div className={`relative max-w-container mx-auto px-6 md:px-8 py-12 flex items-center justify-between gap-8 flex-wrap ${categoryInfo?.image_url ? "text-white" : ""}`}>
           <div>
-            <div className={`flex items-center gap-1.5 text-xs mb-4 flex-wrap ${categoryInfo?.image_url ? "text-white/70" : "text-surface-400"}`}>
-              <Link href={`/${lang}`} className={`no-underline transition-colors ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-400"}`}>{t.home}</Link>
-              <ChevronRight size={12} />
-              {parentSlug ? (
+            <nav
+              aria-label="Breadcrumb"
+              className={`flex items-center gap-1.5 text-xs mb-4 flex-wrap leading-relaxed ${categoryInfo?.image_url ? "text-white/70" : "text-surface-500"}`}
+            >
+              <Link
+                href={`/${lang}`}
+                className={`no-underline transition-colors whitespace-nowrap ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-500"}`}
+              >
+                {t.home}
+              </Link>
+              <ChevronRight size={12} className="flex-shrink-0 opacity-60" />
+              <Link
+                href={`/${lang}/products`}
+                className={`no-underline transition-colors whitespace-nowrap ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-500"}`}
+              >
+                {t.allCategories || "Categories"}
+              </Link>
+              <ChevronRight size={12} className="flex-shrink-0 opacity-60" />
+              {parentSlug && (
                 <>
-                  <Link href={`/${lang}/category/${parentSlug}`} className={`no-underline transition-colors ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-400"}`}>{parentName}</Link>
-                  <ChevronRight size={12} />
-                  <span className={categoryInfo?.image_url ? "text-white font-medium" : "text-surface-700 font-medium"}>{categoryName}</span>
+                  <Link
+                    href={`/${lang}/category/${parentSlug}`}
+                    className={`no-underline transition-colors whitespace-normal break-words ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-500"}`}
+                  >
+                    {parentName}
+                  </Link>
+                  <ChevronRight size={12} className="flex-shrink-0 opacity-60" />
                 </>
-              ) : (
-                <span className={categoryInfo?.image_url ? "text-white font-medium" : "text-surface-700 font-medium"}>{categoryName}</span>
               )}
-            </div>
+              <span className={`whitespace-normal break-words ${categoryInfo?.image_url ? "text-white font-medium" : "text-surface-800 font-semibold"}`}>
+                {categoryName}
+              </span>
+            </nav>
             <div className="flex items-center gap-3 mb-2">
               {categoryInfo?.emoji && <span className="text-4xl">{categoryInfo.emoji}</span>}
               <h1 className={`text-4xl md:text-5xl font-bold ${categoryInfo?.image_url ? "text-white" : "text-surface-900"}`}>{categoryName}</h1>
@@ -425,41 +445,46 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
         </div>
       </section>
 
-      {/* ── Subcategory strip ── */}
+      {/* ── Subcategory grid (replaces old violet pill strip) ── */}
       {subcategories.length > 0 && (
         <section className="border-b border-surface-100 bg-white">
-          <div className="max-w-container mx-auto px-6 md:px-8 py-5">
-            <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar pb-1">
-              {subcategories.map((sub, i) => {
-                const hue = sub.color || "#7c3aed";
+          <div className="max-w-container mx-auto px-6 md:px-8 py-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+              {subcategories.map((sub) => {
+                // Brand pink accent everywhere; only override when the
+                // category record provides a non-violet, non-default color.
+                const isDefaultViolet = !sub.color || /#?7c3aed/i.test(sub.color);
+                const hue = isDefaultViolet ? "#e11d5c" : sub.color;
                 return (
                   <Link
                     key={sub.id || sub.slug}
                     href={`/${lang}/category/${slug}/${sub.slug}`}
-                    className="no-underline flex-shrink-0 group"
+                    className="no-underline group"
                   >
                     <div
-                      className="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-2xl border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-                      style={{
-                        background: `${hue}0d`,
-                        borderColor: `${hue}30`,
-                      }}
+                      className="relative flex flex-col items-start gap-2 p-3.5 rounded-2xl border bg-white hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 h-full"
+                      style={{ borderColor: `${hue}24` }}
                     >
-                      {/* colored dot */}
                       <span
-                        className="w-2 h-2 rounded-full flex-shrink-0"
-                        style={{ background: hue }}
-                      />
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-base flex-shrink-0"
+                        style={{ background: `${hue}14`, color: hue }}
+                      >
+                        {sub.emoji || sub.icon ? (
+                          <span className="text-lg">{sub.emoji || ""}</span>
+                        ) : (
+                          <span className="w-2 h-2 rounded-full" style={{ background: hue }} />
+                        )}
+                      </span>
                       <span
-                        className="text-sm font-semibold whitespace-nowrap transition-colors"
-                        style={{ color: hue }}
+                        className="text-[13.5px] font-semibold leading-tight transition-colors group-hover:opacity-80"
+                        style={{ color: "#1f2937" }}
                       >
                         {sub.name}
                       </span>
                       {sub.product_count > 0 && (
                         <span
-                          className="text-[11px] font-bold px-1.5 py-0.5 rounded-full"
-                          style={{ background: `${hue}20`, color: hue }}
+                          className="absolute top-2 right-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                          style={{ background: `${hue}14`, color: hue }}
                         >
                           {sub.product_count}
                         </span>
@@ -624,7 +649,17 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
                   </div>
                 ) : view === "grid" ? (
                   <>
-                    <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {/* When only 1-2 products, grid-cols-2 stretches them awkwardly.
+                        Use auto-rows + fixed-width columns so single items stay compact. */}
+                    <div
+                      className={
+                        filtered.length === 1
+                          ? "grid grid-cols-1 sm:grid-cols-[minmax(0,260px)] gap-4"
+                          : filtered.length === 2
+                          ? "grid grid-cols-2 md:grid-cols-[repeat(2,minmax(0,260px))] gap-4"
+                          : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+                      }
+                    >
                       {filtered.map((p, i) => <ProductCard key={p.id || i} product={p} lang={lang} />)}
                     </div>
                     {/* Infinite scroll sentinel */}

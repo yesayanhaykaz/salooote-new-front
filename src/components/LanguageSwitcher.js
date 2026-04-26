@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
 import { LOCALES, LOCALE_NAMES, LOCALE_FLAGS } from "@/lib/getDictionary";
 
+const LANGUAGE_LABEL = { en: "Language", hy: "Լեզու", ru: "Язык" };
+
 export default function LanguageSwitcher({ currentLang }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -53,7 +55,9 @@ export default function LanguageSwitcher({ currentLang }) {
               transition={{ duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
               className="absolute right-0 top-full mt-2 bg-white rounded-2xl border border-surface-200 shadow-xl py-1.5 z-50 min-w-[160px] overflow-hidden"
             >
-              <p className="px-4 pt-1.5 pb-2 text-[10px] font-bold text-surface-400 uppercase tracking-wider">Language</p>
+              <p className="px-4 pt-1.5 pb-2 text-[10px] font-bold text-surface-400 uppercase tracking-wider">
+                {LANGUAGE_LABEL[currentLang] || LANGUAGE_LABEL.en}
+              </p>
               {LOCALES.map((locale) => (
                 <button
                   key={locale}

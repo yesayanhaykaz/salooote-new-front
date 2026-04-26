@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Heart, ShoppingCart, Star, Eye, Check } from "lucide-react";
+import { Heart, ShoppingCart, Star, Check, Store } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useSaved } from "@/lib/saved-context";
 import { isLoggedIn } from "@/lib/api";
@@ -18,6 +18,12 @@ const productImages = {
   6: "/images/wedding-cake2.jpg",
   7: "/images/flowers-roses.jpg",
   8: "/images/party-hats.jpg",
+};
+
+const T = {
+  addToCart: { en: "Add to cart",  hy: "Ավելացնել",  ru: "В корзину" },
+  added:     { en: "Added",        hy: "Ավելացված",  ru: "Добавлено" },
+  byVendor:  { en: "by",           hy: "—",          ru: "от" },
 };
 
 export default function ProductCard({ product, lang = "en" }) {
@@ -71,17 +77,18 @@ export default function ProductCard({ product, lang = "en" }) {
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         className="bg-white rounded-xl border border-surface-200 overflow-hidden cursor-pointer will-change-transform"
       >
-        {/* Image */}
-        <div className="h-48 relative overflow-hidden bg-surface-100">
+        {/* Image — aspect-[4/5] = fixed width per column, height adapts */}
+        <div className="relative overflow-hidden bg-surface-100" style={{ aspectRatio: "4 / 5" }}>
           {imgSrc ? (
             <Image
               src={imgSrc}
               alt={product.name}
               fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               className="object-cover transition-transform duration-500 group-hover:scale-108"
             />
           ) : (
-            <div className={`h-full bg-gradient-to-br ${product.gradient || "from-brand-50 to-brand-100"}`} />
+            <div className={`absolute inset-0 bg-gradient-to-br ${product.gradient || "from-brand-50 to-brand-100"}`} />
           )}
 
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-300" />
@@ -122,79 +129,104 @@ export default function ProductCard({ product, lang = "en" }) {
             />
           </motion.button>
 
-          {/* Quick view */}
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            whileHover={{ opacity: 1, y: 0 }}
-            className="absolute bottom-3 left-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <button
-              onClick={(e) => e.preventDefault()}
-              className="w-full bg-white/95 backdrop-blur-sm text-surface-800 border-none rounded-xl py-2 text-xs font-semibold cursor-pointer flex items-center justify-center gap-1.5 hover:bg-brand-600 hover:text-white transition-all shadow-sm"
-            >
-              <Eye size={12} /> Quick View
-            </button>
-          </motion.div>
         </div>
 
         {/* Info */}
         <div className="p-4">
-          <p className="text-[11px] text-surface-400 mb-1 truncate font-medium">{product.vendor}</p>
+          {/* Vendor row — clickable when vendor_slug present */}
+          {(product.vendor || product.vendor_name) && (
+            product.vendor_slug ? (
+              <span
+                role="link"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/${lang}/vendor/${product.vendor_slug}`);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    router.push(`/${lang}/vendor/${product.vendor_slug}`);
+                  }
+                }}
+                className="inline-flex items-center gap-1 text-[11px] text-surface-500 mb-1.5 max-w-full truncate font-medium hover:text-brand-600 transition-colors cursor-pointer"
+              >
+                <Store size={10} className="text-surface-400 flex-shrink-0" />
+                <span className="truncate">{product.vendor || product.vendor_name}</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-[11px] text-surface-500 mb-1.5 max-w-full truncate font-medium">
+                <Store size={10} className="text-surface-400 flex-shrink-0" />
+                <span className="truncate">{product.vendor || product.vendor_name}</span>
+              </span>
+            )
+          )}
+
           <p className="text-sm font-semibold text-surface-800 mb-3 line-clamp-2 group-hover:text-brand-600 transition-colors leading-snug min-h-[40px]">
             {product.name}
           </p>
 
           {/* Stars */}
-          <div className="flex items-center gap-1 mb-3">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={11}
-                className={i < Math.round(product.rating)
-                  ? "fill-warm-400 text-warm-400"
-                  : "fill-surface-200 text-surface-200"
-                }
-              />
-            ))}
-            <span className="text-[11px] text-surface-400 ml-1">{product.rating}</span>
+          {product.rating != null && product.rating > 0 && (
+            <div className="flex items-center gap-1 mb-3">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={11}
+                  className={i < Math.round(product.rating)
+                    ? "fill-warm-400 text-warm-400"
+                    : "fill-surface-200 text-surface-200"
+                  }
+                />
+              ))}
+              <span className="text-[11px] text-surface-400 ml-1">{product.rating}</span>
+            </div>
+          )}
+
+          {/* Price */}
+          <div className="flex items-end gap-1.5 mb-3">
+            <span className="text-base font-bold text-surface-900">
+              {product.price != null
+                ? `${Number(product.price).toLocaleString()} ֏`
+                : "—"}
+            </span>
+            {product.originalPrice && (
+              <span className="text-xs text-surface-400 line-through mb-0.5">
+                {Number(product.originalPrice).toLocaleString()} ֏
+              </span>
+            )}
           </div>
 
-          {/* Price + Cart */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-end gap-1.5">
-              <span className="text-base font-bold text-surface-900">
-                {product.price != null
-                  ? `${Number(product.price).toLocaleString()} ֏`
-                  : "—"}
-              </span>
-              {product.originalPrice && (
-                <span className="text-xs text-surface-400 line-through mb-0.5">
-                  {Number(product.originalPrice).toLocaleString()} ֏
-                </span>
-              )}
-            </div>
-            <motion.button
-              onClick={(e) => {
-                e.preventDefault();
-                addToCart({
-                  product_id:  product.id,
-                  vendor_id:   product.vendor_id,
-                  vendor_name: product.vendor || product.vendor_name || "",
-                  name:        product.name,
-                  price:       Number(product.price),
-                  image:       product.image || null,
-                  qty:         1,
-                });
-                setAdded(true);
-                setTimeout(() => setAdded(false), 1800);
-              }}
-              whileTap={{ scale: 0.88 }}
-              whileHover={{ scale: 1.1, backgroundColor: added ? "#16a34a" : "#be1850" }}
-              className={`text-white border-none rounded-xl w-8 h-8 flex items-center justify-center cursor-pointer flex-shrink-0 transition-colors ${added ? "bg-green-500" : "bg-brand-600"}`}
-            >
-              {added ? <Check size={14} /> : <ShoppingCart size={14} />}
-            </motion.button>
-          </div>
+          {/* Add to Cart — full width, prominent, multilingual */}
+          <motion.button
+            onClick={(e) => {
+              e.preventDefault();
+              addToCart({
+                product_id:  product.id,
+                vendor_id:   product.vendor_id,
+                vendor_name: product.vendor || product.vendor_name || "",
+                name:        product.name,
+                price:       Number(product.price),
+                image:       product.image || null,
+                qty:         1,
+              });
+              setAdded(true);
+              setTimeout(() => setAdded(false), 1800);
+            }}
+            whileTap={{ scale: 0.97 }}
+            whileHover={{ y: -1 }}
+            className={`w-full inline-flex items-center justify-center gap-1.5 border-none rounded-xl py-2.5 text-[13px] font-semibold cursor-pointer transition-all shadow-sm ${
+              added
+                ? "bg-green-500 text-white"
+                : "bg-brand-600 hover:bg-brand-700 text-white"
+            }`}
+          >
+            {added ? (
+              <><Check size={14} /> {T.added[lang] || T.added.en}</>
+            ) : (
+              <><ShoppingCart size={14} /> {T.addToCart[lang] || T.addToCart.en}</>
+            )}
+          </motion.button>
         </div>
       </motion.div>
     </Link>

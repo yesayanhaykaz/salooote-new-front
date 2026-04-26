@@ -1,18 +1,157 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { userAPI, isLoggedIn } from "@/lib/api";
 import {
-  ArrowLeft, MapPin, Phone, User, FileText,
+  ArrowLeft, MapPin, Phone, User, FileText, Calendar,
   CheckCircle2, Loader2, ShoppingBag, Shield, ChevronRight,
-  Package, AlertCircle,
+  Package, AlertCircle, Truck,
 } from "lucide-react";
+
+const T = {
+  en: {
+    backToCart: "Back to cart",
+    checkout: "Checkout",
+    deliveryDetails: "Delivery details",
+    fullName: "Full name", fullNameRequired: "Full name *",
+    fullNamePh: "Your full name",
+    phone: "Phone number", phoneRequired: "Phone number *",
+    phonePh: "+374 XX XXX XXX",
+    address: "Delivery address", addressRequired: "Delivery address *",
+    addressPh: "Street address",
+    city: "City", cityPh: "Yerevan",
+    deliveryDate: "Delivery date *",
+    deliveryDateHint: "Choose your preferred delivery / event date",
+    notes: "Order notes (optional)",
+    notesPh: "Any special requests or delivery instructions…",
+    yourItems: "Your items",
+    summary: "Order summary",
+    subtotal: "Subtotal",
+    deliveryRow: "Delivery",
+    deliveryFree: "Free",
+    total: "Total",
+    placeOrder: "Place order",
+    placing: "Placing order…",
+    sslSecured: "Secured with SSL encryption",
+    multiVendorNotice: "Your cart has items from multiple vendors — separate orders will be placed.",
+    invalidItemsNotice: "items can't be ordered (missing vendor info) and will be skipped.",
+    successTitle: "Order placed! 🎉",
+    successOne: "Your order has been sent to the vendor.",
+    successMany: "orders have been sent to the vendors.",
+    successHint: "You'll get a notification when your order is confirmed.",
+    trackOrders: "Track my orders",
+    continueShopping: "Continue shopping",
+    errorMissing: "Please fill in your name, phone, delivery address, and delivery date.",
+    errorVendorless: "Some items are missing vendor information. Please remove them and try again.",
+    errorGeneric: "Failed to place order. Please try again.",
+    deliveryFee: "Delivery fee",
+  },
+  hy: {
+    backToCart: "Վերադառնալ զամբյուղ",
+    checkout: "Վճարում",
+    deliveryDetails: "Առաքման տվյալներ",
+    fullName: "Անուն Ազգանուն", fullNameRequired: "Անուն Ազգանուն *",
+    fullNamePh: "Ձեր անուն-ազգանունը",
+    phone: "Հեռախոս", phoneRequired: "Հեռախոս *",
+    phonePh: "+374 XX XXX XXX",
+    address: "Առաքման հասցե", addressRequired: "Առաքման հասցե *",
+    addressPh: "Փողոց, շենք",
+    city: "Քաղաք", cityPh: "Երևան",
+    deliveryDate: "Առաքման ամսաթիվ *",
+    deliveryDateHint: "Ընտրեք առաքման / միջոցառման ցանկալի օրը",
+    notes: "Նշումներ (ոչ պարտադիր)",
+    notesPh: "Հատուկ խնդրանքներ կամ առաքման ցուցումներ…",
+    yourItems: "Ձեր ապրանքները",
+    summary: "Պատվերի ամփոփում",
+    subtotal: "Միջանկյալ գումար",
+    deliveryRow: "Առաքում",
+    deliveryFree: "Անվճար",
+    total: "Ընդամենը",
+    placeOrder: "Հաստատել պատվերը",
+    placing: "Հաստատվում է…",
+    sslSecured: "Պաշտպանված SSL գաղտնագրությամբ",
+    multiVendorNotice: "Ձեր զամբյուղում կան տարբեր վաճառողների ապրանքներ — կկատարվեն առանձին պատվերներ։",
+    invalidItemsNotice: "ապրանք չի կարող պատվիրվել (բացակայում է վաճառողի տվյալը) և կբացառվի։",
+    successTitle: "Պատվերը կատարված է! 🎉",
+    successOne: "Ձեր պատվերն ուղարկվել է վաճառողին։",
+    successMany: "պատվեր ուղարկվել է վաճառողներին։",
+    successHint: "Կստանաք ծանուցում, երբ պատվերը հաստատվի։",
+    trackOrders: "Տեսնել իմ պատվերները",
+    continueShopping: "Շարունակել գնումները",
+    errorMissing: "Խնդրում ենք լրացնել անուն, հեռախոս, հասցե և ամսաթիվ։",
+    errorVendorless: "Որոշ ապրանքներ չունեն վաճառողի տվյալներ։ Հեռացրեք դրանք և կրկին փորձեք։",
+    errorGeneric: "Չհաջողվեց պատվիրել։ Կրկին փորձեք։",
+    deliveryFee: "Առաքման վճար",
+  },
+  ru: {
+    backToCart: "Назад в корзину",
+    checkout: "Оформление",
+    deliveryDetails: "Данные доставки",
+    fullName: "ФИО", fullNameRequired: "ФИО *",
+    fullNamePh: "Ваше полное имя",
+    phone: "Телефон", phoneRequired: "Телефон *",
+    phonePh: "+374 XX XXX XXX",
+    address: "Адрес доставки", addressRequired: "Адрес доставки *",
+    addressPh: "Улица, дом",
+    city: "Город", cityPh: "Ереван",
+    deliveryDate: "Дата доставки *",
+    deliveryDateHint: "Выберите желаемую дату доставки / события",
+    notes: "Комментарии (необязательно)",
+    notesPh: "Особые пожелания или указания…",
+    yourItems: "Ваши товары",
+    summary: "Сводка заказа",
+    subtotal: "Сумма",
+    deliveryRow: "Доставка",
+    deliveryFree: "Бесплатно",
+    total: "Итого",
+    placeOrder: "Оформить заказ",
+    placing: "Оформление…",
+    sslSecured: "Защищено SSL-шифрованием",
+    multiVendorNotice: "В корзине товары от разных продавцов — будут оформлены отдельные заказы.",
+    invalidItemsNotice: "товаров нельзя заказать (нет данных продавца) и они будут пропущены.",
+    successTitle: "Заказ оформлен! 🎉",
+    successOne: "Ваш заказ отправлен продавцу.",
+    successMany: "заказов отправлено продавцам.",
+    successHint: "Вы получите уведомление, когда заказ подтвердят.",
+    trackOrders: "Мои заказы",
+    continueShopping: "Продолжить покупки",
+    errorMissing: "Пожалуйста, заполните имя, телефон, адрес и дату доставки.",
+    errorVendorless: "У некоторых товаров нет данных продавца. Удалите их и попробуйте снова.",
+    errorGeneric: "Не удалось оформить заказ. Попробуйте ещё раз.",
+    deliveryFee: "Стоимость доставки",
+  },
+};
+
+// City-based delivery fees (AMD). 0 = free.
+// Easy to swap for backend-driven values later.
+const DELIVERY_FEES_AMD = {
+  yerevan:    0,
+  ереван:     0,
+  երևան:      0,
+  // Outside Yerevan defaults to a flat rate
+  default:    1500,
+};
+
+function deliveryFeeForCity(city = "") {
+  const c = city.trim().toLowerCase();
+  if (!c) return 0;
+  if (DELIVERY_FEES_AMD[c] != null) return DELIVERY_FEES_AMD[c];
+  return DELIVERY_FEES_AMD.default;
+}
+
+// Min selectable delivery date is tomorrow (so vendors have prep time)
+function minDeliveryDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { lang } = useParams();
+  const t = T[lang] || T.en;
   const { cartItems, cartTotal, itemsByVendor, clearCart, hydrated } = useCart();
 
   const [form, setForm] = useState({
@@ -20,6 +159,7 @@ export default function CheckoutPage() {
     phone: "",
     address: "",
     city: "",
+    delivery_date: "",
     notes: "",
   });
   const [loading, setLoading]   = useState(false);
@@ -43,9 +183,13 @@ export default function CheckoutPage() {
 
   const set = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
+  // Compute delivery fee dynamically based on city
+  const deliveryFee = useMemo(() => deliveryFeeForCity(form.city), [form.city]);
+  const grandTotal = cartTotal + deliveryFee;
+
   const handlePlaceOrder = async () => {
-    if (!form.full_name.trim() || !form.phone.trim() || !form.address.trim()) {
-      setError("Please fill in your name, phone, and delivery address.");
+    if (!form.full_name.trim() || !form.phone.trim() || !form.address.trim() || !form.delivery_date) {
+      setError(t.errorMissing);
       return;
     }
     setError("");
@@ -56,31 +200,30 @@ export default function CheckoutPage() {
     const createdIds = [];
 
     try {
-      // One order per vendor group
       const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       const isUUID = (v) => UUID_RE.test(v);
 
       const vendorGroups = Object.values(itemsByVendor);
 
-      // Filter out groups with no real vendor_id
       const validGroups = vendorGroups.filter(g => isUUID(g.vendor_id));
       if (validGroups.length === 0) {
-        setError("Some items are missing vendor information. Please remove them and try again.");
+        setError(t.errorVendorless);
         setLoading(false);
         return;
       }
 
       for (const group of validGroups) {
-        // Filter items with valid product UUIDs
         const validItems = group.items.filter(i => isUUID(i.product_id || i.id));
         if (validItems.length === 0) continue;
 
         const payload = {
-          vendor_id:       group.vendor_id,
-          shipping_name:   form.full_name.trim(),
+          vendor_id:        group.vendor_id,
+          shipping_name:    form.full_name.trim(),
           shipping_address: shipping_address,
-          shipping_phone:  form.phone.trim(),
-          shipping_city:   form.city.trim() || undefined,
+          shipping_phone:   form.phone.trim(),
+          shipping_city:    form.city.trim() || undefined,
+          delivery_date:    form.delivery_date,
+          delivery_fee:     deliveryFee || undefined,
           notes,
           currency: "AMD",
           items: validItems.map(i => ({
@@ -98,7 +241,7 @@ export default function CheckoutPage() {
       clearCart();
       setSuccess(true);
     } catch (err) {
-      setError(err.message || "Failed to place order. Please try again.");
+      setError(err.message || t.errorGeneric);
     } finally {
       setLoading(false);
     }
@@ -112,25 +255,23 @@ export default function CheckoutPage() {
           <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-5">
             <CheckCircle2 size={40} className="text-green-500" />
           </div>
-          <h1 className="text-2xl font-bold text-surface-900 mb-2">Order Placed! 🎉</h1>
+          <h1 className="text-2xl font-bold text-surface-900 mb-2">{t.successTitle}</h1>
           <p className="text-surface-400 text-sm mb-1">
             {orderIds.length > 1
-              ? `${orderIds.length} orders have been sent to the vendors.`
-              : "Your order has been sent to the vendor."}
+              ? `${orderIds.length} ${t.successMany}`
+              : t.successOne}
           </p>
-          <p className="text-surface-400 text-sm mb-8">
-            You'll get a notification when your order is confirmed.
-          </p>
+          <p className="text-surface-400 text-sm mb-8">{t.successHint}</p>
 
           <div className="flex flex-col gap-3">
             <Link href={`/${lang}/account/orders`} className="no-underline">
               <button className="w-full bg-brand-600 text-white border-none rounded-xl py-3 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors flex items-center justify-center gap-2">
-                <Package size={15} /> Track My Orders
+                <Package size={15} /> {t.trackOrders}
               </button>
             </Link>
             <Link href={`/${lang}/products`} className="no-underline">
               <button className="w-full bg-white text-surface-700 border border-surface-200 rounded-xl py-3 text-sm font-semibold cursor-pointer hover:bg-surface-50 transition-colors">
-                Continue Shopping
+                {t.continueShopping}
               </button>
             </Link>
           </div>
@@ -143,18 +284,19 @@ export default function CheckoutPage() {
   const vendorGroups = Object.values(itemsByVendor);
   const invalidItems = cartItems.filter(i => !UUID_RE.test(i.vendor_id));
   const inputCls = "w-full px-4 py-3 text-sm border border-surface-200 rounded-xl outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all bg-white placeholder:text-surface-300";
+  const minDate = minDeliveryDate();
 
   return (
     <div className="min-h-screen bg-surface-50">
       <div className="max-w-container mx-auto px-6 md:px-8 py-10">
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3 mb-8 flex-wrap">
           <Link href={`/${lang}/cart`} className="flex items-center gap-2 text-surface-500 hover:text-brand-600 no-underline text-sm font-medium transition-colors">
-            <ArrowLeft size={16} /> Back to Cart
+            <ArrowLeft size={16} /> {t.backToCart}
           </Link>
           <span className="text-surface-200">/</span>
-          <h1 className="text-2xl font-bold text-surface-900">Checkout</h1>
+          <h1 className="text-2xl font-bold text-surface-900">{t.checkout}</h1>
         </div>
 
         <div className="flex gap-8 flex-wrap lg:flex-nowrap">
@@ -165,18 +307,18 @@ export default function CheckoutPage() {
             {/* Delivery details */}
             <div className="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
               <h2 className="font-bold text-surface-900 text-sm mb-5 flex items-center gap-2">
-                <MapPin size={15} className="text-brand-500" /> Delivery Details
+                <MapPin size={15} className="text-brand-500" /> {t.deliveryDetails}
               </h2>
 
               <div className="space-y-4">
                 {/* Name */}
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">Full Name *</label>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.fullNameRequired}</label>
                   <div className="relative">
                     <User size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-300 pointer-events-none" />
                     <input
                       name="full_name" value={form.full_name} onChange={set}
-                      placeholder="Your full name"
+                      placeholder={t.fullNamePh}
                       className={`${inputCls} pl-10`}
                     />
                   </div>
@@ -184,12 +326,12 @@ export default function CheckoutPage() {
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">Phone Number *</label>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.phoneRequired}</label>
                   <div className="relative">
                     <Phone size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-300 pointer-events-none" />
                     <input
                       name="phone" value={form.phone} onChange={set}
-                      placeholder="+374 XX XXX XXX"
+                      placeholder={t.phonePh}
                       className={`${inputCls} pl-10`}
                     />
                   </div>
@@ -197,12 +339,12 @@ export default function CheckoutPage() {
 
                 {/* Address */}
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">Delivery Address *</label>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.addressRequired}</label>
                   <div className="relative">
                     <MapPin size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-300 pointer-events-none" />
                     <input
                       name="address" value={form.address} onChange={set}
-                      placeholder="Street address"
+                      placeholder={t.addressPh}
                       className={`${inputCls} pl-10`}
                     />
                   </div>
@@ -210,23 +352,40 @@ export default function CheckoutPage() {
 
                 {/* City */}
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">City</label>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.city}</label>
                   <input
                     name="city" value={form.city} onChange={set}
-                    placeholder="Yerevan"
+                    placeholder={t.cityPh}
                     className={inputCls}
                   />
+                </div>
+
+                {/* Delivery date — NEW (CC3) */}
+                <div>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.deliveryDate}</label>
+                  <div className="relative">
+                    <Calendar size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-surface-300 pointer-events-none" />
+                    <input
+                      type="date"
+                      name="delivery_date"
+                      value={form.delivery_date}
+                      onChange={set}
+                      min={minDate}
+                      className={`${inputCls} pl-10`}
+                    />
+                  </div>
+                  <p className="text-[11px] text-surface-400 mt-1">{t.deliveryDateHint}</p>
                 </div>
 
                 {/* Notes */}
                 <div>
                   <label className="block text-xs font-semibold text-surface-700 mb-1.5">
-                    <FileText size={12} className="inline mr-1" />Order Notes (optional)
+                    <FileText size={12} className="inline mr-1" />{t.notes}
                   </label>
                   <textarea
                     name="notes" value={form.notes} onChange={set}
                     rows={3}
-                    placeholder="Any special requests or delivery instructions…"
+                    placeholder={t.notesPh}
                     className={`${inputCls} resize-none`}
                   />
                 </div>
@@ -237,7 +396,7 @@ export default function CheckoutPage() {
             {vendorGroups.length > 0 && (
               <div className="bg-white rounded-2xl border border-surface-200 p-6 shadow-sm">
                 <h2 className="font-bold text-surface-900 text-sm mb-5 flex items-center gap-2">
-                  <ShoppingBag size={15} className="text-brand-500" /> Your Items
+                  <ShoppingBag size={15} className="text-brand-500" /> {t.yourItems}
                 </h2>
                 <div className="space-y-5">
                   {vendorGroups.map((group) => (
@@ -271,7 +430,7 @@ export default function CheckoutPage() {
                       </div>
                       {vendorGroups.length > 1 && (
                         <div className="mt-3 pt-3 border-t border-surface-100 flex justify-between text-xs font-semibold text-surface-500">
-                          <span>Subtotal ({group.vendor_name})</span>
+                          <span>{t.subtotal} ({group.vendor_name})</span>
                           <span className="text-surface-800">
                             {group.items.reduce((s, i) => s + Number(i.price) * i.qty, 0).toLocaleString()} ֏
                           </span>
@@ -287,7 +446,7 @@ export default function CheckoutPage() {
           {/* ── Right: Summary + Place Order ── */}
           <div className="w-full lg:w-[340px] flex-shrink-0">
             <div className="bg-white rounded-2xl border border-surface-200 p-6 sticky top-24 shadow-sm">
-              <h2 className="font-bold text-surface-900 text-base mb-5">Order Summary</h2>
+              <h2 className="font-bold text-surface-900 text-base mb-5">{t.summary}</h2>
 
               <div className="space-y-3 mb-6">
                 {cartItems.map(item => (
@@ -299,13 +458,23 @@ export default function CheckoutPage() {
                   </div>
                 ))}
                 <div className="h-px bg-surface-100 my-2" />
-                <div className="flex justify-between">
-                  <span className="text-sm text-surface-500">Delivery</span>
-                  <span className="text-sm font-medium text-green-600">Free</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-surface-500">{t.subtotal}</span>
+                  <span className="font-medium text-surface-800">{cartTotal.toLocaleString()} ֏</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="font-bold text-surface-900">Total</span>
-                  <span className="font-bold text-brand-600 text-xl">{cartTotal.toLocaleString()} ֏</span>
+                <div className="flex justify-between text-sm">
+                  <span className="text-surface-500 inline-flex items-center gap-1">
+                    <Truck size={11} /> {t.deliveryRow}
+                  </span>
+                  {deliveryFee === 0
+                    ? <span className="text-sm font-medium text-green-600">{t.deliveryFree}</span>
+                    : <span className="text-sm font-medium text-surface-800">{deliveryFee.toLocaleString()} ֏</span>
+                  }
+                </div>
+                <div className="h-px bg-surface-100 my-2" />
+                <div className="flex justify-between items-baseline">
+                  <span className="font-bold text-surface-900">{t.total}</span>
+                  <span className="font-bold text-brand-600 text-xl">{grandTotal.toLocaleString()} ֏</span>
                 </div>
               </div>
 
@@ -313,7 +482,7 @@ export default function CheckoutPage() {
               {invalidItems.length > 0 && (
                 <div className="bg-red-50 border border-red-100 rounded-xl p-3 mb-4">
                   <p className="text-xs text-red-600 font-medium">
-                    ⚠️ {invalidItems.length} item{invalidItems.length !== 1 ? "s" : ""} can't be ordered (missing vendor info) and will be skipped.
+                    ⚠️ {invalidItems.length} {t.invalidItemsNotice}
                   </p>
                 </div>
               )}
@@ -322,7 +491,7 @@ export default function CheckoutPage() {
               {vendorGroups.length > 1 && (
                 <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 mb-4">
                   <p className="text-xs text-amber-700 font-medium">
-                    📦 Your cart has items from {vendorGroups.length} vendors — {vendorGroups.length} separate orders will be placed.
+                    📦 {t.multiVendorNotice.replace("multiple vendors", `${vendorGroups.length} vendors`)}
                   </p>
                 </div>
               )}
@@ -341,13 +510,13 @@ export default function CheckoutPage() {
                 className="w-full bg-brand-600 text-white border-none rounded-xl py-3.5 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors flex items-center justify-center gap-2 mb-3 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading
-                  ? <><Loader2 size={15} className="animate-spin" /> Placing Order…</>
-                  : <><ShoppingBag size={15} /> Place Order <ChevronRight size={14} /></>
+                  ? <><Loader2 size={15} className="animate-spin" /> {t.placing}</>
+                  : <><ShoppingBag size={15} /> {t.placeOrder} <ChevronRight size={14} /></>
                 }
               </button>
 
               <p className="text-center text-xs text-surface-400 flex items-center justify-center gap-1.5">
-                <Shield size={11} /> Secured with SSL encryption
+                <Shield size={11} /> {t.sslSecured}
               </p>
             </div>
           </div>
