@@ -491,15 +491,20 @@ function TypingDots() {
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
       <Avatar />
       <div style={{
-        display: "flex", gap: 5, padding: "13px 18px",
-        background: "#fff", borderRadius: "6px 20px 20px 20px",
-        border: "1.5px solid rgba(240,228,232,.9)",
-        boxShadow: "0 1px 2px rgba(0,0,0,.03), 0 6px 16px rgba(0,0,0,.05)",
+        display: "flex", alignItems: "center", gap: 4, padding: "14px 18px",
+        background: "linear-gradient(135deg,#fff 0%,#fff5f8 100%)",
+        borderRadius: "6px 20px 20px 20px",
+        border: "1.5px solid rgba(240,218,228,.85)",
+        boxShadow: "0 2px 8px rgba(225,29,92,.07), 0 6px 20px rgba(0,0,0,.05)",
       }}>
-        {[0, 1, 2].map(i => (
+        {[0, 1, 2, 3, 4].map(i => (
           <span key={i} style={{
-            width: 6, height: 6, borderRadius: "50%", background: PINK, display: "block",
-            animation: `v2dot 1.3s ease-in-out ${i * 0.2}s infinite`,
+            width: 3,
+            borderRadius: 3,
+            display: "block",
+            background: i % 2 === 0 ? PINK : PINK_DARK,
+            animation: `v2wave 1.1s ease-in-out ${i * 0.1}s infinite`,
+            opacity: 0.85,
           }} />
         ))}
       </div>
@@ -1693,12 +1698,25 @@ export default function AIAssistantV2Client({ lang }) {
     });
   }, []);
 
-  // Lock body scroll while chat overlay is open
+  // Lock body scroll while chat overlay is open (iOS-safe: fixes keyboard viewport bleed)
   useEffect(() => {
     if (phase === "chat") {
-      const prev = document.body.style.overflow;
+      const scrollY = window.scrollY;
+      const prevOverflow = document.body.style.overflow;
+      const prevPosition = document.body.style.position;
+      const prevTop = document.body.style.top;
+      const prevWidth = document.body.style.width;
       document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = prev; };
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        document.body.style.position = prevPosition;
+        document.body.style.top = prevTop;
+        document.body.style.width = prevWidth;
+        window.scrollTo(0, scrollY);
+      };
     }
   }, [phase]);
 
@@ -1892,6 +1910,7 @@ export default function AIAssistantV2Client({ lang }) {
           -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
         }
         @keyframes v2dot{0%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-6px);opacity:1}}
+        @keyframes v2wave{0%,100%{height:4px;opacity:.45}50%{height:18px;opacity:1}}
         @keyframes orbPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.18);opacity:.25}}
         @keyframes orbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         @keyframes v2fade{from{opacity:0}to{opacity:1}}
@@ -2921,10 +2940,15 @@ export default function AIAssistantV2Client({ lang }) {
           }
           .v2-sidebar-toggle{display:inline-flex}
           .v2-head-steps{display:none}
-          .v2-chat-head{padding:12px 16px;gap:10px}
+          .v2-head-new{display:none}
+          .v2-chat-head{padding:12px 16px;gap:10px;position:relative}
+          .v2-head-close{position:absolute;top:50%;right:12px;transform:translateY(-50%)}
           .v2-head-mascot{width:42px;height:42px;border-radius:12px}
           .v2-head-name{font-size:16px}
           .v2-head-role{font-size:11px}
+          .v2-overlay{overflow:hidden}
+          .v2-overlay-main{overflow-x:hidden}
+          .v2-landing-wrap{overflow-x:hidden}
         }
         @media (max-width:520px){
           .v2-landing-grid{padding:24px 18px;gap:24px}
@@ -2934,8 +2958,6 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-trend-grid{grid-template-columns:repeat(2,1fr);gap:12px}
           .v2-occ-grid{grid-template-columns:1fr 1fr;gap:10px}
           .v2-browse-headline{font-size:30px}
-          .v2-head-new{padding:7px 10px}
-          .v2-head-new span{display:none}
           .v2-chat-head{padding:10px 12px;gap:8px}
           .v2-overlay-scroll{padding:14px 12px 12px;gap:10px}
           .v2-head-mascot{width:38px;height:38px;border-radius:11px}
