@@ -513,194 +513,113 @@ function AddServiceRow({ onAdd, lang = "en" }) {
 }
 
 /* ─── VendorCard ─────────────────────────────────────────────────────── */
-const VENDOR_BG = ["#1a0a14","#0d1a1a","#0f0d1a","#1a0d0a","#0a141a"];
+const VENDOR_COLORS = [["#7c3aed","#a855f7"],["#e11d5c","#f43f5e"],["#059669","#10b981"],["#d97706","#f59e0b"],["#0891b2","#06b6d4"]];
 function VendorCard({ vendor, isSelected, onPreview }) {
   const name  = vendor.business_name || vendor.name || "Vendor";
   const image = vendor.cover_image || vendor.logo_url || null;
   const rating = parseFloat(vendor.rating) || 0;
   const city   = vendor.city || "";
-  const bg = VENDOR_BG[name.charCodeAt(0) % VENDOR_BG.length];
-  const [hov, setHov] = useState(false);
+  const [c1, c2] = VENDOR_COLORS[name.charCodeAt(0) % VENDOR_COLORS.length];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 400, damping: 28 }}
-      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
+      initial={{ opacity: 0, scale: 0.94, y: 6 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+      whileHover={{ scale: 1.03, y: -3 }} whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
       onClick={() => onPreview(vendor)}
-      style={{ borderRadius: 14, overflow: "hidden", cursor: "pointer", position: "relative", aspectRatio: "3/4", border: isSelected ? `2px solid ${PC.brand}` : "2px solid transparent", boxShadow: isSelected ? `0 0 0 3px ${PC.brand}28` : "none", transition: "border-color .2s, box-shadow .2s" }}
+      style={{ borderRadius: 12, overflow: "hidden", cursor: "pointer", background: "#fff", border: isSelected ? `2.5px solid ${PC.brand}` : `1.5px solid ${PC.border}`, boxShadow: isSelected ? `0 0 0 4px ${PC.brand}18, 0 4px 16px rgba(0,0,0,0.08)` : "0 2px 8px rgba(0,0,0,0.06)", transition: "border-color 0.15s, box-shadow 0.15s" }}
     >
-      {/* Image */}
-      <div style={{ position: "absolute", inset: 0, background: bg, overflow: "hidden" }}>
+      <div style={{ height: 110, position: "relative", overflow: "hidden" }}>
         {image ? (
-          <motion.img src={image} alt={name}
-            animate={{ scale: hov ? 1.07 : 1 }} transition={{ duration: 0.4, ease: "easeOut" }}
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <img src={image} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         ) : (
-          <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: "2.4rem", fontWeight: 900, color: PC.brand, opacity: 0.35 }}>{name[0]?.toUpperCase()}</span>
+          <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${c1}33, ${c2}55)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: "2rem", fontWeight: 900, color: c1, opacity: 0.5 }}>{name[0]?.toUpperCase()}</span>
           </div>
         )}
+        <AnimatePresence>
+          {isSelected && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              style={{ position: "absolute", inset: 0, background: "rgba(225,29,92,0.52)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ background: "#fff", borderRadius: 100, padding: "4px 12px", display: "flex", alignItems: "center", gap: 5 }}>
+                <Check size={11} color={PC.brand} strokeWidth={3} />
+                <span style={{ fontSize: "0.7rem", fontWeight: 800, color: PC.brand }}>Selected</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-      {/* Gradient overlay */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.15) 55%, transparent 100%)" }} />
-      {/* Info */}
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "10px 11px 10px" }}>
-        <p style={{ margin: "0 0 3px", fontSize: "0.78rem", fontWeight: 700, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", lineHeight: 1.2 }}>{name}</p>
+      <div style={{ padding: "8px 10px 9px" }}>
+        <p style={{ margin: "0 0 2px", fontSize: "0.76rem", fontWeight: 700, color: PC.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          {rating > 0 && <><Star size={9} style={{ color: "#fbbf24", fill: "#fbbf24", flexShrink: 0 }} /><span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,.85)", fontWeight: 600 }}>{rating.toFixed(1)}</span></>}
-          {city && <span style={{ fontSize: "0.62rem", color: "rgba(255,255,255,.6)" }}>{rating > 0 ? " · " : ""}{city}</span>}
+          {rating > 0 && <><Star size={9} style={{ color: "#f59e0b", fill: "#f59e0b", flexShrink: 0 }} /><span style={{ fontSize: "0.64rem", color: PC.text2, fontWeight: 600, flexShrink: 0 }}>{rating.toFixed(1)}</span></>}
+          {city && <span style={{ fontSize: "0.62rem", color: PC.text3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{rating > 0 ? " · " : ""}{city}</span>}
         </div>
       </div>
-      {/* Selected badge */}
-      <AnimatePresence>
-        {isSelected && (
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }}
-            style={{ position: "absolute", top: 8, right: 8, background: PC.brand, borderRadius: 999, width: 22, height: 22, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 2px 8px ${PC.brand}60` }}>
-            <Check size={11} color="#fff" strokeWidth={3} />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }
 
-/* ─── VendorPortfolioModal — dark premium product picker ─────────────── */
-function VendorPortfolioModal({ vendor, serviceType, isSelected, onSelect, onClose, lang }) {
+/* ─── VendorDetailPopup ──────────────────────────────────────────────── */
+function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
   const t = txp(lang);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [chosenId, setChosenId] = useState(null);
+  const [photos, setPhotos]   = useState([]);
+  const [loading, setLoading] = useState(true);
   const name = vendor.business_name || vendor.name || "Vendor";
   const slug = vendor.slug || "";
-  const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 
   useEffect(() => {
-    const params = new URLSearchParams({ limit: "20" });
+    const base = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
+    const params = new URLSearchParams({ limit: "16" });
     if (vendor.id) params.set("vendor_id", vendor.id);
-    fetch(`${base}/products?${params}`).then(r => r.json())
-      .then(d => setProducts(d.data || []))
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
+    fetch(`${base}/products?${params}`).then(r => r.json()).then(d => setPhotos((d.data || []).filter(p => p.thumbnail_url || p.images?.[0]?.url))).catch(() => setPhotos([])).finally(() => setLoading(false));
   }, [vendor.id]);
 
-  const handleChoose = (product) => {
-    setChosenId(product.id);
-    setTimeout(() => {
-      onSelect({ ...vendor, _selectedProduct: product });
-      onClose();
-    }, 180);
-  };
-
-  const handleSelectVendorOnly = () => {
-    setChosenId("__vendor");
-    setTimeout(() => { onSelect(vendor); onClose(); }, 180);
-  };
-
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={onClose}
-      style={{ position: "fixed", inset: 0, zIndex: 600, background: "rgba(8,4,12,.82)", backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "12px" }}>
-      <motion.div
-        initial={{ opacity: 0, y: 28, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: 0.97 }}
-        transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        onClick={e => e.stopPropagation()}
-        style={{ background: "#fff", borderRadius: 20, width: "100%", maxWidth: 660, maxHeight: "88vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 40px 100px rgba(0,0,0,.55)" }}>
-
-        {/* Dark header */}
-        <div style={{ background: "#0f0a12", padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button onClick={onClose}
-              style={{ width: 30, height: 30, borderRadius: "50%", border: "1px solid rgba(255,255,255,.12)", background: "rgba(255,255,255,.07)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.6)" }}>
-              <X size={14} />
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
+      style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(15,23,42,0.25)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <motion.div initial={{ opacity: 0, scale: 0.96, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 300, damping: 28 }} onClick={e => e.stopPropagation()}
+        style={{ background: "#fff", borderRadius: 20, width: "90%", maxWidth: 640, maxHeight: "86vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.22)" }}>
+        <div style={{ padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: `1px solid ${PC.border}`, flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+            <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${PC.border}`, background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: PC.text2 }}>
+              <X size={13} />
             </button>
-            <div>
-              <p style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "#fff", lineHeight: 1.1 }}>{name}</p>
-              <p style={{ margin: "2px 0 0", fontSize: "0.65rem", color: "rgba(255,255,255,.4)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                {loading ? "Loading…" : `${products.length} ${products.length === 1 ? "item" : "items"}`}
-              </p>
-            </div>
+            <span style={{ fontSize: "0.95rem", fontWeight: 800, color: PC.text }}>{name}</span>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            {slug && (
-              <a href={`/${lang}/vendor/${slug}`} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  style={{ background: PC.grad, border: "none", borderRadius: 8, padding: "7px 14px", color: "#fff", fontSize: "0.72rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 4px 14px rgba(225,29,92,.35)" }}>
-                  {t.viewBizPage} →
-                </motion.button>
-              </a>
-            )}
-          </div>
-        </div>
-
-        {/* Product grid */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 8px", background: "#fafafa" }}>
-          {loading ? (
-            <div style={{ display: "flex", justifyContent: "center", padding: "56px 0" }}>
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.85, repeat: Infinity, ease: "linear" }}><Loader2 size={28} color={PC.text3} /></motion.div>
-            </div>
-          ) : products.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "56px 0" }}>
-              <p style={{ margin: "0 0 16px", fontSize: "0.88rem", color: PC.text2 }}>{t.noPhotos}</p>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={handleSelectVendorOnly}
-                style={{ background: PC.grad, border: "none", borderRadius: 12, padding: "11px 24px", color: "#fff", fontWeight: 700, fontSize: "0.87rem", cursor: "pointer", fontFamily: "inherit", boxShadow: "0 6px 20px rgba(225,29,92,.28)" }}>
-                <Check size={14} strokeWidth={2.5} style={{ marginRight: 6 }} />
-                {t.selectVendor}
+          {slug && (
+            <a href={`/${lang}/vendor/${slug}`} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
+              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                style={{ background: PC.grad, border: "none", borderRadius: 8, padding: "7px 14px", color: "#fff", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
+                {t.viewBizPage}
               </motion.button>
+            </a>
+          )}
+        </div>
+        <div style={{ flex: 1, overflowY: "auto", padding: 14 }}>
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center", padding: "48px 0" }}>
+              <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}><Loader2 size={26} color={PC.text3} /></motion.div>
             </div>
+          ) : photos.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "48px 0", color: PC.text3, fontSize: "0.84rem" }}>{t.noPhotos}</div>
           ) : (
-            <div style={{ columns: "3 140px", columnGap: 10 }}>
-              {products.map((p, i) => {
+            <div style={{ columns: "4 140px", columnGap: 8 }}>
+              {photos.map((p, i) => {
                 const img = p.thumbnail_url || p.images?.[0]?.url;
-                const price = parseFloat(p.price);
-                const selected = chosenId === p.id;
-                return (
-                  <motion.div key={p.id || i}
-                    initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.03, type: "spring", stiffness: 380, damping: 28 }}
-                    whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}
-                    onClick={() => handleChoose(p)}
-                    style={{ breakInside: "avoid", marginBottom: 10, borderRadius: 12, overflow: "hidden", cursor: "pointer", border: selected ? `2px solid ${PC.brand}` : "2px solid transparent", boxShadow: selected ? `0 0 0 3px ${PC.brand}22, 0 6px 20px rgba(0,0,0,.12)` : "0 2px 8px rgba(0,0,0,.08)", transition: "border-color .15s, box-shadow .15s", background: "#fff", position: "relative" }}>
-                    {img ? (
-                      <img src={img} alt={p.name || ""} style={{ width: "100%", display: "block" }} loading="lazy" />
-                    ) : (
-                      <div style={{ height: 120, background: "linear-gradient(135deg,#f3f4f6,#e5e7eb)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <Package size={28} color={PC.text3} />
-                      </div>
-                    )}
-                    {/* Product info bar */}
-                    <div style={{ padding: "8px 10px 9px" }}>
-                      <p style={{ margin: "0 0 2px", fontSize: "0.71rem", fontWeight: 600, color: PC.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name || ""}</p>
-                      {!isNaN(price) && price > 0 && (
-                        <p style={{ margin: 0, fontSize: "0.68rem", fontWeight: 700, color: PC.brand }}>{price.toLocaleString()} ֏</p>
-                      )}
-                    </div>
-                    {/* Selected check */}
-                    <AnimatePresence>
-                      {selected && (
-                        <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                          style={{ position: "absolute", top: 7, right: 7, background: PC.brand, borderRadius: 999, width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 2px 8px ${PC.brand}55` }}>
-                          <Check size={10} color="#fff" strokeWidth={3} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                );
+                return <div key={p.id || i} style={{ breakInside: "avoid", marginBottom: 8, borderRadius: 8, overflow: "hidden" }}><img src={img} alt={p.name || ""} style={{ width: "100%", display: "block", borderRadius: 8 }} loading="lazy" /></div>;
               })}
             </div>
           )}
         </div>
-
-        {/* Footer */}
-        <div style={{ padding: "12px 16px 14px", borderTop: `1px solid ${PC.border}`, display: "flex", gap: 10, flexShrink: 0, background: "#fff" }}>
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={handleSelectVendorOnly}
-            style={{ flex: 1, padding: "11px 0", background: isSelected ? "#f0fdf4" : PC.grad, border: isSelected ? "1.5px solid #86efac" : "none", borderRadius: 12, color: isSelected ? "#16a34a" : "#fff", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, fontFamily: "inherit", boxShadow: isSelected ? "none" : "0 6px 20px rgba(225,29,92,.25)" }}>
+        <div style={{ padding: "14px 18px", borderTop: `1px solid ${PC.border}`, display: "flex", gap: 10, flexShrink: 0 }}>
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={() => { onSelect(vendor); onClose(); }}
+            style={{ flex: 1, padding: "11px 0", background: isSelected ? "#f0fdf4" : PC.grad, border: isSelected ? "1.5px solid #86efac" : "none", borderRadius: 12, color: isSelected ? "#16a34a" : "#fff", fontSize: "0.87rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, fontFamily: "inherit", boxShadow: isSelected ? "none" : "0 6px 20px rgba(225,29,92,0.28)" }}>
             <Check size={14} strokeWidth={2.5} />
             {isSelected ? t.alreadySelected : t.selectVendor}
           </motion.button>
-          <button onClick={onClose}
-            style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${PC.borderMd}`, borderRadius: 12, color: PC.text2, fontSize: "0.84rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+          <button onClick={onClose} style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${PC.borderMd}`, borderRadius: 12, color: PC.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
             {t.close}
           </button>
         </div>
@@ -709,96 +628,83 @@ function VendorPortfolioModal({ vendor, serviceType, isSelected, onSelect, onClo
   );
 }
 
-/* ─── VendorSearchModal — dark premium ───────────────────────────────── */
+/* ─── VendorSearchModal ──────────────────────────────────────────────── */
 function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch, accent, selectedVendors = {}, lang = "en" }) {
   const t = txp(lang);
-  const [query, setQuery]             = useState("");
-  const [portfolioVendor, setPortfolio] = useState(null);
-  const results     = vendorResults[service.service_type] || [];
+  const [query, setQuery]         = useState("");
+  const [detailVendor, setDetail] = useState(null);
+  const results    = vendorResults[service.service_type] || [];
   const isSearching = service.searching;
-  const filtered    = query.trim() ? results.filter(v => (v.business_name || v.name || "").toLowerCase().includes(query.toLowerCase())) : results;
-  const serviceLabel = txp(lang).serviceTitles?.[service.service_type] || service.title;
+  const filtered = query.trim() ? results.filter(v => (v.business_name || v.name || "").toLowerCase().includes(query.toLowerCase())) : results;
 
   useEffect(() => { if (!results.length && !isSearching) onSearch(service.service_type, service.title); }, []);
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-        onClick={() => { if (!portfolioVendor) onClose(); }}
-        style={{ position: "fixed", inset: 0, zIndex: 400, background: "rgba(6,2,10,.88)", backdropFilter: "blur(22px)", WebkitBackdropFilter: "blur(22px)", display: "flex", flexDirection: "column" }}>
-
-        {/* Header bar */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}
-          onClick={e => e.stopPropagation()}
-          style={{ padding: "16px 20px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid rgba(255,255,255,.07)", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: `${accent || PC.brand}22`, border: `1px solid ${accent || PC.brand}38`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {getServiceIcon(service.service_type, { size: 16, color: accent || PC.brand, strokeWidth: 1.8 })}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { if (!detailVendor) onClose(); }}
+        style={{ position: "fixed", inset: 0, zIndex: 400, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.18)", backdropFilter: "blur(4px)" }}>
+        <motion.div initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 320, damping: 28 }} onClick={e => e.stopPropagation()}
+          style={{ background: "#fff", borderRadius: 20, width: "90%", maxWidth: 540, maxHeight: "80vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 24px 64px rgba(0,0,0,0.18)" }}>
+          <div style={{ padding: "16px 20px 12px", borderBottom: `1px solid ${PC.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: `${accent || PC.brand}12`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {getServiceIcon(service.service_type, { size: 15, color: accent || PC.brand, strokeWidth: 1.8 })}
+              </div>
+              <div>
+                <h3 style={{ margin: 0, fontSize: "0.92rem", fontWeight: 800, color: PC.text }}>{txp(lang).serviceTitles?.[service.service_type] || service.title}</h3>
+                <p style={{ margin: 0, fontSize: "0.7rem", color: PC.text3 }}>
+                  {isSearching ? t.searching : results.length > 0 ? `${results.length} ${t.vendorsFound}` : t.searchForVendors}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>{serviceLabel}</h3>
-              <p style={{ margin: "2px 0 0", fontSize: "0.67rem", color: "rgba(255,255,255,.35)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                {isSearching ? t.searching : results.length > 0 ? `${results.length} ${t.vendorsFound}` : t.searchForVendors}
-              </p>
+            <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${PC.border}`, background: "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: PC.text3 }}>
+              <X size={14} />
+            </button>
+          </div>
+          <div style={{ padding: "10px 20px", borderBottom: `1px solid ${PC.border}`, flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f8fafc", border: `1px solid ${PC.borderMd}`, borderRadius: 10, padding: "8px 12px" }}>
+              <Search size={13} color={PC.text3} />
+              <input autoFocus value={query} onChange={e => setQuery(e.target.value)} placeholder={t.filterByName}
+                style={{ flex: 1, border: "none", outline: "none", fontSize: "0.84rem", background: "transparent", color: PC.text, fontFamily: "inherit" }} />
+              {query && <button onClick={() => setQuery("")} style={{ border: "none", background: "none", cursor: "pointer", color: PC.text3, padding: 0, display: "flex" }}><X size={12} /></button>}
             </div>
           </div>
-          <button onClick={onClose}
-            style={{ width: 32, height: 32, borderRadius: "50%", border: "1px solid rgba(255,255,255,.12)", background: "rgba(255,255,255,.06)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.5)" }}>
-            <X size={14} />
-          </button>
-        </motion.div>
-
-        {/* Search bar */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.07 }}
-          onClick={e => e.stopPropagation()}
-          style={{ padding: "10px 20px 12px", borderBottom: "1px solid rgba(255,255,255,.05)", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.10)", borderRadius: 10, padding: "9px 13px" }}>
-            <Search size={13} color="rgba(255,255,255,.38)" />
-            <input value={query} onChange={e => setQuery(e.target.value)} placeholder={t.filterByName}
-              style={{ flex: 1, border: "none", outline: "none", fontSize: "0.84rem", background: "transparent", color: "#fff", fontFamily: "inherit" }} />
-            {query && <button onClick={() => setQuery("")} style={{ border: "none", background: "none", cursor: "pointer", color: "rgba(255,255,255,.38)", padding: 0, display: "flex" }}><X size={12} /></button>}
+          <div style={{ flex: 1, overflowY: "auto", padding: "14px 20px 20px" }}>
+            {isSearching && !results.length ? (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: 12 }}>
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}><Loader2 size={24} color={PC.text3} /></motion.div>
+                <p style={{ margin: 0, fontSize: "0.84rem", color: PC.text3 }}>{t.findingVendors}</p>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <p style={{ margin: "0 0 12px", fontSize: "0.88rem", color: PC.text2, fontWeight: 600 }}>{t.noVendorsFound}</p>
+                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                  onClick={() => { setQuery(""); onSearch(service.service_type, service.title); }}
+                  style={{ background: PC.grad, border: "none", borderRadius: 8, padding: "8px 18px", fontSize: "0.8rem", color: "#fff", fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "inherit" }}>
+                  <Search size={12} /> {t.searchAgain}
+                </motion.button>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(148px, 1fr))", gap: 10 }}>
+                {filtered.map((v, i) => (
+                  <VendorCard key={v.id || i} vendor={v} isSelected={selectedVendors[service.service_type]?.id === v.id} onPreview={setDetail} />
+                ))}
+              </div>
+            )}
+          </div>
+          <div style={{ padding: "10px 20px", borderTop: `1px solid ${PC.border}`, display: "flex", justifyContent: "flex-end", flexShrink: 0 }}>
+            <button onClick={onClose} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${PC.borderMd}`, borderRadius: 8, color: PC.text2, fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
+              {t.close}
+            </button>
           </div>
         </motion.div>
-
-        {/* Vendor grid */}
-        <div onClick={e => e.stopPropagation()} style={{ flex: 1, overflowY: "auto", padding: "18px 20px 28px" }}>
-          {isSearching && !results.length ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 0", gap: 14 }}>
-              <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.85, repeat: Infinity, ease: "linear" }}><Loader2 size={26} color="rgba(255,255,255,.35)" /></motion.div>
-              <p style={{ margin: 0, fontSize: "0.84rem", color: "rgba(255,255,255,.35)" }}>{t.findingVendors}</p>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "60px 0" }}>
-              <p style={{ margin: "0 0 16px", fontSize: "0.9rem", color: "rgba(255,255,255,.45)", fontWeight: 600 }}>{t.noVendorsFound}</p>
-              <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                onClick={() => { setQuery(""); onSearch(service.service_type, service.title); }}
-                style={{ background: PC.grad, border: "none", borderRadius: 10, padding: "9px 20px", fontSize: "0.82rem", color: "#fff", fontWeight: 700, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "inherit", boxShadow: "0 4px 16px rgba(225,29,92,.35)" }}>
-                <Search size={12} /> {t.searchAgain}
-              </motion.button>
-            </div>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: 12 }}>
-              {filtered.map((v, i) => (
-                <motion.div key={v.id || i} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04, type: "spring", stiffness: 380, damping: 28 }}>
-                  <VendorCard vendor={v} isSelected={selectedVendors[service.service_type]?.id === v.id} onPreview={setPortfolio} />
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
       </motion.div>
-
-      {/* Portfolio/product picker modal */}
       <AnimatePresence>
-        {portfolioVendor && (
-          <VendorPortfolioModal
-            vendor={portfolioVendor}
-            serviceType={service.service_type}
-            isSelected={selectedVendors[service.service_type]?.id === portfolioVendor.id}
-            onSelect={vendor => { onSelect(service.service_type, vendor); setPortfolio(null); onClose(); }}
-            onClose={() => setPortfolio(null)}
-            lang={lang}
-          />
+        {detailVendor && (
+          <VendorDetailPopup vendor={detailVendor} isSelected={selectedVendors[service.service_type]?.id === detailVendor.id}
+            onSelect={vendor => { onSelect(service.service_type, vendor); setDetail(null); onClose(); }}
+            onClose={() => setDetail(null)} lang={lang} />
         )}
       </AnimatePresence>
     </>
@@ -845,7 +751,7 @@ export function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
   };
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.35)", backdropFilter: "blur(8px)" }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.22)", backdropFilter: "blur(4px)" }} onClick={onClose}>
       <motion.div initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 26 }}
         onClick={e => e.stopPropagation()}
         style={{ background: "#fff", borderRadius: 20, padding: "28px 28px 24px", width: "90%", maxWidth: 460, maxHeight: "85vh", overflowY: "auto", boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}>

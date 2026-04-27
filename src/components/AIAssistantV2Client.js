@@ -1866,7 +1866,7 @@ export default function AIAssistantV2Client({ lang }) {
           business_name: p.name,
           name: p.name,
           slug: p.vendor_slug || p.slug,
-          cover_image: p.images?.[0] || p.image || null,
+          cover_image: p.images?.[0]?.url || p.thumbnail_url || p.image || null,
           rating: p.rating || null,
           price: p.price,
           _isProduct: true,
@@ -1935,64 +1935,21 @@ export default function AIAssistantV2Client({ lang }) {
       let d = {};
 
       if (inPlan) {
-        // Try planner API first; fall back to smart-assistant if unavailable
-        let plannerOk = false;
-        try {
-          const res = await fetch(`${API}/planner/chat`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              message: text, lang,
-              session_id: plannerSessionId || undefined,
-              event_state: {
-                event_type: eventState.event_type,
-                guest_count: eventState.guest_count,
-                city: eventState.city,
-                date: eventState.date,
-                budget: eventState.budget,
-                style: eventState.style,
-                services: eventState.services,
-                selected_vendors: eventState.selected_vendors,
-              },
-            }),
-          });
-          if (res.ok) {
-            const json = await res.json();
-            d = json?.data || {};
-            if (d.session_id) setPlannerSessionId(d.session_id);
-            if (d.actions?.length) {
-              const { state: nextState, searches } = applyActions(d.actions, eventState);
-              setEventState(nextState);
-              for (const s of searches) {
-                handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
-              }
-            }
-            plannerOk = true;
-          }
-        } catch {}
-
-        if (!plannerOk) {
-          // Fallback: smart-assistant with plan context injected
-          const planContext = `[Planning ${eventState.event_type_label || eventState.event_type}. Services: ${(eventState.services || []).map(s => s.title).join(", ")}]`;
-          const historyWithContext = [
-            { role: "assistant", content: planContext },
-            ...history,
-          ];
-          const res = await fetch(`${API}/smart-assistant/chat`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ messages: historyWithContext, state: chatState, lang }),
-          });
-          const json = await res.json();
-          d = json?.data || {};
-          if (d.state) setChatState(d.state);
-        }
-
-        // Fallback message when planner returned actions but no text
-        if (!d.message && (d.actions?.length)) {
-          const confirmMap = { en: "Got it! I've updated your plan.", hy: "Ստացա, թարմացրի պլանը։", ru: "Готово, план обновлён." };
-          d.message = confirmMap[lang] || confirmMap.en;
-        }
+        // In plan mode, use smart-assistant with event context prepended
+        const selectedList = Object.entries(eventState.selected_vendors || {}).map(([k, v]) => `${k}: ${v.name}`).join(", ");
+        const planContext = `You are helping plan a ${eventState.event_type_label || eventState.event_type} event. Services checklist: ${(eventState.services || []).map(s => s.title).join(", ")}. Already selected: ${selectedList || "none"}. Answer the user's question and guide them step by step.`;
+        const historyWithContext = [
+          { role: "assistant", content: planContext },
+          ...history,
+        ];
+        const res = await fetch(`${API}/smart-assistant/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: historyWithContext, state: chatState, lang }),
+        });
+        const json = await res.json();
+        d = json?.data || {};
+        if (d.state) setChatState(d.state);
       } else {
         const res = await fetch(`${API}/smart-assistant/chat`, {
           method: "POST",
@@ -2009,9 +1966,20 @@ export default function AIAssistantV2Client({ lang }) {
       const base = Date.now() + 1;
       const seq = [];
 
-      if (!inPlan && d.action === "plan_event") {
+      if (!inPlan && d.action === "plan_event" && d.event_type) {
+        // Auto-activate plan panel — no button needed
+        const tpl = EVENT_TEMPLATES[d.event_type];
+        if (tpl) {
+          setEventState({
+            ...INITIAL_EVENT_STATE,
+            event_type: d.event_type,
+            event_type_label: tpl.label,
+            accent: tpl.accent,
+            gradient: tpl.gradient,
+            services: tpl.services.map(s => ({ ...s, status: "pending" })),
+          });
+        }
         if (d.message) seq.push({ id: base, role: "bot", type: "text", text: d.message });
-        seq.push({ id: base + 1, role: "bot", type: "plan", event_type: d.event_type });
       } else {
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) {
@@ -2023,14 +1991,7 @@ export default function AIAssistantV2Client({ lang }) {
         }
       }
 
-      // In plan mode with no message at all, show a generic confirmation
-      if (inPlan && !seq.length) {
-        const fallback = { en: "Got it! What else can I help with?", hy: "Ստացա! Ի՞նչ կուզենայիք ավելացնել։", ru: "Хорошо! Чем ещё могу помочь?" };
-        seq.push({ id: Date.now() + 200, role: "bot", type: "text", text: fallback[lang] || fallback.en });
-        revealItems(seq);
-      } else if (seq.length) {
-        revealItems(seq);
-      }
+      if (seq.length) revealItems(seq);
 
     } catch {
       setTyping(false);
@@ -2665,12 +2626,7 @@ export default function AIAssistantV2Client({ lang }) {
 
         /* ── Avatar ── */
         .v2-avatar{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .v2-avatar-ring{
-          position:absolute;inset:-2px;border-radius:50%;
-          background:conic-gradient(from 0deg, ${PINK}, #f43f5e, #c026d3, #f0abfc, ${PINK});
-          animation:v2-avatar-spin 6s linear infinite;
-          filter:blur(.4px);
-        }
+        .v2-avatar-ring{display:none}
         .v2-avatar-core{
           position:relative;width:100%;height:100%;border-radius:50%;
           background:#fff1f5;
