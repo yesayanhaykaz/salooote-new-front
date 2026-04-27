@@ -76,7 +76,8 @@ export async function generateMetadata({ params }) {
         ...(image && { images: [image] }),
       },
     };
-  } catch {
+  } catch (e) {
+    console.error("[generateMetadata]", lang, vendor, product, e?.message || e);
     return {
       title: `${fallbackName} — Salooote.am`,
       description: `${fallbackName} — ${fallbackVendor} on Salooote.am`,
