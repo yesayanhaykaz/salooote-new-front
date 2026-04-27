@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
+import EventPlanPanel, { BulkInquiryModal, applyActions, EVENT_TEMPLATES, INITIAL_EVENT_STATE } from "@/components/PlanPanel";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
@@ -17,12 +18,12 @@ const T = {
   },
   sub: {
     en: "Balloons, cakes, venues, gifts, photographers — tell Salooote AI what you need and we'll plan it, find vendors, and estimate the budget.",
-    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, ֆոտոգրաֆներ — ասեք Salooote AI-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
+    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, մուլտհերոսներ — ասեք Salooote AI-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
     ru: "Шары, торты, площадки, подарки, фотографы — расскажите Salooote AI что нужно, мы спланируем, найдём поставщиков и оценим бюджет.",
   },
   placeholder: {
     en: "Help me plan my daughter's 5th birthday tomorrow…",
-    hy: "Օգնեք պլանավորել աղջկաս 5-ամյա ծնունդը վաղը…",
+    hy: "Ուզում եմ պլանավորել աղջկաս 5-ամյակը վաղը…",
     ru: "Помогите спланировать день рождения дочки на 5 лет завтра…",
   },
   chips: {
@@ -38,7 +39,7 @@ const T = {
       { icon: "balloon",  label: "Գտնել փուչիկներ" },
       { icon: "gift",     label: "Ուղարկել նվեր" },
       { icon: "ring",     label: "Պլանավորել հարսանիք" },
-      { icon: "bolt",     label: "Վերջին պահի միջոցառում" },
+      { icon: "bolt",     label: "Վերջին զանգի միջոցառում" },
     ],
     ru: [
       { icon: "cake",     label: "Спланировать день рождения" },
@@ -55,19 +56,19 @@ const T = {
   },
   welcome: {
     en: "Hi, I'm **Sali**.\n\nTell me what you're looking for — an occasion, a gift, or something specific — and I'll find the right options for you.",
-    hy: "Բարև, ես **Sali**-ն եմ։\n\nԱսեք ինչ եք փնտրում — առիթ, նվեր կամ ինչ-որ կոնկրետ բան — ես կընտրեմ լավագույն տարբերակները։",
+    hy: "Բարև, ես **Sali**-ն եմ։\n\nԱսեք ինչ եք փնտրում՝ միջոցառում, նվեր կամ ինչ-որ կոնկրետ բան և ես կընտրեմ լավագույն տարբերակները։",
     ru: "Привет, я **Sali**.\n\nРасскажите, что ищете — праздник, подарок или что-то конкретное — я подберу варианты.",
   },
   planBtn:  { en: "Plan this event",  hy: "Պլանավորել",   ru: "Планировать" },
   sendBtn:  { en: "Ask Sali",         hy: "Հարցնել",     ru: "Спросить" },
-  saliKnows:{ en: "Sali knows",       hy: "Sali գիտի",   ru: "Sali помнит" },
+  saliKnows:{ en: "Sali knows",       hy: "Sali-ն գիտի",   ru: "Sali помнит" },
   online:   { en: "Online",           hy: "Առցանց",      ru: "Онлайн" },
   viewProduct: { en: "View product", hy: "Տեսնել",     ru: "Открыть" },
   viewStore:   { en: "View store",   hy: "Տեսնել",     ru: "Открыть" },
 
   browseTitle: {
     en: "Browse by Category",
-    hy: "Թերթեք ըստ կատեգորիայի",
+    hy: "Կատեգորիաներ",
     ru: "По категориям",
   },
   browseHeadline: {
@@ -87,7 +88,7 @@ const T = {
   },
   trendingHeadline: {
     en: "Trending Now",
-    hy: "Հայտնի հիմա",
+    hy: "Թրենդային",
     ru: "Популярные сейчас",
   },
   trendingTabs: {
@@ -119,7 +120,7 @@ const T = {
   },
   occSub: {
     en: "Find trusted vendors for every event type — from intimate birthdays to grand weddings.",
-    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար — ինտիմ ծնունդից մինչև շքեղ հարսանիք։",
+    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար — ծնունդից մինչև շքեղ հարսանիք։",
     ru: "Найдите проверенных поставщиков для любого события — от уютных дней рождения до пышных свадеб.",
   },
   occCards: {
@@ -158,7 +159,7 @@ const T = {
   /* ── New centered hero (vibrant) ─────────────── */
   aiBadge: {
     en: "New — AI Planner is live in Armenian, Russian & English",
-    hy: "Նորույթ — AI Պլանավորիչը հասանելի է հայերեն, ռուսերեն և անգլերեն",
+    hy: "Նորույթ — AI կազմակերպիչը հասանելի է հայերեն, ռուսերեն և անգլերեն",
     ru: "Новинка — AI-планировщик доступен на армянском, русском и английском",
   },
   heroPart1: {
@@ -1560,6 +1561,13 @@ export default function AIAssistantV2Client({ lang }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  // Plan mode state
+  const [eventState, setEventState] = useState(INITIAL_EVENT_STATE);
+  const [vendorResults, setVendorResults] = useState({});
+  const [plannerSessionId, setPlannerSessionId] = useState(null);
+  const [showBulkModal, setShowBulkModal] = useState(false);
+  const [showMobilePlan, setShowMobilePlan] = useState(false);
+  const inPlanMode = !!eventState.event_type;
   // FAB UX state
   const [fabDismissed, setFabDismissed] = useState(false);
   const [fabPos, setFabPos] = useState(null);     // { right, bottom } in px, or null = default
@@ -1755,6 +1763,10 @@ export default function AIAssistantV2Client({ lang }) {
     setSessionId(null);
     setTyping(false);
     setInput("");
+    setEventState(INITIAL_EVENT_STATE);
+    setVendorResults({});
+    setPlannerSessionId(null);
+    setShowMobilePlan(false);
     try { localStorage.removeItem("salooote_v2_current_id"); } catch {}
     setSidebarOpen(false);
     setTimeout(() => inputRef.current?.focus(), 50);
@@ -1787,6 +1799,57 @@ export default function AIAssistantV2Client({ lang }) {
       try { localStorage.removeItem("salooote_v2_current_id"); } catch {}
     }
   }, [sessionId]);
+
+  // ── Plan mode handlers ────────────────────────────────────────────
+  const handleAddService = useCallback((title) => {
+    const service_type = title.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+    setEventState(prev => {
+      if (prev.services.find(s => s.service_type === service_type)) return prev;
+      return { ...prev, services: [...prev.services, { service_type, title, category: "other", required: false, canSearch: true, status: "pending" }] };
+    });
+  }, []);
+
+  const handleRemoveService = useCallback((service_type) => {
+    setEventState(prev => {
+      const sv = { ...prev.selected_vendors }; delete sv[service_type];
+      return { ...prev, services: prev.services.filter(s => s.service_type !== service_type), selected_vendors: sv };
+    });
+    setVendorResults(prev => { const n = { ...prev }; delete n[service_type]; return n; });
+  }, []);
+
+  const handleSelectVendor = useCallback((serviceType, vendor) => {
+    setEventState(prev => ({
+      ...prev,
+      selected_vendors: { ...prev.selected_vendors, [serviceType]: { id: vendor.id, name: vendor.business_name || vendor.name } },
+      services: prev.services.map(s => s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s),
+    }));
+  }, []);
+
+  const handleUnselectVendor = useCallback((serviceType) => {
+    setEventState(prev => {
+      const sv = { ...prev.selected_vendors }; delete sv[serviceType];
+      return { ...prev, selected_vendors: sv, services: prev.services.map(s => s.service_type === serviceType ? { ...s, status: "pending" } : s) };
+    });
+  }, []);
+
+  const handleSearchVendors = useCallback(async (serviceType, title) => {
+    setEventState(prev => ({
+      ...prev,
+      services: prev.services.map(s => s.service_type === serviceType ? { ...s, searching: true } : s),
+    }));
+    try {
+      const params = new URLSearchParams({ limit: "24", locale: lang });
+      if (title) params.set("search", title);
+      if (eventState.city) params.set("city", eventState.city);
+      const res = await fetch(`${API}/vendors?${params}`);
+      const json = await res.json();
+      setVendorResults(prev => ({ ...prev, [serviceType]: json.data || [] }));
+    } catch {}
+    setEventState(prev => ({
+      ...prev,
+      services: prev.services.map(s => s.service_type === serviceType ? { ...s, searching: false } : s),
+    }));
+  }, [lang, eventState.city]);
 
   const revealItems = useCallback((items) => {
     if (!items.length) return;
@@ -1830,21 +1893,55 @@ export default function AIAssistantV2Client({ lang }) {
       .map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.text }));
 
     try {
-      const res = await fetch(`${API}/smart-assistant/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history, state: chatState, lang }),
-      });
-      const json = await res.json();
-      const d = json?.data || {};
-      setTyping(false);
+      const inPlan = !!eventState.event_type;
+      let d = {};
 
-      if (d.state) setChatState(d.state);
+      if (inPlan) {
+        const res = await fetch(`${API}/planner/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: text, lang,
+            session_id: plannerSessionId || undefined,
+            event_state: {
+              event_type: eventState.event_type,
+              guest_count: eventState.guest_count,
+              city: eventState.city,
+              date: eventState.date,
+              budget: eventState.budget,
+              style: eventState.style,
+              services: eventState.services,
+              selected_vendors: eventState.selected_vendors,
+            },
+          }),
+        });
+        const json = await res.json();
+        d = json?.data || {};
+        if (d.session_id) setPlannerSessionId(d.session_id);
+        if (d.actions?.length) {
+          const { state: nextState, searches } = applyActions(d.actions, eventState);
+          setEventState(nextState);
+          for (const s of searches) {
+            handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
+          }
+        }
+      } else {
+        const res = await fetch(`${API}/smart-assistant/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: history, state: chatState, lang }),
+        });
+        const json = await res.json();
+        d = json?.data || {};
+        if (d.state) setChatState(d.state);
+      }
+
+      setTyping(false);
 
       const base = Date.now() + 1;
       const seq = [];
 
-      if (d.action === "plan_event") {
+      if (!inPlan && d.action === "plan_event") {
         if (d.message) seq.push({ id: base, role: "bot", type: "text", text: d.message });
         seq.push({ id: base + 1, role: "bot", type: "plan", event_type: d.event_type });
       } else {
@@ -1867,11 +1964,20 @@ export default function AIAssistantV2Client({ lang }) {
         text: "Something went wrong. Please try again!",
       }]);
     }
-  }, [input, typing, phase, messages, chatState, lang, revealItems]);
+  }, [input, typing, phase, messages, chatState, lang, revealItems, eventState, plannerSessionId, handleSearchVendors]);
 
   const handlePlanEvent = useCallback((eventType) => {
-    router.push(`/${lang}/planner?event=${eventType}`);
-  }, [lang, router]);
+    const tpl = EVENT_TEMPLATES[eventType];
+    if (!tpl) return;
+    setEventState({
+      ...INITIAL_EVENT_STATE,
+      event_type: eventType,
+      event_type_label: tpl.label,
+      accent: tpl.accent,
+      gradient: tpl.gradient,
+      services: tpl.services.map(s => ({ ...s, status: "pending" })),
+    });
+  }, []);
 
   const openPopup = useCallback((item, type) => setPopup({ item, type }), []);
 
@@ -2663,6 +2769,37 @@ export default function AIAssistantV2Client({ lang }) {
           animation:v2fade .25s ease;
         }
         .v2-overlay.is-collapsed{grid-template-columns:1fr}
+        .v2-overlay.has-plan{grid-template-columns:300px 1fr 380px}
+        .v2-overlay.has-plan.is-collapsed{grid-template-columns:1fr 380px}
+        .v2-plan-panel{
+          height:100vh;height:100dvh;overflow:hidden;
+          border-left:1px solid rgba(240,218,228,.55);
+          background:#f8fafc;
+          display:flex;flex-direction:column;
+        }
+        .v2-plan-fab{
+          position:fixed;bottom:88px;right:18px;z-index:10000;
+          display:none;
+        }
+        .v2-plan-sheet{
+          position:fixed;inset:0;z-index:10001;
+          background:rgba(15,23,42,.45);
+          backdrop-filter:blur(6px);
+          display:flex;flex-direction:column;justify-content:flex-end;
+        }
+        .v2-plan-sheet-inner{
+          background:#f8fafc;border-radius:20px 20px 0 0;
+          height:82vh;overflow:hidden;display:flex;flex-direction:column;
+        }
+        @media(max-width:900px){
+          .v2-overlay.has-plan{grid-template-columns:300px 1fr}
+          .v2-overlay.has-plan.is-collapsed{grid-template-columns:1fr}
+          .v2-plan-panel{display:none}
+          .v2-plan-fab{display:flex!important}
+        }
+        @media(max-width:768px){
+          .v2-overlay.has-plan{grid-template-columns:1fr}
+        }
         .v2-overlay-main{
           position:relative;display:flex;flex-direction:column;min-width:0;
           height:100vh;height:100dvh;overflow:hidden;
@@ -2993,7 +3130,7 @@ export default function AIAssistantV2Client({ lang }) {
 
       {/* Fullscreen chat overlay — covers site header/footer */}
       {phase === "chat" && (
-        <div lang={lang} className={`v2-overlay ${sidebarCollapsed ? "is-collapsed" : ""}`}>
+        <div lang={lang} className={`v2-overlay ${sidebarCollapsed ? "is-collapsed" : ""} ${inPlanMode ? "has-plan" : ""}`}>
           <ChatSidebar
             lang={lang}
             history={history}
@@ -3048,6 +3185,63 @@ export default function AIAssistantV2Client({ lang }) {
               inputRef={inputRef}
             />
           </div>
+
+          {/* Plan panel — desktop right column */}
+          {inPlanMode && (
+            <div className="v2-plan-panel">
+              <EventPlanPanel
+                eventState={eventState}
+                vendorResults={vendorResults}
+                onSelectVendor={handleSelectVendor}
+                onSearchVendors={handleSearchVendors}
+                onUnselectVendor={handleUnselectVendor}
+                onAddService={handleAddService}
+                onRemoveService={handleRemoveService}
+                onOpenBulkModal={() => setShowBulkModal(true)}
+                sessionId={plannerSessionId}
+                lang={lang}
+              />
+            </div>
+          )}
+
+          {/* Mobile plan FAB — only shown when in plan mode on narrow screens */}
+          {inPlanMode && (
+            <button
+              className="v2-plan-fab"
+              onClick={() => setShowMobilePlan(true)}
+              style={{ background: "linear-gradient(135deg,#e11d5c,#f43f5e)", border: "none", borderRadius: 999, padding: "11px 18px", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 7, boxShadow: "0 6px 22px rgba(225,29,92,.38)", fontFamily: "inherit" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 17V5l11-2v12"/><circle cx="6" cy="17" r="3"/><circle cx="17" cy="15" r="3"/></svg>
+              {lang === "hy" ? "Պլան" : lang === "ru" ? "План" : "Plan"}
+            </button>
+          )}
+
+          {/* Mobile plan bottom sheet */}
+          {showMobilePlan && inPlanMode && (
+            <div className="v2-plan-sheet" onClick={() => setShowMobilePlan(false)}>
+              <div className="v2-plan-sheet-inner" onClick={e => e.stopPropagation()}>
+                <div style={{ padding: "10px 16px 0", display: "flex", justifyContent: "flex-end" }}>
+                  <button onClick={() => setShowMobilePlan(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "#64748b" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>
+                  </button>
+                </div>
+                <div style={{ flex: 1, overflow: "hidden" }}>
+                  <EventPlanPanel
+                    eventState={eventState}
+                    vendorResults={vendorResults}
+                    onSelectVendor={handleSelectVendor}
+                    onSearchVendors={handleSearchVendors}
+                    onUnselectVendor={handleUnselectVendor}
+                    onAddService={handleAddService}
+                    onRemoveService={handleRemoveService}
+                    onOpenBulkModal={() => { setShowMobilePlan(false); setShowBulkModal(true); }}
+                    sessionId={plannerSessionId}
+                    lang={lang}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -3057,6 +3251,15 @@ export default function AIAssistantV2Client({ lang }) {
           type={popup.type}
           lang={lang}
           onClose={() => setPopup(null)}
+        />
+      )}
+
+      {showBulkModal && inPlanMode && (
+        <BulkInquiryModal
+          eventState={eventState}
+          sessionId={plannerSessionId}
+          onClose={() => setShowBulkModal(false)}
+          lang={lang}
         />
       )}
 
