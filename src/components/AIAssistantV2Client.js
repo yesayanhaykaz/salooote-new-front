@@ -10,6 +10,19 @@ const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
 const PINK_DARK = "#9f1239";
 
+// Services where products API gives better results than vendors API
+const PRODUCT_SERVICE_TYPES = new Set([
+  "cake", "wedding_cake", "balloon_decoration", "flowers",
+  "baptism_candle", "cross", "baby_outfit", "wedding_rings", "ring", "bridal_dress",
+]);
+
+// Simplified search terms per service type for better product API match rate
+const PRODUCT_SEARCH_TERMS = {
+  cake: "cake", wedding_cake: "cake", balloon_decoration: "balloon",
+  flowers: "flower", baptism_candle: "candle", cross: "cross",
+  baby_outfit: "baby", wedding_rings: "ring", ring: "ring", bridal_dress: "dress",
+};
+
 const T = {
   hero: {
     en: ["Your event.", "Planned in minutes."],
@@ -18,12 +31,12 @@ const T = {
   },
   sub: {
     en: "Balloons, cakes, venues, gifts, photographers — tell Salooote AI what you need and we'll plan it, find vendors, and estimate the budget.",
-    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, ֆոտոգրաֆներ — ասեք Salooote AI-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
+    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, մուլտհերոսներ — ասեք Salooote AI-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
     ru: "Шары, торты, площадки, подарки, фотографы — расскажите Salooote AI что нужно, мы спланируем, найдём поставщиков и оценим бюджет.",
   },
   placeholder: {
     en: "Help me plan my daughter's 5th birthday tomorrow…",
-    hy: "Օգնեք պլանավորել աղջկաս 5-ամյա ծնունդը վաղը…",
+    hy: "Ուզում եմ պլանավորել աղջկաս 5-ամյակը վաղը…",
     ru: "Помогите спланировать день рождения дочки на 5 лет завтра…",
   },
   chips: {
@@ -39,7 +52,7 @@ const T = {
       { icon: "balloon",  label: "Գտնել փուչիկներ" },
       { icon: "gift",     label: "Ուղարկել նվեր" },
       { icon: "ring",     label: "Պլանավորել հարսանիք" },
-      { icon: "bolt",     label: "Վերջին պահի միջոցառում" },
+      { icon: "bolt",     label: "Վերջին զանգի միջոցառում" },
     ],
     ru: [
       { icon: "cake",     label: "Спланировать день рождения" },
@@ -56,19 +69,19 @@ const T = {
   },
   welcome: {
     en: "Hi, I'm **Sali**.\n\nTell me what you're looking for — an occasion, a gift, or something specific — and I'll find the right options for you.",
-    hy: "Բարև, ես **Sali**-ն եմ։\n\nԱսեք ինչ եք փնտրում — առիթ, նվեր կամ ինչ-որ կոնկրետ բան — ես կընտրեմ լավագույն տարբերակները։",
+    hy: "Բարև, ես **Sali**-ն եմ։\n\nԱսեք ինչ եք փնտրում՝ միջոցառում, նվեր կամ ինչ-որ կոնկրետ բան և ես կընտրեմ լավագույն տարբերակները։",
     ru: "Привет, я **Sali**.\n\nРасскажите, что ищете — праздник, подарок или что-то конкретное — я подберу варианты.",
   },
   planBtn:  { en: "Plan this event",  hy: "Պլանավորել",   ru: "Планировать" },
   sendBtn:  { en: "Ask Sali",         hy: "Հարցնել",     ru: "Спросить" },
-  saliKnows:{ en: "Sali knows",       hy: "Sali գիտի",   ru: "Sali помнит" },
+  saliKnows:{ en: "Sali knows",       hy: "Sali-ն գիտի",   ru: "Sali помнит" },
   online:   { en: "Online",           hy: "Առցանց",      ru: "Онлайн" },
   viewProduct: { en: "View product", hy: "Տեսնել",     ru: "Открыть" },
   viewStore:   { en: "View store",   hy: "Տեսնել",     ru: "Открыть" },
 
   browseTitle: {
     en: "Browse by Category",
-    hy: "Թերթեք ըստ կատեգորիայի",
+    hy: "Կատեգորիաներ",
     ru: "По категориям",
   },
   browseHeadline: {
@@ -88,7 +101,7 @@ const T = {
   },
   trendingHeadline: {
     en: "Trending Now",
-    hy: "Հայտնի հիմա",
+    hy: "Թրենդային",
     ru: "Популярные сейчас",
   },
   trendingTabs: {
@@ -120,7 +133,7 @@ const T = {
   },
   occSub: {
     en: "Find trusted vendors for every event type — from intimate birthdays to grand weddings.",
-    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար — ինտիմ ծնունդից մինչև շքեղ հարսանիք։",
+    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար — ծնունդից մինչև շքեղ հարսանիք։",
     ru: "Найдите проверенных поставщиков для любого события — от уютных дней рождения до пышных свадеб.",
   },
   occCards: {
@@ -159,7 +172,7 @@ const T = {
   /* ── New centered hero (vibrant) ─────────────── */
   aiBadge: {
     en: "New — AI Planner is live in Armenian, Russian & English",
-    hy: "Նորույթ — AI Պլանավորիչը հասանելի է հայերեն, ռուսերեն և անգլերեն",
+    hy: "Նորույթ — AI կազմակերպիչը հասանելի է հայերեն, ռուսերեն և անգլերեն",
     ru: "Новинка — AI-планировщик доступен на армянском, русском и английском",
   },
   heroPart1: {
@@ -1838,12 +1851,37 @@ export default function AIAssistantV2Client({ lang }) {
       services: prev.services.map(s => s.service_type === serviceType ? { ...s, searching: true } : s),
     }));
     try {
-      const params = new URLSearchParams({ limit: "24", locale: lang });
-      if (title) params.set("search", title);
-      if (eventState.city) params.set("city", eventState.city);
-      const res = await fetch(`${API}/vendors?${params}`);
-      const json = await res.json();
-      setVendorResults(prev => ({ ...prev, [serviceType]: json.data || [] }));
+      const useProductsApi = PRODUCT_SERVICE_TYPES.has(serviceType);
+      let results = [];
+
+      if (useProductsApi) {
+        const params = new URLSearchParams({ limit: "24", locale: lang });
+        const searchTerm = PRODUCT_SEARCH_TERMS[serviceType] || title;
+        if (searchTerm) params.set("search", searchTerm);
+        const res = await fetch(`${API}/products?${params}`);
+        const json = await res.json();
+        // Normalize products into vendor-card-compatible shape
+        results = (json.data || []).map(p => ({
+          id: p.id,
+          business_name: p.name,
+          name: p.name,
+          slug: p.vendor_slug || p.slug,
+          cover_image: p.images?.[0] || p.image || null,
+          rating: p.rating || null,
+          price: p.price,
+          _isProduct: true,
+          vendor_id: p.vendor_id,
+        }));
+      } else {
+        const params = new URLSearchParams({ limit: "24", locale: lang });
+        if (title) params.set("search", title);
+        if (eventState.city) params.set("city", eventState.city);
+        const res = await fetch(`${API}/vendors?${params}`);
+        const json = await res.json();
+        results = json.data || [];
+      }
+
+      setVendorResults(prev => ({ ...prev, [serviceType]: results }));
     } catch {}
     setEventState(prev => ({
       ...prev,
@@ -1897,33 +1935,63 @@ export default function AIAssistantV2Client({ lang }) {
       let d = {};
 
       if (inPlan) {
-        const res = await fetch(`${API}/planner/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text, lang,
-            session_id: plannerSessionId || undefined,
-            event_state: {
-              event_type: eventState.event_type,
-              guest_count: eventState.guest_count,
-              city: eventState.city,
-              date: eventState.date,
-              budget: eventState.budget,
-              style: eventState.style,
-              services: eventState.services,
-              selected_vendors: eventState.selected_vendors,
-            },
-          }),
-        });
-        const json = await res.json();
-        d = json?.data || {};
-        if (d.session_id) setPlannerSessionId(d.session_id);
-        if (d.actions?.length) {
-          const { state: nextState, searches } = applyActions(d.actions, eventState);
-          setEventState(nextState);
-          for (const s of searches) {
-            handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
+        // Try planner API first; fall back to smart-assistant if unavailable
+        let plannerOk = false;
+        try {
+          const res = await fetch(`${API}/planner/chat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: text, lang,
+              session_id: plannerSessionId || undefined,
+              event_state: {
+                event_type: eventState.event_type,
+                guest_count: eventState.guest_count,
+                city: eventState.city,
+                date: eventState.date,
+                budget: eventState.budget,
+                style: eventState.style,
+                services: eventState.services,
+                selected_vendors: eventState.selected_vendors,
+              },
+            }),
+          });
+          if (res.ok) {
+            const json = await res.json();
+            d = json?.data || {};
+            if (d.session_id) setPlannerSessionId(d.session_id);
+            if (d.actions?.length) {
+              const { state: nextState, searches } = applyActions(d.actions, eventState);
+              setEventState(nextState);
+              for (const s of searches) {
+                handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
+              }
+            }
+            plannerOk = true;
           }
+        } catch {}
+
+        if (!plannerOk) {
+          // Fallback: smart-assistant with plan context injected
+          const planContext = `[Planning ${eventState.event_type_label || eventState.event_type}. Services: ${(eventState.services || []).map(s => s.title).join(", ")}]`;
+          const historyWithContext = [
+            { role: "assistant", content: planContext },
+            ...history,
+          ];
+          const res = await fetch(`${API}/smart-assistant/chat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: historyWithContext, state: chatState, lang }),
+          });
+          const json = await res.json();
+          d = json?.data || {};
+          if (d.state) setChatState(d.state);
+        }
+
+        // Fallback message when planner returned actions but no text
+        if (!d.message && (d.actions?.length)) {
+          const confirmMap = { en: "Got it! I've updated your plan.", hy: "Ստացա, թարմացրի պլանը։", ru: "Готово, план обновлён." };
+          d.message = confirmMap[lang] || confirmMap.en;
         }
       } else {
         const res = await fetch(`${API}/smart-assistant/chat`, {
@@ -1955,7 +2023,14 @@ export default function AIAssistantV2Client({ lang }) {
         }
       }
 
-      if (seq.length) revealItems(seq);
+      // In plan mode with no message at all, show a generic confirmation
+      if (inPlan && !seq.length) {
+        const fallback = { en: "Got it! What else can I help with?", hy: "Ստացա! Ի՞նչ կուզենայիք ավելացնել։", ru: "Хорошо! Чем ещё могу помочь?" };
+        seq.push({ id: Date.now() + 200, role: "bot", type: "text", text: fallback[lang] || fallback.en });
+        revealItems(seq);
+      } else if (seq.length) {
+        revealItems(seq);
+      }
 
     } catch {
       setTyping(false);
@@ -2598,9 +2673,10 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-avatar-core{
           position:relative;width:100%;height:100%;border-radius:50%;
-          background:radial-gradient(circle at 30% 28%,#ff8db4 0%,${PINK} 55%,#7c1d3f 100%);
+          background:#fff1f5;
           display:flex;align-items:center;justify-content:center;color:#fff;
-          box-shadow:inset 0 -6px 12px rgba(124,29,63,.45),inset 0 6px 10px rgba(255,255,255,.35),0 4px 14px rgba(225,29,92,.3);
+          border:1.5px solid #fcd4e0;
+          box-shadow:0 2px 8px rgba(225,29,92,.12);
         }
         @keyframes v2-avatar-spin{to{transform:rotate(360deg)}}
 
@@ -3209,7 +3285,7 @@ export default function AIAssistantV2Client({ lang }) {
             <button
               className="v2-plan-fab"
               onClick={() => setShowMobilePlan(true)}
-              style={{ background: "linear-gradient(135deg,#e11d5c,#f43f5e)", border: "none", borderRadius: 999, padding: "11px 18px", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 7, boxShadow: "0 6px 22px rgba(225,29,92,.38)", fontFamily: "inherit" }}
+              style={{ background: "linear-gradient(135deg,#e11d5c,#f43f5e)", border: "none", borderRadius: 999, padding: "11px 18px", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", alignItems: "center", gap: 7, boxShadow: "0 6px 22px rgba(225,29,92,.38)", fontFamily: "inherit" }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 17V5l11-2v12"/><circle cx="6" cy="17" r="3"/><circle cx="17" cy="15" r="3"/></svg>
               {lang === "hy" ? "Պլան" : lang === "ru" ? "План" : "Plan"}
