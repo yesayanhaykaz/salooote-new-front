@@ -112,6 +112,20 @@ const T = {
     authFeature3: "Everything saved — pick up where you left off",
     createFreeAccount: "Create free account",
     signIn: "Already have an account? Sign in",
+    addService: "Add a service",
+    addServicePlaceholder: "e.g. Ice cream, Photo booth…",
+    removeService: "Remove",
+    serviceTitles: {
+      church: "Church Booking", baptism_candle: "Baptism Candle", cross: "Cross for Baby",
+      kavor: "Godfather (Kavor)", kavork: "Godmother (Kavork)", baby_outfit: "White Baby Outfit",
+      venue: "Venue", catering: "Catering", cake: "Cake", wedding_cake: "Wedding Cake",
+      photographer: "Photographer", videographer: "Videographer",
+      decoration: "Decorations", balloon_decoration: "Balloon Decorations",
+      flowers: "Flowers", music: "Music / DJ", tamada: "Tamada (MC)",
+      wedding_rings: "Wedding Rings", ring: "Engagement Ring", bridal_dress: "Bridal Gown",
+      ceremony_venue: "Ceremony Venue", reception_venue: "Reception Hall",
+      av_tech: "AV & Tech Setup", entertainment: "Entertainment", animator: "Kids Animator",
+    },
   },
 hy: {
   subtitle: "Խելացի միջոցառումների օգնական · Առցանց",
@@ -241,6 +255,20 @@ hy: {
 
   createFreeAccount: "Ստեղծել անվճար հաշիվ",
   signIn: "Արդեն ունե՞ս հաշիվ — Մուտք գործել",
+  addService: "Ավելացնել ծառայություն",
+  addServicePlaceholder: "օր.՝ Պաղպաղակ, Ֆոտո կրպակ…",
+  removeService: "Հեռացնել",
+  serviceTitles: {
+    church: "Եկեղեցու ամրագրում", baptism_candle: "Մկրտության մոմ", cross: "Խաչ երեխայի համար",
+    kavor: "Կավոր (Կնքհայր)", kavork: "Կավորք (Կնքամայր)", baby_outfit: "Սպիտակ հագուստ երեխայի համար",
+    venue: "Վայր", catering: "Կերակրատեսակ", cake: "Տորթ", wedding_cake: "Հարսանեկան տորթ",
+    photographer: "Լուսանկարիչ", videographer: "Վիդեո օպերատոր",
+    decoration: "Դեկոր", balloon_decoration: "Փուչիկների դեկոր",
+    flowers: "Ծաղիկներ", music: "Երաժշտություն / DJ", tamada: "Թամադա",
+    wedding_rings: "Հարսանեկան մատանիներ", ring: "Նշանադրական մատանի", bridal_dress: "Հարսնազգեստ",
+    ceremony_venue: "Արարողության վայր", reception_venue: "Ընդունելության սրահ",
+    av_tech: "AV տեխնիկա", entertainment: "Ժամանցային ծրագիր", animator: "Մանկական անիմատոր",
+  },
 },
 
 
@@ -324,6 +352,20 @@ hy: {
     authFeature3: "Всё сохранено — продолжи с того места",
     createFreeAccount: "Создать аккаунт бесплатно",
     signIn: "Уже есть аккаунт? Войти",
+    addService: "Добавить услугу",
+    addServicePlaceholder: "напр. Мороженое, Фотобудка…",
+    removeService: "Удалить",
+    serviceTitles: {
+      church: "Бронирование церкви", baptism_candle: "Крестильная свеча", cross: "Крестик для малыша",
+      kavor: "Крёстный отец (Каvor)", kavork: "Крёстная мать (Кавork)", baby_outfit: "Белый наряд для малыша",
+      venue: "Площадка", catering: "Кейтеринг", cake: "Торт", wedding_cake: "Свадебный торт",
+      photographer: "Фотограф", videographer: "Видеограф",
+      decoration: "Украшения", balloon_decoration: "Воздушные шары",
+      flowers: "Цветы", music: "Музыка / DJ", tamada: "Тамада",
+      wedding_rings: "Обручальные кольца", ring: "Помолвочное кольцо", bridal_dress: "Свадебное платье",
+      ceremony_venue: "Место церемонии", reception_venue: "Банкетный зал",
+      av_tech: "AV-техника", entertainment: "Развлечения", animator: "Детский аниматор",
+    },
   },
 };
 const tx = (lang) => T[lang] || T.en;
@@ -1083,65 +1125,84 @@ function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
 /* ─────────────────────────────────────────
    SERVICE ROW
 ───────────────────────────────────────── */
-function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, onOpenSearch, accent, lang = "en" }) {
+function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, onOpenSearch, onRemoveService, accent, lang = "en" }) {
   const t = tx(lang);
-  const results    = vendorResults[service.service_type] || [];
-  const isSelected = !!selectedVendor;
+  const results     = vendorResults[service.service_type] || [];
+  const isSelected  = !!selectedVendor;
   const isSearching = service.searching;
-  const hasResults = results.length > 0 && !isSelected;
-  const iconColor  = isSelected ? C.green : (accent || C.purple);
+  const hasResults  = results.length > 0 && !isSelected;
+  const iconColor   = isSelected ? C.green : (accent || C.brand);
+  const displayTitle = t.serviceTitles?.[service.service_type] || service.title;
 
   return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 0" }}>
-        <div style={{ width: 20, height: 20, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {isSelected ? (
-            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 460, damping: 22 }}
-              style={{ width: 20, height: 20, borderRadius: "50%", background: "#f0fdf4", border: "1.5px solid #86efac", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Check size={11} color={C.green} strokeWidth={2.5} />
-            </motion.div>
-          ) : isSearching ? (
-            <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
-              style={{ width: 20, height: 20, borderRadius: "50%", border: `2px solid ${(accent || C.purple)}22`, borderTopColor: accent || C.purple }} />
-          ) : (
-            <div style={{ width: 20, height: 20, borderRadius: "50%", border: `1.5px solid ${C.borderMd}` }} />
-          )}
-        </div>
-        <div style={{ width: 18, height: 18, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.65 }}>
-          {getServiceIcon(service.service_type, { size: 14, color: iconColor, strokeWidth: 1.8 })}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ margin: 0, fontSize: "0.79rem", fontWeight: 600, color: isSelected ? "#15803d" : C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-            {service.title}
-          </p>
-          {isSelected && selectedVendor && <p style={{ margin: "1px 0 0", fontSize: "0.69rem", color: C.green, fontWeight: 500 }}>{selectedVendor.name}</p>}
-          {!service.required && !isSelected && <span style={{ fontSize: "0.6rem", background: "rgba(15,23,42,0.04)", color: C.text3, border: `1px solid ${C.border}`, borderRadius: 100, padding: "1px 6px", fontWeight: 600 }}>{t.optional}</span>}
-        </div>
-        <div style={{ flexShrink: 0 }}>
-          {isSelected ? (
-            <button onClick={() => onUnselectVendor(service.service_type)}
-              style={{ border: "none", background: "none", cursor: "pointer", padding: "3px 4px", color: C.text3, display: "flex", alignItems: "center", borderRadius: 6, transition: "color 0.15s" }}
-              onMouseEnter={e => e.currentTarget.style.color = C.text2} onMouseLeave={e => e.currentTarget.style.color = C.text3}>
-              <X size={13} />
-            </button>
-          ) : hasResults ? (
-            <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-              onClick={() => onOpenSearch(service.service_type)}
-              style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#fefce8", border: "1px solid #fef08a", color: "#854d0e", borderRadius: 8, padding: "5px 10px", fontSize: "0.69rem", fontWeight: 700, cursor: "pointer" }}>
-              {results.length} {t.found} <ChevronRight size={10} strokeWidth={2.5} />
-            </motion.button>
-          ) : service.canSearch && !isSearching ? (
-            <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
-              onClick={() => { onSearchVendors(service.service_type, service.title); onOpenSearch(service.service_type); }}
-              style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#f8fafc", border: `1px solid ${C.borderMd}`, color: C.text2, borderRadius: 8, padding: "5px 10px", fontSize: "0.69rem", fontWeight: 600, cursor: "pointer", transition: "all 0.15s" }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = C.text; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.color = C.text2; }}>
-              <Search size={9} strokeWidth={2.5} /> {t.find}
-            </motion.button>
-          ) : null}
-        </div>
+    <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 0" }}>
+      {/* Status circle */}
+      <div style={{ width: 18, height: 18, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {isSelected ? (
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 460, damping: 22 }}
+            style={{ width: 18, height: 18, borderRadius: "50%", background: "#f0fdf4", border: "1.5px solid #86efac", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Check size={10} color={C.green} strokeWidth={2.5} />
+          </motion.div>
+        ) : isSearching ? (
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
+            style={{ width: 18, height: 18, borderRadius: "50%", border: `1.5px solid ${(accent || C.brand)}22`, borderTopColor: accent || C.brand }} />
+        ) : (
+          <div style={{ width: 18, height: 18, borderRadius: "50%", border: `1.5px solid ${C.border}` }} />
+        )}
       </div>
 
+      {/* Icon */}
+      <div style={{ width: 16, height: 16, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: isSelected ? 0.5 : 0.6 }}>
+        {getServiceIcon(service.service_type, { size: 13, color: iconColor, strokeWidth: 1.8 })}
+      </div>
+
+      {/* Title + vendor name */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ margin: 0, fontSize: "0.78rem", fontWeight: isSelected ? 500 : 600, color: isSelected ? C.text3 : C.text, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textDecoration: isSelected ? "line-through" : "none" }}>
+          {displayTitle}
+        </p>
+        {isSelected && selectedVendor && (
+          <p style={{ margin: "1px 0 0", fontSize: "0.68rem", color: C.green, fontWeight: 600 }}>{selectedVendor.name}</p>
+        )}
+        {!service.required && !isSelected && (
+          <span style={{ fontSize: "0.58rem", color: C.text3, fontWeight: 500 }}>{t.optional}</span>
+        )}
+      </div>
+
+      {/* Action buttons */}
+      <div style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 4 }}>
+        {isSelected ? (
+          <button onClick={() => onUnselectVendor(service.service_type)}
+            style={{ border: "none", background: "none", cursor: "pointer", padding: "2px", color: C.text3, display: "flex", alignItems: "center", borderRadius: 4, transition: "color 0.15s" }}
+            onMouseEnter={e => e.currentTarget.style.color = C.text2} onMouseLeave={e => e.currentTarget.style.color = C.text3}>
+            <X size={12} />
+          </button>
+        ) : hasResults ? (
+          <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+            onClick={() => onOpenSearch(service.service_type)}
+            style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#fefce8", border: "1px solid #fde68a", color: "#92400e", borderRadius: 6, padding: "4px 9px", fontSize: "0.67rem", fontWeight: 700, cursor: "pointer" }}>
+            {results.length} {t.found} <ChevronRight size={9} strokeWidth={2.5} />
+          </motion.button>
+        ) : service.canSearch && !isSearching ? (
+          <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
+            onClick={() => { onSearchVendors(service.service_type, displayTitle); onOpenSearch(service.service_type); }}
+            style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "transparent", border: `1px solid ${C.border}`, color: C.text3, borderRadius: 6, padding: "4px 9px", fontSize: "0.67rem", fontWeight: 600, cursor: "pointer", transition: "all 0.15s" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.brand + "44"; e.currentTarget.style.color = C.brand; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.text3; }}>
+            <Search size={9} strokeWidth={2.5} /> {t.find}
+          </motion.button>
+        ) : null}
+
+        {/* Remove service button */}
+        {onRemoveService && (
+          <button onClick={() => onRemoveService(service.service_type)}
+            title={t.removeService}
+            style={{ border: "none", background: "none", cursor: "pointer", padding: "2px 3px", color: "transparent", display: "flex", alignItems: "center", borderRadius: 4, transition: "color 0.15s" }}
+            onMouseEnter={e => e.currentTarget.style.color = "#fca5a5"} onMouseLeave={e => e.currentTarget.style.color = "transparent"}>
+            <X size={11} />
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -1154,30 +1215,91 @@ function CategorySection({ label, services, selectedVendors, onOpenSearch, lang 
   const done = services.filter(s => selectedVendors?.[s.service_type]).length;
   const all  = done === services.length;
   return (
-    <div style={{ background: "#fff", border: `1px solid ${C.border}`, borderRadius: 12, marginBottom: 6, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.03)" }}>
+    <div style={{ marginBottom: 2 }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "9px 13px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <span style={{ fontSize: "0.66rem", fontWeight: 700, color: C.text2, letterSpacing: "0.07em", textTransform: "uppercase" }}>{label}</span>
+        style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "6px 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: "0.6rem", fontWeight: 700, color: C.text3, letterSpacing: "0.09em", textTransform: "uppercase" }}>{label}</span>
           {done > 0 && (
-            <span style={{ fontSize: "0.61rem", fontWeight: 700, borderRadius: 100, padding: "2px 7px", background: all ? "#f0fdf4" : "rgba(15,23,42,0.04)", color: all ? "#16a34a" : C.text3, border: `1px solid ${all ? "#bbf7d0" : C.border}` }}>
+            <span style={{ fontSize: "0.58rem", fontWeight: 700, borderRadius: 100, padding: "1px 6px", background: all ? "#f0fdf4" : "transparent", color: all ? "#16a34a" : C.text3, border: `1px solid ${all ? "#bbf7d0" : C.border}` }}>
               {done}/{services.length}
             </span>
           )}
         </div>
-        {open ? <ChevronUp size={12} style={{ color: C.text3 }} /> : <ChevronDown size={12} style={{ color: C.text3 }} />}
+        {open ? <ChevronUp size={10} style={{ color: C.text3 }} /> : <ChevronDown size={10} style={{ color: C.text3 }} />}
       </button>
       <AnimatePresence>
         {open && (
-          <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} transition={{ duration: 0.18 }} style={{ overflow: "hidden" }}>
-            <div style={{ padding: "0 13px 8px", borderTop: `1px solid ${C.border}` }}>
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.15 }} style={{ overflow: "hidden" }}>
+            <div>
               {services.map((s, idx) => (
                 <div key={s.service_type}>
-                  {idx > 0 && <div style={{ height: 1, background: "rgba(15,23,42,0.04)" }} />}
+                  {idx > 0 && <div style={{ height: 1, background: C.border, marginLeft: 27 }} />}
                   <ServiceRow service={s} selectedVendor={selectedVendors?.[s.service_type]} onOpenSearch={onOpenSearch} lang={lang} {...rowProps} />
                 </div>
               ))}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────
+   ADD SERVICE ROW  (inline input)
+───────────────────────────────────────── */
+function AddServiceRow({ onAdd, lang = "en" }) {
+  const t = tx(lang);
+  const [open, setOpen]   = useState(false);
+  const [value, setValue] = useState("");
+  const inputRef = useRef(null);
+
+  const handleOpen = () => { setOpen(true); setTimeout(() => inputRef.current?.focus(), 60); };
+  const handleSubmit = () => {
+    const v = value.trim();
+    if (!v) { setOpen(false); return; }
+    onAdd(v);
+    setValue("");
+    setOpen(false);
+  };
+
+  return (
+    <div style={{ marginTop: 8 }}>
+      <AnimatePresence mode="wait">
+        {!open ? (
+          <motion.button key="btn"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={handleOpen}
+            style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "transparent", border: `1px dashed ${C.border}`, borderRadius: 8, padding: "6px 12px", fontSize: "0.72rem", color: C.text3, cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s", width: "100%" }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.brand + "50"; e.currentTarget.style.color = C.brand; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.text3; }}>
+            <Plus size={12} strokeWidth={2} /> {t.addService}
+          </motion.button>
+        ) : (
+          <motion.div key="input"
+            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 7, background: "#f8fafc", border: `1px solid ${C.brand}44`, borderRadius: 8, padding: "6px 10px" }}>
+              <Plus size={12} color={C.brand} strokeWidth={2} />
+              <input
+                ref={inputRef}
+                value={value}
+                onChange={e => setValue(e.target.value)}
+                onKeyDown={e => { if (e.key === "Enter") handleSubmit(); if (e.key === "Escape") { setOpen(false); setValue(""); } }}
+                placeholder={t.addServicePlaceholder}
+                style={{ flex: 1, border: "none", outline: "none", fontSize: "0.78rem", background: "transparent", color: C.text, fontFamily: "inherit" }}
+              />
+            </div>
+            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+              onClick={handleSubmit}
+              style={{ background: C.grad, border: "none", borderRadius: 7, padding: "6px 12px", fontSize: "0.72rem", color: "#fff", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }}>
+              <Check size={13} />
+            </motion.button>
+            <button onClick={() => { setOpen(false); setValue(""); }}
+              style={{ background: "transparent", border: "none", cursor: "pointer", padding: "4px", color: C.text3, display: "flex", alignItems: "center" }}>
+              <X size={13} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
@@ -1558,31 +1680,31 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
 /* ─────────────────────────────────────────
    PLAN PANEL (right, when event active)
 ───────────────────────────────────────── */
-function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, sessionId, lang, onOpenBulkModal }) {
+function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, onAddService, onRemoveService, sessionId, lang, onOpenBulkModal }) {
   const t = tx(lang);
-  const { event_type, event_type_label, accent, date, city, guest_count, budget, services = [], selected_vendors = {} } = eventState;
+  const { event_type_label, accent, date, city, guest_count, budget, services = [], selected_vendors = {} } = eventState;
   const searchable = services.filter(s => s.canSearch);
   const sel = Object.keys(selected_vendors).length;
   const grouped = {};
   for (const s of services) { if (!grouped[s.category]) grouped[s.category] = []; grouped[s.category].push(s); }
   const missing = services.filter(s => s.required && s.canSearch && !selected_vendors[s.service_type]);
+  const pct = searchable.length > 0 ? Math.round((sel / searchable.length) * 100) : 0;
 
-  // Vendor search modal state
-  const [searchModalSvc, setSearchModalSvc] = useState(null); // service_type string | null
+  const [searchModalSvc, setSearchModalSvc] = useState(null);
   const modalService = searchModalSvc ? services.find(s => s.service_type === searchModalSvc) : null;
-  const openSearch = (service_type) => { setSearchModalSvc(service_type); };
+  const openSearch = (service_type) => setSearchModalSvc(service_type);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
       {/* Event header */}
-      <div style={{ padding: "16px 20px 14px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+      <div style={{ padding: "14px 18px 12px", borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 10 }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: "0.65rem", fontWeight: 700, color: C.brand, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 5, display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.brand, boxShadow: `0 0 8px ${C.brand}`, display: "inline-block", animation: "plannerGlow 2s infinite" }} />
+            <div style={{ fontSize: "0.6rem", fontWeight: 700, color: C.brand, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 3, display: "flex", alignItems: "center", gap: 5 }}>
+              <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.brand, display: "inline-block", animation: "plannerGlow 2s infinite" }} />
               {t.planningInProgress}
             </div>
-            <h2 style={{ margin: 0, fontSize: "clamp(18px, 2vw, 24px)", fontWeight: 400, color: C.text, lineHeight: 1.2, letterSpacing: "-0.03em", fontFamily: "'Georgia', 'Playfair Display', serif" }}>
+            <h2 style={{ margin: 0, fontSize: "1.25rem", fontWeight: 400, color: C.text, lineHeight: 1.2, letterSpacing: "-0.03em", fontFamily: "'Georgia', serif" }}>
               {event_type_label}
             </h2>
           </div>
@@ -1590,56 +1712,77 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
             {sel > 0 && (
               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                 onClick={onOpenBulkModal}
-                style={{ background: C.grad, border: "none", borderRadius: 999, padding: "5px 12px", fontSize: 11.5, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit", fontWeight: 700, boxShadow: "0 4px 14px rgba(225,29,92,0.25)" }}>
-                <Send size={11} /> {t.sendToVendors}
+                style={{ background: C.grad, border: "none", borderRadius: 999, padding: "5px 11px", fontSize: 11, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit", fontWeight: 700, boxShadow: "0 4px 12px rgba(225,29,92,0.22)" }}>
+                <Send size={10} /> {t.sendToVendors}
               </motion.button>
             )}
-            <button style={{ background: "transparent", border: `1px solid ${C.border}`, borderRadius: 999, padding: "5px 10px", fontSize: 11.5, color: C.text2, cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
-              <Share2 size={11} /> {t.share}
-            </button>
           </div>
         </div>
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-          {date       && <MetaChip icon={<Calendar size={11} color={C.brand} />}>{date}</MetaChip>}
-          {city       && <MetaChip icon={<MapPin    size={11} color={C.brand} />}>{city}</MetaChip>}
-          {guest_count && <MetaChip icon={<Users    size={11} color={C.brand} />}>{guest_count} {t.guests}</MetaChip>}
-          {budget?.description && <MetaChip icon={<DollarSign size={11} color={C.brand} />}>{budget.description}</MetaChip>}
-        </div>
+
+        {/* Meta chips */}
+        {(date || city || guest_count || budget?.description) && (
+          <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 10 }}>
+            {date       && <MetaChip icon={<Calendar size={10} color={C.brand} />}>{date}</MetaChip>}
+            {city       && <MetaChip icon={<MapPin    size={10} color={C.brand} />}>{city}</MetaChip>}
+            {guest_count && <MetaChip icon={<Users    size={10} color={C.brand} />}>{guest_count} {t.guests}</MetaChip>}
+            {budget?.description && <MetaChip icon={<DollarSign size={10} color={C.brand} />}>{budget.description}</MetaChip>}
+          </div>
+        )}
+
+        {/* Progress bar */}
+        {searchable.length > 0 && (
+          <div>
+            <div style={{ height: 3, borderRadius: 999, background: "rgba(15,23,42,0.06)", overflow: "hidden" }}>
+              <motion.div animate={{ width: `${pct}%` }} transition={{ duration: 0.6, ease: "easeOut" }}
+                style={{ height: "100%", background: pct === 100 ? "#86efac" : C.grad, borderRadius: 999 }} />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, fontSize: "0.62rem", color: C.text3 }}>
+              <span>{sel} / {searchable.length} {t.confirmed}</span>
+              <span>{pct}%</span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Budget bar */}
-      <BudgetBar sel={sel} total={searchable.length} lang={lang} />
-
       {/* Scrollable content */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 24px" }}>
+      <div style={{ flex: 1, overflowY: "auto", padding: "14px 18px 24px" }}>
 
         {/* Missing items warning */}
         {missing.length > 0 && sel > 0 && (
           <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-            style={{ background: "#fffbeb", border: "1px solid #fef08a", borderRadius: 10, padding: "9px 13px", marginBottom: 12, display: "flex", gap: 9, alignItems: "flex-start" }}>
-            <AlertTriangle size={14} color="#92400e" style={{ flexShrink: 0, marginTop: 1 }} />
-            <div>
-              <p style={{ margin: "0 0 2px", fontSize: "0.76rem", fontWeight: 700, color: "#92400e" }}>{t.stillNeeded}</p>
-              <p style={{ margin: 0, fontSize: "0.71rem", color: "#b45309", lineHeight: 1.5 }}>{missing.map(s => s.title).join(" · ")}</p>
-            </div>
+            style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 8, padding: "8px 12px", marginBottom: 14, display: "flex", gap: 8, alignItems: "flex-start" }}>
+            <AlertTriangle size={13} color="#92400e" style={{ flexShrink: 0, marginTop: 1 }} />
+            <p style={{ margin: 0, fontSize: "0.72rem", color: "#92400e", lineHeight: 1.5 }}>
+              <strong>{t.stillNeeded}</strong> {missing.map(s => t.serviceTitles?.[s.service_type] || s.title).join(", ")}
+            </p>
           </motion.div>
         )}
 
         {/* Category sections */}
-        <div style={{ marginBottom: 16 }}>
-          {Object.entries(grouped).map(([cat, items]) => (
-            <CategorySection key={cat} label={t.catLabels?.[cat] || CATEGORY_LABELS[cat] || cat} services={items} selectedVendors={selected_vendors}
-              vendorResults={vendorResults} onSelectVendor={onSelectVendor} onSearchVendors={onSearchVendors} onUnselectVendor={onUnselectVendor} accent={accent}
-              lang={lang} onOpenSearch={openSearch} />
+        <div>
+          {Object.entries(grouped).map(([cat, items], idx) => (
+            <div key={cat}>
+              {idx > 0 && <div style={{ height: 1, background: C.border, margin: "6px 0" }} />}
+              <CategorySection
+                label={t.catLabels?.[cat] || CATEGORY_LABELS[cat] || cat}
+                services={items}
+                selectedVendors={selected_vendors}
+                vendorResults={vendorResults}
+                onSelectVendor={onSelectVendor}
+                onSearchVendors={onSearchVendors}
+                onUnselectVendor={onUnselectVendor}
+                onRemoveService={onRemoveService}
+                accent={accent}
+                lang={lang}
+                onOpenSearch={openSearch}
+              />
+            </div>
           ))}
         </div>
 
-        {/* Bottom: timeline + progress side by side */}
-        {services.length > 0 && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginTop: 4 }}>
-            <PlanTimeline services={services} selectedVendors={selected_vendors} lang={lang} />
-            <ProgressByCategory services={services} selectedVendors={selected_vendors} lang={lang} />
-          </div>
+        {/* Add service */}
+        {onAddService && (
+          <AddServiceRow onAdd={onAddService} lang={lang} />
         )}
       </div>
 
@@ -1651,7 +1794,7 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
             vendorResults={vendorResults}
             onSelect={onSelectVendor}
             onClose={() => setSearchModalSvc(null)}
-            onSearch={(type, title) => { onSearchVendors(type, title); }}
+            onSearch={(type, title) => onSearchVendors(type, title)}
             accent={accent}
             selectedVendors={selected_vendors}
             lang={lang}
@@ -2027,6 +2170,29 @@ function PlannerClientInner({ lang }) {
     });
   }, []);
 
+  const handleAddService = useCallback((title) => {
+    const service_type = title.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+    setEventState(prev => {
+      if (prev.services.find(s => s.service_type === service_type)) return prev;
+      return {
+        ...prev,
+        services: [...prev.services, { service_type, title, category: "other", required: false, canSearch: true, status: "pending" }],
+      };
+    });
+  }, []);
+
+  const handleRemoveService = useCallback(service_type => {
+    setEventState(prev => {
+      const sv = { ...prev.selected_vendors }; delete sv[service_type];
+      return {
+        ...prev,
+        services: prev.services.filter(s => s.service_type !== service_type),
+        selected_vendors: sv,
+      };
+    });
+    setVendorResults(prev => { const n = { ...prev }; delete n[service_type]; return n; });
+  }, []);
+
   const handleNewChat = useCallback(() => {
     const nt = tx(lang);
     setMessages([{ id: 1, role: "bot", text: `${nt.greeting}\n\n${nt.welcome1}\n${nt.welcome2} ${nt.welcome3}`, suggestions: nt.suggestions }]);
@@ -2145,6 +2311,8 @@ function PlannerClientInner({ lang }) {
                     onSelectVendor={handleSelectVendor}
                     onSearchVendors={handleSearchVendors}
                     onUnselectVendor={handleUnselectVendor}
+                    onAddService={handleAddService}
+                    onRemoveService={handleRemoveService}
                     sessionId={sessionId}
                     lang={lang}
                     onOpenBulkModal={() => setShowBulkModal(true)}
@@ -2323,6 +2491,8 @@ function PlannerClientInner({ lang }) {
                         onSelectVendor={handleSelectVendor}
                         onSearchVendors={handleSearchVendors}
                         onUnselectVendor={handleUnselectVendor}
+                        onAddService={handleAddService}
+                        onRemoveService={handleRemoveService}
                         sessionId={sessionId}
                         lang={lang}
                         onOpenBulkModal={() => { setShowBulkModal(true); setMobilePlanOpen(false); }}
