@@ -10,6 +10,19 @@ const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
 const PINK_DARK = "#9f1239";
 
+// Services where products API gives better results than vendors API
+const PRODUCT_SERVICE_TYPES = new Set([
+  "cake", "wedding_cake", "balloon_decoration", "flowers",
+  "baptism_candle", "cross", "baby_outfit", "wedding_rings", "ring", "bridal_dress",
+]);
+
+// Simplified search terms per service type for better product API match rate
+const PRODUCT_SEARCH_TERMS = {
+  cake: "cake", wedding_cake: "cake", balloon_decoration: "balloon",
+  flowers: "flower", baptism_candle: "candle", cross: "cross",
+  baby_outfit: "baby", wedding_rings: "ring", ring: "ring", bridal_dress: "dress",
+};
+
 const T = {
   hero: {
     en: ["Your event.", "Planned in minutes."],
@@ -425,26 +438,53 @@ function StateBar({ state, lang }) {
   );
 }
 
-// ── Sali mascot — minimal flat robot ──────────────────────────────
+// ── Happy Sali mascot — friendly robot with party hat ──────────────
 function BotMascot({ size = 44 }) {
-  const u = size / 32;
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" aria-hidden>
-      {/* Antenna */}
-      <line x1="16" y1="11" x2="16" y2="7" stroke="#e11d5c" strokeWidth={1.6 * u} strokeLinecap="round" />
-      <circle cx="16" cy="6" r={2 * u} fill="#e11d5c" />
-      {/* Head */}
-      <rect x="6" y="11" width="20" height="15" rx={5 * u} fill="#1a0a14" />
-      {/* Ear nubs */}
-      <rect x="3" y="15" width={3 * u} height={6 * u} rx={1.5 * u} fill="#1a0a14" />
-      <rect x="26" y="15" width={3 * u} height={6 * u} rx={1.5 * u} fill="#1a0a14" />
-      {/* Eyes */}
-      <circle cx="12" cy="19" r={2.4 * u} fill="#e11d5c" opacity=".9" />
-      <circle cx="20" cy="19" r={2.4 * u} fill="#e11d5c" opacity=".9" />
-      <circle cx={12.8 * u} cy={18.3 * u} r={0.9 * u} fill="#fff" />
-      <circle cx={20.8 * u} cy={18.3 * u} r={0.9 * u} fill="#fff" />
-      {/* Smile */}
-      <path d={`M${11 * u} ${23.5 * u} q${5 * u} ${2.2 * u} ${10 * u} 0`} stroke="#e11d5c" strokeWidth={1.4 * u} strokeLinecap="round" fill="none" />
+    <svg
+      width={size} height={size} viewBox="0 0 64 64" fill="none"
+      xmlns="http://www.w3.org/2000/svg" aria-hidden
+    >
+      <defs>
+        <linearGradient id="bm-body" x1="16" y1="20" x2="48" y2="56" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#fff7fa" />
+          <stop offset="1" stopColor="#ffe1ec" />
+        </linearGradient>
+        <linearGradient id="bm-hat" x1="36" y1="6" x2="50" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#f43f5e" />
+          <stop offset="1" stopColor="#9f1239" />
+        </linearGradient>
+        <linearGradient id="bm-screen" x1="20" y1="28" x2="44" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#1a0a14" />
+          <stop offset="1" stopColor="#3a1424" />
+        </linearGradient>
+      </defs>
+      {/* Soft cheek glow */}
+      <circle cx="20" cy="46" r="3.6" fill="#ffd5e2" opacity=".9" />
+      <circle cx="44" cy="46" r="3.6" fill="#ffd5e2" opacity=".9" />
+      {/* Head body */}
+      <path
+        d="M16 28c0-6.6 5.4-12 12-12h8c6.6 0 12 5.4 12 12v14c0 4.4-3.6 8-8 8H24c-4.4 0-8-3.6-8-8V28Z"
+        fill="url(#bm-body)" stroke="#1a0a14" strokeWidth="2.2" strokeLinejoin="round"
+      />
+      {/* Ears */}
+      <rect x="10" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
+      <rect x="48" y="32" width="6" height="10" rx="3" fill="#fff7fa" stroke="#1a0a14" strokeWidth="2" />
+      {/* Antenna dot */}
+      <circle cx="32" cy="13" r="2.4" fill="#e11d5c" />
+      {/* Screen face */}
+      <rect x="20" y="28" width="24" height="14" rx="6" fill="url(#bm-screen)" />
+      {/* Eyes — happy curves in brand pink */}
+      <path d="M25 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      <path d="M32.8 36c.8-1.6 2.2-2.4 3.6-2.4s2.8.8 3.6 2.4" stroke="#ffb6cc" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      {/* Smile in brand pink */}
+      <path d="M28 47c1.4 1.6 3 2.4 4 2.4s2.6-.8 4-2.4" stroke="#e11d5c" strokeWidth="2" strokeLinecap="round" fill="none" />
+      {/* Party hat */}
+      <path d="M30 16 L40 16 L37 4 Z" fill="url(#bm-hat)" stroke="#1a0a14" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M31 12 L39 12" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M30.5 9 L38.5 9" stroke="#ffd5e2" strokeWidth="1.2" strokeLinecap="round" opacity=".9" />
+      {/* Hat star */}
+      <path d="M37 3.5 L37.7 5.3 L39.6 5.3 L38.1 6.4 L38.7 8.3 L37 7.1 L35.3 8.3 L35.9 6.4 L34.4 5.3 L36.3 5.3 Z" fill="#ffd5e2" />
     </svg>
   );
 }
@@ -1540,7 +1580,6 @@ export default function AIAssistantV2Client({ lang }) {
   const [plannerSessionId, setPlannerSessionId] = useState(null);
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [showMobilePlan, setShowMobilePlan] = useState(false);
-  const [pendingSelection, setPendingSelection] = useState(null);
   const inPlanMode = !!eventState.event_type;
   // FAB UX state
   const [fabDismissed, setFabDismissed] = useState(false);
@@ -1792,13 +1831,11 @@ export default function AIAssistantV2Client({ lang }) {
   }, []);
 
   const handleSelectVendor = useCallback((serviceType, vendor) => {
-    const vendorName = vendor.business_name || vendor.name;
     setEventState(prev => ({
       ...prev,
-      selected_vendors: { ...prev.selected_vendors, [serviceType]: { id: vendor.id, name: vendorName } },
+      selected_vendors: { ...prev.selected_vendors, [serviceType]: { id: vendor.id, name: vendor.business_name || vendor.name } },
       services: prev.services.map(s => s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s),
     }));
-    setPendingSelection({ serviceType, vendorName });
   }, []);
 
   const handleUnselectVendor = useCallback((serviceType) => {
@@ -1808,77 +1845,49 @@ export default function AIAssistantV2Client({ lang }) {
     });
   }, []);
 
-  const SERVICE_SEARCH_TERMS = {
-    church: "church", baptism_candle: "baptism candle", venue: "venue restaurant hall",
-    ceremony_venue: "venue ceremony", reception_venue: "restaurant banquet hall",
-    catering: "catering food", cake: "cake bakery", wedding_cake: "wedding cake",
-    photographer: "photographer", videographer: "videographer",
-    decoration: "decoration decor", balloon_decoration: "balloons decoration",
-    flowers: "flowers florist", music: "dj music", tamada: "tamada mc",
-    wedding_rings: "jewelry rings", ring: "jewelry engagement", bridal_dress: "bridal dress",
-    av_tech: "audio visual", entertainment: "entertainment", animator: "kids animator",
-  };
-
   const handleSearchVendors = useCallback(async (serviceType, title) => {
     setEventState(prev => ({
       ...prev,
       services: prev.services.map(s => s.service_type === serviceType ? { ...s, searching: true } : s),
     }));
     try {
-      const searchTerm = SERVICE_SEARCH_TERMS[serviceType] || title || serviceType.replace(/_/g, " ");
-      const params = new URLSearchParams({ limit: "24", locale: lang, search: searchTerm });
-      if (eventState.city) params.set("city", eventState.city);
-      const res = await fetch(`${API}/vendors?${params}`);
-      const json = await res.json();
-      setVendorResults(prev => ({ ...prev, [serviceType]: json.data || [] }));
+      const useProductsApi = PRODUCT_SERVICE_TYPES.has(serviceType);
+      let results = [];
+
+      if (useProductsApi) {
+        const params = new URLSearchParams({ limit: "24", locale: lang });
+        const searchTerm = PRODUCT_SEARCH_TERMS[serviceType] || title;
+        if (searchTerm) params.set("search", searchTerm);
+        const res = await fetch(`${API}/products?${params}`);
+        const json = await res.json();
+        // Normalize products into vendor-card-compatible shape
+        results = (json.data || []).map(p => ({
+          id: p.id,
+          business_name: p.name,
+          name: p.name,
+          slug: p.vendor_slug || p.slug,
+          cover_image: p.images?.[0] || p.image || null,
+          rating: p.rating || null,
+          price: p.price,
+          _isProduct: true,
+          vendor_id: p.vendor_id,
+        }));
+      } else {
+        const params = new URLSearchParams({ limit: "24", locale: lang });
+        if (title) params.set("search", title);
+        if (eventState.city) params.set("city", eventState.city);
+        const res = await fetch(`${API}/vendors?${params}`);
+        const json = await res.json();
+        results = json.data || [];
+      }
+
+      setVendorResults(prev => ({ ...prev, [serviceType]: results }));
     } catch {}
     setEventState(prev => ({
       ...prev,
       services: prev.services.map(s => s.service_type === serviceType ? { ...s, searching: false } : s),
     }));
-  }, [lang, eventState.city]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // After vendor selection — ask planner what to do next
-  useEffect(() => {
-    if (!pendingSelection) return;
-    const { serviceType, vendorName } = pendingSelection;
-    setPendingSelection(null);
-    const doNotify = async () => {
-      setTyping(true);
-      try {
-        const res = await fetch(`${API}/planner/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: `I selected ${vendorName} for ${serviceType.replace(/_/g, " ")}`,
-            lang,
-            session_id: plannerSessionId || undefined,
-            event_state: {
-              event_type: eventState.event_type,
-              guest_count: eventState.guest_count,
-              city: eventState.city,
-              date: eventState.date,
-              budget: eventState.budget,
-              style: eventState.style,
-              services: eventState.services,
-              selected_vendors: eventState.selected_vendors,
-            },
-          }),
-        });
-        const json = await res.json();
-        const d = json?.data || {};
-        if (d.session_id) setPlannerSessionId(d.session_id);
-        if (d.actions?.length) {
-          const { state: nextState, searches } = applyActions(d.actions, eventState);
-          setEventState(nextState);
-          for (const s of searches) handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
-        }
-        setTyping(false);
-        if (d.message) setMessages(prev => [...prev, { id: Date.now(), role: "bot", type: "text", text: d.message }]);
-      } catch { setTyping(false); }
-    };
-    doNotify();
-  }, [pendingSelection]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [lang, eventState.city]);
 
   const revealItems = useCallback((items) => {
     if (!items.length) return;
@@ -1926,33 +1935,63 @@ export default function AIAssistantV2Client({ lang }) {
       let d = {};
 
       if (inPlan) {
-        const res = await fetch(`${API}/planner/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text, lang,
-            session_id: plannerSessionId || undefined,
-            event_state: {
-              event_type: eventState.event_type,
-              guest_count: eventState.guest_count,
-              city: eventState.city,
-              date: eventState.date,
-              budget: eventState.budget,
-              style: eventState.style,
-              services: eventState.services,
-              selected_vendors: eventState.selected_vendors,
-            },
-          }),
-        });
-        const json = await res.json();
-        d = json?.data || {};
-        if (d.session_id) setPlannerSessionId(d.session_id);
-        if (d.actions?.length) {
-          const { state: nextState, searches } = applyActions(d.actions, eventState);
-          setEventState(nextState);
-          for (const s of searches) {
-            handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
+        // Try planner API first; fall back to smart-assistant if unavailable
+        let plannerOk = false;
+        try {
+          const res = await fetch(`${API}/planner/chat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message: text, lang,
+              session_id: plannerSessionId || undefined,
+              event_state: {
+                event_type: eventState.event_type,
+                guest_count: eventState.guest_count,
+                city: eventState.city,
+                date: eventState.date,
+                budget: eventState.budget,
+                style: eventState.style,
+                services: eventState.services,
+                selected_vendors: eventState.selected_vendors,
+              },
+            }),
+          });
+          if (res.ok) {
+            const json = await res.json();
+            d = json?.data || {};
+            if (d.session_id) setPlannerSessionId(d.session_id);
+            if (d.actions?.length) {
+              const { state: nextState, searches } = applyActions(d.actions, eventState);
+              setEventState(nextState);
+              for (const s of searches) {
+                handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
+              }
+            }
+            plannerOk = true;
           }
+        } catch {}
+
+        if (!plannerOk) {
+          // Fallback: smart-assistant with plan context injected
+          const planContext = `[Planning ${eventState.event_type_label || eventState.event_type}. Services: ${(eventState.services || []).map(s => s.title).join(", ")}]`;
+          const historyWithContext = [
+            { role: "assistant", content: planContext },
+            ...history,
+          ];
+          const res = await fetch(`${API}/smart-assistant/chat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: historyWithContext, state: chatState, lang }),
+          });
+          const json = await res.json();
+          d = json?.data || {};
+          if (d.state) setChatState(d.state);
+        }
+
+        // Fallback message when planner returned actions but no text
+        if (!d.message && (d.actions?.length)) {
+          const confirmMap = { en: "Got it! I've updated your plan.", hy: "Ստացա, թարմացրի պլանը։", ru: "Готово, план обновлён." };
+          d.message = confirmMap[lang] || confirmMap.en;
         }
       } else {
         const res = await fetch(`${API}/smart-assistant/chat`, {
@@ -1971,10 +2010,8 @@ export default function AIAssistantV2Client({ lang }) {
       const seq = [];
 
       if (!inPlan && d.action === "plan_event") {
-        // Auto-activate plan panel instead of showing a button
-        if (d.event_type) handlePlanEvent(d.event_type);
         if (d.message) seq.push({ id: base, role: "bot", type: "text", text: d.message });
-        // No "plan" button pushed to chat — panel slides in automatically
+        seq.push({ id: base + 1, role: "bot", type: "plan", event_type: d.event_type });
       } else {
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) {
@@ -1983,14 +2020,17 @@ export default function AIAssistantV2Client({ lang }) {
         });
         if (d.message) {
           seq.push({ id: base + 100, role: "bot", type: "text", text: d.message });
-        } else if (inPlan && d.actions?.length) {
-          // Planner returned actions but no message — show brief confirmation
-          const confirmMap = { en: "Got it! Plan updated.", hy: "Ստացա!", ru: "Готово, план обновлён." };
-          seq.push({ id: base + 100, role: "bot", type: "text", text: confirmMap[lang] || "Got it! I’ve updated your plan." });
         }
       }
 
-      if (seq.length) revealItems(seq);
+      // In plan mode with no message at all, show a generic confirmation
+      if (inPlan && !seq.length) {
+        const fallback = { en: "Got it! What else can I help with?", hy: "Ստացա! Ի՞նչ կուզենայիք ավելացնել։", ru: "Хорошо! Чем ещё могу помочь?" };
+        seq.push({ id: Date.now() + 200, role: "bot", type: "text", text: fallback[lang] || fallback.en });
+        revealItems(seq);
+      } else if (seq.length) {
+        revealItems(seq);
+      }
 
     } catch {
       setTyping(false);
@@ -2625,13 +2665,20 @@ export default function AIAssistantV2Client({ lang }) {
 
         /* ── Avatar ── */
         .v2-avatar{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .v2-avatar-ring{display:none}
+        .v2-avatar-ring{
+          position:absolute;inset:-2px;border-radius:50%;
+          background:conic-gradient(from 0deg, ${PINK}, #f43f5e, #c026d3, #f0abfc, ${PINK});
+          animation:v2-avatar-spin 6s linear infinite;
+          filter:blur(.4px);
+        }
         .v2-avatar-core{
           position:relative;width:100%;height:100%;border-radius:50%;
-          background:#1a0a14;
-          display:flex;align-items:center;justify-content:center;
-          box-shadow:0 2px 8px rgba(0,0,0,.18);
+          background:#fff1f5;
+          display:flex;align-items:center;justify-content:center;color:#fff;
+          border:1.5px solid #fcd4e0;
+          box-shadow:0 2px 8px rgba(225,29,92,.12);
         }
+        @keyframes v2-avatar-spin{to{transform:rotate(360deg)}}
 
         /* ── Textarea placeholder ── */
         .v2-chat-textarea::placeholder,
@@ -3021,10 +3068,10 @@ export default function AIAssistantV2Client({ lang }) {
 
         .v2-reopen-mini{
           position:relative;
-          width:56px;height:56px;border-radius:50%;border:none;
-          background:#fff;
+          width:60px;height:60px;border-radius:50%;border:none;
+          background:linear-gradient(135deg,#fff 0%,#ffeef4 100%);
           cursor:grab;display:flex;align-items:center;justify-content:center;
-          box-shadow:0 4px 18px rgba(225,29,92,.22),0 1px 4px rgba(0,0,0,.10);
+          box-shadow:0 12px 32px rgba(225,29,92,.32),0 4px 12px rgba(225,29,92,.18);
           transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s cubic-bezier(.2,.8,.2,1);
           animation:v2-reopen-in .35s cubic-bezier(.2,.8,.2,1);
           user-select:none;-webkit-user-select:none;
@@ -3238,7 +3285,7 @@ export default function AIAssistantV2Client({ lang }) {
             <button
               className="v2-plan-fab"
               onClick={() => setShowMobilePlan(true)}
-              style={{ background: "linear-gradient(135deg,#e11d5c,#f43f5e)", border: "none", borderRadius: 999, padding: "11px 18px", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", display: "flex", alignItems: "center", gap: 7, boxShadow: "0 6px 22px rgba(225,29,92,.38)", fontFamily: "inherit" }}
+              style={{ background: "linear-gradient(135deg,#e11d5c,#f43f5e)", border: "none", borderRadius: 999, padding: "11px 18px", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", alignItems: "center", gap: 7, boxShadow: "0 6px 22px rgba(225,29,92,.38)", fontFamily: "inherit" }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 17V5l11-2v12"/><circle cx="6" cy="17" r="3"/><circle cx="17" cy="15" r="3"/></svg>
               {lang === "hy" ? "Պլան" : lang === "ru" ? "План" : "Plan"}
