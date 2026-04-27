@@ -1984,6 +1984,7 @@ export default function AIAssistantV2Client({ lang }) {
           body: JSON.stringify({
             message: text,
             lang,
+            messages: history,
             event_state: {
               event_type: eventState.event_type,
               event_type_label: eventState.event_type_label,
