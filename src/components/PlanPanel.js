@@ -577,7 +577,7 @@ function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
-      style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(15,23,42,0.55)", backdropFilter: "blur(6px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      style={{ position: "fixed", inset: 0, zIndex: 500, background: "rgba(15,23,42,0.25)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <motion.div initial={{ opacity: 0, scale: 0.96, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.97 }}
         transition={{ type: "spring", stiffness: 300, damping: 28 }} onClick={e => e.stopPropagation()}
         style={{ background: "#fff", borderRadius: 20, width: "90%", maxWidth: 640, maxHeight: "86vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 32px 80px rgba(0,0,0,0.22)" }}>
@@ -633,16 +633,31 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
   const t = txp(lang);
   const [query, setQuery]         = useState("");
   const [detailVendor, setDetail] = useState(null);
-  const results    = vendorResults[service.service_type] || [];
+  const results     = vendorResults[service.service_type] || [];
   const isSearching = service.searching;
+  const isProducts  = results.length > 0 && results[0]?._isProduct;
   const filtered = query.trim() ? results.filter(v => (v.business_name || v.name || "").toLowerCase().includes(query.toLowerCase())) : results;
+
+  const foundLabel = isProducts
+    ? (lang === "hy" ? `${results.length} ապրանք գտնվեց` : lang === "ru" ? `Найдено товаров: ${results.length}` : `${results.length} products found`)
+    : `${results.length} ${t.vendorsFound}`;
+
+  // Clicking a product auto-selects without opening detail popup
+  const handleCardClick = (item) => {
+    if (item._isProduct) {
+      onSelect(service.service_type, item);
+      onClose();
+    } else {
+      setDetail(item);
+    }
+  };
 
   useEffect(() => { if (!results.length && !isSearching) onSearch(service.service_type, service.title); }, []);
 
   return (
     <>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { if (!detailVendor) onClose(); }}
-        style={{ position: "fixed", inset: 0, zIndex: 400, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.40)", backdropFilter: "blur(6px)" }}>
+        style={{ position: "fixed", inset: 0, zIndex: 400, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.18)", backdropFilter: "blur(4px)" }}>
         <motion.div initial={{ opacity: 0, y: 20, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 10, scale: 0.97 }}
           transition={{ type: "spring", stiffness: 320, damping: 28 }} onClick={e => e.stopPropagation()}
           style={{ background: "#fff", borderRadius: 20, width: "90%", maxWidth: 540, maxHeight: "80vh", display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 24px 64px rgba(0,0,0,0.18)" }}>
@@ -654,7 +669,7 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
               <div>
                 <h3 style={{ margin: 0, fontSize: "0.92rem", fontWeight: 800, color: PC.text }}>{txp(lang).serviceTitles?.[service.service_type] || service.title}</h3>
                 <p style={{ margin: 0, fontSize: "0.7rem", color: PC.text3 }}>
-                  {isSearching ? t.searching : results.length > 0 ? `${results.length} ${t.vendorsFound}` : t.searchForVendors}
+                  {isSearching ? t.searching : results.length > 0 ? foundLabel : t.searchForVendors}
                 </p>
               </div>
             </div>
@@ -688,7 +703,7 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
             ) : (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(148px, 1fr))", gap: 10 }}>
                 {filtered.map((v, i) => (
-                  <VendorCard key={v.id || i} vendor={v} isSelected={selectedVendors[service.service_type]?.id === v.id} onPreview={setDetail} />
+                  <VendorCard key={v.id || i} vendor={v} isSelected={selectedVendors[service.service_type]?.id === v.id} onPreview={handleCardClick} />
                 ))}
               </div>
             )}
@@ -751,7 +766,7 @@ export function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
   };
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.35)", backdropFilter: "blur(8px)" }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 600, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(15,23,42,0.22)", backdropFilter: "blur(4px)" }} onClick={onClose}>
       <motion.div initial={{ opacity: 0, y: 20, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 26 }}
         onClick={e => e.stopPropagation()}
         style={{ background: "#fff", borderRadius: 20, padding: "28px 28px 24px", width: "90%", maxWidth: 460, maxHeight: "85vh", overflowY: "auto", boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}>
@@ -832,13 +847,7 @@ export default function EventPlanPanel({ eventState, vendorResults, onSelectVend
               {event_type_label}
             </h2>
           </div>
-          {sel > 0 && (
-            <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={onOpenBulkModal}
-              style={{ background: PC.grad, border: "none", borderRadius: 999, padding: "5px 11px", fontSize: 11, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit", fontWeight: 700, boxShadow: "0 4px 12px rgba(225,29,92,0.22)", flexShrink: 0 }}>
-              <Send size={10} /> {t.sendToVendors}
-            </motion.button>
-          )}
-        </div>
+          </div>
 
         {/* Meta chips */}
         {(date || city || guest_count || budget?.description) && (
@@ -897,6 +906,21 @@ export default function EventPlanPanel({ eventState, vendorResults, onSelectVend
 
         {onAddService && <AddServiceRow onAdd={onAddService} lang={lang} />}
       </div>
+
+      {/* Sticky send-inquiry footer */}
+      <AnimatePresence>
+        {sel > 0 && (
+          <motion.div initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 60, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 340, damping: 28 }}
+            style={{ borderTop: `1px solid ${PC.border}`, padding: "12px 18px", background: "#fff", flexShrink: 0 }}>
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onOpenBulkModal}
+              style={{ width: "100%", background: PC.grad, border: "none", borderRadius: 12, padding: "13px 18px", color: "#fff", fontWeight: 700, fontSize: "0.88rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, fontFamily: "inherit", boxShadow: "0 6px 20px rgba(225,29,92,0.28)" }}>
+              <Send size={14} />
+              {t.sendToVendors} ({sel})
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Vendor search modal */}
       <AnimatePresence>

@@ -1524,10 +1524,11 @@ function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
           rows={1}
           style={{
             flex: 1, border: "none", outline: "none", background: "transparent",
-            padding: "12px 14px", fontSize: 14.5, color: "#1a0a14",
-            resize: "none", lineHeight: 1.7, fontFamily: "inherit",
+            padding: "12px 14px", fontSize: 16, color: "#1a0a14",
+            resize: "none", lineHeight: 1.6, fontFamily: "inherit",
             minHeight: 44, maxHeight: 140, overflowY: "auto",
             display: "block",
+            WebkitTextSizeAdjust: "100%",
           }}
         />
         <button
@@ -1608,6 +1609,47 @@ export default function AIAssistantV2Client({ lang }) {
     setFabDismissed(true);
     try { sessionStorage.setItem("salooote_fab_dismissed", "1"); } catch {}
   }, []);
+
+  // Auto-save event plan to backend for logged-in users (debounced 2s)
+  const autoSaveTimerRef = useRef(null);
+  useEffect(() => {
+    if (!inPlanMode || typeof window === "undefined") return;
+    const token = localStorage.getItem("access_token");
+    if (!token) return;
+    clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(async () => {
+      try {
+        const body = {
+          title: `${eventState.event_type_label || eventState.event_type} plan`,
+          event_type: eventState.event_type,
+          location: eventState.city || "",
+          guest_count: eventState.guest_count ? parseInt(eventState.guest_count) : undefined,
+          event_date: eventState.date || undefined,
+          event_data: JSON.stringify({
+            services: eventState.services,
+            selected_vendors: eventState.selected_vendors,
+            style: eventState.style,
+            budget: eventState.budget,
+          }),
+          status: "active",
+        };
+        if (plannerSessionId) {
+          await fetch(`${API}/user/planner/sessions/${plannerSessionId}`, {
+            method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify(body),
+          });
+        } else {
+          const res = await fetch(`${API}/user/planner/sessions`, {
+            method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify(body),
+          });
+          const json = await res.json();
+          if (json?.data?.id) setPlannerSessionId(json.data.id);
+        }
+      } catch {}
+    }, 2000);
+    return () => clearTimeout(autoSaveTimerRef.current);
+  }, [inPlanMode, eventState, plannerSessionId]);
 
   // Drag handlers — track movement, on mouseup save position. Click only fires
   // if the pointer didn't actually move beyond a small threshold.
@@ -1855,7 +1897,7 @@ export default function AIAssistantV2Client({ lang }) {
       let results = [];
 
       if (useProductsApi) {
-        const params = new URLSearchParams({ limit: "24", locale: lang });
+        const params = new URLSearchParams({ limit: "100", locale: lang });
         const searchTerm = PRODUCT_SEARCH_TERMS[serviceType] || title;
         if (searchTerm) params.set("search", searchTerm);
         const res = await fetch(`${API}/products?${params}`);
@@ -1866,14 +1908,14 @@ export default function AIAssistantV2Client({ lang }) {
           business_name: p.name,
           name: p.name,
           slug: p.vendor_slug || p.slug,
-          cover_image: p.images?.[0] || p.image || null,
+          cover_image: p.images?.[0]?.url || p.thumbnail_url || p.image || null,
           rating: p.rating || null,
           price: p.price,
           _isProduct: true,
           vendor_id: p.vendor_id,
         }));
       } else {
-        const params = new URLSearchParams({ limit: "24", locale: lang });
+        const params = new URLSearchParams({ limit: "100", locale: lang });
         if (title) params.set("search", title);
         if (eventState.city) params.set("city", eventState.city);
         const res = await fetch(`${API}/vendors?${params}`);
@@ -1935,63 +1977,43 @@ export default function AIAssistantV2Client({ lang }) {
       let d = {};
 
       if (inPlan) {
-        // Try planner API first; fall back to smart-assistant if unavailable
-        let plannerOk = false;
-        try {
-          const res = await fetch(`${API}/planner/chat`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              message: text, lang,
-              session_id: plannerSessionId || undefined,
-              event_state: {
-                event_type: eventState.event_type,
-                guest_count: eventState.guest_count,
-                city: eventState.city,
-                date: eventState.date,
-                budget: eventState.budget,
-                style: eventState.style,
-                services: eventState.services,
-                selected_vendors: eventState.selected_vendors,
-              },
-            }),
-          });
-          if (res.ok) {
-            const json = await res.json();
-            d = json?.data || {};
-            if (d.session_id) setPlannerSessionId(d.session_id);
-            if (d.actions?.length) {
-              const { state: nextState, searches } = applyActions(d.actions, eventState);
-              setEventState(nextState);
-              for (const s of searches) {
-                handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
-              }
-            }
-            plannerOk = true;
+        // Dedicated plan-chat endpoint: returns message + actions + blocks
+        const res = await fetch(`${API}/smart-assistant/plan-chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: text,
+            lang,
+            messages: history,
+            event_state: {
+              event_type: eventState.event_type,
+              event_type_label: eventState.event_type_label,
+              city: eventState.city,
+              date: eventState.date,
+              guest_count: eventState.guest_count,
+              budget: eventState.budget,
+              style: eventState.style,
+              services: (eventState.services || []).map(s => ({
+                service_type: s.service_type,
+                title: s.title,
+                category: s.category,
+                required: s.required,
+                can_search: s.canSearch,
+                status: s.status,
+              })),
+              selected_vendors: eventState.selected_vendors || {},
+            },
+          }),
+        });
+        const json = await res.json();
+        d = json?.data || {};
+        // Apply plan actions returned from backend
+        if (d.actions?.length) {
+          const { state: nextState, searches } = applyActions(d.actions, eventState);
+          setEventState(nextState);
+          for (const s of searches) {
+            handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
           }
-        } catch {}
-
-        if (!plannerOk) {
-          // Fallback: smart-assistant with plan context injected
-          const planContext = `[Planning ${eventState.event_type_label || eventState.event_type}. Services: ${(eventState.services || []).map(s => s.title).join(", ")}]`;
-          const historyWithContext = [
-            { role: "assistant", content: planContext },
-            ...history,
-          ];
-          const res = await fetch(`${API}/smart-assistant/chat`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ messages: historyWithContext, state: chatState, lang }),
-          });
-          const json = await res.json();
-          d = json?.data || {};
-          if (d.state) setChatState(d.state);
-        }
-
-        // Fallback message when planner returned actions but no text
-        if (!d.message && (d.actions?.length)) {
-          const confirmMap = { en: "Got it! I've updated your plan.", hy: "Ստացա, թարմացրի պլանը։", ru: "Готово, план обновлён." };
-          d.message = confirmMap[lang] || confirmMap.en;
         }
       } else {
         const res = await fetch(`${API}/smart-assistant/chat`, {
@@ -2009,9 +2031,20 @@ export default function AIAssistantV2Client({ lang }) {
       const base = Date.now() + 1;
       const seq = [];
 
-      if (!inPlan && d.action === "plan_event") {
+      if (!inPlan && d.action === "plan_event" && d.event_type) {
+        // Auto-activate plan panel — no button needed
+        const tpl = EVENT_TEMPLATES[d.event_type];
+        if (tpl) {
+          setEventState({
+            ...INITIAL_EVENT_STATE,
+            event_type: d.event_type,
+            event_type_label: tpl.label,
+            accent: tpl.accent,
+            gradient: tpl.gradient,
+            services: tpl.services.map(s => ({ ...s, status: "pending" })),
+          });
+        }
         if (d.message) seq.push({ id: base, role: "bot", type: "text", text: d.message });
-        seq.push({ id: base + 1, role: "bot", type: "plan", event_type: d.event_type });
       } else {
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) {
@@ -2023,14 +2056,7 @@ export default function AIAssistantV2Client({ lang }) {
         }
       }
 
-      // In plan mode with no message at all, show a generic confirmation
-      if (inPlan && !seq.length) {
-        const fallback = { en: "Got it! What else can I help with?", hy: "Ստացա! Ի՞նչ կուզենայիք ավելացնել։", ru: "Хорошо! Чем ещё могу помочь?" };
-        seq.push({ id: Date.now() + 200, role: "bot", type: "text", text: fallback[lang] || fallback.en });
-        revealItems(seq);
-      } else if (seq.length) {
-        revealItems(seq);
-      }
+      if (seq.length) revealItems(seq);
 
     } catch {
       setTyping(false);
@@ -2148,7 +2174,7 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-chat-textarea{
           width:100%;border:none;outline:none;background:transparent;
-          font-family:inherit;font-size:15.5px;line-height:1.7;color:#1a0a14;
+          font-family:inherit;font-size:16px;line-height:1.7;color:#1a0a14;
           padding:10px 8px;resize:none;min-height:64px;max-height:160px;letter-spacing:.05px;
           display:block;
         }
@@ -2283,7 +2309,7 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-hero2-search-icon{display:inline-flex;color:#9b8390;flex-shrink:0}
         .v2-hero2-search-input{
           flex:1;border:none;outline:none;background:transparent;
-          font-family:inherit;font-size:15.5px;color:#1a0a14;letter-spacing:.05px;
+          font-family:inherit;font-size:16px;color:#1a0a14;letter-spacing:.05px;
           padding:13px 4px;
         }
         .v2-hero2-search-input::placeholder{color:#a08596}
@@ -2638,7 +2664,7 @@ export default function AIAssistantV2Client({ lang }) {
         }
         .v2-how-sub{
           margin:0 auto 48px;max-width:540px;text-align:center;
-          font-size:15.5px;color:#7c5566;line-height:1.6;
+          font-size:16px;color:#7c5566;line-height:1.6;
         }
         .v2-how-grid{
           display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -2665,12 +2691,7 @@ export default function AIAssistantV2Client({ lang }) {
 
         /* ── Avatar ── */
         .v2-avatar{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-        .v2-avatar-ring{
-          position:absolute;inset:-2px;border-radius:50%;
-          background:conic-gradient(from 0deg, ${PINK}, #f43f5e, #c026d3, #f0abfc, ${PINK});
-          animation:v2-avatar-spin 6s linear infinite;
-          filter:blur(.4px);
-        }
+        .v2-avatar-ring{display:none}
         .v2-avatar-core{
           position:relative;width:100%;height:100%;border-radius:50%;
           background:#fff1f5;
@@ -2799,7 +2820,7 @@ export default function AIAssistantV2Client({ lang }) {
         .v2-occ-headline{margin:6px auto 12px;text-align:center}
         .v2-occ-sub{
           margin:0 auto;max-width:560px;
-          font-size:15.5px;line-height:1.65;color:#7c5566;text-align:center;
+          font-size:16px;line-height:1.65;color:#7c5566;text-align:center;
         }
         .v2-occ-grid{
           display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
@@ -3172,7 +3193,7 @@ export default function AIAssistantV2Client({ lang }) {
           .v2-overlay-scroll{padding:14px 12px 12px;gap:10px}
           .v2-head-mascot{width:38px;height:38px;border-radius:11px}
           .v2-head-titles{min-width:0}
-          .v2-head-name{font-size:15.5px;letter-spacing:-.3px}
+          .v2-head-name{font-size:16px;letter-spacing:-.3px}
           .v2-head-role{font-size:10.5px}
           .v2-head-icon-btn{width:34px;height:34px;border-radius:11px}
           .v2-head-close{width:34px;height:34px}
