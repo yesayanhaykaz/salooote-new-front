@@ -17,17 +17,40 @@ export async function generateMetadata({ params }) {
 
   try {
     const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
-    const vRes = await fetch(`${API}/vendors/slug/${vendor}`, { next: { revalidate: 3600 } });
+    const vRes = await fetch(`${API}/vendors/slug/${vendor}`, { cache: "no-store" });
     if (!vRes.ok) throw new Error("vendor fetch failed");
     const vData = await vRes.json();
     const vendorId = vData?.data?.id;
+    const vendorImage = vData?.data?.logo_url || vData?.data?.cover_url || null;
+    const vendorName = vData?.data?.business_name || fallbackVendor;
     if (!vendorId) throw new Error("no vendor id");
 
-    const pRes = await fetch(`${API}/products/by-slug?vendor_id=${vendorId}&slug=${encodeURIComponent(product)}&locale=${lang}`, { next: { revalidate: 3600 } });
+    const pRes = await fetch(`${API}/products/by-slug?vendor_id=${vendorId}&slug=${encodeURIComponent(product)}&locale=${lang}`, { cache: "no-store" });
     if (!pRes.ok) throw new Error("product fetch failed");
     const pData = await pRes.json();
     const p = pData?.data;
-    if (!p) throw new Error("no product");
+    if (!p) {
+      // Product not found — use vendor info as fallback
+      return {
+        title: `${fallbackName} — ${vendorName} — Salooote.am`,
+        description: `${fallbackName} by ${vendorName} on Salooote.am`,
+        alternates: { canonical: pageUrl },
+        openGraph: {
+          title: `${fallbackName} — ${vendorName} — Salooote.am`,
+          description: `${fallbackName} by ${vendorName} on Salooote.am`,
+          url: pageUrl,
+          siteName: "Salooote.am",
+          ...(vendorImage && { images: [{ url: vendorImage, width: 1200, height: 630, alt: vendorName }] }),
+          type: "website",
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: `${fallbackName} — ${vendorName} — Salooote.am`,
+          description: `${fallbackName} by ${vendorName} on Salooote.am`,
+          ...(vendorImage && { images: [vendorImage] }),
+        },
+      };
+    }
 
     const name = p.name || fallbackName;
     const rawDesc = p.short_description || p.description || "";

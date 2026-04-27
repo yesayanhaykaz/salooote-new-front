@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
 
   try {
     const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
-    const res = await fetch(`${API}/vendors/slug/${slug}`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API}/vendors/slug/${slug}`, { cache: "no-store" });
     if (!res.ok) throw new Error("vendor fetch failed");
     const data = await res.json();
     const v = data?.data;
