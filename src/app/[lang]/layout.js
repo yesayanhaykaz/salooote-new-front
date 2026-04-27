@@ -23,39 +23,35 @@ export async function generateMetadata({ params }) {
     ru: "организация мероприятий, свадьба Армения, день рождения, Ереван, кейтеринг",
   };
 
+  const SITE = "https://development.salooote.am";
+  const OG_IMG = `${SITE}/images/hero-dj.jpg`;
+
   return {
-    metadataBase: new URL("https://salooote.am"),
+    metadataBase: new URL(SITE),
     title: dict.meta.homeTitle,
     description: dict.meta.homeDesc,
     keywords: keywordsMap[lang] || keywordsMap.en,
     openGraph: {
       title: dict.meta.homeTitle,
       description: dict.meta.homeDesc,
-      url: `https://salooote.am/${lang}`,
+      url: `${SITE}/${lang}`,
       siteName: dict.meta.siteName,
       locale: ogLocaleMap[lang] || "en_US",
       type: "website",
-      images: [
-        {
-          url: "https://salooote.am/images/hero-dj.jpg",
-          width: 1200,
-          height: 630,
-          alt: "Salooote.am",
-        },
-      ],
+      images: [{ url: OG_IMG, width: 1200, height: 630, alt: "Salooote.am" }],
     },
     twitter: {
       card: "summary_large_image",
       title: dict.meta.homeTitle,
       description: dict.meta.homeDesc,
-      images: ["https://salooote.am/images/hero-dj.jpg"],
+      images: [OG_IMG],
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}`,
+      canonical: `${SITE}/${lang}`,
       languages: {
-        en: "https://salooote.am/en",
-        hy: "https://salooote.am/hy",
-        ru: "https://salooote.am/ru",
+        en: `${SITE}/en`,
+        hy: `${SITE}/hy`,
+        ru: `${SITE}/ru`,
       },
     },
     robots: {
