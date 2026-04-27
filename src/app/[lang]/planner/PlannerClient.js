@@ -68,6 +68,50 @@ const T = {
       kids_party: "Kids Party", corporate: "Corporate", baby_shower: "Baby Shower",
       engagement: "Engagement", graduation: "Graduation",
     },
+    catLabels: { religious: "Religious", roles: "Key Roles", clothing: "Attire", ceremony: "Ceremony", reception: "Reception", celebration: "Celebration", food: "Food & Cake", decoration: "Decorations", media: "Photo & Video", entertainment: "Entertainment", attire: "Attire", venue: "Venue", tech: "Tech & AV", other: "Other" },
+    planningInProgress: "Planning in progress",
+    sendToVendors: "Send to Vendors",
+    share: "Share",
+    guests: "guests",
+    stillNeeded: "Still needed:",
+    optional: "optional",
+    find: "Find",
+    found: "found",
+    vendorProgress: "Vendor Progress",
+    confirmed: "confirmed",
+    stillNeededShort: "still needed",
+    timeline: "Timeline",
+    now: "Now",
+    progress: "Progress",
+    searching: "Searching…",
+    vendorsFound: "vendors found",
+    searchForVendors: "Search for vendors",
+    filterByName: "Filter by name…",
+    findingVendors: "Finding vendors…",
+    noVendorsFound: "No vendors found",
+    searchAgain: "Search again",
+    close: "Close",
+    alreadySelected: "Already Selected — Click to deselect",
+    selectVendor: "Select this vendor",
+    viewBizPage: "View Business Page",
+    noPhotos: "No portfolio photos yet",
+    requestsSent: "Requests Sent!",
+    sentWithErrors: "Sent with some errors",
+    sendInquiryAll: "Send Inquiry to All Vendors",
+    vendorReplyNote: "Vendors will reply to your inquiries. You can track them in your messages.",
+    viewInquiries: "View Inquiries",
+    sending: "Sending…",
+    cancel: "Cancel",
+    sent: "Sent",
+    failed: "Failed",
+    saveYourPlan: "Save your event plan",
+    freeAccount: "Free account — no credit card",
+    saveDesc: "Create a free account to save your plan, get vendor matches, and track every detail of your event in one place.",
+    authFeature1: "Complete checklist built automatically for your event",
+    authFeature2: "Find & compare vendors in your city",
+    authFeature3: "Everything saved — pick up where you left off",
+    createFreeAccount: "Create free account",
+    signIn: "Already have an account? Sign in",
   },
   hy: {
     subtitle: "Քո միջոցառումների խելացի օգնականը · Առցանց",
@@ -104,6 +148,50 @@ const T = {
       engagement: "Նշանադրություն",
       graduation: "Ավարտական երեկո",
     },
+    catLabels: { religious: "Կրոնական", roles: "Հիմնական դերեր", clothing: "Հագուստ", ceremony: "Արարողություն", reception: "Ընդունելություն", celebration: "Տոնակատարություն", food: "Սնունդ ու կարկանդակ", decoration: "Զardarank", media: "Լuusankar u tesanyut", entertainment: "Ժamane", attire: "Հagukap", venue: "Vayr", tech: "Tex u AV", other: "Ayl" },
+    planningInProgress: "Պlany dzevavorvum e",
+    sendToVendors: "Ougharkel matakararnerine",
+    share: "Kisvel",
+    guests: "hyor",
+    stillNeeded: "Der petk e.",
+    optional: "kaomntir",
+    find: "Gtnel",
+    found: "gtnvel e",
+    vendorProgress: "Matakararneri ynthachk",
+    confirmed: "hasttatvadz",
+    stillNeededShort: "der harkavor e",
+    timeline: "Zhamanakachuyts",
+    now: "Hima",
+    progress: "Ynthachk",
+    searching: "Oronvum e…",
+    vendorsFound: "matakararar gtnvel e",
+    searchForVendors: "Matakararneri oronum",
+    filterByName: "Philtrel anunov…",
+    findingVendors: "Matakararnere en gtnvum…",
+    noVendorsFound: "Matakararar chi gtnvel",
+    searchAgain: "Norich oronel",
+    close: "Phakel",
+    alreadySelected: "Arden yntrvadz — Kttatsru apaintrel",
+    selectVendor: "Yntrel ays matakararin",
+    viewBizPage: "Ditel biznesin ejin",
+    noPhotos: "Portfolio nkarnere der chkan",
+    requestsSent: "Harcumnere ugharkvadz en!",
+    sentWithErrors: "Ugharkvadz e, bayts skhalnerov",
+    sendInquiryAll: "Ugharkel harcum bolor matakararnerin",
+    vendorReplyNote: "Matakararnere kpataskhanen dzer harcumnerin. Karog es hetel drants haghordag rutnyunnere.",
+    viewInquiries: "Ditel harcumnere",
+    sending: "Ugharkvum e…",
+    cancel: "Chegharkel",
+    sent: "Ugharkvadz",
+    failed: "Tsakhogvadz",
+    saveYourPlan: "Pahir dzer mijocararman plany",
+    freeAccount: "Anvchar hashiv — ants bankayini qarti",
+    saveDesc: "Steghtsir anvchar hashiv, pahir plandt, stattsir matakararneri arajarkutyunner.",
+    authFeature1: "Amboghjakan stugaterth avtomatik kazmvadz",
+    authFeature2: "Gtir u hametmatir matakararner qo qaghakum",
+    authFeature3: "Amen inch pahvadz e — sharunakir",
+    createFreeAccount: "Steghtsir anvchar hashiv",
+    signIn: "Arden hashiv unes? Mutk gortsir",
   },
   ru: {
     subtitle: "Умный помощник для мероприятий · Онлайн",
@@ -140,6 +228,50 @@ const T = {
       engagement: "Помолвка",
       graduation: "Выпускной",
     },
+    catLabels: { religious: "Религиозное", roles: "Ключевые роли", clothing: "Одежда", ceremony: "Церемония", reception: "Приём", celebration: "Торжество", food: "Еда и торт", decoration: "Украшения", media: "Фото и видео", entertainment: "Развлечения", attire: "Наряды", venue: "Площадка", tech: "Техника и AV", other: "Прочее" },
+    planningInProgress: "Планирование в процессе",
+    sendToVendors: "Отправить поставщикам",
+    share: "Поделиться",
+    guests: "гостей",
+    stillNeeded: "Ещё нужно:",
+    optional: "необязательно",
+    find: "Найти",
+    found: "найдено",
+    vendorProgress: "Прогресс по поставщикам",
+    confirmed: "подтверждено",
+    stillNeededShort: "ещё нужно",
+    timeline: "Хронология",
+    now: "Сейчас",
+    progress: "Прогресс",
+    searching: "Поиск…",
+    vendorsFound: "поставщиков найдено",
+    searchForVendors: "Поиск поставщиков",
+    filterByName: "Фильтр по имени…",
+    findingVendors: "Ищем поставщиков…",
+    noVendorsFound: "Поставщики не найдены",
+    searchAgain: "Искать снова",
+    close: "Закрыть",
+    alreadySelected: "Уже выбран — нажмите для отмены",
+    selectVendor: "Выбрать этого поставщика",
+    viewBizPage: "Смотреть страницу",
+    noPhotos: "Фотографий портфолио пока нет",
+    requestsSent: "Запросы отправлены!",
+    sentWithErrors: "Отправлено с ошибками",
+    sendInquiryAll: "Отправить запрос всем поставщикам",
+    vendorReplyNote: "Поставщики ответят на твои запросы. Ты можешь следить за ними в сообщениях.",
+    viewInquiries: "Посмотреть запросы",
+    sending: "Отправка…",
+    cancel: "Отмена",
+    sent: "Отправлено",
+    failed: "Ошибка",
+    saveYourPlan: "Сохрани план мероприятия",
+    freeAccount: "Бесплатный аккаунт — без карты",
+    saveDesc: "Создай бесплатный аккаунт, чтобы сохранить план, получить предложения от поставщиков и отслеживать всё в одном месте.",
+    authFeature1: "Полный чеклист, составленный автоматически",
+    authFeature2: "Найди и сравни поставщиков в своём городе",
+    authFeature3: "Всё сохранено — продолжи с того места",
+    createFreeAccount: "Создать аккаунт бесплатно",
+    signIn: "Уже есть аккаунт? Войти",
   },
 };
 const tx = (lang) => T[lang] || T.en;
@@ -793,6 +925,7 @@ function VendorCard({ vendor, isSelected, onPreview }) {
    VENDOR DETAIL POPUP  — masonry photo grid
 ───────────────────────────────────────── */
 function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
+  const t = tx(lang);
   const [photos,  setPhotos]  = useState([]);
   const [loading, setLoading] = useState(true);
   const name = vendor.business_name || vendor.name || "Vendor";
@@ -851,7 +984,7 @@ function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
             </div>
           ) : photos.length === 0 ? (
             <div style={{ textAlign: "center", padding: "48px 0", color: C.text3, fontSize: "0.84rem" }}>
-              No portfolio photos yet
+              {t.noPhotos}
             </div>
           ) : (
             <div style={{ columns: "4 140px", columnGap: 8 }}>
@@ -883,11 +1016,11 @@ function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
               boxShadow: isSelected ? "none" : "0 6px 20px rgba(225,29,92,0.28)",
             }}>
             <Check size={14} strokeWidth={2.5} />
-            {isSelected ? "Already Selected — Click to deselect" : "Select this vendor"}
+            {isSelected ? t.alreadySelected : t.selectVendor}
           </motion.button>
           <button onClick={onClose}
             style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${C.borderMd}`, borderRadius: 12, color: C.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            Close
+            {t.close}
           </button>
         </div>
       </motion.div>
@@ -898,7 +1031,8 @@ function VendorDetailPopup({ vendor, isSelected, onSelect, onClose, lang }) {
 /* ─────────────────────────────────────────
    SERVICE ROW
 ───────────────────────────────────────── */
-function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, onOpenSearch, accent }) {
+function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, onOpenSearch, accent, lang = "en" }) {
+  const t = tx(lang);
   const results    = vendorResults[service.service_type] || [];
   const isSelected = !!selectedVendor;
   const isSearching = service.searching;
@@ -929,7 +1063,7 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
             {service.title}
           </p>
           {isSelected && selectedVendor && <p style={{ margin: "1px 0 0", fontSize: "0.69rem", color: C.green, fontWeight: 500 }}>{selectedVendor.name}</p>}
-          {!service.required && !isSelected && <span style={{ fontSize: "0.6rem", background: "rgba(15,23,42,0.04)", color: C.text3, border: `1px solid ${C.border}`, borderRadius: 100, padding: "1px 6px", fontWeight: 600 }}>optional</span>}
+          {!service.required && !isSelected && <span style={{ fontSize: "0.6rem", background: "rgba(15,23,42,0.04)", color: C.text3, border: `1px solid ${C.border}`, borderRadius: 100, padding: "1px 6px", fontWeight: 600 }}>{t.optional}</span>}
         </div>
         <div style={{ flexShrink: 0 }}>
           {isSelected ? (
@@ -942,7 +1076,7 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
               onClick={() => onOpenSearch(service.service_type)}
               style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#fefce8", border: "1px solid #fef08a", color: "#854d0e", borderRadius: 8, padding: "5px 10px", fontSize: "0.69rem", fontWeight: 700, cursor: "pointer" }}>
-              {results.length} found <ChevronRight size={10} strokeWidth={2.5} />
+              {results.length} {t.found} <ChevronRight size={10} strokeWidth={2.5} />
             </motion.button>
           ) : service.canSearch && !isSearching ? (
             <motion.button whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}
@@ -950,7 +1084,7 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
               style={{ display: "inline-flex", alignItems: "center", gap: 3, background: "#f8fafc", border: `1px solid ${C.borderMd}`, color: C.text2, borderRadius: 8, padding: "5px 10px", fontSize: "0.69rem", fontWeight: 600, cursor: "pointer", transition: "all 0.15s" }}
               onMouseEnter={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = C.text; }}
               onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.color = C.text2; }}>
-              <Search size={9} strokeWidth={2.5} /> Find
+              <Search size={9} strokeWidth={2.5} /> {t.find}
             </motion.button>
           ) : null}
         </div>
@@ -963,7 +1097,7 @@ function ServiceRow({ service, selectedVendor, vendorResults, onSelectVendor, on
 /* ─────────────────────────────────────────
    CATEGORY SECTION
 ───────────────────────────────────────── */
-function CategorySection({ label, services, selectedVendors, onOpenSearch, ...rowProps }) {
+function CategorySection({ label, services, selectedVendors, onOpenSearch, lang = "en", ...rowProps }) {
   const [open, setOpen] = useState(true);
   const done = services.filter(s => selectedVendors?.[s.service_type]).length;
   const all  = done === services.length;
@@ -988,7 +1122,7 @@ function CategorySection({ label, services, selectedVendors, onOpenSearch, ...ro
               {services.map((s, idx) => (
                 <div key={s.service_type}>
                   {idx > 0 && <div style={{ height: 1, background: "rgba(15,23,42,0.04)" }} />}
-                  <ServiceRow service={s} selectedVendor={selectedVendors?.[s.service_type]} onOpenSearch={onOpenSearch} {...rowProps} />
+                  <ServiceRow service={s} selectedVendor={selectedVendors?.[s.service_type]} onOpenSearch={onOpenSearch} lang={lang} {...rowProps} />
                 </div>
               ))}
             </div>
@@ -1018,14 +1152,15 @@ function MetaChip({ icon, children }) {
 /* ─────────────────────────────────────────
    BUDGET BAR
 ───────────────────────────────────────── */
-function BudgetBar({ sel, total }) {
+function BudgetBar({ sel, total, lang = "en" }) {
+  const t = tx(lang);
   const pct = total > 0 ? Math.round((sel / total) * 100) : 0;
   return (
     <div style={{ padding: "14px 20px", borderBottom: `1px solid ${C.border}` }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: "0.07em", textTransform: "uppercase" }}>Vendor Progress</span>
+        <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: "0.07em", textTransform: "uppercase" }}>{t.vendorProgress}</span>
         <span style={{ fontSize: 12, color: C.text2 }}>
-          <span style={{ color: C.text, fontWeight: 700 }}>{sel}</span> / {total} confirmed
+          <span style={{ color: C.text, fontWeight: 700 }}>{sel}</span> / {total} {t.confirmed}
         </span>
       </div>
       <div style={{ height: 5, borderRadius: 999, background: "rgba(15,23,42,0.06)", overflow: "hidden" }}>
@@ -1033,7 +1168,7 @@ function BudgetBar({ sel, total }) {
           style={{ height: "100%", background: C.grad, borderRadius: 999, boxShadow: "0 0 8px rgba(225,29,92,0.3)" }} />
       </div>
       <div style={{ fontSize: "0.65rem", color: C.text3, marginTop: 5, fontFamily: "monospace" }}>
-        {pct}% allocated · {total - sel} still needed
+        {pct}% {t.confirmed} · {total - sel} {t.stillNeededShort}
       </div>
     </div>
   );
@@ -1042,12 +1177,13 @@ function BudgetBar({ sel, total }) {
 /* ─────────────────────────────────────────
    TIMELINE
 ───────────────────────────────────────── */
-function PlanTimeline({ services, selectedVendors }) {
+function PlanTimeline({ services, selectedVendors, lang = "en" }) {
+  const t = tx(lang);
   const items = services.slice(0, 7);
   const firstActiveIdx = items.findIndex(s => !selectedVendors[s.service_type]);
   return (
     <div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 10 }}>Timeline</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 10 }}>{t.timeline}</div>
       <div style={{ position: "relative", paddingLeft: 22 }}>
         <div style={{ position: "absolute", left: 7, top: 6, bottom: 6, width: 1, background: C.border }} />
         {items.map((item, i) => {
@@ -1072,7 +1208,7 @@ function PlanTimeline({ services, selectedVendors }) {
                 textDecoration: isDone ? "line-through" : "none",
               }}>{item.title}</span>
               {isActive && (
-                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: C.brand, background: `${C.brand}10`, border: `1px solid ${C.brand}28`, borderRadius: 100, padding: "2px 7px", flexShrink: 0 }}>Now</span>
+                <span style={{ fontSize: "0.6rem", fontWeight: 700, color: C.brand, background: `${C.brand}10`, border: `1px solid ${C.brand}28`, borderRadius: 100, padding: "2px 7px", flexShrink: 0 }}>{t.now}</span>
               )}
             </div>
           );
@@ -1085,7 +1221,8 @@ function PlanTimeline({ services, selectedVendors }) {
 /* ─────────────────────────────────────────
    PROGRESS BY CATEGORY
 ───────────────────────────────────────── */
-function ProgressByCategory({ services, selectedVendors }) {
+function ProgressByCategory({ services, selectedVendors, lang = "en" }) {
+  const t = tx(lang);
   const grouped = {};
   for (const s of services) {
     if (!grouped[s.category]) grouped[s.category] = [];
@@ -1094,7 +1231,7 @@ function ProgressByCategory({ services, selectedVendors }) {
   const entries = Object.entries(grouped).slice(0, 5);
   return (
     <div>
-      <div style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 10 }}>Progress</div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 10 }}>{t.progress}</div>
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {entries.map(([cat, items]) => {
           const done = items.filter(s => selectedVendors[s.service_type]).length;
@@ -1102,7 +1239,7 @@ function ProgressByCategory({ services, selectedVendors }) {
           const complete = pct === 1;
           return (
             <div key={cat} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 10px", background: "rgba(15,23,42,0.02)", border: `1px solid ${C.border}`, borderRadius: 10 }}>
-              <div style={{ flex: 1, fontSize: "0.76rem", color: C.text2 }}>{CATEGORY_LABELS[cat] || cat}</div>
+              <div style={{ flex: 1, fontSize: "0.76rem", color: C.text2 }}>{t.catLabels?.[cat] || CATEGORY_LABELS[cat] || cat}</div>
               <div style={{ width: 72, height: 3, borderRadius: 999, background: C.border, overflow: "hidden" }}>
                 <div style={{ width: `${pct * 100}%`, height: "100%", background: complete ? "#86efac" : C.brand, borderRadius: 999 }} />
               </div>
@@ -1119,6 +1256,7 @@ function ProgressByCategory({ services, selectedVendors }) {
    BULK INQUIRY MODAL (T3)
 ───────────────────────────────────────── */
 function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
+  const t = tx(lang);
   const vendors = Object.entries(eventState.selected_vendors || {});
   const [sending,   setSending]   = useState(false);
   const [results,   setResults]   = useState({}); // {service_type: "ok"|"err"}
@@ -1181,13 +1319,10 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
 
         <div style={{ marginBottom: 20 }}>
           <h3 style={{ margin: "0 0 6px", fontSize: "1.05rem", fontWeight: 800, color: C.text }}>
-            {done ? (allSent ? "✓ Requests Sent!" : "Sent with some errors") : "Send Inquiry to All Vendors"}
+            {done ? (allSent ? "✓ " + t.requestsSent : t.sentWithErrors) : t.sendInquiryAll}
           </h3>
           <p style={{ margin: 0, fontSize: "0.82rem", color: C.text2, lineHeight: 1.5 }}>
-            {done
-              ? "Vendors will reply to your inquiries. You can track them in your messages."
-              : `Send one personalised inquiry to each of your ${vendors.length} selected vendors. They'll receive your event details and get back to you.`
-            }
+            {done ? t.vendorReplyNote : `${t.sendInquiryAll} (${vendors.length})`}
           </p>
         </div>
 
@@ -1208,8 +1343,8 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
                   <p style={{ margin: 0, fontSize: "0.8rem", fontWeight: 600, color: C.text }}>{vendor.name}</p>
                   <p style={{ margin: 0, fontSize: "0.7rem", color: C.text3, textTransform: "capitalize" }}>{serviceType.replace(/_/g, " ")}</p>
                 </div>
-                {result === "ok" && <span style={{ fontSize: "0.68rem", color: "#16a34a", fontWeight: 700 }}>Sent</span>}
-                {result === "err" && <span style={{ fontSize: "0.68rem", color: "#dc2626", fontWeight: 700 }}>Failed</span>}
+                {result === "ok" && <span style={{ fontSize: "0.68rem", color: "#16a34a", fontWeight: 700 }}>{t.sent}</span>}
+                {result === "err" && <span style={{ fontSize: "0.68rem", color: "#dc2626", fontWeight: 700 }}>{t.failed}</span>}
               </div>
             );
           })}
@@ -1220,11 +1355,11 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
             <>
               <Link href={`/${lang}/account/inquiries`} style={{ textDecoration: "none", flex: 1 }}>
                 <button style={{ width: "100%", padding: "11px 0", background: C.grad, border: "none", borderRadius: 12, color: "#fff", fontSize: "0.85rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-                  View Inquiries
+                  {t.viewInquiries}
                 </button>
               </Link>
               <button onClick={onClose} style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 12, color: C.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                Close
+                {t.close}
               </button>
             </>
           ) : (
@@ -1235,7 +1370,7 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
                 {sending ? <><Loader2 size={14} /> Sending…</> : <><Send size={14} /> Send to {vendors.length} Vendors</>}
               </motion.button>
               <button onClick={onClose} style={{ padding: "11px 18px", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 12, color: C.text2, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-                Cancel
+                {t.cancel}
               </button>
             </>
           )}
@@ -1249,6 +1384,7 @@ function BulkInquiryModal({ eventState, sessionId, onClose, lang }) {
    VENDOR SEARCH MODAL  (popup on Find click)
 ───────────────────────────────────────── */
 function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch, accent, selectedVendors = {}, lang = "en" }) {
+  const t = tx(lang);
   const [query, setQuery] = useState("");
   const [detailVendor, setDetailVendor] = useState(null);
   const results   = vendorResults[service.service_type] || [];
@@ -1286,7 +1422,7 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
             <div>
               <h3 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 800, color: C.text, letterSpacing: "-0.02em" }}>{service.title}</h3>
               <p style={{ margin: 0, fontSize: "0.72rem", color: C.text3 }}>
-                {isSearching ? "Searching…" : results.length > 0 ? `${results.length} vendors found` : "Search for vendors"}
+                {isSearching ? t.searching : results.length > 0 ? `${results.length} ${t.vendorsFound}` : t.searchForVendors}
               </p>
             </div>
           </div>
@@ -1303,7 +1439,7 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
               autoFocus
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Filter by name…"
+              placeholder={t.filterByName}
               style={{ flex: 1, border: "none", outline: "none", fontSize: "0.84rem", background: "transparent", color: C.text, fontFamily: "inherit" }}
             />
             {query && <button onClick={() => setQuery("")} style={{ border: "none", background: "none", cursor: "pointer", color: C.text3, padding: 0, display: "flex" }}><X size={12} /></button>}
@@ -1317,15 +1453,15 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}>
                 <Loader2 size={24} color={C.text3} />
               </motion.div>
-              <p style={{ margin: 0, fontSize: "0.84rem", color: C.text3 }}>Finding vendors…</p>
+              <p style={{ margin: 0, fontSize: "0.84rem", color: C.text3 }}>{t.findingVendors}</p>
             </div>
           ) : filtered.length === 0 ? (
             <div style={{ textAlign: "center", padding: "40px 0" }}>
-              <p style={{ margin: "0 0 12px", fontSize: "0.88rem", color: C.text2, fontWeight: 600 }}>No vendors found</p>
+              <p style={{ margin: "0 0 12px", fontSize: "0.88rem", color: C.text2, fontWeight: 600 }}>{t.noVendorsFound}</p>
               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                 onClick={() => { setQuery(""); onSearch(service.service_type, service.title); }}
                 style={{ background: C.grad, border: "none", borderRadius: 8, padding: "8px 18px", fontSize: "0.8rem", color: "#fff", fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "inherit" }}>
-                <Search size={12} /> Search again
+                <Search size={12} /> {t.searchAgain}
               </motion.button>
             </div>
           ) : (
@@ -1345,7 +1481,7 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
         {/* Footer */}
         <div style={{ padding: "12px 20px", borderTop: `1px solid ${C.border}`, display: "flex", justifyContent: "flex-end", flexShrink: 0 }}>
           <button onClick={onClose} style={{ padding: "8px 18px", background: "transparent", border: `1px solid ${C.borderMd}`, borderRadius: 8, color: C.text2, fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            Close
+            {t.close}
           </button>
         </div>
       </motion.div>
@@ -1371,6 +1507,7 @@ function VendorSearchModal({ service, vendorResults, onSelect, onClose, onSearch
    PLAN PANEL (right, when event active)
 ───────────────────────────────────────── */
 function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVendors, onUnselectVendor, sessionId, lang, onOpenBulkModal }) {
+  const t = tx(lang);
   const { event_type, event_type_label, accent, date, city, guest_count, budget, services = [], selected_vendors = {} } = eventState;
   const searchable = services.filter(s => s.canSearch);
   const sel = Object.keys(selected_vendors).length;
@@ -1391,7 +1528,7 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: "0.65rem", fontWeight: 700, color: C.brand, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 5, display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: C.brand, boxShadow: `0 0 8px ${C.brand}`, display: "inline-block", animation: "plannerGlow 2s infinite" }} />
-              Planning in progress
+              {t.planningInProgress}
             </div>
             <h2 style={{ margin: 0, fontSize: "clamp(18px, 2vw, 24px)", fontWeight: 400, color: C.text, lineHeight: 1.2, letterSpacing: "-0.03em", fontFamily: "'Georgia', 'Playfair Display', serif" }}>
               {event_type_label}
@@ -1402,24 +1539,24 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
               <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                 onClick={onOpenBulkModal}
                 style={{ background: C.grad, border: "none", borderRadius: 999, padding: "5px 12px", fontSize: 11.5, color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit", fontWeight: 700, boxShadow: "0 4px 14px rgba(225,29,92,0.25)" }}>
-                <Send size={11} /> Send to Vendors
+                <Send size={11} /> {t.sendToVendors}
               </motion.button>
             )}
             <button style={{ background: "transparent", border: `1px solid ${C.border}`, borderRadius: 999, padding: "5px 10px", fontSize: 11.5, color: C.text2, cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
-              <Share2 size={11} /> Share
+              <Share2 size={11} /> {t.share}
             </button>
           </div>
         </div>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           {date       && <MetaChip icon={<Calendar size={11} color={C.brand} />}>{date}</MetaChip>}
           {city       && <MetaChip icon={<MapPin    size={11} color={C.brand} />}>{city}</MetaChip>}
-          {guest_count && <MetaChip icon={<Users    size={11} color={C.brand} />}>{guest_count} guests</MetaChip>}
+          {guest_count && <MetaChip icon={<Users    size={11} color={C.brand} />}>{guest_count} {t.guests}</MetaChip>}
           {budget?.description && <MetaChip icon={<DollarSign size={11} color={C.brand} />}>{budget.description}</MetaChip>}
         </div>
       </div>
 
       {/* Budget bar */}
-      <BudgetBar sel={sel} total={searchable.length} />
+      <BudgetBar sel={sel} total={searchable.length} lang={lang} />
 
       {/* Scrollable content */}
       <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 24px" }}>
@@ -1430,7 +1567,7 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
             style={{ background: "#fffbeb", border: "1px solid #fef08a", borderRadius: 10, padding: "9px 13px", marginBottom: 12, display: "flex", gap: 9, alignItems: "flex-start" }}>
             <AlertTriangle size={14} color="#92400e" style={{ flexShrink: 0, marginTop: 1 }} />
             <div>
-              <p style={{ margin: "0 0 2px", fontSize: "0.76rem", fontWeight: 700, color: "#92400e" }}>Still needed:</p>
+              <p style={{ margin: "0 0 2px", fontSize: "0.76rem", fontWeight: 700, color: "#92400e" }}>{t.stillNeeded}</p>
               <p style={{ margin: 0, fontSize: "0.71rem", color: "#b45309", lineHeight: 1.5 }}>{missing.map(s => s.title).join(" · ")}</p>
             </div>
           </motion.div>
@@ -1439,17 +1576,17 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
         {/* Category sections */}
         <div style={{ marginBottom: 16 }}>
           {Object.entries(grouped).map(([cat, items]) => (
-            <CategorySection key={cat} label={CATEGORY_LABELS[cat] || cat} services={items} selectedVendors={selected_vendors}
+            <CategorySection key={cat} label={t.catLabels?.[cat] || CATEGORY_LABELS[cat] || cat} services={items} selectedVendors={selected_vendors}
               vendorResults={vendorResults} onSelectVendor={onSelectVendor} onSearchVendors={onSearchVendors} onUnselectVendor={onUnselectVendor} accent={accent}
-              onOpenSearch={openSearch} />
+              lang={lang} onOpenSearch={openSearch} />
           ))}
         </div>
 
         {/* Bottom: timeline + progress side by side */}
         {services.length > 0 && (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginTop: 4 }}>
-            <PlanTimeline services={services} selectedVendors={selected_vendors} />
-            <ProgressByCategory services={services} selectedVendors={selected_vendors} />
+            <PlanTimeline services={services} selectedVendors={selected_vendors} lang={lang} />
+            <ProgressByCategory services={services} selectedVendors={selected_vendors} lang={lang} />
           </div>
         )}
       </div>
@@ -1526,6 +1663,7 @@ function RightEmptyState({ onPickType, lang }) {
    AUTH GATE  (login wall — shown after 3 free messages)
 ───────────────────────────────────────── */
 function AuthGate({ lang }) {
+  const t = tx(lang);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -1559,23 +1697,23 @@ function AuthGate({ lang }) {
           </div>
           <div>
             <h2 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: C.text, letterSpacing: "-0.025em", lineHeight: 1.3 }}>
-              Save your event plan
+              {t.saveYourPlan}
             </h2>
-            <p style={{ margin: "3px 0 0", fontSize: "0.8rem", color: C.text3 }}>Free account — no credit card</p>
+            <p style={{ margin: "3px 0 0", fontSize: "0.8rem", color: C.text3 }}>{t.freeAccount}</p>
           </div>
         </div>
 
         {/* Description */}
         <p style={{ margin: "0 0 20px", fontSize: "0.86rem", color: C.text2, lineHeight: 1.6 }}>
-          Create a free account to save your plan, get vendor matches, and track every detail of your event in one place.
+          {t.saveDesc}
         </p>
 
         {/* Feature list */}
         <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 24 }}>
           {[
-            "Complete checklist built automatically for your event",
-            "Find & compare vendors in your city",
-            "Everything saved — pick up where you left off",
+            t.authFeature1,
+            t.authFeature2,
+            t.authFeature3,
           ].map((text, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
               <div style={{ width: 18, height: 18, borderRadius: "50%", background: `${C.brand}12`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 1 }}>
@@ -1591,14 +1729,14 @@ function AuthGate({ lang }) {
           <Link href={`/${lang}/signup?redirect=/${lang}/planner`} style={{ textDecoration: "none" }}>
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
               style={{ width: "100%", padding: "12px 0", background: C.grad, border: "none", borderRadius: 12, color: "#fff", fontSize: "0.9rem", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 7, boxShadow: "0 6px 20px rgba(225,29,92,0.25)", fontFamily: "inherit" }}>
-              <Sparkles size={14} strokeWidth={2} /> Create free account
+              <Sparkles size={14} strokeWidth={2} /> {t.createFreeAccount}
             </motion.button>
           </Link>
           <Link href={`/${lang}/login?redirect=/${lang}/planner`} style={{ textDecoration: "none" }}>
             <button style={{ width: "100%", padding: "10px 0", background: "transparent", border: `1px solid rgba(15,23,42,0.12)`, borderRadius: 12, color: C.text2, fontSize: "0.87rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(15,23,42,0.2)"; e.currentTarget.style.color = C.text; }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(15,23,42,0.12)"; e.currentTarget.style.color = C.text2; }}>
-              Already have an account? Sign in
+              {t.signIn}
             </button>
           </Link>
         </div>
