@@ -20,14 +20,14 @@ export async function generateMetadata({ params }) {
       description: post.excerpt,
       images: [
         {
-          url: `https://salooote.am${post.image}`,
+          url: `https://development.salooote.am${post.image}`,
           width: 1200,
           height: 630,
         },
       ],
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}/blog/${slug}`,
+      canonical: `https://development.salooote.am/${lang}/blog/${slug}`,
     },
   };
 }

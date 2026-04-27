@@ -11,7 +11,7 @@ export async function generateMetadata({ params }) {
     description: "Track the status of your Salooote order in real time.",
     robots: { index: false },
     alternates: {
-      canonical: `https://salooote.am/${lang}/track-order`,
+      canonical: `https://development.salooote.am/${lang}/track-order`,
     },
   };
 }

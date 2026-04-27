@@ -7,7 +7,7 @@ export default function robots() {
         disallow: ["/api/", "/_next/", "/admin/"],
       },
     ],
-    sitemap: "https://salooote.am/sitemap.xml",
-    host: "https://salooote.am",
+    sitemap: "https://development.salooote.am/sitemap.xml",
+    host: "https://development.salooote.am",
   };
 }

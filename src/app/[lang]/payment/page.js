@@ -12,8 +12,8 @@ export async function generateMetadata({ params }) {
     title: `${dict.meta.checkoutTitle || "Checkout"} — Salooote.am`,
     robots: { index: false },
     alternates: {
-      canonical: `https://salooote.am/${lang}/payment`,
-      languages: { en: "https://salooote.am/en/payment", hy: "https://salooote.am/hy/payment", ru: "https://salooote.am/ru/payment" },
+      canonical: `https://development.salooote.am/${lang}/payment`,
+      languages: { en: "https://development.salooote.am/en/payment", hy: "https://development.salooote.am/hy/payment", ru: "https://development.salooote.am/ru/payment" },
     },
   };
 }

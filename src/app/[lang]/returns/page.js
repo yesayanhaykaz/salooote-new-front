@@ -9,11 +9,11 @@ export async function generateMetadata({ params }) {
   return {
     title: "Return Policy — Salooote",
     description: "Learn about Salooote's 30-day return policy, eligible items, and refund timeline.",
-    alternates: { canonical: `https://salooote.am/${lang}/returns` },
+    alternates: { canonical: `https://development.salooote.am/${lang}/returns` },
     openGraph: {
       title: "Return Policy — Salooote",
       description: "Learn about Salooote's 30-day return policy, eligible items, and refund timeline.",
-      url: `https://salooote.am/${lang}/returns`,
+      url: `https://development.salooote.am/${lang}/returns`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

@@ -10,13 +10,13 @@ export async function generateMetadata({ params }) {
     title: "Apply to Become a Vendor — Salooote.am",
     description: "Join Salooote's marketplace as a vendor. Apply in minutes and reach thousands of event planners.",
     alternates: {
-      canonical: `https://salooote.am/${lang}/apply`,
-      languages: { en: "https://salooote.am/en/apply", hy: "https://salooote.am/hy/apply", ru: "https://salooote.am/ru/apply" },
+      canonical: `https://development.salooote.am/${lang}/apply`,
+      languages: { en: "https://development.salooote.am/en/apply", hy: "https://development.salooote.am/hy/apply", ru: "https://development.salooote.am/ru/apply" },
     },
     openGraph: {
       title: "Apply to Become a Vendor — Salooote.am",
       description: "Join Salooote's marketplace as a vendor. Apply in minutes and reach thousands of event planners.",
-      url: `https://salooote.am/${lang}/apply`,
+      url: `https://development.salooote.am/${lang}/apply`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

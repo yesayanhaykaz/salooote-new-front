@@ -12,8 +12,8 @@ export async function generateMetadata({ params }) {
     title: dict.meta.cartTitle,
     robots: { index: false },
     alternates: {
-      canonical: `https://salooote.am/${lang}/cart`,
-      languages: { en: "https://salooote.am/en/cart", hy: "https://salooote.am/hy/cart", ru: "https://salooote.am/ru/cart" },
+      canonical: `https://development.salooote.am/${lang}/cart`,
+      languages: { en: "https://development.salooote.am/en/cart", hy: "https://development.salooote.am/hy/cart", ru: "https://development.salooote.am/ru/cart" },
     },
   };
 }

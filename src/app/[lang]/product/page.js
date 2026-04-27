@@ -14,12 +14,12 @@ export async function generateMetadata({ params }) {
     description: `View product details, pricing and vendor information on Salooote.am. ${dict.meta.productsDesc}`,
     openGraph: {
       title: `Premium Wedding Cake — Salooote.am`,
-      images: [{ url: "https://salooote.am/images/wedding-cake.jpg", width: 1200, height: 630 }],
-      url: `https://salooote.am/${lang}/product`,
+      images: [{ url: "https://development.salooote.am/images/wedding-cake.jpg", width: 1200, height: 630 }],
+      url: `https://development.salooote.am/${lang}/product`,
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}/product`,
-      languages: { en: "https://salooote.am/en/product", hy: "https://salooote.am/hy/product", ru: "https://salooote.am/ru/product" },
+      canonical: `https://development.salooote.am/${lang}/product`,
+      languages: { en: "https://development.salooote.am/en/product", hy: "https://development.salooote.am/hy/product", ru: "https://development.salooote.am/ru/product" },
     },
   };
 }

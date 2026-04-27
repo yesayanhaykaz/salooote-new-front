@@ -14,13 +14,13 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: dict.meta.categoryTitle,
       description: dict.meta.categoryDesc,
-      url: `https://salooote.am/${lang}/category`,
+      url: `https://development.salooote.am/${lang}/category`,
       siteName: "Salooote.am",
-      images: [{ url: "https://salooote.am/images/flowers-roses.jpg", width: 1200, height: 630 }],
+      images: [{ url: "https://development.salooote.am/images/flowers-roses.jpg", width: 1200, height: 630 }],
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}/category`,
-      languages: { en: "https://salooote.am/en/category", hy: "https://salooote.am/hy/category", ru: "https://salooote.am/ru/category" },
+      canonical: `https://development.salooote.am/${lang}/category`,
+      languages: { en: "https://development.salooote.am/en/category", hy: "https://development.salooote.am/hy/category", ru: "https://development.salooote.am/ru/category" },
     },
   };
 }

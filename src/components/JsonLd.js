@@ -3,8 +3,8 @@ export function OrganizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Salooote.am",
-    url: "https://salooote.am",
-    logo: "https://salooote.am/images/logo.png",
+    url: "https://development.salooote.am",
+    logo: "https://development.salooote.am/images/logo.png",
     description: "Armenia's #1 event planning marketplace. 850+ verified vendors for weddings, birthdays, corporate events.",
     address: {
       "@type": "PostalAddress",
@@ -34,12 +34,12 @@ export function WebsiteJsonLd({ lang = "en" }) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Salooote.am",
-    url: "https://salooote.am",
+    url: "https://development.salooote.am",
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: `https://salooote.am/${lang}/products?q={search_term_string}`,
+        urlTemplate: `https://development.salooote.am/${lang}/products?q={search_term_string}`,
       },
       "query-input": "required name=search_term_string",
     },
@@ -62,8 +62,8 @@ export function LocalBusinessJsonLd() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Salooote.am",
-    image: "https://salooote.am/images/hero-dj.jpg",
-    url: "https://salooote.am",
+    image: "https://development.salooote.am/images/hero-dj.jpg",
+    url: "https://development.salooote.am",
     telephone: "+374-77-123-456",
     address: {
       "@type": "PostalAddress",
@@ -103,7 +103,7 @@ export function ProductJsonLd({ product }) {
     "@type": "Product",
     name: product.name,
     description: product.description || product.name,
-    image: product.image || "https://salooote.am/images/wedding-cake.jpg",
+    image: product.image || "https://development.salooote.am/images/wedding-cake.jpg",
     offers: {
       "@type": "Offer",
       priceCurrency: "USD",
@@ -138,7 +138,7 @@ export function BreadcrumbJsonLd({ items }) {
       "@type": "ListItem",
       position: i + 1,
       name: item.name,
-      item: `https://salooote.am${item.href}`,
+      item: `https://development.salooote.am${item.href}`,
     })),
   };
   return (

@@ -12,13 +12,13 @@ export async function generateMetadata({ params }) {
     title: dict.meta.vendorTitle,
     description: dict.meta.vendorDesc,
     alternates: {
-      canonical: `https://salooote.am/${lang}/vendor-service`,
-      languages: { en: "https://salooote.am/en/vendor-service", hy: "https://salooote.am/hy/vendor-service", ru: "https://salooote.am/ru/vendor-service" },
+      canonical: `https://development.salooote.am/${lang}/vendor-service`,
+      languages: { en: "https://development.salooote.am/en/vendor-service", hy: "https://development.salooote.am/hy/vendor-service", ru: "https://development.salooote.am/ru/vendor-service" },
     },
     openGraph: {
       title: dict.meta.vendorTitle,
       description: dict.meta.vendorDesc,
-      url: `https://salooote.am/${lang}/vendor-service`,
+      url: `https://development.salooote.am/${lang}/vendor-service`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

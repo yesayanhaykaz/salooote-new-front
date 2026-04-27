@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { lang, id } = await params;
-  const pageUrl = `https://salooote.am/${lang}/product/${id}`;
+  const pageUrl = `https://development.salooote.am/${lang}/product/${id}`;
   try {
     const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
     const res = await fetch(`${API}/products/${id}?locale=${lang}`, { next: { revalidate: 3600 } });

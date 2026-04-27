@@ -16,13 +16,13 @@ export async function generateMetadata({ params }) {
     title,
     openGraph: {
       title,
-      url: `https://salooote.am/${lang}/signup`,
+      url: `https://development.salooote.am/${lang}/signup`,
       siteName: "Salooote.am",
       locale: ogLocale,
       type: "website",
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}/signup`,
+      canonical: `https://development.salooote.am/${lang}/signup`,
     },
   };
 }

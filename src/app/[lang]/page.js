@@ -24,13 +24,13 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title,
       description,
-      url: `https://salooote.am/${lang}`,
+      url: `https://development.salooote.am/${lang}`,
       siteName: "Salooote.am",
       locale: ogLocale,
       type: "website",
       images: [
         {
-          url: "https://salooote.am/images/hero-dj.jpg",
+          url: "https://development.salooote.am/images/hero-dj.jpg",
           width: 1200,
           height: 630,
         },
@@ -42,11 +42,11 @@ export async function generateMetadata({ params }) {
       description,
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}`,
+      canonical: `https://development.salooote.am/${lang}`,
       languages: {
-        en: "https://salooote.am/en",
-        hy: "https://salooote.am/hy",
-        ru: "https://salooote.am/ru",
+        en: "https://development.salooote.am/en",
+        hy: "https://development.salooote.am/hy",
+        ru: "https://development.salooote.am/ru",
       },
     },
   };

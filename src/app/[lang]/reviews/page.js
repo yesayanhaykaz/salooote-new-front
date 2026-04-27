@@ -12,17 +12,17 @@ export async function generateMetadata({ params }) {
     title: `${dict.reviewsPage?.heroTitle || dict.vendor?.reviews || "Reviews"} — Salooote.am`,
     description: dict.reviewsPage?.heroSubtitle || dict.meta.homeDesc,
     alternates: {
-      canonical: `https://salooote.am/${lang}/reviews`,
+      canonical: `https://development.salooote.am/${lang}/reviews`,
       languages: {
-        en: "https://salooote.am/en/reviews",
-        hy: "https://salooote.am/hy/reviews",
-        ru: "https://salooote.am/ru/reviews",
+        en: "https://development.salooote.am/en/reviews",
+        hy: "https://development.salooote.am/hy/reviews",
+        ru: "https://development.salooote.am/ru/reviews",
       },
     },
     openGraph: {
       title: `${dict.reviewsPage?.heroTitle || dict.vendor?.reviews || "Reviews"} — Salooote.am`,
       description: dict.reviewsPage?.heroSubtitle || dict.meta.homeDesc,
-      url: `https://salooote.am/${lang}/reviews`,
+      url: `https://development.salooote.am/${lang}/reviews`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

@@ -9,11 +9,11 @@ export async function generateMetadata({ params }) {
   return {
     title: "Partner Policy — Salooote",
     description: "Terms and policies for vendors and partners on the Salooote marketplace.",
-    alternates: { canonical: `https://salooote.am/${lang}/partner-policy` },
+    alternates: { canonical: `https://development.salooote.am/${lang}/partner-policy` },
     openGraph: {
       title: "Partner Policy — Salooote",
       description: "Terms and policies for vendors and partners on the Salooote marketplace.",
-      url: `https://salooote.am/${lang}/partner-policy`,
+      url: `https://development.salooote.am/${lang}/partner-policy`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

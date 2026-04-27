@@ -17,7 +17,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title,
       description: dict.meta.categoryDesc,
-      url: `https://salooote.am/${lang}/category/${slug}/${subslug}`,
+      url: `https://development.salooote.am/${lang}/category/${slug}/${subslug}`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
@@ -29,11 +29,11 @@ export async function generateMetadata({ params }) {
       images: ["/images/hero-dj.jpg"],
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}/category/${slug}/${subslug}`,
+      canonical: `https://development.salooote.am/${lang}/category/${slug}/${subslug}`,
       languages: {
-        en: `https://salooote.am/en/category/${slug}/${subslug}`,
-        hy: `https://salooote.am/hy/category/${slug}/${subslug}`,
-        ru: `https://salooote.am/ru/category/${slug}/${subslug}`,
+        en: `https://development.salooote.am/en/category/${slug}/${subslug}`,
+        hy: `https://development.salooote.am/hy/category/${slug}/${subslug}`,
+        ru: `https://development.salooote.am/ru/category/${slug}/${subslug}`,
       },
     },
   };

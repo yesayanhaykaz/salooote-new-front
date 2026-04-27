@@ -1,4 +1,4 @@
-const BASE_URL = "https://salooote.am";
+const BASE_URL = "https://development.salooote.am";
 const LOCALES  = ["en", "hy", "ru"];
 
 const staticRoutes = [

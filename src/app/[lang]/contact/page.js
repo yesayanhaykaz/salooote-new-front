@@ -12,17 +12,17 @@ export async function generateMetadata({ params }) {
     title: `${dict.contactPage?.title || "Contact Us"} — Salooote.am`,
     description: dict.contactPage?.subtitle || "Get in touch with the Salooote team.",
     alternates: {
-      canonical: `https://salooote.am/${lang}/contact`,
+      canonical: `https://development.salooote.am/${lang}/contact`,
       languages: {
-        en: "https://salooote.am/en/contact",
-        hy: "https://salooote.am/hy/contact",
-        ru: "https://salooote.am/ru/contact",
+        en: "https://development.salooote.am/en/contact",
+        hy: "https://development.salooote.am/hy/contact",
+        ru: "https://development.salooote.am/ru/contact",
       },
     },
     openGraph: {
       title: `${dict.contactPage?.title || "Contact Us"} — Salooote.am`,
       description: dict.contactPage?.subtitle || "Get in touch with the Salooote team.",
-      url: `https://salooote.am/${lang}/contact`,
+      url: `https://development.salooote.am/${lang}/contact`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

@@ -10,13 +10,13 @@ export async function generateMetadata({ params }) {
     title: "Help Center — Salooote.am",
     description: "Find answers to common questions about orders, payments, returns, vendors, and your account.",
     alternates: {
-      canonical: `https://salooote.am/${lang}/help`,
-      languages: { en: "https://salooote.am/en/help", hy: "https://salooote.am/hy/help", ru: "https://salooote.am/ru/help" },
+      canonical: `https://development.salooote.am/${lang}/help`,
+      languages: { en: "https://development.salooote.am/en/help", hy: "https://development.salooote.am/hy/help", ru: "https://development.salooote.am/ru/help" },
     },
     openGraph: {
       title: "Help Center — Salooote.am",
       description: "Find answers to common questions about orders, payments, returns, vendors, and your account.",
-      url: `https://salooote.am/${lang}/help`,
+      url: `https://development.salooote.am/${lang}/help`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",

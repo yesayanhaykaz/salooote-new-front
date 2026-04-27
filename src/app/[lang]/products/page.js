@@ -21,13 +21,13 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title,
       description,
-      url: `https://salooote.am/${lang}/products`,
+      url: `https://development.salooote.am/${lang}/products`,
       siteName: "Salooote.am",
       locale: ogLocale,
       type: "website",
       images: [
         {
-          url: "https://salooote.am/images/cupcakes.jpg",
+          url: "https://development.salooote.am/images/cupcakes.jpg",
           width: 1200,
           height: 630,
         },
@@ -39,11 +39,11 @@ export async function generateMetadata({ params }) {
       description,
     },
     alternates: {
-      canonical: `https://salooote.am/${lang}/products`,
+      canonical: `https://development.salooote.am/${lang}/products`,
       languages: {
-        en: "https://salooote.am/en/products",
-        hy: "https://salooote.am/hy/products",
-        ru: "https://salooote.am/ru/products",
+        en: "https://development.salooote.am/en/products",
+        hy: "https://development.salooote.am/hy/products",
+        ru: "https://development.salooote.am/ru/products",
       },
     },
   };

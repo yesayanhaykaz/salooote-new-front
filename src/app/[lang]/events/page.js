@@ -22,11 +22,11 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    alternates: { canonical: `https://salooote.am/${lang}/events` },
+    alternates: { canonical: `https://development.salooote.am/${lang}/events` },
     openGraph: {
       title,
       description,
-      url: `https://salooote.am/${lang}/events`,
+      url: `https://development.salooote.am/${lang}/events`,
       siteName: "Salooote.am",
       images: [{ url: "/images/hero-dj.jpg", width: 1200, height: 630, alt: "Salooote.am" }],
       type: "website",
