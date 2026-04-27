@@ -198,6 +198,15 @@ export const plannerAPI = {
     request(`/user/planner/sessions/${sessionId}/inquiries`),
 };
 
+// Public — Venues
+export const venuesAPI = {
+  list: (params = {}) => {
+    const q = new URLSearchParams(params).toString();
+    return request(`/venues${q ? "?" + q : ""}`);
+  },
+  getById: (id) => request(`/venues/${id}`),
+};
+
 // User — Inquiries + messaging
 export const inquiriesAPI = {
   list: (params = {}) => {
