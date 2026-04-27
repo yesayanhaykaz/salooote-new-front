@@ -36,6 +36,114 @@ const C = {
   userBg:   "linear-gradient(135deg,#e11d5c,#f43f5e)",
   botBg:    "#f8fafc",
 };
+/* ─────────────────────────────────────────
+   TRANSLATIONS
+───────────────────────────────────────── */
+const T = {
+  en: {
+    subtitle: "Event planning assistant · Online",
+    newChat: "New chat",
+    greeting: "Hi!",
+    welcome1: "I\'m your AI event planner — ready to help make your celebration exactly as you envision.",
+    welcome2: "Just tell me: what event, where, how many guests and what vibe you want,",
+    welcome3: "I\'ll handle the rest for you",
+    feat1Title: "Smart Plan",
+    feat1Desc: "A clear, complete step-by-step built automatically for your event",
+    feat1Msg: "Build me a smart checklist for my event",
+    feat2Title: "Find the Best",
+    feat2Desc: "Real, verified vendors in your city — found in seconds",
+    feat2Msg: "Find top vendors near me",
+    feat3Title: "Cultural Nuances",
+    feat3Desc: "Armenian traditions, tips and details so you forget nothing",
+    feat3Msg: "Tell me about Armenian traditions and cultural tips",
+    placeholder: "Write what you want to plan…",
+    pill1: "Attach", pill2: "Add to plan", pill3: "Give ideas",
+    disclaimer: "AI may make mistakes · Always verify details with vendors",
+    quickStart: "Quick start",
+    pickType: "Pick an event type",
+    pickSub: "Or describe your event in chat\nand I\'ll build the full plan",
+    suggestions: ["Plan a wedding", "Plan a birthday", "Christening ideas", "Corporate event"],
+    eventLabels: {
+      christening: "Christening", wedding: "Wedding", birthday: "Birthday",
+      kids_party: "Kids Party", corporate: "Corporate", baby_shower: "Baby Shower",
+      engagement: "Engagement", graduation: "Graduation",
+    },
+  },
+  hy: {
+    subtitle: "Քո միջոցառումների խելացի օգնականը · Առցանց",
+    newChat: "Նոր զրույց",
+    greeting: "Բարև",
+    welcome1: "Ես քո AI պլանավորիչն եմ — պատրաստ օգնելու, որ քո տոնը լինի հենց այնպիսին, ինչպիսին պատկերացնում ես։",
+    welcome2: "Պարզապես ասա՝ ինչ միջոցառում է, որտեղ է, քանի հյուր ունես ու ինչ ոճ ես ուզում,",
+    welcome3: "մնացածը ես կանեմ քեզ համար",
+    feat1Title: "Խելացի պլան",
+    feat1Desc: "Քո միջոցառման համար ավտոմատ կազմված հստակ ու ամբողջական քայլեր",
+    feat1Msg: "Խելացի պլան",
+    feat2Title: "Գտիր լավագույններին",
+    feat2Desc: "Իրական, ստուգված մատակարարներ քո քաղաքում՝ մի քանի վայրկյանում",
+    feat2Msg: "Գտիր լավագույններին",
+    feat3Title: "Մշակութային նրբություններ",
+    feat3Desc: "Հայկական ավանդույթներ, խորհուրդներ ու մանրուքներ, որ ոչինչ չմոռանաս",
+    feat3Msg: "Մշակութային նրբություններ",
+    placeholder: "Գրիր՝ ինչ ուզում ես կազմակերպել…",
+    pill1: "Կցել",
+    pill2: "Ավելացնել պլանին",
+    pill3: "Տուր գաղափարներ",
+    disclaimer: "AI-ը երբեմն կարող է սխալվել · Միշտ ճշտիր մանրամասները մատակարարների հետ",
+    quickStart: "Արագ սկսիր",
+    pickType: "Ընտրիր միջոցառման տեսակն",
+    pickSub: "կամ պարզապես գրիր քո գաղափարը,\\nու ես կկազմեմ քո ամբողջ պլանը",
+    suggestions: ["Հարսանիք", "Ծննդյան տարեդարձ", "Մկրտություն", "Կորպորատիվ միջոցառում"],
+    eventLabels: {
+      christening: "Մկրտություն",
+      wedding: "Հարսանիք",
+      birthday: "Ծննդյան տարեդարձ",
+      kids_party: "Մանկական տոն",
+      corporate: "Կորպորատիվ միջոցառում",
+      baby_shower: "Baby Shower (մայրության տոն)",
+      engagement: "Նշանադրություն",
+      graduation: "Ավարտական երեկո",
+    },
+  },
+  ru: {
+    subtitle: "Умный помощник для мероприятий · Онлайн",
+    newChat: "Новый чат",
+    greeting: "Привет!",
+    welcome1: "Я твой AI-планировщик — готов помочь сделать твой праздник именно таким, каким ты его представляешь.",
+    welcome2: "Просто скажи: какое мероприятие, где, сколько гостей и какой стиль хочешь,",
+    welcome3: "остальное я сделаю за тебя",
+    feat1Title: "Умный план",
+    feat1Desc: "Чёткие и полные шаги для твоего мероприятия, составленные автоматически",
+    feat1Msg: "Умный план",
+    feat2Title: "Найди лучших",
+    feat2Desc: "Реальные, проверенные поставщики в твоём городе — за секунды",
+    feat2Msg: "Найди лучших",
+    feat3Title: "Культурные тонкости",
+    feat3Desc: "Армянские традиции, советы и детали, чтобы ничего не забыть",
+    feat3Msg: "Культурные тонкости",
+    placeholder: "Напиши, что хочешь организовать…",
+    pill1: "Прикрепить",
+    pill2: "Добавить в план",
+    pill3: "Дай идеи",
+    disclaimer: "AI иногда может ошибаться · Всегда уточняй детали у поставщиков",
+    quickStart: "Быстрый старт",
+    pickType: "Выбери тип мероприятия",
+    pickSub: "или просто опиши свою идею,\\nи я составлю полный план",
+    suggestions: ["Планировать свадьбу", "День рождения", "Крещение", "Корпоратив"],
+    eventLabels: {
+      christening: "Крещение",
+      wedding: "Свадьба",
+      birthday: "День рождения",
+      kids_party: "Детский праздник",
+      corporate: "Корпоратив",
+      baby_shower: "Baby Shower",
+      engagement: "Помолвка",
+      graduation: "Выпускной",
+    },
+  },
+};
+const tx = (lang) => T[lang] || T.en;
+
 
 /* ─────────────────────────────────────────
    ICON MAPS
@@ -261,7 +369,7 @@ function applyActions(actions, prev) {
 ───────────────────────────────────────── */
 function getContextSuggestions(eventState) {
   if (!eventState.event_type) {
-    return ["Plan a wedding", "Plan a birthday", "Christening ideas", "Corporate event"];
+    const t = tx("en"); return t.suggestions;
   }
   if (!eventState.date && !eventState.city) {
     return ["Set date & city", "How many guests?", "What's my budget?"];
@@ -417,7 +525,8 @@ function MessageBubble({ msg, onSuggestionClick }) {
 /* ─────────────────────────────────────────
    CHAT PANEL HEADER
 ───────────────────────────────────────── */
-function ChatPanelHeader({ onNewChat }) {
+function ChatPanelHeader({ onNewChat, lang }) {
+  const t = tx(lang);
   return (
     <div style={{
       padding: "12px 16px 10px",
@@ -431,7 +540,7 @@ function ChatPanelHeader({ onNewChat }) {
             <span style={{ fontSize: 14, fontWeight: 700, color: C.text, letterSpacing: "-0.02em" }}>Salooote AI</span>
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", boxShadow: "0 0 6px #22c55e", display: "inline-block" }} />
           </div>
-          <div style={{ fontSize: 11, color: C.text3 }}>Event planning assistant · Online</div>
+          <div style={{ fontSize: 11, color: C.text3 }}>{t.subtitle}</div>
         </div>
       </div>
       <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
@@ -445,7 +554,7 @@ function ChatPanelHeader({ onNewChat }) {
           onMouseEnter={e => { e.currentTarget.style.borderColor = C.brand + "44"; e.currentTarget.style.color = C.brand; }}
           onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.color = C.text2; }}
         >
-          <Plus size={11} /> New chat
+          <Plus size={11} /> {t.newChat}
         </button>
         <button style={{
           width: 30, height: 30, borderRadius: "50%",
@@ -467,7 +576,8 @@ function ChatPanelHeader({ onNewChat }) {
 /* ─────────────────────────────────────────
    COMPOSER (input + pills)
 ───────────────────────────────────────── */
-function Composer({ input, setInput, onSend, loading, onSuggestionClick }) {
+function Composer({ input, setInput, onSend, loading, onSuggestionClick, lang }) {
+  const t = tx(lang);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef(null);
   const canSend = !!input.trim() && !loading;
@@ -497,7 +607,7 @@ function Composer({ input, setInput, onSend, loading, onSuggestionClick }) {
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               disabled={loading}
-              placeholder="Ask anything about your event…"
+              placeholder={t.placeholder}
               autoFocus
               style={{ flex: 1, border: "none", outline: "none", fontSize: "0.875rem", background: "transparent", color: C.text, fontFamily: "inherit" }}
             />
@@ -538,12 +648,12 @@ function Composer({ input, setInput, onSend, loading, onSuggestionClick }) {
       {/* Quick pills */}
       <div style={{ display: "flex", gap: 6, marginTop: 10, paddingLeft: 2 }}>
         {[
-          { icon: <Paperclip size={11} />, label: "Attach" },
-          { icon: <Bookmark size={11} />, label: "Add to plan" },
-          { icon: <Zap size={11} />, label: "Inspire me" },
-        ].map(({ icon, label }) => (
+          { icon: <Paperclip size={11} />, label: t.pill1, action: null },
+          { icon: <Bookmark size={11} />, label: t.pill2, action: null },
+          { icon: <Zap size={11} />, label: t.pill3, action: "inspire" },
+        ].map(({ icon, label, action }) => (
           <button key={label}
-            onClick={() => label === "Inspire me" && onSuggestionClick("Give me event ideas and inspiration")}
+            onClick={() => action === "inspire" && onSuggestionClick("Give me event ideas and inspiration")}
             style={{
               display: "inline-flex", alignItems: "center", gap: 5,
               background: "transparent", border: `1px solid ${C.border}`,
@@ -559,7 +669,7 @@ function Composer({ input, setInput, onSend, loading, onSuggestionClick }) {
         ))}
       </div>
       <p style={{ margin: "8px 0 0", fontSize: "0.62rem", color: C.text3, textAlign: "center" }}>
-        AI may make mistakes · Always verify with vendors
+        {t.disclaimer}
       </p>
     </div>
   );
@@ -568,39 +678,41 @@ function Composer({ input, setInput, onSend, loading, onSuggestionClick }) {
 /* ─────────────────────────────────────────
    CHAT WELCOME
 ───────────────────────────────────────── */
-const FEATURES = [
-  { icon: <Star size={17} color={C.brand} />, title: "Smart Checklist", desc: "Complete checklist built from your event type instantly" },
-  { icon: <Search size={17} color={C.purple} />, title: "Find Vendors", desc: "Real vendors in your city, searched instantly" },
-  { icon: <Heart size={17} color="#0ea5e9" />, title: "Cultural Tips", desc: "Armenian traditions & cultural guidance included" },
-];
-
-function ChatWelcome() {
+function ChatWelcome({ lang, onFeatureClick }) {
+  const t = tx(lang);
+  const features = [
+    { icon: <Sparkles size={18} color={C.brand} />, title: t.feat1Title, desc: t.feat1Desc, msg: t.feat1Msg, accent: C.brand, bg: "rgba(225,29,92,0.06)", border: "rgba(225,29,92,0.15)" },
+    { icon: <Search size={18} color="#7c3aed" />, title: t.feat2Title, desc: t.feat2Desc, msg: t.feat2Msg, accent: "#7c3aed", bg: "rgba(124,58,237,0.06)", border: "rgba(124,58,237,0.15)" },
+    { icon: <Heart size={18} color="#0ea5e9" />, title: t.feat3Title, desc: t.feat3Desc, msg: t.feat3Msg, accent: "#0ea5e9", bg: "rgba(14,165,233,0.06)", border: "rgba(14,165,233,0.15)" },
+  ];
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "28px 24px", textAlign: "center" }}>
-      <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }} style={{ marginBottom: 22 }}>
-        <OrbLarge size={68} />
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "24px 20px", textAlign: "center", overflowY: "auto" }}>
+      <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.05 }} style={{ marginBottom: 18 }}>
+        <OrbLarge size={62} />
       </motion.div>
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} style={{ marginBottom: 24, maxWidth: 320 }}>
-        <h2 style={{ margin: "0 0 10px", fontSize: "1.3rem", fontWeight: 700, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.35 }}>
-          Hi! I'm your{" "}
-          <span style={{ background: C.grad, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text", fontWeight: 800 }}>
-            AI event planner
-          </span>
-          {" "}ready to build the perfect celebration.
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }} style={{ marginBottom: 22, maxWidth: 340 }}>
+        <h2 style={{ margin: "0 0 6px", fontSize: "1.22rem", fontWeight: 800, color: C.text, letterSpacing: "-0.03em", lineHeight: 1.32 }}>
+          <span style={{ background: C.grad, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>{t.greeting}</span>
         </h2>
-        <p style={{ margin: 0, fontSize: "0.84rem", color: C.text2, lineHeight: 1.6 }}>
-          Tell me your event type, guests, city and style.<br />I'll handle everything else.
-        </p>
+        <p style={{ margin: "0 0 4px", fontSize: "0.83rem", color: C.text, lineHeight: 1.6, fontWeight: 500 }}>{t.welcome1}</p>
+        <p style={{ margin: "0 0 2px", fontSize: "0.8rem", color: C.text2, lineHeight: 1.55 }}>{t.welcome2}</p>
+        <p style={{ margin: 0, fontSize: "0.8rem", color: C.text2, lineHeight: 1.55 }}>{t.welcome3}</p>
       </motion.div>
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-        style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, width: "100%", maxWidth: 400 }}>
-        {FEATURES.map((f, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.38 + i * 0.07 }}
-            style={{ background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 14, padding: "14px 12px", textAlign: "left", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
-            <div style={{ marginBottom: 8 }}>{f.icon}</div>
-            <p style={{ margin: "0 0 4px", fontSize: "0.74rem", fontWeight: 700, color: C.text }}>{f.title}</p>
-            <p style={{ margin: 0, fontSize: "0.66rem", color: C.text3, lineHeight: 1.5 }}>{f.desc}</p>
-          </motion.div>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+        style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, width: "100%", maxWidth: 420 }}>
+        {features.map((f, i) => (
+          <motion.button key={i}
+            initial={{ opacity: 0, y: 12, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.32 + i * 0.07, type: "spring", stiffness: 280 }}
+            whileHover={{ scale: 1.04, y: -3 }} whileTap={{ scale: 0.96 }}
+            onClick={() => onFeatureClick && onFeatureClick(f.msg)}
+            style={{ background: "#f8fafc", border: `1.5px solid ${C.border}`, borderRadius: 16, padding: "14px 10px", textAlign: "left", cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = f.bg; e.currentTarget.style.borderColor = f.border; e.currentTarget.style.boxShadow = `0 8px 24px ${f.accent}18`; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.03)"; }}
+          >
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: f.bg, border: `1px solid ${f.border}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>{f.icon}</div>
+            <p style={{ margin: "0 0 5px", fontSize: "0.72rem", fontWeight: 700, color: C.text, lineHeight: 1.3 }}>{f.title}</p>
+            <p style={{ margin: 0, fontSize: "0.63rem", color: C.text3, lineHeight: 1.5 }}>{f.desc}</p>
+          </motion.button>
         ))}
       </motion.div>
     </div>
@@ -1365,41 +1477,46 @@ function EventPlanPanel({ eventState, vendorResults, onSelectVendor, onSearchVen
    RIGHT EMPTY STATE  (event type picker)
 ───────────────────────────────────────── */
 const EVENT_TYPES_GRID = [
-  { key: "christening", label: "Christening", color: "#e11d5c" },
-  { key: "wedding",     label: "Wedding",     color: "#e11d5c" },
-  { key: "birthday",    label: "Birthday",    color: "#3b82f6" },
-  { key: "kids_party",  label: "Kids Party",  color: "#10b981" },
-  { key: "corporate",   label: "Corporate",   color: "#475569" },
-  { key: "baby_shower", label: "Baby Shower", color: "#0ea5e9" },
-  { key: "engagement",  label: "Engagement",  color: "#8b5cf6" },
-  { key: "graduation",  label: "Graduation",  color: "#ea580c" },
+  { key: "christening", color: "#e11d5c" },
+  { key: "wedding",     color: "#e11d5c" },
+  { key: "birthday",    color: "#3b82f6" },
+  { key: "kids_party",  color: "#10b981" },
+  { key: "corporate",   color: "#475569" },
+  { key: "baby_shower", color: "#0ea5e9" },
+  { key: "engagement",  color: "#8b5cf6" },
+  { key: "graduation",  color: "#ea580c" },
 ];
 
-function RightEmptyState({ onPickType }) {
+function RightEmptyState({ onPickType, lang }) {
+  const t = tx(lang);
+  const pickSub = t.pickSub.split("\n");
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", padding: "32px 20px", textAlign: "center" }}>
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ marginBottom: 24 }}>
-        <p style={{ margin: "0 0 5px", fontSize: "0.65rem", fontWeight: 700, color: C.text3, letterSpacing: "0.1em", textTransform: "uppercase" }}>Quick start</p>
-        <h3 style={{ margin: "0 0 8px", fontSize: "1.1rem", fontWeight: 800, color: C.text, letterSpacing: "-0.03em" }}>Pick an event type</h3>
-        <p style={{ margin: 0, fontSize: "0.81rem", color: C.text2, lineHeight: 1.5, maxWidth: 240 }}>Or describe your event in chat and I'll build the plan automatically.</p>
+        <p style={{ margin: "0 0 5px", fontSize: "0.65rem", fontWeight: 700, color: C.text3, letterSpacing: "0.1em", textTransform: "uppercase" }}>{t.quickStart}</p>
+        <h3 style={{ margin: "0 0 8px", fontSize: "1.1rem", fontWeight: 800, color: C.text, letterSpacing: "-0.03em" }}>{t.pickType}</h3>
+        <p style={{ margin: 0, fontSize: "0.81rem", color: C.text2, lineHeight: 1.5, maxWidth: 240 }}>{pickSub[0]}<br />{pickSub[1]}</p>
       </motion.div>
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
         style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8, width: "100%", maxWidth: 360 }}>
-        {EVENT_TYPES_GRID.map((t, i) => (
-          <motion.button key={t.key}
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.22 + i * 0.04, type: "spring", stiffness: 300 }}
-            whileHover={{ scale: 1.06, y: -3 }} whileTap={{ scale: 0.96 }}
-            onClick={() => onPickType(t.label)}
-            style={{ background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 14, padding: "14px 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 7, transition: "all 0.18s" }}
-            onMouseEnter={e => { e.currentTarget.style.background = `${t.color}09`; e.currentTarget.style.borderColor = `${t.color}40`; e.currentTarget.style.boxShadow = `0 8px 20px ${t.color}14`; }}
-            onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}
-          >
-            <div style={{ width: 34, height: 34, borderRadius: "50%", background: `${t.color}12`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {getEventIcon(t.key, { size: 17, color: t.color, strokeWidth: 1.8 })}
-            </div>
-            <span style={{ fontSize: "0.61rem", fontWeight: 700, color: C.text2 }}>{t.label}</span>
-          </motion.button>
-        ))}
+        {EVENT_TYPES_GRID.map((ev, i) => {
+          const label = t.eventLabels[ev.key] || ev.key;
+          return (
+            <motion.button key={ev.key}
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.22 + i * 0.04, type: "spring", stiffness: 300 }}
+              whileHover={{ scale: 1.06, y: -3 }} whileTap={{ scale: 0.96 }}
+              onClick={() => onPickType(label)}
+              style={{ background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 14, padding: "14px 8px", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 7, transition: "all 0.18s", fontFamily: "inherit" }}
+              onMouseEnter={e => { e.currentTarget.style.background = `${ev.color}09`; e.currentTarget.style.borderColor = `${ev.color}40`; e.currentTarget.style.boxShadow = `0 8px 20px ${ev.color}14`; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "#f8fafc"; e.currentTarget.style.borderColor = C.border; e.currentTarget.style.boxShadow = "none"; }}
+            >
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: `${ev.color}12`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                {getEventIcon(ev.key, { size: 17, color: ev.color, strokeWidth: 1.8 })}
+              </div>
+              <span style={{ fontSize: "0.61rem", fontWeight: 700, color: C.text2, textAlign: "center", lineHeight: 1.3 }}>{label}</span>
+            </motion.button>
+          );
+        })}
       </motion.div>
     </div>
   );
@@ -1613,10 +1730,11 @@ function PlannerClientInner({ lang }) {
   // Welcome message
   useEffect(() => {
     const t = setTimeout(() => {
+      const wt = tx(lang);
       setMessages([{
         id: 1, role: "bot",
-        text: "Hi! I'm your Salooote event planner.\n\nDescribe what you want to plan — event type, guests, city, style. I'll build your complete checklist and find vendors instantly!",
-        suggestions: ["Plan a wedding", "Plan a birthday", "Christening ideas", "Corporate event"],
+        text: `${wt.greeting}\n\n${wt.welcome1}\n${wt.welcome2} ${wt.welcome3}`,
+        suggestions: wt.suggestions,
       }]);
     }, 400);
     return () => clearTimeout(t);
@@ -1720,7 +1838,8 @@ function PlannerClientInner({ lang }) {
   }, []);
 
   const handleNewChat = useCallback(() => {
-    setMessages([{ id: 1, role: "bot", text: "Hi! I'm your Salooote event planner.\n\nDescribe what you want to plan — event type, guests, city, style. I'll build your complete checklist and find vendors instantly!", suggestions: ["Plan a wedding", "Plan a birthday", "Christening ideas", "Corporate event"] }]);
+    const nt = tx(lang);
+    setMessages([{ id: 1, role: "bot", text: `${nt.greeting}\n\n${nt.welcome1}\n${nt.welcome2} ${nt.welcome3}`, suggestions: nt.suggestions }]);
     setEventState(INITIAL_STATE);
     setVendorResults({});
     setSessionId(null);
@@ -1782,14 +1901,14 @@ function PlannerClientInner({ lang }) {
             borderRadius: isMobile ? 16 : 20, boxShadow: "0 4px 24px rgba(0,0,0,0.05),0 1px 4px rgba(0,0,0,0.03)",
             overflow: "hidden",
           }}>
-            <ChatPanelHeader onNewChat={handleNewChat} />
+            <ChatPanelHeader onNewChat={handleNewChat} lang={lang} />
 
             {/* Messages */}
             <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
               <AnimatePresence mode="wait">
                 {showWelcome ? (
                   <motion.div key="welcome" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.98 }} transition={{ duration: 0.18 }} style={{ flex: 1, overflow: "hidden" }}>
-                    <ChatWelcome />
+                    <ChatWelcome lang={lang} onFeatureClick={sendMessage} />
                   </motion.div>
                 ) : (
                   <motion.div key="chat" ref={msgsRef} className="planner-hide-scroll"
@@ -1810,6 +1929,7 @@ function PlannerClientInner({ lang }) {
               onSend={showAuthGate ? () => {} : sendMessage}
               loading={loading || showAuthGate}
               onSuggestionClick={showAuthGate ? () => {} : sendMessage}
+              lang={lang}
             />
           </div>
 
@@ -1824,7 +1944,7 @@ function PlannerClientInner({ lang }) {
               {!hasEvent ? (
                 <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <RightEmptyState onPickType={label => sendMessage(`I want to plan a ${label}`)} />
+                  <RightEmptyState onPickType={label => sendMessage(`I want to plan a ${label}`)} lang={lang} />
                 </motion.div>
               ) : (
                 <motion.div key="plan" initial={{ opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
@@ -2001,6 +2121,7 @@ function PlannerClientInner({ lang }) {
                           sendMessage(`I want to plan a ${label}`);
                           setMobilePlanOpen(false);
                         }}
+                        lang={lang}
                       />
                     </motion.div>
                   ) : (
