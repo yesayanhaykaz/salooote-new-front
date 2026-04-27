@@ -11,8 +11,18 @@ import {
 
 const T = {
   en: { dashboard: "Dashboard", myOrders: "My Orders", messages: "Messages", myEvents: "My Events", inquiries: "Inquiries", myReviews: "My Reviews", savedItems: "Saved Items", notifications: "Notifications", settings: "Settings", signOut: "Sign Out" },
-  hy: { dashboard: "Վահանակ", myOrders: "Իմ Պատվերները", messages: "Հաղ-ներ", myEvents: "Իմ Միջ-ները", inquiries: "Հարցումներ", myReviews: "Կարծիքներ", savedItems: "Պահված", notifications: "Ծانоуцումներ", settings: "Կարգ-ումներ", signOut: "Ելք" },
-  ru: { dashboard: "Главная", myOrders: "Мои Заказы", messages: "Сообщения", myEvents: "Мои Мероприятия", inquiries: "Запросы", myReviews: "Отзывы", savedItems: "Сохранённое", notifications: "Уведомления", settings: "Настройки", signOut: "Выйти" },
+hy: {
+  dashboard: "Վահանակ",
+  myOrders: "Իմ պատվերները",
+  messages: "Հաղորդագրություններ",
+  myEvents: "Իմ միջոցառումները",
+  inquiries: "Հարցումներ",
+  myReviews: "Իմ կարծիքները",
+  savedItems: "Պահվածներ",
+  notifications: "Ծանուցումներ",
+  settings: "Կարգավորումներ",
+  signOut: "Ելք"
+}, ru: { dashboard: "Главная", myOrders: "Мои Заказы", messages: "Сообщения", myEvents: "Мои Мероприятия", inquiries: "Запросы", myReviews: "Отзывы", savedItems: "Сохранённое", notifications: "Уведомления", settings: "Настройки", signOut: "Выйти" },
 };
 
 export default function AccountLayout({ children }) {
