@@ -178,7 +178,7 @@ const T = {
   },
   heroSubtitle: {
     en: "Armenia's most beautiful celebrations start here. Cakes, flowers, venues, photographers — all in one place, with an AI that plans alongside you.",
-    hy: "Հայաստանի ամենագեղեցիկ տոները սկսվում են այստեղ։ Տորթեր, ծաղիկներ, սրահներ, ֆոտոգրաֆներ — մեկ տեղում, AI օգնականով։",
+    hy: "Ինչ լեզվով էլ խոսես, մեր AI կազմակերպիիչը քեզ կհասկանա",
     ru: "Самые красивые торжества Армении начинаются здесь. Торты, цветы, площадки, фотографы — всё в одном месте, с AI-помощником рядом.",
   },
   heroPlaceholder: {
@@ -1028,9 +1028,6 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
         </div>
       </section>
 
-      {/* Browse by Category */}
-      <BrowseByCategory lang={lang} />
-
       {/* Trending Now */}
       <TrendingNow lang={lang} />
 
@@ -1049,7 +1046,7 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
       <section id="v2-howitworks" className="v2-how">
         <h2 className="v2-how-title">
           {lang === "ru" ? "Как Salooote планирует ваш праздник"
-            : lang === "hy" ? "Ինչպես Salooote-ը պլանավորում է ձեր տոնը"
+            : lang === "hy" ? "Ինչպես ենք օգնում կազմակերպել ձեր տոնը"
             : "How Salooote plans your event"}
         </h2>
         <p className="v2-how-sub">
@@ -1059,14 +1056,14 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
         </p>
         <div className="v2-how-grid">
           {[
-            { icon: "sparkle", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Ասեք" : "Describe",
-              desc: lang === "ru" ? "Тип события, дата, бюджет, гости." : lang === "hy" ? "Միջոցառման տեսակը, ամսաթիվ, բյուջե։" : "Event type, date, budget, guests." },
+            { icon: "sparkle", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Պատմեք" : "Describe",
+              desc: lang === "ru" ? "Тип события, дата, бюджет, гости." : lang === "hy" ? "Միջոցառման տեսակը, ամսաթիվն ու թե ոնց եք պատկերացնում:" : "Event type, date, budget, guests." },
             { icon: "search", title: lang === "ru" ? "Найдём" : lang === "hy" ? "Կգտնենք" : "Find",
-              desc: lang === "ru" ? "Подберём поставщиков и продукты." : lang === "hy" ? "Կգտնենք մատակարարների և ապրանքներ։" : "We match vendors and products." },
-            { icon: "calendar", title: lang === "ru" ? "План" : lang === "hy" ? "Պլան" : "Plan",
-              desc: lang === "ru" ? "Сравните цены, фото, отзывы." : lang === "hy" ? "Համեմատեք գները, լուսանկարները, գնահատականները։" : "Compare prices, photos, reviews." },
+              desc: lang === "ru" ? "Подберём поставщиков и продукты." : lang === "hy" ? "Կհստակեցնենք ու կգտնենք ծառայություններ, անցկացման վայրեր և ապրանքներ։" : "We match vendors and products." },
+            { icon: "calendar", title: lang === "ru" ? "План" : lang === "hy" ? "Կկազմենք պլան" : "Plan",
+              desc: lang === "ru" ? "Сравните цены, фото, отзывы." : lang === "hy" ? "Համեմատեք արծեքները, լուսանկարները, կարծիքները ու միասին կընտրենք։" : "Compare prices, photos, reviews." },
             { icon: "check", title: lang === "ru" ? "Бронь" : lang === "hy" ? "Ամրագրում" : "Book",
-              desc: lang === "ru" ? "Запросите цитату или забронируйте." : lang === "hy" ? "Պատվերեք կամ ամրագրեք ուղիղ։" : "Request a quote or book directly." },
+              desc: lang === "ru" ? "Запросите цитату или забронируйте." : lang === "hy" ? "Պատվիրեք մեր հարթակում, գրեք կամ զանգահարեք անմիջապես կամ ամրագրեք ուղիղ։" : "Request a quote or book directly." },
           ].map((card, i) => (
             <div key={i} className="v2-how-card">
               <div className="v2-how-icon"><Icon name={card.icon} size={22} /></div>
