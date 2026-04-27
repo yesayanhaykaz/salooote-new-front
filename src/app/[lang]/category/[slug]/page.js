@@ -17,7 +17,6 @@ export async function generateStaticParams() {
     "planning-coordination",
     "lighting-equipment",
     "clothing-accessories",
-    // legacy slugs (keep so old links don't 404)
     "cakes", "catering", "flowers", "party", "gifts",
     "dj-music", "venues", "photography", "decoration",
   ];

@@ -32,29 +32,40 @@ const T = {
     notifications: "Notifications",
     noSubject: "(No subject)",
   },
+
+
   hy: {
-    welcomeBack: "Բարի վերադարձ",
-    subtitle: "Ահա թե ինչ է կատարվում ձեր հաշվով:",
-    myOrders: "Իմ Պատվերները",
-    savedItems: "Պահված",
-    activeInquiries: "Ակտիվ Հարցումներ",
-    unreadNotifs: "Չկարդացված",
-    recentOrders: "Վերջին Պատվերները",
-    recentInquiries: "Վերջին Հարցումները",
-    recentActivity: "Վերջին Գործողություններ",
-    quickLinks: "Արագ Հղումներ",
-    viewAll: "Բոլորը",
-    noOrders: "Դեռ պատվեր չկա:",
-    noInquiries: "Դեռ հարցում չկա:",
-    sendOne: "Ուղարկել",
-    noNotifications: "Ծаноуцումներ չկան:",
-    messages: "Հաղ-ներ",
-    myEvents: "Իմ Միջ-ները",
-    inquiries: "Հարցումներ",
-    myReviews: "Կարծիքներ",
-    notifications: "Ծаноуцումներ",
-    noSubject: "(Թեմա չկա)",
-  },
+  welcomeBack: "Բարի վերադարձ",
+  subtitle: "Ահա ձեր հաշվի ընթացիկ ակտիվությունը",
+
+  myOrders: "Իմ պատվերները",
+  savedItems: "Պահվածներ",
+  activeInquiries: "Ակտիվ հարցումներ",
+  unreadNotifs: "Չկարդացված ծանուցումներ",
+
+  recentOrders: "Վերջին պատվերներ",
+  recentInquiries: "Վերջին հարցումներ",
+  recentActivity: "Վերջին ակտիվություն",
+
+  quickLinks: "Արագ հղումներ",
+  viewAll: "Դիտել բոլորը",
+
+  noOrders: "Դեռևս պատվերներ չկան",
+  noInquiries: "Դեռևս հարցումներ չկան",
+  noNotifications: "Ծանուցումներ չկան",
+
+  sendOne: "Ուղարկել հարցում",
+
+  messages: "Հաղորդագրություններ",
+  myEvents: "Իմ միջոցառումները",
+  inquiries: "Հարցումներ",
+  myReviews: "Կարծիքներ",
+  notifications: "Ծանուցումներ",
+
+  noSubject: "Առանց թեմայի",
+},
+
+
   ru: {
     welcomeBack: "С возвращением",
     subtitle: "Вот что происходит с вашим аккаунтом.",
