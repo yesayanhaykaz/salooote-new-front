@@ -6,8 +6,10 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }) {
   const { lang, vendor, product } = await params;
-  const fallbackName = decodeURIComponent(product).replace(/-/g, " ");
-  const fallbackVendor = decodeURIComponent(vendor).replace(/-/g, " ");
+  const decodedProduct = decodeURIComponent(product);
+  const decodedVendor = decodeURIComponent(vendor);
+  const fallbackName = decodedProduct.replace(/-/g, " ");
+  const fallbackVendor = decodedVendor.replace(/-/g, " ");
 
   // Use actual request host so og:url matches what was shared (iMessage follows og:url)
   const headersList = headers();
@@ -17,7 +19,7 @@ export async function generateMetadata({ params }) {
 
   try {
     const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
-    const vRes = await fetch(`${API}/vendors/slug/${vendor}`, { cache: "no-store" });
+    const vRes = await fetch(`${API}/vendors/slug/${encodeURIComponent(decodedVendor)}`, { cache: "no-store" });
     if (!vRes.ok) throw new Error("vendor fetch failed");
     const vData = await vRes.json();
     const vendorId = vData?.data?.id;
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }) {
     const vendorName = vData?.data?.business_name || fallbackVendor;
     if (!vendorId) throw new Error("no vendor id");
 
-    const pRes = await fetch(`${API}/products/by-slug?vendor_id=${vendorId}&slug=${encodeURIComponent(product)}&locale=${lang}`, { cache: "no-store" });
+    const pRes = await fetch(`${API}/products/by-slug?vendor_id=${vendorId}&slug=${encodeURIComponent(decodedProduct)}&locale=${lang}`, { cache: "no-store" });
     if (!pRes.ok) throw new Error("product fetch failed");
     const pData = await pRes.json();
     const p = pData?.data;
