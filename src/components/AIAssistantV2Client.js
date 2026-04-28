@@ -245,10 +245,10 @@ const T = {
   },
 
   /* ── Browse Moments (replaces Plan Any Occasion) ── */
-  momentsEyebrow:   { en: "Browse moments", hy: "Թերթեք պահերը", ru: "Просмотрите моменты" },
+  momentsEyebrow:   { en: "Browse moments", hy: "Ընտրեք", ru: "Просмотрите моменты" },
   momentsHeadline: {
     en: "Pick the moment. We'll bring it to life.",
-    hy: "Ընտրեք պահը։ Մենք կկյանքի կոչենք։",
+    hy: "Ընտրեք պահը։ Մենք կյանքի կոչենք։",
     ru: "Выберите момент. Мы воплотим его в жизнь.",
   },
   momentsAllEvents: { en: "All events", hy: "Բոլորը", ru: "Все события" },
@@ -316,6 +316,7 @@ const ICON_PATHS = {
   baby:     <><circle cx="12" cy="11" r="4.5"/><path d="M9 18a4 4 0 0 0 6 0"/><path d="M9.5 8.5h.01"/><path d="M14.5 8.5h.01"/></>,
   church:   <><path d="M12 2v6"/><path d="M9 5h6"/><path d="M5 21V11l7-4 7 4v10"/><path d="M9 21v-5h6v5"/></>,
   x:        <><path d="M6 6l12 12"/><path d="M18 6 6 18"/></>,
+  bookmark: <><path d="M5 3h14a1 1 0 0 1 1 1v17l-8-4-8 4V4a1 1 0 0 1 1-1Z"/></>,
   grid:     <><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></>,
   flame:    <><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-5 0 2 1 3 2 3 0-3 0-5 2-8z"/></>,
   plus:     <><path d="M12 5v14"/><path d="M5 12h14"/></>,
@@ -526,12 +527,13 @@ function TypingDots() {
   );
 }
 
-function ProductCard({ p, lang, onOpen }) {
+function ProductCard({ p, lang, onOpen, onAddToPlan }) {
   const img = imgSrc(p.thumbnail_url || p.images?.[0]?.url);
   const name = (lang !== "en" && p[`name_${lang}`]) || p.name || "Product";
   const [hover, setHover] = useState(false);
   const { addToCart } = useCart();
   const [added, setAdded] = useState(false);
+  const [planAdded, setPlanAdded] = useState(false);
 
   const handleAddCart = (e) => {
     e.stopPropagation();
@@ -547,6 +549,15 @@ function ProductCard({ p, lang, onOpen }) {
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
+  };
+
+  const handleAddPlan = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (planAdded || !onAddToPlan) return;
+    onAddToPlan(p);
+    setPlanAdded(true);
+    setTimeout(() => setPlanAdded(false), 2000);
   };
 
   return (
@@ -581,6 +592,25 @@ function ProductCard({ p, lang, onOpen }) {
             className={`v2-mini-cart ${added ? "is-added" : ""}`}
           >
             <Icon name={added ? "check" : "plus"} size={14} />
+          </button>
+        )}
+        {onAddToPlan && (
+          <button
+            type="button"
+            onClick={handleAddPlan}
+            aria-label={lang === "hy" ? "Ավելացնել պլանին" : lang === "ru" ? "В план" : "Add to plan"}
+            style={{
+              position: "absolute", top: 8, left: 8,
+              width: 28, height: 28, borderRadius: "50%",
+              background: planAdded ? "#10b981" : "rgba(255,255,255,0.92)",
+              border: `1.5px solid ${planAdded ? "#10b981" : "#e11d5c"}`,
+              color: planAdded ? "#fff" : "#e11d5c",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", boxShadow: "0 2px 8px rgba(0,0,0,.12)",
+              transition: "all .22s ease", fontSize: 11, fontWeight: 700,
+            }}
+          >
+            {planAdded ? <Icon name="check" size={12} /> : <Icon name="bookmark" size={12} />}
           </button>
         )}
       </div>
@@ -643,16 +673,19 @@ function VendorCard({ v, onOpen }) {
   );
 }
 
-function Block({ block, lang, onOpen }) {
+function Block({ block, lang, onOpen, onAddToPlan }) {
   const items = block.data;
   if (!items || (Array.isArray(items) && !items.length)) return null;
+  // Limit to 4 items inline — show "see more" hint if there are more
+  const shown = items.slice(0, 4);
+  const hasMore = items.length > 4;
   return (
     <div>
       {block.title && (
         <p style={{
           margin: "0 0 9px 40px", fontSize: 10, fontWeight: 800,
           color: "#c8adb8", letterSpacing: 1, textTransform: "uppercase",
-        }}>{block.title}</p>
+        }}>{block.title}{hasMore ? ` (${items.length})` : ""}</p>
       )}
       <div className="v2-cards" style={{
         display: "flex", gap: 12, overflowX: "auto", paddingBottom: 6,
@@ -660,10 +693,13 @@ function Block({ block, lang, onOpen }) {
         overscrollBehaviorX: "contain", WebkitOverflowScrolling: "touch",
         scrollSnapType: "x mandatory",
       }}>
-        {block.type === "products" && items.map((p, i) => (
-          <ProductCard key={p.id || i} p={p} lang={lang} onOpen={onOpen} />
+        {block.type === "products" && shown.map((p, i) => (
+          <ProductCard
+            key={p.id || i} p={p} lang={lang} onOpen={onOpen}
+            onAddToPlan={onAddToPlan ? (item) => onAddToPlan(item, block.service_type) : null}
+          />
         ))}
-        {block.type === "vendors" && items.map((v, i) => (
+        {block.type === "vendors" && shown.map((v, i) => (
           <VendorCard key={v.id || i} v={v} onOpen={onOpen} />
         ))}
       </div>
@@ -1884,6 +1920,29 @@ export default function AIAssistantV2Client({ lang }) {
     setEventState(prev => {
       const sv = { ...prev.selected_vendors }; delete sv[serviceType];
       return { ...prev, selected_vendors: sv, services: prev.services.map(s => s.service_type === serviceType ? { ...s, status: "pending" } : s) };
+    });
+  }, []);
+
+  // Called when user clicks "Add to Plan" on an inline chat product card.
+  // serviceType comes from block.service_type returned by the backend.
+  const addToPlanFromChat = useCallback((product, serviceType) => {
+    if (!serviceType) return;
+    const name = product.name || "Product";
+    const vendorName = product.vendor_name || product.vendor?.business_name || "";
+    setEventState(prev => {
+      // If the service exists in the plan, mark it selected; otherwise do nothing.
+      const exists = (prev.services || []).some(s => s.service_type === serviceType);
+      if (!exists) return prev;
+      return {
+        ...prev,
+        selected_vendors: {
+          ...prev.selected_vendors,
+          [serviceType]: { id: product.id, name, vendor_name: vendorName, thumbnail: product.thumbnail_url, price: product.price },
+        },
+        services: prev.services.map(s =>
+          s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s
+        ),
+      };
     });
   }, []);
 
@@ -3259,7 +3318,10 @@ export default function AIAssistantV2Client({ lang }) {
                   if (msg.type === "block") {
                     return (
                       <div key={msg.id} className="v2-msg">
-                        <Block block={msg.block} lang={lang} onOpen={openPopup} />
+                        <Block
+                          block={msg.block} lang={lang} onOpen={openPopup}
+                          onAddToPlan={inPlanMode ? addToPlanFromChat : null}
+                        />
                       </div>
                     );
                   }
