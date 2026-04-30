@@ -245,7 +245,8 @@ export default function EventDetailPage() {
     );
   }
 
-  const data   = session.event_data || {};
+  let data = {};
+  try { data = typeof session.event_data === "string" ? JSON.parse(session.event_data) : session.event_data || {}; } catch {}
   const accent = EVENT_COLORS[session.event_type] || "#e11d5c";
   const services = data.services || [];
   const selectedVendors = data.selected_vendors || {};
