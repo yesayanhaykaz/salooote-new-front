@@ -363,84 +363,84 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
     <div className="bg-white">
 
       {/* ── Hero ── */}
-      <section className={`border-b border-surface-200 relative overflow-hidden ${categoryInfo?.image_url ? "" : "bg-gradient-to-br from-surface-50 to-white"}`}>
-        {/* Background image when available */}
-        {categoryInfo?.image_url && (
-          <>
-            <Image
-              src={categoryInfo.image_url}
-              alt={categoryName}
-              fill
-              className="object-cover"
-              priority
-            />
-            <div className="absolute inset-0 bg-black/55" />
-          </>
-        )}
-        <div className={`relative max-w-container mx-auto px-6 md:px-8 py-12 flex items-center justify-between gap-8 flex-wrap ${categoryInfo?.image_url ? "text-white" : ""}`}>
-          <div>
-            <nav
-              aria-label="Breadcrumb"
-              className={`flex items-center gap-1.5 text-xs mb-4 flex-wrap leading-relaxed ${categoryInfo?.image_url ? "text-white/70" : "text-surface-500"}`}
-            >
-              <Link
-                href={`/${lang}`}
-                className={`no-underline transition-colors whitespace-nowrap ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-500"}`}
-              >
-                {t.home}
-              </Link>
-              <ChevronRight size={12} className="flex-shrink-0 opacity-60" />
-              <Link
-                href={`/${lang}/products`}
-                className={`no-underline transition-colors whitespace-nowrap ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-500"}`}
-              >
-                {t.allCategories || "Categories"}
-              </Link>
-              <ChevronRight size={12} className="flex-shrink-0 opacity-60" />
-              {parentSlug && (
-                <>
-                  <Link
-                    href={`/${lang}/category/${parentSlug}`}
-                    className={`no-underline transition-colors whitespace-normal break-words ${categoryInfo?.image_url ? "hover:text-white text-white/70" : "hover:text-brand-600 text-surface-500"}`}
-                  >
-                    {parentName}
-                  </Link>
-                  <ChevronRight size={12} className="flex-shrink-0 opacity-60" />
-                </>
+      <section className="border-b border-surface-200 bg-white overflow-hidden">
+        <div className="max-w-container mx-auto px-6 md:px-8">
+          <div className="flex flex-col md:flex-row items-stretch gap-0 md:gap-8 py-8 md:py-10">
+
+            {/* LEFT — image */}
+            <div className="w-full md:w-[42%] flex-shrink-0 rounded-2xl overflow-hidden relative min-h-[200px] md:min-h-[260px]">
+              {categoryInfo?.image_url ? (
+                <Image
+                  src={categoryInfo.image_url}
+                  alt={categoryName}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              ) : (
+                <div className="w-full h-full min-h-[200px] md:min-h-[260px] bg-gradient-to-br from-brand-50 via-rose-50 to-surface-100 flex items-center justify-center">
+                  {categoryInfo?.emoji
+                    ? <span className="text-7xl opacity-40">{categoryInfo.emoji}</span>
+                    : <div className="w-20 h-20 rounded-full bg-brand-100 flex items-center justify-center"><Search size={32} className="text-brand-300" /></div>
+                  }
+                </div>
               )}
-              <span className={`whitespace-normal break-words ${categoryInfo?.image_url ? "text-white font-medium" : "text-surface-800 font-semibold"}`}>
-                {categoryName}
-              </span>
-            </nav>
-            <div className="flex items-center gap-3 mb-2">
-              {categoryInfo?.emoji && <span className="text-4xl">{categoryInfo.emoji}</span>}
-              <h1 className={`text-4xl md:text-5xl font-bold ${categoryInfo?.image_url ? "text-white" : "text-surface-900"}`}>{categoryName}</h1>
+              {/* subtle overlay so text below it stays readable */}
+              {categoryInfo?.image_url && <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />}
             </div>
-            {categoryInfo?.description && (
-              <p className={`text-base leading-relaxed max-w-[500px] mt-2 mb-5 ${categoryInfo?.image_url ? "text-white/80" : "text-surface-500"}`}>
-                {categoryInfo.description}
-              </p>
-            )}
-            <div className={`flex items-center gap-3 mt-4 ${categoryInfo?.image_url ? "text-white/70" : ""}`}>
-              <span className="text-sm font-medium">{total} {t.productsAvailable}</span>
-              {vendors.length > 0 && (
-                <span className="text-sm opacity-70">· {vendors.length} {t.vendorsCount}</span>
+
+            {/* RIGHT — text + search */}
+            <div className="flex-1 flex flex-col justify-center pt-6 md:pt-0">
+              {/* Breadcrumb */}
+              <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-surface-400 mb-4 flex-wrap leading-relaxed">
+                <Link href={`/${lang}`} className="no-underline hover:text-brand-600 text-surface-400 transition-colors whitespace-nowrap">{t.home}</Link>
+                <ChevronRight size={12} className="flex-shrink-0 opacity-50" />
+                <Link href={`/${lang}/products`} className="no-underline hover:text-brand-600 text-surface-400 transition-colors whitespace-nowrap">{t.allCategories || "Categories"}</Link>
+                <ChevronRight size={12} className="flex-shrink-0 opacity-50" />
+                {parentSlug && (
+                  <>
+                    <Link href={`/${lang}/category/${parentSlug}`} className="no-underline hover:text-brand-600 text-surface-400 transition-colors break-words">{parentName}</Link>
+                    <ChevronRight size={12} className="flex-shrink-0 opacity-50" />
+                  </>
+                )}
+                <span className="text-surface-700 font-semibold break-words">{categoryName}</span>
+              </nav>
+
+              {/* Title */}
+              <div className="flex items-center gap-3 mb-2">
+                {categoryInfo?.emoji && <span className="text-3xl">{categoryInfo.emoji}</span>}
+                <h1 className="text-3xl md:text-4xl font-bold text-surface-900 leading-tight">{categoryName}</h1>
+              </div>
+
+              {/* Description */}
+              {categoryInfo?.description && (
+                <p className="text-sm leading-relaxed text-surface-500 mt-2 mb-4 max-w-[480px]">
+                  {categoryInfo.description}
+                </p>
               )}
+
+              {/* Stats */}
+              <div className="flex items-center gap-3 mb-5 text-surface-400">
+                <span className="text-sm font-medium text-surface-600">{total} {t.productsAvailable}</span>
+                {vendors.length > 0 && (
+                  <span className="text-sm">· {vendors.length} {t.vendorsCount}</span>
+                )}
+              </div>
+
+              {/* Search */}
+              <div className="relative max-w-[440px]">
+                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder={t.searchIn(categoryName)}
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && fetchProducts()}
+                  className="w-full pl-11 pr-4 py-3 rounded-xl border border-surface-200 text-sm text-surface-900 bg-white outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all placeholder:text-surface-400"
+                />
+              </div>
             </div>
-          </div>
-          {/* Search bar */}
-          <div className="w-full md:w-[360px]">
-            <div className="relative">
-              <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-surface-400" />
-              <input
-                type="text"
-                placeholder={t.searchIn(categoryName)}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && fetchProducts()}
-                className="w-full pl-11 pr-4 py-3 rounded-xl border border-surface-200 text-sm bg-white outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all"
-              />
-            </div>
+
           </div>
         </div>
       </section>
@@ -582,22 +582,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
                   ))}
                 </div>
 
-                {/* Tags (from DB) */}
-                {filters.tags.length > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold text-surface-800 mb-3">{t.tags}</p>
-                    {filters.tags.map(tag => (
-                      <CheckboxFilter
-                        key={tag}
-                        label={tag}
-                        checked={selectedTags.includes(tag)}
-                        onChange={() => toggleTag(tag)}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                {filters.tags.length === 0 && !loading && (
+                {filters.tags.length === 0 && !loading && priceRanges.length <= 1 && (
                   <p className="text-xs text-surface-400 italic">{t.noFilters}</p>
                 )}
               </div>
