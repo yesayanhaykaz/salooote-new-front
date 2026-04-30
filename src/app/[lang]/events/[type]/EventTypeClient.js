@@ -450,69 +450,9 @@ const corporateLinks = {
 
 
 
-const corporateLinks = {
-  venue: {
-    hy: "վայրը",
-    href: "/hy/categories/venues",
-  },
-  catering: {
-    hy: "սննդի մատուցումը",
-    href: "/hy/categories/catering",
-  },
-  music: {
-    hy: "երաժշտությունը",
-    href: "/hy/categories/music",
-  },
-  entertainment: {
-    hy: "ժամանցային ծրագրերը",
-    href: "/hy/categories/entertainment",
-  },
-  photography: {
-    hy: "լուսանկարահանումը",
-    href: "/hy/categories/photography",
-  },
-  decorations: {
-    hy: "ձևավորումը",
-    href: "/hy/categories/decorations",
-  },
-};
 
 
 
-
-
-const baptismLinks = {
-  balloons: {
-    hy: "փուչիկներ",
-    en: "balloons",
-    ru: "шарами",
-    href: "/categories/balloons",
-  },
-  decorations: {
-    hy: "ձևավորումներով",
-    en: "decorations",
-    ru: "оформления",
-    href: "/categories/decorations",
-  },
-  gifts: {
-    hy: "նվերներով",
-    en: "gifts",
-    ru: "подарков",
-    href: "/categories/gifts",
-  },
-  cake: {
-    hy: "տորթով",
-    en: "cake",
-    ru: "торта",
-    href: "/categories/cakes",
-  },
-  photography: {
-    hy: "լուսանկարահանում",
-    en: "photography",
-    ru: "фотосъёмкой",
-    href: "/categories/photography",
-  },
-};
 
 
 const baptismLinks = {
@@ -662,49 +602,43 @@ const EVENT_META = {
     desc: "Create an unforgettable romantic moment with the help of our vendors.",
     descHy: "Ռոմանտիկ միջոցառումներ և սիրո խոստովանություններ",
     descRu: "Создайте незабываемый романтический момент с помощью специалистов на Salooote.",
-about: {
-  hy: `Ի՞նչը կարող է լինել ավելի լուսավոր ու հուզիչ, քան նոր կյանքի առաջին կարևոր օրվա նշումը։
+    about: {
+      hy: `Ի՞նչը կարող է լինել ավելի հուզիչ ու անմոռանալի, քան կատարյալ ռոմանտիկ պահը, որը կմնա Ձեր սրտում ամբողջ կյանքում։
 
-Մկրտությունը պարզապես արարողություն չէ․ դա օրհնության, հավատքի և նոր սկիզբի խորհրդանիշ է։ Այս օրը միավորում է ընտանիքին, հարազատներին ու մտերիմներին՝ կիսելու փոքրիկի կյանքի կարևորագույն պահերից մեկը։
+Ռոմանտիկ ձևավորումն ու սիրո խոստովանությունը պահանջում են ուշադիր պլանավորում։ Ամեն մանրուք պատմում է Ձեր պատմությունը՝ գեղեցիկ {{flowers}}, նրբագեղ {{decorations}} և մթնոլորտ, որտեղ ժամանակը կարծես կանգ է առնում։
 
-Յուրաքանչյուր մկրտություն առանձնահատուկ է իր ջերմությամբ ու հոգևոր խորությամբ։ Եկեղեցական արարողությունը լի է խորհրդանշական պահերով, իսկ դրանից հետո օրը հաճախ շարունակվում է ընտանեկան ջերմ հավաքույթով կամ փոքրիկ տոնակատարությամբ։
+Ճիշտ ընտրված {{music}}-ը ստեղծում է կատարյալ տրամադրություն, իսկ պրոֆեսիոնալ {{photography}}-ը հավերժացնում է Ձեր կյանքի ամենակարևոր պահը։
 
-Մկրտության օրը կարելի է ավելի գեղեցիկ դարձնել նուրբ {{balloons}}-ով, թեմատիկ {{decorations}}-ով, փոքրիկի համար ընտրված {{gifts}}-ով և, իհարկե, հատուկ պատրաստված {{cake}}-ով։
+Կախված Ձեր ցանկությունից՝ դա կարող է լինել մոմավառ անակնկալ, երազային բացօթյա ձևավորում կամ ջերմ ինտիմ երեկո՝ ուղեկցված հատուկ {{gifts}}-ով և կատարյալ մթնոլորտով։
 
-Այս օրը հաճախ ուղեկցվում է գեղեցիկ ավանդույթներով՝ նվերներ փոքրիկին, բարեմաղթանքներ, ընտանեկան {{photography}} և ուրախ պահեր, որոնք դառնում են ընտանեկան պատմության մի մասը։
+Salooote-ում կարող եք գտնել ռոմանտիկ ձևավորման մասնագետներ, ծաղկաբույծներ, ֆոտոգրաֆներ և ամեն ինչ, ինչ անհրաժեշտ է անմոռանալի պահ ստեղծելու համար։
 
-Եթե ցանկանում եք, որ այս օրը անցնի խաղաղ և կազմակերպված, կարևոր է նախապես մտածել բոլոր մանրուքների մասին՝ եկեղեցու ընտրությունը, ժամանակացույցը, հյուրերի ցանկը և հետագա տոնակատարությունը։
+Պարզապես պատկերացրեք Ձեր իդեալական ռոմանտիկ պահը — իսկ մնացածը կարելի է վստահել ճիշտ մասնագետներին։`,
 
-Պարզապես վստահեք այդ օրվա գեղեցկությանը — իսկ մնացածը կարելի է հեշտությամբ կազմակերպել Salooote-ի միջոցով։`,
+      en: `What could be more emotional and unforgettable than a perfectly planned romantic moment that will stay in your heart forever?
 
-  en: `What could be brighter and more emotional than celebrating one of the first important days of a new life?
+Romantic setups and proposals deserve careful planning. Every detail tells your story — beautiful {{flowers}}, delicate {{decorations}}, and an atmosphere where time seems to stand still.
 
-A baptism is not just a ceremony; it is a symbol of blessing, faith, and a new beginning. This day brings family and loved ones together to share one of the child’s most meaningful moments.
+The right {{music}} sets the perfect mood, and professional {{photography}} captures the most important moment of your life forever.
 
-Every baptism is special with its warmth and spiritual meaning. After the church ceremony, the day often continues with a family gathering or a small celebration.
+Whether it is a candlelit surprise, a dreamy outdoor setting, or a warm intimate evening — thoughtful {{gifts}} and the perfect atmosphere make all the difference.
 
-You can make the baptism day even more beautiful with gentle {{balloons}}, themed {{decorations}}, thoughtful {{gifts}} for the child, and, of course, a custom {{cake}}.
+On Salooote, you can find romantic setup specialists, florists, photographers, and everything you need to create an unforgettable moment.
 
-This day is often filled with beautiful traditions: gifts for the child, warm wishes, family {{photography}}, and joyful moments that become part of your family story.
+Simply imagine your ideal romantic moment — and let the right professionals make it happen.`,
 
-To make the day peaceful and well-organized, it is important to plan the details in advance: the church, schedule, guest list, and celebration after the ceremony.
+      ru: `Что может быть трогательнее и незабываемее, чем идеально спланированный романтический момент, который останется в сердце на всю жизнь?
 
-Simply trust the beauty of this day — and organize the rest easily with Salooote.`,
+Романтические оформления и предложения руки и сердца заслуживают тщательной подготовки. Каждая деталь рассказывает вашу историю — красивые {{flowers}}, нежное {{decorations}}, атмосфера, где время словно останавливается.
 
-  ru: `Что может быть светлее и трогательнее, чем один из первых важных дней в жизни ребёнка?
+Правильно выбранная {{music}} создаёт идеальное настроение, а профессиональная {{photography}} сохранит самый важный момент вашей жизни навсегда.
 
-Крещение — это не просто церемония, а символ благословения, веры и нового начала. В этот день семья и близкие собираются вместе, чтобы разделить один из самых значимых моментов в жизни малыша.
+Будь то сюрприз со свечами, романтическое оформление на свежем воздухе или уютный интимный вечер — душевные {{gifts}} и идеальная атмосфера решают всё.
 
-Каждое крещение особенно своей теплотой и духовным смыслом. После церковной церемонии день часто продолжается семейной встречей или небольшим праздником.
+На Salooote вы найдёте специалистов по романтическому оформлению, флористов, фотографов и всё необходимое для создания незабываемого момента.
 
-День крещения можно сделать ещё красивее с помощью нежных {{balloons}}, тематического {{decorations}}, памятных {{gifts}} для ребёнка и, конечно, особенного {{cake}}.
-
-Этот день часто сопровождается красивыми традициями: подарками малышу, тёплыми пожеланиями, семейной {{photography}} и радостными моментами, которые становятся частью семейной истории.
-
-Чтобы день прошёл спокойно и организованно, важно заранее продумать детали: церковь, расписание, список гостей и праздник после церемонии.
-
-Просто доверьтесь красоте этого дня — а остальное легко организовать с Salooote.`,
-},
+Просто представьте свой идеальный романтический момент — а остальное доверьте профессионалам.`,
+    },
     icon: Heart,
     image: "/images/flowers-roses.jpg",
     accent: "from-rose-600 to-red-500",
@@ -726,29 +660,50 @@ Simply trust the beauty of this day — and organize the rest easily with Salooo
     descHy: "Կյանքի ամենակարևոր արարողություններից մեկը դարձրե՛ք անմոռանալի՝ Salooote-ի մատակարարների օգնությամբ։",
     descRu: "Сделайте одно из самых важных таинств жизни незабываемым с помощью специалистов Salooote.",
     about: {
+      hy: `Ի՞նչը կարող է լինել ավելի լուսավոր ու հուզիչ, քան նոր կյանքի առաջին կարևոր օրվա նշումը։
 
-  hy: `Ի՞նչը կարող է ավելի լավ միավորել թիմին, քան լավ կազմակերպված կորպորատիվ միջոցառումը։
+Մկրտությունը պարզապես արարողություն չէ․ դա օրհնության, հավատքի և նոր սկիզբի խորհրդանիշ է։ Այս օրը միավորում է ընտանիքին, հարազատներին ու մտերիմներին՝ կիսելու փոքրիկի կյանքի կարևորագույն պահերից մեկը։
 
-Կորպորատիվ տոները պարզապես հանգիստ կամ ժամանց չեն․ դրանք թիմային մշակույթի կարևոր մասն են։ Դրանք հնարավորություն են ստեղծում աշխատակիցներին դուրս գալ առօրյա աշխատանքային ռեժիմից, շփվել ավելի ազատ միջավայրում և ձևավորել ավելի ամուր կապեր միմյանց հետ։
+Յուրաքանչյուր մկրտություն առանձնահատուկ է իր ջերմությամբ ու հոգևոր խորությամբ։ Եկեղեցական արարողությունը լի է խորհրդանշական պահերով, իսկ դրանից հետո օրը հաճախ շարունակվում է ընտանեկան ջերմ հավաքույթով կամ փոքրիկ տոնակատարությամբ։
 
-Անկախ նրանից՝ կազմակերպում եք տարեվերջյան միջոցառում, թիմբիլդինգ, ընկերության տարեդարձ կամ նոր նախագծի մեկնարկ, կարևոր է ստեղծել այնպիսի մթնոլորտ, որը կլինի միաժամանակ հաճելի, մոտիվացնող և հիշվող։
+Մկրտության օրը կարելի է ավելի գեղեցիկ դարձնել նուրբ {{balloons}}-ով, թեմատիկ {{decorations}}-ով, փոքրիկի համար ընտրված {{gifts}}-ով և, իհարկե, հատուկ պատրաստված {{cake}}-ով։
 
-Կորպորատիվ միջոցառումները կարող են լինել տարբեր ձևաչափերով՝ պաշտոնական ընթրիքներից մինչև ակտիվ թիմային խաղեր, բացօթյա միջոցառումներ կամ թեմատիկ երեկույթներ։ Ճիշտ ընտրված կոնցեպտը կարող է բարձրացնել թիմի տրամադրությունը, խթանել համագործակցությունը և ստեղծել դրական էներգիա ամբողջ կազմակերպությունում։
+Այս օրը հաճախ ուղեկցվում է գեղեցիկ ավանդույթներով՝ նվերներ փոքրիկին, բարեմաղթանքներ, ընտանեկան {{photography}} և ուրախ պահեր, որոնք դառնում են ընտանեկան պատմության մի մասը։
 
-Այսպիսի միջոցառումների ընթացքում կարևոր են մանրուքները՝ ճիշտ ընտրված {{venue}}, որակյալ {{catering}}, լավ {{music}}, հետաքրքիր {{entertainment}} և պրոֆեսիոնալ {{photography}}։ Երբ ամեն ինչ մտածված է, արդյունքը զգացվում է ոչ միայն այդ օրը, այլ նաև աշխատանքի արդյունավետության մեջ։
+Եթե ցանկանում եք, որ այս օրը անցնի խաղաղ և կազմակերպված, կարևոր է նախապես մտածել բոլոր մանրուքների մասին՝ եկեղեցու ընտրությունը, ժամանակացույցը, հյուրերի ցանկը և հետագա տոնակատարությունը։
 
-Կորպորատիվ տոները նաև հիանալի հնարավորություն են գնահատելու թիմի աշխատանքը, նշելու ձեռքբերումները և ներշնչելու նոր նպատակների հասնելու համար։
+Պարզապես վստահեք այդ օրվա գեղեցկությանը — իսկ մնացածը կարելի է հեշտությամբ կազմակերպել Salooote-ի միջոցով։`,
 
-Եթե ցանկանում եք, որ միջոցառումը լինի հաջողված և օգտակար, կարևոր է ճիշտ պլանավորումը։ Պետք է հաշվի առնել թիմի չափը, նպատակները, ձևաչափը և բյուջեն։
+      en: `What could be brighter and more emotional than celebrating one of the first important days of a new life?
 
-Salooote-ում կարող եք գտնել կորպորատիվ միջոցառումների կազմակերպման բոլոր ծառայությունները մեկ հարթակում՝ սկսած {{catering}}-ից և {{decorations}}-ից մինչև {{entertainment}} և {{photography}}։
+A baptism is not just a ceremony; it is a symbol of blessing, faith, and a new beginning. This day brings family and loved ones together to share one of the child's most meaningful moments.
 
-Պարզապես սահմանեք ձեր նպատակը — իսկ մնացածը կարելի է վստահել ճիշտ կազմակերպմանը։`,
-      en: "A baptism is one of the most important and memorable moments in your family's life.\n\nOn Salooote, you can find experienced professionals who will help make this special day as beautiful as possible.\n\nChoose a decoration style, order a cake, gifts, or any other services you need.",
-      ru: "Крещение — один из самых важных и памятных моментов в жизни вашей семьи.\n\nНа Salooote вы найдёте опытных специалистов, которые помогут сделать этот особый день максимально красивым.\n\nВыберите стиль оформления, закажите торт, подарки или другие необходимые услуги.",
+Every baptism is special with its warmth and spiritual meaning. After the church ceremony, the day often continues with a family gathering or a small celebration.
+
+You can make the baptism day even more beautiful with gentle {{balloons}}, themed {{decorations}}, thoughtful {{gifts}} for the child, and, of course, a custom {{cake}}.
+
+This day is often filled with beautiful traditions: gifts for the child, warm wishes, family {{photography}}, and joyful moments that become part of your family story.
+
+To make the day peaceful and well-organized, it is important to plan the details in advance: the church, schedule, guest list, and celebration after the ceremony.
+
+Simply trust the beauty of this day — and organize the rest easily with Salooote.`,
+
+      ru: `Что может быть светлее и трогательнее, чем один из первых важных дней в жизни ребёнка?
+
+Крещение — это не просто церемония, а символ благословения, веры и нового начала. В этот день семья и близкие собираются вместе, чтобы разделить один из самых значимых моментов в жизни малыша.
+
+Каждое крещение особенно своей теплотой и духовным смыслом. После церковной церемонии день часто продолжается семейной встречей или небольшим праздником.
+
+День крещения можно сделать ещё красивее с помощью нежных {{balloons}}, тематического {{decorations}}, памятных {{gifts}} для ребёнка и, конечно, особенного {{cake}}.
+
+Этот день часто сопровождается красивыми традициями: подарками малышу, тёплыми пожеланиями, семейной {{photography}} и радостными моментами, которые становятся частью семейной истории.
+
+Чтобы день прошёл спокойно и организованно, важно заранее продумать детали: церковь, расписание, список гостей и праздник после церемонии.
+
+Просто доверьтесь красоте этого дня — а остальное легко организовать с Salooote.`,
     },
     icon: Baby,
-    image: "/images/cupcakes.jpg",
+    image: "/images/wedding-ceremony.jpg",
     accent: "from-sky-500 to-indigo-500",
     keywords: ["baptism", "christening", "baby", "մկրտություն", "крещение"],
     suggestedCats: ["balloons", "cakes-desserts", "gifts"],
@@ -892,7 +847,7 @@ Simply imagine your ideal New Year — and let the rest be handled by the right 
 Просто представьте свой идеальный праздник — а остальное доверьте профессионалам։`,
 },
     icon: TreePine,
-    image: "/images/wedding-dance.jpg",
+    image: "/images/catering-buffet.jpg",
     accent: "from-emerald-600 to-rose-500",
     keywords: ["christmas", "new year", "ամանոր", "Новый год"],
     suggestedCats: ["gifts", "cakes-desserts", "balloons"],
@@ -1379,6 +1334,48 @@ const SUGGESTED_VENDORS = {
   "kids-party":         ["Cakes & Pastry", "Balloons & Decor", "Catering", "Animators"],
 };
 
+const ABOUT_LINKS = {
+  birthday:    birthdayLinks,
+  wedding:     weddingLinks,
+  baptism:     baptismLinks,
+  "baby-tooth": baptismLinks,
+  christmas:   newYearLinks,
+  corporate:   corporateLinks,
+  engagement:  engagementLinks,
+  anniversary: anniversaryLinks,
+  "kids-party": kidsLinks,
+  romantic:    engagementLinks,
+};
+
+function renderAboutText(text, linksMap, lang) {
+  if (!linksMap || !text || !text.includes("{{")) return text;
+  const parts = [];
+  let last = 0;
+  const re = /\{\{(\w+)\}\}/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) parts.push(text.slice(last, m.index));
+    const key = m[1];
+    const def = linksMap[key];
+    if (def) {
+      let href = def.href || "#";
+      href = href.replace(/^\/categories\//, `/${lang}/category/`);
+      if (href.startsWith("/events/")) href = `/${lang}${href}`;
+      const label = def[lang] || def.en || key;
+      parts.push(
+        <Link key={`${key}-${m.index}`} href={href} className="text-brand-600 font-medium hover:underline underline-offset-2 transition-colors">
+          {label}
+        </Link>
+      );
+    } else {
+      parts.push(m[0]);
+    }
+    last = re.lastIndex;
+  }
+  if (last < text.length) parts.push(text.slice(last));
+  return parts.length > 0 ? parts : text;
+}
+
 /* ────────────────────────────────────────────────────────────────────
    Component
 ──────────────────────────────────────────────────────────────────── */
@@ -1518,7 +1515,7 @@ export default function EventTypeClient({ lang, type, dict }) {
                   {t.heroCtaVendors} <ArrowRight size={16} />
                 </Link>
                 <Link
-                  href={`/${lang}/planner`}
+                  href={`/${lang}?sali=${type}`}
                   className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/30 text-white hover:bg-white/25 px-5 py-3 rounded-full font-semibold text-sm transition-all no-underline"
                 >
                   <Wand2 size={16} /> {t.heroCtaAI}
@@ -1604,9 +1601,9 @@ export default function EventTypeClient({ lang, type, dict }) {
                   <h2 className="text-2xl md:text-[28px] font-bold text-surface-900 tracking-tight">{t.aboutTitle}</h2>
                 </div>
                 <div className="bg-surface-50 rounded-3xl border border-surface-100 p-6 md:p-8">
-                  {aboutText.split("\n\n").map((para, i) => (
-                    <p key={i} className={`text-surface-700 leading-[1.75] text-[15px] md:text-base${i < aboutText.split("\n\n").length - 1 ? " mb-4" : ""}`}>
-                      {para}
+                  {aboutText.split("\n\n").map((para, i, arr) => (
+                    <p key={i} className={`text-surface-700 leading-[1.75] text-[15px] md:text-base${i < arr.length - 1 ? " mb-4" : ""}`}>
+                      {renderAboutText(para, ABOUT_LINKS[type], lang)}
                     </p>
                   ))}
                 </div>
@@ -1616,7 +1613,7 @@ export default function EventTypeClient({ lang, type, dict }) {
             {/* AI CTA */}
             <section className="mb-14">
               <Link
-                href={`/${lang}/planner`}
+                href={`/${lang}?sali=${type}`}
                 className="block no-underline group"
               >
                 <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-rose-600 via-pink-600 to-fuchsia-600 p-7 md:p-9 text-white">
@@ -1798,7 +1795,7 @@ export default function EventTypeClient({ lang, type, dict }) {
                 {/* AI helper inside sidebar */}
                 <div className="mt-5 pt-5 border-t border-surface-100">
                   <Link
-                    href={`/${lang}/planner`}
+                    href={`/${lang}?sali=${type}`}
                     className="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-rose-50 to-pink-50 hover:from-rose-100 hover:to-pink-100 border border-rose-100 transition-colors no-underline"
                   >
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white flex-shrink-0">

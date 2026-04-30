@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import EventPlanPanel, { BulkInquiryModal, applyActions, EVENT_TEMPLATES, INITIAL_EVENT_STATE } from "@/components/PlanPanel";
 
@@ -1593,9 +1593,23 @@ function ChatInput({ lang, input, setInput, onSend, typing, inputRef }) {
   );
 }
 
+const SALI_EVENT_LABELS = {
+  birthday:    { en: "birthday", hy: "ծննդյան տոն", ru: "день рождения" },
+  wedding:     { en: "wedding", hy: "հարսանիք", ru: "свадьбу" },
+  baptism:     { en: "baptism", hy: "մկրտություն", ru: "крещение" },
+  engagement:  { en: "engagement", hy: "նշանդրեք", ru: "помолвку" },
+  anniversary: { en: "anniversary", hy: "ամյակ", ru: "юбилей" },
+  corporate:   { en: "corporate event", hy: "կորպորատիվ միջոցառում", ru: "корпоратив" },
+  "kids-party": { en: "kids party", hy: "մանկական տոն", ru: "детский праздник" },
+  "baby-tooth": { en: "first tooth party", hy: "ատամհատիկ", ru: "праздник первого зубика" },
+  christmas:   { en: "New Year celebration", hy: "Ամանոր", ru: "Новый год" },
+  romantic:    { en: "romantic setup", hy: "ռոմանտիկ ձևավորում", ru: "романтическое оформление" },
+};
+
 export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
   const pathname = usePathname() || "";
+  const searchParams = useSearchParams();
   const onAIPage = /^\/(en|hy|ru)\/?$/.test(pathname);
   // Pages where Sali IS the page itself — only the planner. The home page
   // shows AI in the hero, but users still expect a launcher to come back to.
@@ -2127,6 +2141,23 @@ export default function AIAssistantV2Client({ lang }) {
       }]);
     }
   }, [input, typing, phase, messages, chatState, lang, revealItems, eventState, plannerSessionId, handleSearchVendors]);
+
+  const saliTriggerFiredRef = useRef(false);
+  useEffect(() => {
+    if (saliTriggerFiredRef.current) return;
+    const saliType = searchParams?.get("sali");
+    if (!saliType || !hydrated) return;
+    saliTriggerFiredRef.current = true;
+    const labels = SALI_EVENT_LABELS[saliType];
+    if (!labels) return;
+    const label = labels[lang] || labels.en;
+    const msg = lang === "hy"
+      ? `Ուզում եմ կազմակերպել ${label}!`
+      : lang === "ru"
+      ? `Хочу организовать ${label}!`
+      : `I want to plan a ${label}!`;
+    setTimeout(() => send(msg), 300);
+  }, [searchParams, hydrated, send, lang]);
 
   const handlePlanEvent = useCallback((eventType) => {
     const tpl = EVENT_TEMPLATES[eventType];
