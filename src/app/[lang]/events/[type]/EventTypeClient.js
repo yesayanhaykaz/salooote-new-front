@@ -450,32 +450,6 @@ const corporateLinks = {
 
 
 
-const corporateLinks = {
-  venue: {
-    hy: "վայրը",
-    href: "/hy/categories/venues",
-  },
-  catering: {
-    hy: "սննդի մատուցումը",
-    href: "/hy/categories/catering",
-  },
-  music: {
-    hy: "երաժշտությունը",
-    href: "/hy/categories/music",
-  },
-  entertainment: {
-    hy: "ժամանցային ծրագրերը",
-    href: "/hy/categories/entertainment",
-  },
-  photography: {
-    hy: "լուսանկարահանումը",
-    href: "/hy/categories/photography",
-  },
-  decorations: {
-    hy: "ձևավորումը",
-    href: "/hy/categories/decorations",
-  },
-};
 
 
 
@@ -514,39 +488,6 @@ const baptismLinks = {
   },
 };
 
-
-const baptismLinks = {
-  balloons: {
-    hy: "փուչիկներ",
-    en: "balloons",
-    ru: "шарами",
-    href: "/categories/balloons",
-  },
-  decorations: {
-    hy: "ձևավորումներով",
-    en: "decorations",
-    ru: "оформления",
-    href: "/categories/decorations",
-  },
-  gifts: {
-    hy: "նվերներով",
-    en: "gifts",
-    ru: "подарков",
-    href: "/categories/gifts",
-  },
-  cake: {
-    hy: "տորթով",
-    en: "cake",
-    ru: "торта",
-    href: "/categories/cakes",
-  },
-  photography: {
-    hy: "լուսանկարահանում",
-    en: "photography",
-    ru: "фотосъёмкой",
-    href: "/categories/photography",
-  },
-};
 
 /* ────────────────────────────────────────────────────────────────────
    Event metadata — fully translated, no mixed-script
