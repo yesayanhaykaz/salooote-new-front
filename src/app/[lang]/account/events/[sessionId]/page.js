@@ -213,11 +213,17 @@ export default function EventDetailPage() {
   useEffect(() => {
     if (!sessionId) return;
     plannerAPI.getById(sessionId)
-      .then(res => setSession(res?.data || res))
+      .then(res => {
+        const s = res?.data ?? res;
+        setSession(s && typeof s === "object" && !Array.isArray(s) ? s : null);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
     plannerAPI.getInquiries(sessionId)
-      .then(res => setInquiries(res?.data || res || []))
+      .then(res => {
+        const arr = res?.data ?? res;
+        setInquiries(Array.isArray(arr) ? arr : []);
+      })
       .catch(() => setInquiries([]));
   }, [sessionId]);
 
@@ -256,13 +262,13 @@ export default function EventDetailPage() {
 
   // Build a lookup: vendor_id → inquiry
   const inquiryByVendorId = {};
-  for (const inq of inquiries) {
+  for (const inq of (Array.isArray(inquiries) ? inquiries : [])) {
     if (inq.vendor_id) inquiryByVendorId[inq.vendor_id] = inq;
   }
 
   // Group services by category
   const grouped = {};
-  for (const s of services) {
+  for (const s of (Array.isArray(services) ? services : [])) {
     if (!grouped[s.category]) grouped[s.category] = [];
     grouped[s.category].push(s);
   }
