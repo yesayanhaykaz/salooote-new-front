@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import EventPlanPanel, { BulkInquiryModal, applyActions, EVENT_TEMPLATES, INITIAL_EVENT_STATE } from "@/components/PlanPanel";
 
@@ -1609,7 +1609,6 @@ const SALI_EVENT_LABELS = {
 export default function AIAssistantV2Client({ lang }) {
   const router = useRouter();
   const pathname = usePathname() || "";
-  const searchParams = useSearchParams();
   const onAIPage = /^\/(en|hy|ru)\/?$/.test(pathname);
   // Pages where Sali IS the page itself — only the planner. The home page
   // shows AI in the hero, but users still expect a launcher to come back to.
@@ -2144,9 +2143,9 @@ export default function AIAssistantV2Client({ lang }) {
 
   const saliTriggerFiredRef = useRef(false);
   useEffect(() => {
-    if (saliTriggerFiredRef.current) return;
-    const saliType = searchParams?.get("sali");
-    if (!saliType || !hydrated) return;
+    if (saliTriggerFiredRef.current || !hydrated) return;
+    const saliType = new URLSearchParams(window.location.search).get("sali");
+    if (!saliType) return;
     saliTriggerFiredRef.current = true;
     const labels = SALI_EVENT_LABELS[saliType];
     if (!labels) return;
@@ -2157,7 +2156,7 @@ export default function AIAssistantV2Client({ lang }) {
       ? `Хочу организовать ${label}!`
       : `I want to plan a ${label}!`;
     setTimeout(() => send(msg), 300);
-  }, [searchParams, hydrated, send, lang]);
+  }, [hydrated, send, lang]);
 
   const handlePlanEvent = useCallback((eventType) => {
     const tpl = EVENT_TEMPLATES[eventType];
