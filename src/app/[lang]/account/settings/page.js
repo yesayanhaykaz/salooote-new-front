@@ -41,29 +41,34 @@ const T = {
     passwordTooShort: "New password must be at least 8 characters.",
     passwordChanged: "Password changed successfully.",
   },
-  hy: {
-    title: "Կարգ.",
-    profile: "Պրոֆիլ",
-    password: "Գաղ.",
-    profileInfo: "Պրոֆիլի տվ.",
-    firstName: "Անուն",
-    lastName: "Ազգ.",
-    phone: "Հեռ.",
-    email: "Էլ.",
-    emailNote: "Էլ.հասցեն փոփոխել հնարավոր չէ։",
-    saveChanges: "Պահ.",
-    saving: "Պահ.…",
-    profileSaved: "Պրոֆիլը պահ.։",
-    changePassword: "Փոխ. գաղ.",
-    currentPassword: "Ընթ. գաղ.",
-    newPassword: "Նոր գաղ.",
-    newPasswordHint: "Մ. 8 նիշ",
-    confirmPassword: "Հաստ. Գաղ.",
-    changePasswordBtn: "Փոխ. Գաղ.",
-    passwordMismatch: "Գաղ. չеն հ.։",
-    passwordTooShort: "Նոր գաղ. 8+ նիշ.",
-    passwordChanged: "Գաղ. փոխ.։",
-  },
+
+
+
+hy: {
+  title: "Կարգավորումներ",
+  profile: "Պրոֆիլ",
+  password: "Գաղտնաբառ",
+  profileInfo: "Պրոֆիլի տվյալներ",
+  firstName: "Անուն",
+  lastName: "Ազգանուն",
+  phone: "Հեռախոս",
+  email: "Էլ․ փոստ",
+  emailNote: "Էլ․ փոստի հասցեն հնարավոր չէ փոփոխել։",
+  saveChanges: "Պահպանել փոփոխությունները",
+  saving: "Պահպանվում է…",
+  profileSaved: "Պրոֆիլը հաջողությամբ պահպանվեց։",
+  changePassword: "Փոխել գաղտնաբառը",
+  currentPassword: "Ընթացիկ գաղտնաբառ",
+  newPassword: "Նոր գաղտնաբառ",
+  newPasswordHint: "Առնվազն 8 նիշ",
+  confirmPassword: "Հաստատել գաղտնաբառը",
+  changePasswordBtn: "Փոխել գաղտնաբառը",
+  passwordMismatch: "Գաղտնաբառերը չեն համընկնում։",
+  passwordTooShort: "Նոր գաղտնաբառը պետք է լինի առնվազն 8 նիշ։",
+  passwordChanged: "Գաղտնաբառը հաջողությամբ փոխվեց։",
+},
+
+
   ru: {
     title: "Настройки",
     profile: "Профиль",
@@ -87,6 +92,7 @@ const T = {
     passwordTooShort: "Минимум 8 символов.",
     passwordChanged: "Пароль изменён.",
   },
+
 };
 
 export default function AccountSettingsPage() {

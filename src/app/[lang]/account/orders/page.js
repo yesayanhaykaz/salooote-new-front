@@ -29,7 +29,7 @@ const T = {
     emptyFiltered: "Այս կարգավիճակով պատվերներ չկան",
     showItems: (c) => `Ցուցադրել ${c} ապրանք`,
     hideItems: "Թաքցնել",
-    qty: "Քան.",
+    qty: "Քանակ",
     delivery: "Առաքում",
     address: "Հասցե",
     vendor: "Վաճառող",

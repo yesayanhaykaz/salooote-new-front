@@ -30,7 +30,7 @@ const T = {
     thisWeek: "Այս շաբաթ",
     empty: "Բոլորը կարդացված է!",
     emptyDesc: "Ծանուցումներ չկան",
-    tabs: { all: "Բոլոր", unread: "Չկարդացված", messages: "Հաղ.", bookings: "Պատ.", reviews: "Կարծ.", system: "Համակ." },
+    tabs: { all: "Բոլոր", unread: "Չկարդացված", messages: "Հաղորդագրություններ", bookings: "Ամրագրում", reviews: "Կարծիքներ", system: "Համակարգ" },
   },
   ru: {
     title: "Уведомления",
