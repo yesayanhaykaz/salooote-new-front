@@ -172,7 +172,7 @@ const T = {
   /* ── New centered hero (vibrant) ─────────────── */
   aiBadge: {
     en: "New — AI Planner is live in Armenian, Russian & English",
-    hy: "Նորույթ — AI կազմակերպիչը հասանելի է հայերեն, ռուսերեն և անգլերեն",
+    hy: "Ինչ լեզվով էլ խոսես, մեր AI կազմակերպիիչը քեզ կհասկանա",
     ru: "Новинка — AI-планировщик доступен на армянском, русском и английском",
   },
   heroPart1: {
@@ -192,12 +192,12 @@ const T = {
   },
   heroSubtitle: {
     en: "Armenia's most beautiful celebrations start here. Cakes, flowers, venues, photographers — all in one place, with an AI that plans alongside you.",
-    hy: "Ինչ լեզվով էլ խոսես, մեր AI կազմակերպիիչը քեզ կհասկանա",
+    hy: "Ամենագեղեցիկ տոները սկսվում են այստեղ․ Մեր AI օգնականը կգտնի քեզ համար տորթեր, ծաղիկներ, փուչիկներ ու ինչ կկամենաս՝ մեկ հարթակում:",
     ru: "Самые красивые торжества Армении начинаются здесь. Торты, цветы, площадки, фотографы — всё в одном месте, с AI-помощником рядом.",
   },
   heroPlaceholder: {
     en: "What are you celebrating?",
-    hy: "Ի՞նչ եք տոնում",
+    hy: "Ի՞նչ եք նշում",
     ru: "Что вы празднуете?",
   },
   askAI: { en: "Ask AI", hy: "Հարցնել AI", ru: "Спросить AI" },
@@ -234,7 +234,7 @@ const T = {
 
   trust: {
     en: ["850+ verified vendors", "4.9 from 6,400+ reviews", "15K+ events planned"],
-    hy: ["850+ հաստատված մատակարար", "4.9 6,400+ կարծիքներից", "15K+ պլանավորված միջոցառում"],
+    hy: ["850+ հաստատված գործընկեր", "4.9 6,400+ կարծիքներից", "15K+ պլանավորված միջոցառում"],
     ru: ["850+ проверенных поставщиков", "4.9 из 6,400+ отзывов", "15K+ спланированных событий"],
   },
 
@@ -248,7 +248,7 @@ const T = {
   momentsEyebrow:   { en: "Browse moments", hy: "Ընտրեք", ru: "Просмотрите моменты" },
   momentsHeadline: {
     en: "Pick the moment. We'll bring it to life.",
-    hy: "Ընտրեք պահը։ Մենք կյանքի կոչենք։",
+    hy: "Պատմիր քո պատկերացումները, մենք կյանքի կկոչենք։",
     ru: "Выберите момент. Мы воплотим его в жизнь.",
   },
   momentsAllEvents: { en: "All events", hy: "Բոլորը", ru: "Все события" },
