@@ -348,6 +348,13 @@ function imgSrc(url) {
 }
 const fmt = (p) => { const n = parseFloat(p); return isNaN(n) ? "" : n.toLocaleString() + " ֏"; };
 
+// Fixes Armenian token-split artifacts like "Ո. րն" → "Որն" that can appear
+// in LLM output when an uppercase letter gets separated from the rest of the word.
+function fixArmenianText(text) {
+  if (!text) return text;
+  return text.replace(/([Ա-Ֆ])\.\s([ա-ֆ])/g, "$1$2");
+}
+
 function BoldText({ text }) {
   return <>{text.split(/\*\*(.*?)\*\*/g).map((s, i) => i % 2 === 1 ? <strong key={i} style={{ color: PINK_DARK }}>{s}</strong> : s)}</>;
 }
@@ -2118,7 +2125,7 @@ export default function AIAssistantV2Client({ lang }) {
             services: tpl.services.map(s => ({ ...s, status: "pending" })),
           });
         }
-        if (d.message) seq.push({ id: base, role: "bot", type: "text", text: d.message });
+        if (d.message) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(d.message) });
       } else {
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) {
@@ -2126,7 +2133,7 @@ export default function AIAssistantV2Client({ lang }) {
           }
         });
         if (d.message) {
-          seq.push({ id: base + 100, role: "bot", type: "text", text: d.message });
+          seq.push({ id: base + 100, role: "bot", type: "text", text: fixArmenianText(d.message) });
         }
       }
 
