@@ -31,12 +31,12 @@ const T = {
   },
   sub: {
     en: "Balloons, cakes, venues, gifts, photographers — tell Salooote AI what you need and we'll plan it, find vendors, and estimate the budget.",
-    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, մուլտհերոսներ — ասեք Salooote AI-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
+    hy: "Փուչիկներ, տորթեր, սրահներ, նվերներ, մուլտհերոսներ — ասեք Sali-ին ինչ է պետք, նա կպլանավորի, կգտնի մատակարարներ և կհաշվի բյուջեն։",
     ru: "Шары, торты, площадки, подарки, фотографы — расскажите Salooote AI что нужно, мы спланируем, найдём поставщиков и оценим бюджет.",
   },
   placeholder: {
     en: "Help me plan my daughter's 5th birthday tomorrow…",
-    hy: "Ուզում եմ պլանավորել աղջկաս 5-ամյակը վաղը…",
+    hy: "Ուզում եմ պլանավորել աղջկաս 5-ամյակը ամսի 12-ին…",
     ru: "Помогите спланировать день рождения дочки на 5 лет завтра…",
   },
   chips: {
@@ -81,7 +81,7 @@ const T = {
 
   browseTitle: {
     en: "Browse by Category",
-    hy: "Կատեգորիաներ",
+    hy: "Բաժիններ",
     ru: "По категориям",
   },
   browseHeadline: {
@@ -91,7 +91,7 @@ const T = {
   },
   allCategories: {
     en: "All categories",
-    hy: "Բոլոր կատեգորիաները",
+    hy: "Բոլոր բաժինները",
     ru: "Все категории",
   },
   trendingTitle: {
@@ -123,17 +123,17 @@ const T = {
   },
   occEyebrow: {
     en: "Plan Any Occasion",
-    hy: "Պլանավորեք ցանկացած տոն",
+    hy: "Պլանավորեք ցանկացած միջոցառում",
     ru: "Планируйте любое событие",
   },
   occHeadline: {
     en: "What are you celebrating?",
-    hy: "Ի՞նչ եք տոնում",
+    hy: "Ի՞նչ եք փնտրում: Պատմեք մեր Sali-ին",
     ru: "Что вы празднуете?",
   },
   occSub: {
     en: "Find trusted vendors for every event type — from intimate birthdays to grand weddings.",
-    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար — ծնունդից մինչև շքեղ հարսանիք։",
+    hy: "Գտեք վստահելի մատակարարներ ցանկացած միջոցառման համար՝ ծննդից մինչև հարսանիք։",
     ru: "Найдите проверенных поставщиков для любого события — от уютных дней рождения до пышных свадеб.",
   },
   occCards: {
@@ -172,8 +172,8 @@ const T = {
   /* ── New centered hero (vibrant) ─────────────── */
   aiBadge: {
     en: "New — AI Planner is live in Armenian, Russian & English",
-    hy: "Ինչ լեզվով էլ խոսես, մեր AI կազմակերպիիչը քեզ կհասկանա",
-    ru: "Новинка — AI-планировщик доступен на армянском, русском и английском",
+    hy: "Ինչ լեզվով էլ խոսես, մեր AI-ը քեզ կհասկանա",
+    ru: "Новинка — AI планировщик доступен на армянском, русском и английском",
   },
   heroPart1: {
     en: "Make every",
@@ -1110,18 +1110,18 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
         </h2>
         <p className="v2-how-sub">
           {lang === "ru" ? "Скажите, что нужно — мы найдём поставщиков, цены и составим план."
-            : lang === "hy" ? "Ասեք ինչ է պետք — մենք կգտնենք մատակարարներին, գները և կկազմենք պլանը։"
+            : lang === "hy" ? "Ասեք ինչ է պետք ու մենք կգտնենք մատակարարներին, գները և կկազմենք պլանը։"
             : "Tell us what you need — we find vendors, prices, and build a plan."}
         </p>
         <div className="v2-how-grid">
           {[
-            { icon: "sparkle", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Պատմեք" : "Describe",
+            { icon: "sparkle", title: lang === "ru" ? "Расскажите" : lang === "hy" ? "Պատմում եք" : "Describe",
               desc: lang === "ru" ? "Тип события, дата, бюджет, гости." : lang === "hy" ? "Միջոցառման տեսակը, ամսաթիվն ու թե ոնց եք պատկերացնում:" : "Event type, date, budget, guests." },
-            { icon: "search", title: lang === "ru" ? "Найдём" : lang === "hy" ? "Կգտնենք" : "Find",
+            { icon: "search", title: lang === "ru" ? "Найдём" : lang === "hy" ? "Գտնում ենք" : "Find",
               desc: lang === "ru" ? "Подберём поставщиков и продукты." : lang === "hy" ? "Կհստակեցնենք ու կգտնենք ծառայություններ, անցկացման վայրեր և ապրանքներ։" : "We match vendors and products." },
-            { icon: "calendar", title: lang === "ru" ? "План" : lang === "hy" ? "Կկազմենք պլան" : "Plan",
+            { icon: "calendar", title: lang === "ru" ? "План" : lang === "hy" ? "Կազմում ենք պլան" : "Plan",
               desc: lang === "ru" ? "Сравните цены, фото, отзывы." : lang === "hy" ? "Համեմատեք արծեքները, լուսանկարները, կարծիքները ու միասին կընտրենք։" : "Compare prices, photos, reviews." },
-            { icon: "check", title: lang === "ru" ? "Бронь" : lang === "hy" ? "Ամրագրում" : "Book",
+            { icon: "check", title: lang === "ru" ? "Бронь" : lang === "hy" ? "Ամրագրում ենք" : "Book",
               desc: lang === "ru" ? "Запросите цитату или забронируйте." : lang === "hy" ? "Պատվիրեք մեր հարթակում, գրեք կամ զանգահարեք անմիջապես կամ ամրագրեք ուղիղ։" : "Request a quote or book directly." },
           ].map((card, i) => (
             <div key={i} className="v2-how-card">
