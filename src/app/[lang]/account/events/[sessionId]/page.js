@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft, Loader2, Calendar, MapPin, Users, DollarSign,
-  CheckCircle2, Clock, XCircle, Send, MessageCircle, ChevronDown,
-  ChevronUp, Building2, Camera, Cake, UtensilsCrossed, Flower2,
-  Music, Gem, Star, Smile, Briefcase, GraduationCap, Baby,
-  Monitor, Package, Flame, Plus, User, Mic, X,
+  CheckCircle2, Clock, XCircle, Send, MessageCircle,
+  Building2, Camera, Cake, UtensilsCrossed, Flower2,
+  Music, Gem, Star, Smile, Monitor, Package, Flame, Plus, User, Mic, X,
+  ExternalLink,
 } from "lucide-react";
 import { plannerAPI, inquiriesAPI } from "@/lib/api";
 
@@ -37,6 +37,32 @@ const STATUS_CONFIG = {
   rejected: { label: "Rejected", color: "#dc2626", bg: "#fee2e2", icon: XCircle },
   closed:   { label: "Closed",   color: "#64748b", bg: "#f1f5f9", icon: XCircle },
 };
+
+// ─── Vendor avatar ────────────────────────────────────────────────────────────
+const AVATAR_COLORS = ["#7c3aed","#e11d5c","#059669","#d97706","#0891b2","#6366f1"];
+function VendorAvatar({ vendor }) {
+  const img  = vendor?.logo || vendor?.thumbnail || null;
+  const name = vendor?.name || vendor?.business_name || "V";
+  const col  = AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
+  return (
+    <div style={{ width: 48, height: 48, borderRadius: 10, overflow: "hidden", flexShrink: 0,
+      border: "1px solid rgba(15,23,42,0.08)", background: img ? "#f8fafc" : `${col}18`,
+      display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {img
+        ? <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        : <span style={{ fontWeight: 800, fontSize: 18, color: col }}>{name[0]?.toUpperCase()}</span>
+      }
+    </div>
+  );
+}
+
+function vendorHref(vendor, lang) {
+  if (!vendor) return null;
+  if (vendor.is_product && vendor.vendor_slug) return `/${lang}/${vendor.vendor_slug}`;
+  if (vendor.is_product) return `/${lang}/product/${vendor.id}`;
+  if (vendor.slug) return `/${lang}/vendor/${vendor.slug}`;
+  return null;
+}
 
 // ─── Message Thread ───────────────────────────────────────────────────────────
 function MessageThread({ inquiry, onClose }) {
@@ -80,7 +106,6 @@ function MessageThread({ inquiry, onClose }) {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "flex-end", padding: 24, pointerEvents: "none" }}>
       <div style={{ pointerEvents: "all", width: "100%", maxWidth: 420, background: "#fff", borderRadius: 20, boxShadow: "0 24px 60px rgba(0,0,0,0.18)", display: "flex", flexDirection: "column", maxHeight: "70vh", overflow: "hidden" }}>
-        {/* Header */}
         <div style={{ padding: "14px 16px", borderBottom: "1px solid rgba(15,23,42,0.08)", display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ margin: 0, fontWeight: 700, fontSize: "0.85rem", color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -93,7 +118,6 @@ function MessageThread({ inquiry, onClose }) {
           </button>
         </div>
 
-        {/* Messages */}
         <div style={{ flex: 1, overflowY: "auto", padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8 }}>
           {loading ? (
             <div style={{ display: "flex", justifyContent: "center", padding: 24 }}><Loader2 size={20} color="#94a3b8" className="animate-spin" /></div>
@@ -119,7 +143,6 @@ function MessageThread({ inquiry, onClose }) {
           <div ref={bottomRef} />
         </div>
 
-        {/* Input */}
         <div style={{ padding: "10px 12px", borderTop: "1px solid rgba(15,23,42,0.08)", display: "flex", gap: 8, flexShrink: 0 }}>
           <input
             value={input}
@@ -139,33 +162,45 @@ function MessageThread({ inquiry, onClose }) {
 }
 
 // ─── Vendor Service Row ───────────────────────────────────────────────────────
-function VendorRow({ service, vendor, inquiry, accent, onOpenThread }) {
+function VendorRow({ service, vendor, inquiry, accent, lang, onOpenThread }) {
   const Icon = getServiceIcon(service.service_type);
   const status = inquiry ? STATUS_CONFIG[inquiry.status] || STATUS_CONFIG.pending : null;
   const StatusIcon = status?.icon || Clock;
+  const href = vendorHref(vendor, lang);
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#fff", borderRadius: 14, border: "1px solid rgba(15,23,42,0.07)", marginBottom: 8 }}>
-      {/* Icon */}
-      <div style={{ width: 38, height: 38, borderRadius: 10, background: `${accent}14`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <Icon size={16} color={accent} />
-      </div>
+
+      {/* Left: icon or vendor avatar */}
+      {vendor ? (
+        <VendorAvatar vendor={vendor} />
+      ) : (
+        <div style={{ width: 48, height: 48, borderRadius: 10, background: `${accent}14`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <Icon size={18} color={accent} />
+        </div>
+      )}
 
       {/* Info */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ margin: 0, fontWeight: 600, fontSize: "0.82rem", color: "#0f172a" }}>{service.title}</p>
         {vendor ? (
-          <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#64748b" }}>
-            {vendor.name || vendor.business_name}
-            {vendor.city ? ` · ${vendor.city}` : ""}
-            {vendor.rating ? ` · ★ ${vendor.rating}` : ""}
-          </p>
+          href ? (
+            <a href={href} target="_blank" rel="noreferrer"
+              style={{ margin: "2px 0 0", fontSize: "0.72rem", color: accent, fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 3, maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {vendor.name || vendor.business_name}
+              <ExternalLink size={10} style={{ flexShrink: 0, opacity: 0.7 }} />
+            </a>
+          ) : (
+            <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#64748b" }}>
+              {vendor.name || vendor.business_name}
+            </p>
+          )
         ) : (
           <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#94a3b8" }}>No vendor selected</p>
         )}
       </div>
 
-      {/* Status & action */}
+      {/* Status & chat */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
         {status && (
           <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.7rem", fontWeight: 700, color: status.color, background: status.bg, borderRadius: 999, padding: "3px 9px" }}>
@@ -202,18 +237,22 @@ function ProgressBar({ selected, total, accent }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function EventDetailPage() {
   const params    = useParams();
+  const router    = useRouter();
   const lang      = params?.lang || "en";
   const sessionId = params?.sessionId;
 
-  const [session,   setSession]   = useState(null);
-  const [inquiries, setInquiries] = useState([]);
-  const [loading,   setLoading]   = useState(true);
+  const [session,      setSession]     = useState(null);
+  const [inquiries,    setInquiries]   = useState([]);
+  const [loading,      setLoading]     = useState(true);
   const [activeThread, setActiveThread] = useState(null);
 
   useEffect(() => {
     if (!sessionId) return;
     plannerAPI.getById(sessionId)
-      .then(res => setSession(res?.data || res))
+      .then(res => {
+        const s = res?.data ?? res;
+        setSession(s && typeof s === "object" && !Array.isArray(s) ? s : null);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
     plannerAPI.getInquiries(sessionId)
@@ -244,11 +283,11 @@ export default function EventDetailPage() {
 
   let data = {};
   try { data = typeof session.event_data === "string" ? JSON.parse(session.event_data) : session.event_data || {}; } catch {}
-  const accent = EVENT_COLORS[session.event_type] || "#e11d5c";
-  const services = Array.isArray(data.services) ? data.services : [];
+  const accent          = EVENT_COLORS[session.event_type] || "#e11d5c";
+  const services        = Array.isArray(data.services) ? data.services : [];
   const selectedVendors = data.selected_vendors || {};
-  const searchable = services.filter(s => s.canSearch);
-  const selectedCount = Object.keys(selectedVendors).length;
+  const searchable      = services.filter(s => s.canSearch);
+  const selectedCount   = Object.keys(selectedVendors).length;
 
   const dateStr = session.event_date
     ? new Date(session.event_date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
@@ -274,6 +313,21 @@ export default function EventDetailPage() {
     tech: "Tech & AV", other: "Other",
   };
 
+  const handleContinue = () => {
+    try {
+      localStorage.setItem("salooote_resume_session", JSON.stringify({
+        plannerSessionId: session.id,
+        event_type:       session.event_type,
+        event_type_label: session.title || session.event_type?.replace(/_/g, " "),
+        location:         session.location || "",
+        guest_count:      session.guest_count,
+        event_date:       session.event_date,
+        event_data:       data,
+      }));
+    } catch {}
+    router.push(`/${lang}`);
+  };
+
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "32px 16px 64px" }}>
       {/* Back link */}
@@ -294,11 +348,10 @@ export default function EventDetailPage() {
                 {session.event_type?.replace(/_/g, " ")}
               </p>
             </div>
-            <Link href={`/${lang}/planner?session=${session.id}`} style={{ textDecoration: "none", flexShrink: 0 }}>
-              <button style={{ background: `linear-gradient(135deg,${accent},${accent}cc)`, border: "none", borderRadius: 12, padding: "9px 16px", color: "#fff", fontSize: "0.8rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-                Continue Planning
-              </button>
-            </Link>
+            <button onClick={handleContinue}
+              style={{ background: `linear-gradient(135deg,${accent},${accent}cc)`, border: "none", borderRadius: 12, padding: "9px 16px", color: "#fff", fontSize: "0.8rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }}>
+              Continue Planning
+            </button>
           </div>
 
           {/* Meta chips */}
@@ -339,7 +392,7 @@ export default function EventDetailPage() {
             {CATEGORY_LABELS[cat] || cat}
           </h2>
           {items.map(service => {
-            const vendor = selectedVendors[service.service_type] || null;
+            const vendor  = selectedVendors[service.service_type] || null;
             const inquiry = vendor?.id ? inquiryByVendorId[vendor.id] : null;
             return (
               <VendorRow
@@ -348,6 +401,7 @@ export default function EventDetailPage() {
                 vendor={vendor}
                 inquiry={inquiry}
                 accent={accent}
+                lang={lang}
                 onOpenThread={setActiveThread}
               />
             );
@@ -355,7 +409,7 @@ export default function EventDetailPage() {
         </div>
       ))}
 
-      {/* Inquiry overview (if any exist but not matched to selected vendor) */}
+      {/* All inquiries */}
       {inquiries.length > 0 && (
         <div style={{ marginTop: 8 }}>
           <h2 style={{ margin: "0 0 12px", fontSize: "0.75rem", fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em" }}>
@@ -383,7 +437,6 @@ export default function EventDetailPage() {
         </div>
       )}
 
-      {/* Floating message thread */}
       {activeThread && (
         <MessageThread inquiry={activeThread} onClose={() => setActiveThread(null)} />
       )}

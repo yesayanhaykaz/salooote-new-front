@@ -1789,6 +1789,33 @@ export default function AIAssistantV2Client({ lang }) {
       const sb = localStorage.getItem("salooote_v2_sidebar_collapsed");
       if (sb === "1") setSidebarCollapsed(true);
     } catch {}
+
+    // Resume a planning session from the account events detail page
+    try {
+      const resumeRaw = localStorage.getItem("salooote_resume_session");
+      if (resumeRaw) {
+        localStorage.removeItem("salooote_resume_session");
+        const resume = JSON.parse(resumeRaw);
+        if (resume.plannerSessionId) {
+          const ed = resume.event_data || {};
+          setEventState(s => ({
+            ...s,
+            event_type:       resume.event_type       || s.event_type,
+            event_type_label: resume.event_type_label || s.event_type_label,
+            services:         Array.isArray(ed.services) ? ed.services : s.services,
+            selected_vendors: (ed.selected_vendors && typeof ed.selected_vendors === "object") ? ed.selected_vendors : s.selected_vendors,
+            style:       ed.style       || s.style,
+            budget:      ed.budget      || s.budget,
+            city:        resume.location || s.city,
+            guest_count: resume.guest_count ? String(resume.guest_count) : s.guest_count,
+            date:        resume.event_date || s.date,
+          }));
+          setPlannerSessionId(resume.plannerSessionId);
+          setPhase("chat");
+        }
+      }
+    } catch {}
+
     setHydrated(true);
   }, []);
 
@@ -1933,7 +1960,18 @@ export default function AIAssistantV2Client({ lang }) {
   const handleSelectVendor = useCallback((serviceType, vendor) => {
     setEventState(prev => ({
       ...prev,
-      selected_vendors: { ...prev.selected_vendors, [serviceType]: { id: vendor.id, name: vendor.business_name || vendor.name } },
+      selected_vendors: {
+        ...prev.selected_vendors,
+        [serviceType]: {
+          id:          vendor.id,
+          name:        vendor.business_name || vendor.name,
+          slug:        vendor.slug || null,
+          logo:        vendor.cover_image || vendor.logo || vendor.thumbnail || null,
+          thumbnail:   vendor.cover_image || vendor.logo || vendor.thumbnail || null,
+          is_product:  vendor._isProduct || false,
+          vendor_slug: vendor.slug || null,
+        },
+      },
       services: prev.services.map(s => s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s),
     }));
   }, []);
@@ -1959,7 +1997,16 @@ export default function AIAssistantV2Client({ lang }) {
         ...prev,
         selected_vendors: {
           ...prev.selected_vendors,
-          [serviceType]: { id: product.id, name, vendor_name: vendorName, thumbnail: product.thumbnail_url, price: product.price },
+          [serviceType]: {
+            id:          product.id,
+            name,
+            vendor_name: vendorName,
+            thumbnail:   product.thumbnail_url || product.image || null,
+            logo:        product.thumbnail_url || product.image || null,
+            price:       product.price,
+            is_product:  true,
+            vendor_slug: product.vendor_slug || product.vendor?.slug || null,
+          },
         },
         services: prev.services.map(s =>
           s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s
