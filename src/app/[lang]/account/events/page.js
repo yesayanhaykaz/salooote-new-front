@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   Bot, ArrowRight, Loader2, MapPin, Calendar, Users,
-  Trash2, Sparkles, Plus, ExternalLink,
+  Trash2, Sparkles, ExternalLink,
 } from "lucide-react";
 import { plannerAPI, isLoggedIn } from "@/lib/api";
 
@@ -159,16 +159,9 @@ export default function AccountEventsPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       {/* Page header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-surface-900 leading-tight">My Events</h1>
-          <p className="text-sm text-surface-400 mt-1">All your AI-planned events in one place</p>
-        </div>
-        <Link href={`/${lang}/planner`} className="no-underline">
-          <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-brand-500 to-purple-600 text-white text-sm font-semibold rounded-xl shadow-md shadow-brand-100 hover:shadow-lg cursor-pointer border-none transition-all">
-            <Plus size={14} /> New Event
-          </button>
-        </Link>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-surface-900 leading-tight">My Events</h1>
+        <p className="text-sm text-surface-400 mt-1">All your AI-planned events in one place</p>
       </div>
 
       {loading ? (

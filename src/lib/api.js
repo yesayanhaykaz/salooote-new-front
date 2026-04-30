@@ -136,6 +136,7 @@ export const userAPI = {
   notifications: (params = {}) => { const q = new URLSearchParams(params).toString(); return request(`/user/notifications${q ? "?" + q : ""}`); },
   markNotifRead: (id) => request(`/user/notifications/${id}/read`, { method: "PATCH" }),
   markAllNotifsRead: () => request("/user/notifications/read-all", { method: "POST" }),
+  deleteAccount: (password) => request("/user/account", { method: "DELETE", body: JSON.stringify({ password }) }),
 };
 
 // Public - Categories

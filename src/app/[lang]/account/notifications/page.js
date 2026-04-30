@@ -1,10 +1,50 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { userAPI } from "@/lib/api";
 import {
   Bell, MessageSquare, CalendarCheck, Star, CheckCircle,
   Package, CreditCard, X, Check, CheckCheck,
 } from "lucide-react";
+
+const T = {
+  en: {
+    title: "Notifications",
+    unread: (c) => `${c} unread`,
+    allCaughtUp: "All caught up",
+    markAllRead: "Mark all read",
+    today: "Today",
+    yesterday: "Yesterday",
+    thisWeek: "This Week",
+    empty: "All caught up!",
+    emptyDesc: "No notifications to show here.",
+    tabs: { all: "All", unread: "Unread", messages: "Messages", bookings: "Bookings", reviews: "Reviews", system: "System" },
+  },
+  hy: {
+    title: "Ծանուցումներ",
+    unread: (c) => `${c} չկարդացված`,
+    allCaughtUp: "Բոլորը կարդացված է",
+    markAllRead: "Նշել բոլորը կարդացված",
+    today: "Այսօր",
+    yesterday: "Երեկ",
+    thisWeek: "Այս շաբաթ",
+    empty: "Բոլորը կարդացված է!",
+    emptyDesc: "Ծանուցումներ չկան",
+    tabs: { all: "Բոլոր", unread: "Չկարդացված", messages: "Հաղ.", bookings: "Պատ.", reviews: "Կարծ.", system: "Համակ." },
+  },
+  ru: {
+    title: "Уведомления",
+    unread: (c) => `${c} непрочитанных`,
+    allCaughtUp: "Всё прочитано",
+    markAllRead: "Прочитать все",
+    today: "Сегодня",
+    yesterday: "Вчера",
+    thisWeek: "На этой неделе",
+    empty: "Всё прочитано!",
+    emptyDesc: "Уведомлений нет.",
+    tabs: { all: "Все", unread: "Непрочитанные", messages: "Сообщения", bookings: "Заказы", reviews: "Отзывы", system: "Система" },
+  },
+};
 
 const ICON_BG = {
   inquiry:  "bg-blue-50 text-blue-500",
@@ -30,7 +70,7 @@ const TYPE_ICON = {
   payment:  CreditCard,
   message:  MessageSquare,
   success:  CheckCircle,
-  cancelled:X,
+  cancelled: X,
   system:   Bell,
   info:     Bell,
   warning:  Bell,
@@ -43,6 +83,19 @@ const TYPE_FILTER_MAP = {
   system:   ["system", "profile", "listing", "payment", "info", "success", "warning"],
 };
 
+// Where to navigate when user clicks a notification
+const TYPE_ROUTE = {
+  inquiry:      "/account/messages",
+  message:      "/account/messages",
+  booking:      "/account/orders",
+  cancelled:    "/account/orders",
+  review:       "/account/reviews",
+  profile:      "/account/settings",
+  listing:      "/account/saved",
+  subscription: "/account/settings",
+  payment:      "/account/orders",
+};
+
 function getGroupKey(iso) {
   if (!iso) return "this_week";
   const h = (Date.now() - new Date(iso).getTime()) / 3600000;
@@ -51,8 +104,7 @@ function getGroupKey(iso) {
   return "this_week";
 }
 
-const GROUP_LABELS = { today: "Today", yesterday: "Yesterday", this_week: "This Week" };
-const GROUP_KEYS   = ["today", "yesterday", "this_week"];
+const GROUP_KEYS = ["today", "yesterday", "this_week"];
 
 function timeAgo(iso) {
   if (!iso) return "";
@@ -68,20 +120,26 @@ function timeAgo(iso) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-const FILTER_TABS = [
-  { value: "all",      label: "All" },
-  { value: "unread",   label: "Unread" },
-  { value: "messages", label: "Messages" },
-  { value: "bookings", label: "Bookings" },
-  { value: "reviews",  label: "Reviews" },
-  { value: "system",   label: "System" },
-];
-
 export default function AccountNotificationsPage() {
+  const { lang } = useParams();
+  const router   = useRouter();
+  const t = T[lang] || T.en;
+
   const [notifs,  setNotifs]  = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter,  setFilter]  = useState("all");
   const [readSet, setReadSet] = useState(new Set());
+
+  const FILTER_TABS = [
+    { value: "all",      label: t.tabs.all },
+    { value: "unread",   label: t.tabs.unread },
+    { value: "messages", label: t.tabs.messages },
+    { value: "bookings", label: t.tabs.bookings },
+    { value: "reviews",  label: t.tabs.reviews },
+    { value: "system",   label: t.tabs.system },
+  ];
+
+  const GROUP_LABELS = { today: t.today, yesterday: t.yesterday, this_week: t.thisWeek };
 
   useEffect(() => {
     userAPI.notifications({ limit: 50 })
@@ -96,10 +154,13 @@ export default function AccountNotificationsPage() {
 
   const isRead = (id) => readSet.has(id);
 
-  const markRead = async (id) => {
-    if (isRead(id)) return;
-    setReadSet(p => new Set([...p, id]));
-    try { await userAPI.markNotifRead(id); } catch {}
+  const handleClick = async (n) => {
+    if (!isRead(n.id)) {
+      setReadSet(p => new Set([...p, n.id]));
+      try { await userAPI.markNotifRead(n.id); } catch {}
+    }
+    const route = TYPE_ROUTE[n.type];
+    if (route) router.push(`/${lang}${route}`);
   };
 
   const markAllRead = async () => {
@@ -128,17 +189,17 @@ export default function AccountNotificationsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-surface-900">
-            Notifications
+            {t.title}
             {unreadCount > 0 && (
               <span className="ml-2 bg-brand-600 text-white text-xs px-2 py-0.5 rounded-full font-semibold">{unreadCount}</span>
             )}
           </h1>
-          <p className="text-sm text-surface-400 mt-0.5">{unreadCount > 0 ? `${unreadCount} unread` : "All caught up"}</p>
+          <p className="text-sm text-surface-400 mt-0.5">{unreadCount > 0 ? t.unread(unreadCount) : t.allCaughtUp}</p>
         </div>
         {unreadCount > 0 && (
           <button onClick={markAllRead}
             className="flex items-center gap-1.5 text-sm font-semibold text-brand-600 bg-brand-50 px-4 py-2 rounded-xl hover:bg-brand-100 cursor-pointer border-none transition-colors">
-            <CheckCheck size={14} /> Mark all read
+            <CheckCheck size={14} /> {t.markAllRead}
           </button>
         )}
       </div>
@@ -172,8 +233,8 @@ export default function AccountNotificationsPage() {
           <div className="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center mx-auto mb-4">
             <Check size={24} className="text-green-500" />
           </div>
-          <p className="font-semibold text-surface-700">All caught up!</p>
-          <p className="text-sm text-surface-400 mt-1">No notifications to show here.</p>
+          <p className="font-semibold text-surface-700">{t.empty}</p>
+          <p className="text-sm text-surface-400 mt-1">{t.emptyDesc}</p>
         </div>
       )}
 
@@ -187,9 +248,12 @@ export default function AccountNotificationsPage() {
               const read      = isRead(n.id);
               const iconStyle = ICON_BG[n.type] || "bg-surface-100 text-surface-400";
               const Icon      = TYPE_ICON[n.type] || Bell;
+              const clickable = !!TYPE_ROUTE[n.type];
               return (
-                <div key={n.id} onClick={() => markRead(n.id)}
-                  className={`flex items-start gap-4 px-5 py-4 hover:bg-surface-50 cursor-pointer transition-colors ${!read ? "bg-brand-50/30" : ""}`}
+                <div key={n.id} onClick={() => handleClick(n)}
+                  className={`flex items-start gap-4 px-5 py-4 transition-colors ${
+                    !read ? "bg-brand-50/30" : ""
+                  } ${clickable ? "cursor-pointer hover:bg-surface-50" : "cursor-default"}`}
                 >
                   <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5 ${iconStyle}`}>
                     <Icon size={16} />

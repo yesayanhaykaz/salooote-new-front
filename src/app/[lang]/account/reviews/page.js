@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { userAPI } from "@/lib/api";
-import { Star, Plus, X, Send, AlertCircle } from "lucide-react";
+import { Star } from "lucide-react";
 
 const STATUS_STYLES = {
   pending:  "bg-amber-50  text-amber-600  border-amber-200",
@@ -24,123 +24,21 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-function StarRating({ value, onChange, readonly = false, size = 18 }) {
-  const [hovered, setHovered] = useState(0);
+function StarRating({ value, size = 14 }) {
   return (
     <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map(n => (
-        <button key={n} type="button" disabled={readonly}
-          onClick={() => !readonly && onChange?.(n)}
-          onMouseEnter={() => !readonly && setHovered(n)}
-          onMouseLeave={() => !readonly && setHovered(0)}
-          className={`bg-transparent border-none p-0 ${!readonly ? "cursor-pointer hover:scale-110" : "cursor-default"} transition-transform`}
-        >
-          <Star size={size}
-            className={`${(hovered || value) >= n ? "fill-amber-400 text-amber-400" : "text-surface-200"} transition-colors`}
-          />
-        </button>
+        <Star key={n} size={size}
+          className={`${value >= n ? "fill-amber-400 text-amber-400" : "text-surface-200"} transition-colors`}
+        />
       ))}
     </div>
   );
 }
 
-function WriteReviewModal({ onClose, onCreated }) {
-  const [form, setForm] = useState({ target_type: "vendor", target_id: "", rating: 0, title: "", body: "" });
-  const [saving, setSaving] = useState(false);
-  const [error,  setError]  = useState("");
-
-  const set = (e) => { setForm(p => ({ ...p, [e.target.name]: e.target.value })); setError(""); };
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!form.target_id.trim()) { setError("Target ID is required."); return; }
-    if (!form.rating)           { setError("Please select a rating."); return; }
-    if (!form.body.trim())      { setError("Review text is required."); return; }
-    setSaving(true);
-    try {
-      const res = await userAPI.createReview({
-        target_type: form.target_type,
-        target_id:   form.target_id.trim(),
-        rating:      form.rating,
-        title:       form.title.trim(),
-        body:        form.body.trim(),
-      });
-      onCreated(res?.data || res);
-    } catch (err) { setError(err.message || "Failed to submit review."); }
-    finally { setSaving(false); }
-  }
-
-  return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
-        <div className="px-6 py-4 border-b border-surface-200 flex items-center justify-between sticky top-0 bg-white z-10">
-          <h2 className="text-sm font-bold text-surface-900">Write a Review</h2>
-          <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-surface-100 flex items-center justify-center cursor-pointer border-none bg-transparent">
-            <X size={15} className="text-surface-500" />
-          </button>
-        </div>
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-surface-700 mb-1.5">Type *</label>
-              <select name="target_type" value={form.target_type} onChange={set}
-                className="w-full px-4 py-2.5 text-sm border border-surface-200 rounded-xl outline-none focus:border-brand-400 bg-white transition-all">
-                <option value="vendor">Vendor</option>
-                <option value="product">Product</option>
-                <option value="service">Service</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-surface-700 mb-1.5">Target ID *</label>
-              <input name="target_id" value={form.target_id} onChange={set} placeholder="UUID"
-                className="w-full px-4 py-2.5 text-sm border border-surface-200 rounded-xl outline-none focus:border-brand-400 transition-all font-mono" />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-surface-700 mb-2">Rating *</label>
-            <StarRating value={form.rating} onChange={v => setForm(p => ({ ...p, rating: v }))} size={24} />
-            {!form.rating && <p className="text-[11px] text-surface-400 mt-1">Click to set rating</p>}
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-surface-700 mb-1.5">Title</label>
-            <input name="title" value={form.title} onChange={set} placeholder="Summary of your experience"
-              className="w-full px-4 py-2.5 text-sm border border-surface-200 rounded-xl outline-none focus:border-brand-400 transition-all" />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-surface-700 mb-1.5">Review *</label>
-            <textarea name="body" value={form.body} onChange={set} rows={4} placeholder="Share your experience…"
-              className="w-full resize-none px-4 py-2.5 text-sm border border-surface-200 rounded-xl outline-none focus:border-brand-400 transition-all" />
-          </div>
-
-          {error && (
-            <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
-              <AlertCircle size={14} className="flex-shrink-0" /> {error}
-            </div>
-          )}
-
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose}
-              className="flex-1 py-3 text-sm font-semibold text-surface-600 border border-surface-200 rounded-xl hover:bg-surface-50 cursor-pointer bg-white transition-colors">
-              Cancel
-            </button>
-            <button type="submit" disabled={saving}
-              className="flex-1 flex items-center justify-center gap-2 py-3 text-sm font-semibold text-white bg-brand-600 rounded-xl hover:bg-brand-700 cursor-pointer border-none disabled:opacity-60 transition-colors">
-              <Send size={14} /> {saving ? "Submitting…" : "Submit Review"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
 export default function AccountReviewsPage() {
-  const [reviews,   setReviews]  = useState([]);
-  const [loading,   setLoading]  = useState(true);
-  const [showModal, setModal]    = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     userAPI.reviews({ limit: 50 })
@@ -149,19 +47,11 @@ export default function AccountReviewsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleCreated = (r) => { if (r?.id) setReviews(p => [r, ...p]); setModal(false); };
-
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-surface-900">My Reviews</h1>
-          <p className="text-sm text-surface-400 mt-0.5">Your submitted reviews</p>
-        </div>
-        <button onClick={() => setModal(true)}
-          className="flex items-center gap-2 bg-brand-600 text-white border-none rounded-xl px-4 py-2.5 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
-          <Plus size={15} /> Write Review
-        </button>
+      <div>
+        <h1 className="text-xl font-bold text-surface-900">My Reviews</h1>
+        <p className="text-sm text-surface-400 mt-0.5">Your submitted reviews</p>
       </div>
 
       {loading && (
@@ -176,11 +66,7 @@ export default function AccountReviewsPage() {
             <Star size={24} className="text-amber-300" />
           </div>
           <p className="font-semibold text-surface-700">No reviews yet</p>
-          <p className="text-sm text-surface-400 mt-1 mb-4">Share your experience with vendors you've worked with.</p>
-          <button onClick={() => setModal(true)}
-            className="flex items-center gap-2 bg-brand-600 text-white border-none rounded-xl px-5 py-2.5 text-sm font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
-            <Plus size={14} /> Write First Review
-          </button>
+          <p className="text-sm text-surface-400 mt-1">Your submitted reviews will appear here.</p>
         </div>
       )}
 
@@ -205,7 +91,7 @@ export default function AccountReviewsPage() {
                 <span className="text-xs text-surface-400 flex-shrink-0">{formatDate(review.created_at)}</span>
               </div>
 
-              <StarRating value={review.rating} readonly size={14} />
+              <StarRating value={review.rating} />
 
               {review.body && (
                 <p className="text-sm text-surface-600 mt-2.5 leading-relaxed">{review.body}</p>
@@ -214,8 +100,6 @@ export default function AccountReviewsPage() {
           ))}
         </div>
       )}
-
-      {showModal && <WriteReviewModal onClose={() => setModal(false)} onCreated={handleCreated} />}
     </div>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { userAPI, clearAuth } from "@/lib/api";
-import { Eye, EyeOff, Save, AlertTriangle, User, Lock, Check, AlertCircle, LogOut } from "lucide-react";
+import { useParams } from "next/navigation";
+import { userAPI } from "@/lib/api";
+import { Eye, EyeOff, Save, User, Lock, Check, AlertCircle } from "lucide-react";
 
 function Toast({ msg, type }) {
   if (!msg) return null;
@@ -17,27 +17,99 @@ function Toast({ msg, type }) {
   );
 }
 
-const TABS = [
-  { key: "profile",  label: "Profile",  icon: User },
-  { key: "password", label: "Password", icon: Lock },
-];
+const T = {
+  en: {
+    title: "Settings",
+    profile: "Profile",
+    password: "Password",
+    profileInfo: "Profile Information",
+    firstName: "First Name",
+    lastName: "Last Name",
+    phone: "Phone",
+    email: "Email",
+    emailNote: "Email cannot be changed.",
+    saveChanges: "Save Changes",
+    saving: "Saving…",
+    profileSaved: "Profile saved successfully.",
+    changePassword: "Change Password",
+    currentPassword: "Current Password",
+    newPassword: "New Password",
+    newPasswordHint: "Min. 8 characters",
+    confirmPassword: "Confirm New Password",
+    changePasswordBtn: "Change Password",
+    passwordMismatch: "Passwords do not match.",
+    passwordTooShort: "New password must be at least 8 characters.",
+    passwordChanged: "Password changed successfully.",
+  },
+  hy: {
+    title: "Կարգ.",
+    profile: "Պրոֆիլ",
+    password: "Գաղ.",
+    profileInfo: "Պրոֆիլի տվ.",
+    firstName: "Անուն",
+    lastName: "Ազգ.",
+    phone: "Հեռ.",
+    email: "Էլ.",
+    emailNote: "Էլ.հասցեն փոփոխել հնարավոր չէ։",
+    saveChanges: "Պահ.",
+    saving: "Պահ.…",
+    profileSaved: "Պրոֆիլը պահ.։",
+    changePassword: "Փոխ. գաղ.",
+    currentPassword: "Ընթ. գաղ.",
+    newPassword: "Նոր գաղ.",
+    newPasswordHint: "Մ. 8 նիշ",
+    confirmPassword: "Հաստ. Գաղ.",
+    changePasswordBtn: "Փոխ. Գաղ.",
+    passwordMismatch: "Գաղ. չеն հ.։",
+    passwordTooShort: "Նոր գաղ. 8+ նիշ.",
+    passwordChanged: "Գաղ. փոխ.։",
+  },
+  ru: {
+    title: "Настройки",
+    profile: "Профиль",
+    password: "Пароль",
+    profileInfo: "Данные профиля",
+    firstName: "Имя",
+    lastName: "Фамилия",
+    phone: "Телефон",
+    email: "Email",
+    emailNote: "Email нельзя изменить.",
+    saveChanges: "Сохранить",
+    saving: "Сохранение…",
+    profileSaved: "Профиль сохранён.",
+    changePassword: "Изменить пароль",
+    currentPassword: "Текущий пароль",
+    newPassword: "Новый пароль",
+    newPasswordHint: "Мин. 8 символов",
+    confirmPassword: "Подтвердите пароль",
+    changePasswordBtn: "Сменить пароль",
+    passwordMismatch: "Пароли не совпадают.",
+    passwordTooShort: "Минимум 8 символов.",
+    passwordChanged: "Пароль изменён.",
+  },
+};
 
 export default function AccountSettingsPage() {
   const { lang } = useParams();
-  const router   = useRouter();
+  const t = T[lang] || T.en;
   const [activeTab, setTab] = useState("profile");
 
+  const TABS = [
+    { key: "profile",  label: t.profile,  icon: User },
+    { key: "password", label: t.password, icon: Lock },
+  ];
+
   // Profile
-  const [profile, setProfile]           = useState({ first_name: "", last_name: "", phone: "", email: "" });
-  const [profileLoading, setPLoading]   = useState(true);
-  const [profileSaving,  setPSaving]    = useState(false);
-  const [profileMsg, setPMsg]           = useState({ msg: "", type: "" });
+  const [profile, setProfile]         = useState({ first_name: "", last_name: "", phone: "", email: "" });
+  const [profileLoading, setPLoading] = useState(true);
+  const [profileSaving,  setPSaving]  = useState(false);
+  const [profileMsg, setPMsg]         = useState({ msg: "", type: "" });
 
   // Password
-  const [pw, setPw]                     = useState({ current_password: "", new_password: "", confirm_new_password: "" });
-  const [shows, setShows]               = useState({ current: false, newp: false, confirm: false });
-  const [pwSaving,  setPwSaving]        = useState(false);
-  const [pwMsg, setPwMsg]               = useState({ msg: "", type: "" });
+  const [pw, setPw]                   = useState({ current_password: "", new_password: "", confirm_new_password: "" });
+  const [shows, setShows]             = useState({ current: false, newp: false, confirm: false });
+  const [pwSaving,  setPwSaving]      = useState(false);
+  const [pwMsg, setPwMsg]             = useState({ msg: "", type: "" });
 
   useEffect(() => {
     userAPI.getProfile()
@@ -57,7 +129,7 @@ export default function AccountSettingsPage() {
     setPSaving(true); setPMsg({ msg: "", type: "" });
     try {
       await userAPI.updateProfile({ first_name: profile.first_name, last_name: profile.last_name, phone: profile.phone });
-      setPMsg({ msg: "Profile saved successfully.", type: "success" });
+      setPMsg({ msg: t.profileSaved, type: "success" });
     } catch (err) { setPMsg({ msg: err.message || "Failed to save profile.", type: "error" }); }
     finally { setPSaving(false); }
   };
@@ -65,24 +137,22 @@ export default function AccountSettingsPage() {
   const savePassword = async (e) => {
     e.preventDefault();
     setPwMsg({ msg: "", type: "" });
-    if (pw.new_password !== pw.confirm_new_password) { setPwMsg({ msg: "Passwords do not match.", type: "error" }); return; }
-    if (pw.new_password.length < 8) { setPwMsg({ msg: "New password must be at least 8 characters.", type: "error" }); return; }
+    if (pw.new_password !== pw.confirm_new_password) { setPwMsg({ msg: t.passwordMismatch, type: "error" }); return; }
+    if (pw.new_password.length < 8) { setPwMsg({ msg: t.passwordTooShort, type: "error" }); return; }
     setPwSaving(true);
     try {
       await userAPI.changePassword({ current_password: pw.current_password, new_password: pw.new_password });
-      setPwMsg({ msg: "Password changed successfully.", type: "success" });
+      setPwMsg({ msg: t.passwordChanged, type: "success" });
       setPw({ current_password: "", new_password: "", confirm_new_password: "" });
     } catch (err) { setPwMsg({ msg: err.message || "Failed to change password.", type: "error" }); }
     finally { setPwSaving(false); }
   };
 
-  const handleLogout = () => { clearAuth(); router.push(`/${lang}/login`); };
-
   const inputCls = "w-full px-4 py-2.5 text-sm border border-surface-200 rounded-xl bg-white outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all placeholder:text-surface-300";
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-bold text-surface-900">Settings</h1>
+      <h1 className="text-xl font-bold text-surface-900">{t.title}</h1>
 
       {/* Tab bar */}
       <div className="flex items-center gap-1 bg-white border border-surface-200 rounded-xl px-2 py-1.5 w-fit shadow-sm">
@@ -100,7 +170,7 @@ export default function AccountSettingsPage() {
       {/* Profile tab */}
       {activeTab === "profile" && (
         <div className="bg-white rounded-2xl border border-surface-200 shadow-sm p-6">
-          <h2 className="text-sm font-bold text-surface-900 mb-5">Profile Information</h2>
+          <h2 className="text-sm font-bold text-surface-900 mb-5">{t.profileInfo}</h2>
           {profileLoading ? (
             <div className="flex items-center justify-center py-12">
               <div className="w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
@@ -109,29 +179,29 @@ export default function AccountSettingsPage() {
             <form onSubmit={saveProfile} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">First Name</label>
-                  <input name="first_name" value={profile.first_name} onChange={handleProfileChange} placeholder="First name" className={inputCls} />
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.firstName}</label>
+                  <input name="first_name" value={profile.first_name} onChange={handleProfileChange} placeholder={t.firstName} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">Last Name</label>
-                  <input name="last_name" value={profile.last_name} onChange={handleProfileChange} placeholder="Last name" className={inputCls} />
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.lastName}</label>
+                  <input name="last_name" value={profile.last_name} onChange={handleProfileChange} placeholder={t.lastName} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">Phone</label>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.phone}</label>
                   <input type="tel" name="phone" value={profile.phone} onChange={handleProfileChange} placeholder="+374 xx xxx xxx" className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">Email</label>
+                  <label className="block text-xs font-semibold text-surface-700 mb-1.5">{t.email}</label>
                   <input type="email" name="email" value={profile.email} disabled
                     className="w-full px-4 py-2.5 text-sm border border-surface-100 rounded-xl bg-surface-50 text-surface-400 cursor-not-allowed" />
-                  <p className="text-[11px] text-surface-400 mt-1">Email cannot be changed.</p>
+                  <p className="text-[11px] text-surface-400 mt-1">{t.emailNote}</p>
                 </div>
               </div>
               <Toast msg={profileMsg.msg} type={profileMsg.type} />
               <div className="flex justify-end pt-1">
                 <button type="submit" disabled={profileSaving}
                   className="flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white text-sm font-semibold rounded-xl hover:bg-brand-700 cursor-pointer border-none disabled:opacity-60 transition-colors">
-                  <Save size={14} /> {profileSaving ? "Saving…" : "Save Changes"}
+                  <Save size={14} /> {profileSaving ? t.saving : t.saveChanges}
                 </button>
               </div>
             </form>
@@ -142,12 +212,12 @@ export default function AccountSettingsPage() {
       {/* Password tab */}
       {activeTab === "password" && (
         <div className="bg-white rounded-2xl border border-surface-200 shadow-sm p-6">
-          <h2 className="text-sm font-bold text-surface-900 mb-5">Change Password</h2>
+          <h2 className="text-sm font-bold text-surface-900 mb-5">{t.changePassword}</h2>
           <form onSubmit={savePassword} className="space-y-4">
             {[
-              { name: "current_password",     showKey: "current", label: "Current Password" },
-              { name: "new_password",         showKey: "newp",    label: "New Password",     hint: "Min. 8 characters" },
-              { name: "confirm_new_password", showKey: "confirm", label: "Confirm New Password" },
+              { name: "current_password",     showKey: "current", label: t.currentPassword },
+              { name: "new_password",         showKey: "newp",    label: t.newPassword,    hint: t.newPasswordHint },
+              { name: "confirm_new_password", showKey: "confirm", label: t.confirmPassword },
             ].map(({ name, showKey, label, hint }) => (
               <div key={name}>
                 <label className="block text-xs font-semibold text-surface-700 mb-1.5">{label}</label>
@@ -171,44 +241,12 @@ export default function AccountSettingsPage() {
             <div className="flex justify-end pt-1">
               <button type="submit" disabled={pwSaving}
                 className="flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white text-sm font-semibold rounded-xl hover:bg-brand-700 cursor-pointer border-none disabled:opacity-60 transition-colors">
-                <Save size={14} /> {pwSaving ? "Saving…" : "Change Password"}
+                <Save size={14} /> {pwSaving ? t.saving : t.changePasswordBtn}
               </button>
             </div>
           </form>
         </div>
       )}
-
-      {/* Sign out */}
-      <div className="bg-white rounded-2xl border border-surface-200 shadow-sm p-6">
-        <h2 className="text-sm font-bold text-surface-900 mb-1">Sign Out</h2>
-        <p className="text-xs text-surface-400 mb-4">You will be signed out of your account on this device.</p>
-        <button onClick={handleLogout}
-          className="flex items-center gap-2 border border-red-200 text-red-500 bg-transparent rounded-xl px-5 py-2.5 text-sm font-semibold cursor-pointer hover:bg-red-50 transition-colors">
-          <LogOut size={15} /> Sign Out
-        </button>
-      </div>
-
-      {/* Danger zone */}
-      <div className="bg-white rounded-2xl border border-red-200 shadow-sm p-6">
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0">
-            <AlertTriangle size={16} className="text-red-500" />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold text-surface-900">Danger Zone</h2>
-            <p className="text-xs text-surface-400 mt-0.5">These actions are permanent and cannot be undone.</p>
-          </div>
-        </div>
-        <div className="flex items-center justify-between p-4 rounded-xl bg-red-50 border border-red-100">
-          <div>
-            <p className="text-sm font-semibold text-surface-800">Delete Account</p>
-            <p className="text-xs text-surface-400 mt-0.5">Permanently remove your account and all your data</p>
-          </div>
-          <button className="px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-xl hover:bg-red-100 cursor-pointer bg-white transition-colors">
-            Delete Account
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

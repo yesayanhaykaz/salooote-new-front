@@ -1,155 +1,84 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { userAPI } from "@/lib/api";
-import { Package, ChevronDown, ChevronUp, ShoppingBag, Star } from "lucide-react";
+import { Package, ChevronDown, ChevronUp, ShoppingBag, MapPin, Calendar, ExternalLink } from "lucide-react";
 
-/* ================= TRANSLATIONS ================= */
-
-const translations = {
+const T = {
   en: {
-    myOrders: "My Orders",
-    ordersCount: (c) => `${c} order${c !== 1 ? "s" : ""}`,
-
-    filters: {
-      All: "All",
-      Pending: "Pending",
-      Confirmed: "Confirmed",
-      Processing: "Processing",
-      Shipped: "Shipped",
-      Delivered: "Delivered",
-      Cancelled: "Cancelled",
-    },
-
-    empty: {
-      title: "No orders found",
-      all: "You haven't placed any orders yet.",
-      filtered: "No orders with this status.",
-    },
-
-    review: {
-      title: "Write a Review",
-      order: (id) => `Order #${id}`,
-      placeholder: "Share your experience...",
-      cancel: "Cancel",
-      submit: "Submit Review",
-      submitting: "Submitting...",
-    },
-
-    order: {
-      vendorFallback: (id) => `Vendor ···${id}`,
-      itemsCount: (c) => `${c} item${c !== 1 ? "s" : ""}`,
-      showItems: (c) => `Show ${c} items`,
-      hideItems: "Hide items",
-      writeReview: "Write a Review",
-      itemFallback: (i) => `Item ${i}`,
-    },
+    title: "My Orders",
+    count: (c) => `${c} order${c !== 1 ? "s" : ""}`,
+    filters: { All: "All", Pending: "Pending", Confirmed: "Confirmed", Processing: "Processing", Shipped: "Shipped", Delivered: "Delivered", Cancelled: "Cancelled" },
+    emptyTitle: "No orders found",
+    emptyAll: "You haven't placed any orders yet.",
+    emptyFiltered: "No orders with this status.",
+    showItems: (c) => `Show ${c} items`,
+    hideItems: "Hide items",
+    qty: "Qty",
+    delivery: "Delivery",
+    address: "Address",
+    vendor: "Vendor",
   },
-
   hy: {
-    myOrders: "Իմ պատվերները",
-    ordersCount: (c) => `${c} պատվեր`,
-
-    filters: {
-      All: "Բոլորը",
-      Pending: "Սպասման մեջ",
-      Confirmed: "Հաստատված",
-      Processing: "Ընթացքում",
-      Shipped: "Ուղարկված",
-      Delivered: "Առաքված",
-      Cancelled: "Չեղարկված",
-    },
-
-    empty: {
-      title: "Պատվերներ չեն գտնվել",
-      all: "Դուք դեռ պատվեր չեք կատարել",
-      filtered: "Այս կարգավիճակով պատվերներ չկան",
-    },
-
-    review: {
-      title: "Գրել կարծիք",
-      order: (id) => `Պատվեր #${id}`,
-      placeholder: "Կիսվեք ձեր փորձով...",
-      cancel: "Չեղարկել",
-      submit: "Ուղարկել կարծիքը",
-      submitting: "Ուղարկվում է...",
-    },
-
-    order: {
-      vendorFallback: (id) => `Վաճառող ···${id}`,
-      itemsCount: (c) => `${c} ապրանք`,
-      showItems: (c) => `Ցուցադրել ${c} ապրանք`,
-      hideItems: "Թաքցնել ապրանքները",
-      writeReview: "Գրել կարծիք",
-      itemFallback: (i) => `Ապրանք ${i}`,
-    },
+    title: "Իմ պատվերները",
+    count: (c) => `${c} պատվեր`,
+    filters: { All: "Բոլորը", Pending: "Սպասում", Confirmed: "Հաստատված", Processing: "Ընթացքում", Shipped: "Ուղարկված", Delivered: "Առաքված", Cancelled: "Չեղարկված" },
+    emptyTitle: "Պատվերներ չկան",
+    emptyAll: "Դուք դեռ պատվեր չեք կատարել",
+    emptyFiltered: "Այս կարգավիճակով պատվերներ չկան",
+    showItems: (c) => `Ցուցադրել ${c} ապրանք`,
+    hideItems: "Թաքցնել",
+    qty: "Քան.",
+    delivery: "Առաքում",
+    address: "Հասցե",
+    vendor: "Վաճառող",
   },
-
   ru: {
-    myOrders: "Мои заказы",
-    ordersCount: (c) => `${c} заказ${c !== 1 ? "ов" : ""}`,
-
-    filters: {
-      All: "Все",
-      Pending: "В ожидании",
-      Confirmed: "Подтвержден",
-      Processing: "В обработке",
-      Shipped: "Отправлен",
-      Delivered: "Доставлен",
-      Cancelled: "Отменен",
-    },
-
-    empty: {
-      title: "Заказы не найдены",
-      all: "Вы еще не сделали ни одного заказа",
-      filtered: "Нет заказов с таким статусом",
-    },
-
-    review: {
-      title: "Написать отзыв",
-      order: (id) => `Заказ #${id}`,
-      placeholder: "Поделитесь своим опытом...",
-      cancel: "Отмена",
-      submit: "Отправить отзыв",
-      submitting: "Отправка...",
-    },
-
-    order: {
-      vendorFallback: (id) => `Продавец ···${id}`,
-      itemsCount: (c) => `${c} товар${c !== 1 ? "а" : ""}`,
-      showItems: (c) => `Показать ${c} товаров`,
-      hideItems: "Скрыть товары",
-      writeReview: "Написать отзыв",
-      itemFallback: (i) => `Товар ${i}`,
-    },
+    title: "Мои заказы",
+    count: (c) => `${c} заказ${c > 1 ? "а" : ""}`,
+    filters: { All: "Все", Pending: "В ожидании", Confirmed: "Подтверждён", Processing: "В обработке", Shipped: "Отправлен", Delivered: "Доставлен", Cancelled: "Отменён" },
+    emptyTitle: "Заказы не найдены",
+    emptyAll: "Вы ещё не сделали ни одного заказа",
+    emptyFiltered: "Нет заказов с таким статусом",
+    showItems: (c) => `Показать ${c} товаров`,
+    hideItems: "Скрыть",
+    qty: "Кол-во",
+    delivery: "Доставка",
+    address: "Адрес",
+    vendor: "Продавец",
   },
 };
 
-/* ================= COMPONENT ================= */
-
 const STATUS_FILTERS = ["All", "Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
+
+const STATUS_STYLES = {
+  pending:    "bg-amber-50 text-amber-600 border-amber-200",
+  confirmed:  "bg-blue-50 text-blue-600 border-blue-200",
+  processing: "bg-blue-50 text-blue-600 border-blue-200",
+  shipped:    "bg-violet-50 text-violet-600 border-violet-200",
+  delivered:  "bg-green-50 text-green-600 border-green-200",
+  cancelled:  "bg-red-50 text-red-500 border-red-200",
+};
 
 function formatDate(iso) {
   if (!iso) return "—";
-  return new Date(iso).toLocaleDateString();
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
 export default function AccountOrdersPage() {
-  const [lang, setLang] = useState("hy"); // change default if needed
-  const t = translations[lang];
+  const { lang } = useParams();
+  const t = T[lang] || T.en;
 
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeFilter, setFilter] = useState("All");
-  const [expandedId, setExpandedId] = useState(null);
-  const [reviewOrder, setReviewOrder] = useState(null);
-  const [reviewRating, setReviewRating] = useState(5);
-  const [reviewText, setReviewText] = useState("");
-  const [submittingReview, setSubmittingReview] = useState(false);
-  const [reviewDone, setReviewDone] = useState({});
+  const [orders,      setOrders]     = useState([]);
+  const [loading,     setLoading]    = useState(true);
+  const [activeFilter, setFilter]    = useState("All");
+  const [expandedId,  setExpandedId] = useState(null);
 
   useEffect(() => {
     userAPI.orders({ limit: 50 })
       .then(res => setOrders(res?.data || []))
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
@@ -159,111 +88,159 @@ export default function AccountOrdersPage() {
 
   return (
     <div className="space-y-5">
-
-      {/* Language Switch */}
-      <div className="flex gap-2">
-        {["en","hy","ru"].map(l => (
-          <button key={l} onClick={() => setLang(l)} className="text-xs border px-2 py-1 rounded">
-            {l.toUpperCase()}
-          </button>
-        ))}
-      </div>
-
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">{t.myOrders}</h1>
-        <span className="text-sm">{t.ordersCount(orders.length)}</span>
+        <div>
+          <h1 className="text-xl font-bold text-surface-900">{t.title}</h1>
+          <p className="text-sm text-surface-400 mt-0.5">{t.count(orders.length)}</p>
+        </div>
       </div>
 
       {/* Filters */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex items-center gap-1.5 flex-wrap">
         {STATUS_FILTERS.map(f => (
-          <button key={f} onClick={() => setFilter(f)} className="px-3 py-1 border rounded-full text-sm">
+          <button key={f} onClick={() => setFilter(f)}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-colors cursor-pointer ${
+              activeFilter === f
+                ? "bg-brand-600 text-white border-brand-600"
+                : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"
+            }`}
+          >
             {t.filters[f]}
           </button>
         ))}
       </div>
 
-      {/* Empty */}
-      {!loading && filtered.length === 0 && (
-        <div className="text-center py-20">
-          <ShoppingBag size={24}/>
-          <p className="font-semibold">{t.empty.title}</p>
-          <p className="text-sm">
-            {activeFilter === "All" ? t.empty.all : t.empty.filtered}
-          </p>
+      {loading && (
+        <div className="flex items-center justify-center py-20">
+          <div className="w-7 h-7 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 
-      {/* Orders */}
-      {filtered.map(order => {
-        const items = order.items || [];
-        const expanded = expandedId === order.id;
-
-        return (
-          <div key={order.id} className="border rounded-xl p-4">
-            <div className="flex justify-between">
-              <div>
-                <p className="font-bold">
-                  {t.review.order(order.id?.slice(-8))}
-                </p>
-                <p className="text-xs">
-                  {order.vendor_name || t.order.vendorFallback(order.vendor_id?.slice(-4))}
-                </p>
-              </div>
-            </div>
-
-            <div className="text-sm mt-2">
-              {formatDate(order.created_at)} · {order.total} ֏ · {t.order.itemsCount(items.length)}
-            </div>
-
-            <div className="flex gap-3 mt-3">
-              {items.length > 0 && (
-                <button onClick={() => setExpandedId(expanded ? null : order.id)}>
-                  {expanded ? t.order.hideItems : t.order.showItems(items.length)}
-                </button>
-              )}
-
-              {(order.status === "completed" || order.status === "delivered") && !reviewDone[order.id] && (
-                <button onClick={() => setReviewOrder(order)}>
-                  {t.order.writeReview}
-                </button>
-              )}
-            </div>
-
-            {expanded && items.map((item, i) => (
-              <div key={i} className="text-xs flex justify-between mt-2">
-                <span>{item.product_name || t.order.itemFallback(i+1)}</span>
-                <span>× {item.quantity} · {item.unit_price} ֏</span>
-              </div>
-            ))}
+      {!loading && filtered.length === 0 && (
+        <div className="bg-white rounded-2xl border border-surface-200 shadow-sm flex flex-col items-center justify-center py-20 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-surface-50 flex items-center justify-center mb-4">
+            <ShoppingBag size={24} className="text-surface-300" />
           </div>
-        );
-      })}
+          <p className="font-semibold text-surface-700">{t.emptyTitle}</p>
+          <p className="text-sm text-surface-400 mt-1">{activeFilter === "All" ? t.emptyAll : t.emptyFiltered}</p>
+        </div>
+      )}
 
-      {/* Review Modal */}
-      {reviewOrder && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-xl w-full max-w-md">
-            <h3 className="font-bold">{t.review.title}</h3>
-            <p className="text-sm">{t.review.order(reviewOrder.id?.slice(-8))}</p>
+      {!loading && filtered.length > 0 && (
+        <div className="space-y-4">
+          {filtered.map(order => {
+            const items     = order.items || [];
+            const expanded  = expandedId === order.id;
+            const statusKey = order.status?.toLowerCase() || "";
+            const statusCls = STATUS_STYLES[statusKey] || "bg-surface-100 text-surface-500 border-surface-200";
 
-            <textarea
-              placeholder={t.review.placeholder}
-              value={reviewText}
-              onChange={(e)=>setReviewText(e.target.value)}
-              className="w-full border mt-3 p-2"
-            />
+            return (
+              <div key={order.id} className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden hover:border-surface-300 transition-colors">
+                <div className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-11 h-11 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
+                      <Package size={18} className="text-brand-500" />
+                    </div>
 
-            <div className="flex gap-2 mt-4">
-              <button onClick={()=>setReviewOrder(null)}>
-                {t.review.cancel}
-              </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-3 mb-1">
+                        <div>
+                          <p className="text-sm font-bold text-surface-900">
+                            #{order.id?.slice(-8).toUpperCase()}
+                          </p>
+                          <p className="text-xs text-surface-400 mt-0.5">
+                            {t.vendor}: {order.vendor_name || `···${order.vendor_id?.slice(-6)}`}
+                          </p>
+                        </div>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border capitalize flex-shrink-0 ${statusCls}`}>
+                          {order.status || "—"}
+                        </span>
+                      </div>
 
-              <button disabled={!reviewText.trim()}>
-                {submittingReview ? t.review.submitting : t.review.submit}
-              </button>
-            </div>
-          </div>
+                      {/* Meta row */}
+                      <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-surface-400">
+                        <span className="flex items-center gap-1">
+                          <Calendar size={11} /> {formatDate(order.created_at)}
+                        </span>
+                        {order.total != null && (
+                          <span className="font-bold text-brand-600 text-sm">
+                            {order.total?.toLocaleString()} {order.currency?.toUpperCase() || "AMD"}
+                          </span>
+                        )}
+                        {items.length > 0 && (
+                          <span>{items.length} item{items.length !== 1 ? "s" : ""}</span>
+                        )}
+                      </div>
+
+                      {/* Delivery info */}
+                      {(order.delivery_date || order.delivery_address) && (
+                        <div className="flex flex-wrap gap-3 mt-2 text-xs text-surface-500">
+                          {order.delivery_date && (
+                            <span className="flex items-center gap-1">
+                              <Calendar size={11} className="text-brand-400" />
+                              {t.delivery}: {formatDate(order.delivery_date)}
+                            </span>
+                          )}
+                          {order.delivery_address && (
+                            <span className="flex items-center gap-1">
+                              <MapPin size={11} className="text-brand-400" />
+                              {order.delivery_address}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {items.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-surface-50">
+                      <button
+                        onClick={() => setExpandedId(expanded ? null : order.id)}
+                        className="flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 cursor-pointer border-none bg-transparent transition-colors"
+                      >
+                        {expanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                        {expanded ? t.hideItems : t.showItems(items.length)}
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Expanded items */}
+                {expanded && items.length > 0 && (
+                  <div className="border-t border-surface-100 bg-surface-50 px-5 py-3 space-y-2">
+                    {items.map((item, i) => (
+                      <div key={i} className="flex items-center justify-between py-1.5 text-xs">
+                        <div className="flex items-center gap-2 min-w-0">
+                          {item.image_url && (
+                            <img src={item.image_url} alt={item.product_name || ""} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                          )}
+                          <div className="min-w-0">
+                            {item.product_id ? (
+                              <Link href={`/${lang}/product/${item.product_id}`}
+                                className="font-semibold text-surface-900 hover:text-brand-600 transition-colors no-underline flex items-center gap-1 truncate">
+                                {item.product_name || `Item ${i + 1}`}
+                                <ExternalLink size={10} className="flex-shrink-0 opacity-50" />
+                              </Link>
+                            ) : (
+                              <span className="font-semibold text-surface-900">{item.product_name || `Item ${i + 1}`}</span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 text-surface-500 flex-shrink-0 ml-3">
+                          <span>{t.qty}: {item.quantity || 1}</span>
+                          {item.unit_price != null && (
+                            <span className="font-bold text-surface-700">
+                              {item.unit_price?.toLocaleString()} {order.currency?.toUpperCase() || "AMD"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
