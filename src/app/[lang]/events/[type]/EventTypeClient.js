@@ -132,6 +132,422 @@ const T = {
   },
 };
 
+
+
+
+
+
+
+const kidsLinks = {
+  decorations: {
+    hy: "ձևավորում",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+  balloons: {
+    hy: "փուչիկներ",
+    en: "balloons",
+    ru: "шары",
+    href: "/categories/balloons",
+  },
+  entertainment: {
+    hy: "ժամանց",
+    en: "entertainment",
+    ru: "развлечения",
+    href: "/categories/entertainment",
+  },
+  cake: {
+    hy: "տորթ",
+    en: "cake",
+    ru: "торт",
+    href: "/categories/cakes",
+  },
+  gifts: {
+    hy: "նվերներ",
+    en: "gifts",
+    ru: "подарки",
+    href: "/categories/gifts",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+};
+
+
+
+
+const anniversaryLinks = {
+  decorations: {
+    hy: "ձևավորում",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+  music: {
+    hy: "երաժշտություն",
+    en: "music",
+    ru: "музыка",
+    href: "/categories/music",
+  },
+  catering: {
+    hy: "սնունդ",
+    en: "catering",
+    ru: "кейтеринг",
+    href: "/categories/catering",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+  cake: {
+    hy: "տորթ",
+    en: "cake",
+    ru: "торт",
+    href: "/categories/cakes",
+  },
+  gifts: {
+    hy: "նվերներ",
+    en: "gifts",
+    ru: "подарки",
+    href: "/categories/gifts",
+  },
+};
+
+
+
+
+
+
+const engagementLinks = {
+  flowers: {
+    hy: "ծաղիկներ",
+    en: "flowers",
+    ru: "цветы",
+    href: "/categories/flowers",
+  },
+  decorations: {
+    hy: "ձևավորում",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+  music: {
+    hy: "երաժշտություն",
+    en: "music",
+    ru: "музыка",
+    href: "/categories/music",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+  gifts: {
+    hy: "նվերներ",
+    en: "gifts",
+    ru: "подарки",
+    href: "/categories/gifts",
+  },
+  cake: {
+    hy: "տորթ",
+    en: "cake",
+    ru: "торт",
+    href: "/categories/cakes",
+  },
+  wedding: {
+    hy: "հարսանիք",
+    en: "wedding",
+    ru: "свадьбе",
+    href: "/events/wedding",
+  },
+};
+
+
+
+
+
+
+const birthdayLinks = {
+  balloons: {
+    hy: "փուչիկներ",
+    en: "balloons",
+    ru: "шары",
+    href: "/categories/balloons",
+  },
+  decorations: {
+    hy: "ձևավորում",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+  catering: {
+    hy: "սնունդ",
+    en: "catering",
+    ru: "кейтеринг",
+    href: "/categories/catering",
+  },
+  music: {
+    hy: "երաժշտություն",
+    en: "music",
+    ru: "музыка",
+    href: "/categories/music",
+  },
+  entertainment: {
+    hy: "ժամանց",
+    en: "entertainment",
+    ru: "развлечения",
+    href: "/categories/entertainment",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+  cake: {
+    hy: "տորթ",
+    en: "cake",
+    ru: "торт",
+    href: "/categories/cakes",
+  },
+  gifts: {
+    hy: "նվերներ",
+    en: "gifts",
+    ru: "подарки",
+    href: "/categories/gifts",
+  },
+};
+
+const weddingLinks = {
+  flowers: {
+    hy: "ծաղիկներ",
+    en: "flowers",
+    ru: "цветы",
+    href: "/categories/flowers",
+  },
+  decorations: {
+    hy: "ձևավորում",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+  catering: {
+    hy: "սննդի մատուցում",
+    en: "catering",
+    ru: "кейтеринг",
+    href: "/categories/catering",
+  },
+  cake: {
+    hy: "տորթ",
+    en: "cake",
+    ru: "торт",
+    href: "/categories/cakes",
+  },
+  music: {
+    hy: "երաժշտություն",
+    en: "music",
+    ru: "музыка",
+    href: "/categories/music",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+};
+
+
+
+
+
+const newYearLinks = {
+  decorations: {
+    hy: "ձևավորում",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+  balloons: {
+    hy: "փուչիկներ",
+    en: "balloons",
+    ru: "шары",
+    href: "/categories/balloons",
+  },
+  catering: {
+    hy: "սնունդ",
+    en: "catering",
+    ru: "кейтеринг",
+    href: "/categories/catering",
+  },
+  cake: {
+    hy: "տորթ",
+    en: "cake",
+    ru: "торт",
+    href: "/categories/cakes",
+  },
+  gifts: {
+    hy: "նվերներ",
+    en: "gifts",
+    ru: "подарки",
+    href: "/categories/gifts",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+};
+
+
+
+const corporateLinks = {
+  venue: {
+    hy: "վայրը",
+    en: "venue",
+    ru: "место",
+    href: "/categories/venues",
+  },
+  catering: {
+    hy: "սննդի մատուցումը",
+    en: "catering",
+    ru: "кейтеринг",
+    href: "/categories/catering",
+  },
+  music: {
+    hy: "երաժշտությունը",
+    en: "music",
+    ru: "музыка",
+    href: "/categories/music",
+  },
+  entertainment: {
+    hy: "ժամանցային ծրագրերը",
+    en: "entertainment",
+    ru: "развлечения",
+    href: "/categories/entertainment",
+  },
+  photography: {
+    hy: "լուսանկարահանումը",
+    en: "photography",
+    ru: "фотосъёмка",
+    href: "/categories/photography",
+  },
+  decorations: {
+    hy: "ձևավորումը",
+    en: "decorations",
+    ru: "оформление",
+    href: "/categories/decorations",
+  },
+};
+
+
+
+const corporateLinks = {
+  venue: {
+    hy: "վայրը",
+    href: "/hy/categories/venues",
+  },
+  catering: {
+    hy: "սննդի մատուցումը",
+    href: "/hy/categories/catering",
+  },
+  music: {
+    hy: "երաժշտությունը",
+    href: "/hy/categories/music",
+  },
+  entertainment: {
+    hy: "ժամանցային ծրագրերը",
+    href: "/hy/categories/entertainment",
+  },
+  photography: {
+    hy: "լուսանկարահանումը",
+    href: "/hy/categories/photography",
+  },
+  decorations: {
+    hy: "ձևավորումը",
+    href: "/hy/categories/decorations",
+  },
+};
+
+
+
+
+
+const baptismLinks = {
+  balloons: {
+    hy: "փուչիկներ",
+    en: "balloons",
+    ru: "шарами",
+    href: "/categories/balloons",
+  },
+  decorations: {
+    hy: "ձևավորումներով",
+    en: "decorations",
+    ru: "оформления",
+    href: "/categories/decorations",
+  },
+  gifts: {
+    hy: "նվերներով",
+    en: "gifts",
+    ru: "подарков",
+    href: "/categories/gifts",
+  },
+  cake: {
+    hy: "տորթով",
+    en: "cake",
+    ru: "торта",
+    href: "/categories/cakes",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмкой",
+    href: "/categories/photography",
+  },
+};
+
+
+const baptismLinks = {
+  balloons: {
+    hy: "փուչիկներ",
+    en: "balloons",
+    ru: "шарами",
+    href: "/categories/balloons",
+  },
+  decorations: {
+    hy: "ձևավորումներով",
+    en: "decorations",
+    ru: "оформления",
+    href: "/categories/decorations",
+  },
+  gifts: {
+    hy: "նվերներով",
+    en: "gifts",
+    ru: "подарков",
+    href: "/categories/gifts",
+  },
+  cake: {
+    hy: "տորթով",
+    en: "cake",
+    ru: "торта",
+    href: "/categories/cakes",
+  },
+  photography: {
+    hy: "լուսանկարահանում",
+    en: "photography",
+    ru: "фотосъёмкой",
+    href: "/categories/photography",
+  },
+};
+
 /* ────────────────────────────────────────────────────────────────────
    Event metadata — fully translated, no mixed-script
 ──────────────────────────────────────────────────────────────────── */
@@ -236,6 +652,9 @@ const EVENT_META = {
     bestFor: { en: "Any occasion", hy: "Ցանկացած առիթ", ru: "Любой повод" },
     daysAhead: 2,
   },
+
+
+
   romantic: {
     label: "Romantic & Proposals",
     labelHy: "Ռոմանտիկ և Սիրո Խոստովանություն",
@@ -243,11 +662,49 @@ const EVENT_META = {
     desc: "Create an unforgettable romantic moment with the help of our vendors.",
     descHy: "Ռոմանտիկ միջոցառումներ և սիրո խոստովանություններ",
     descRu: "Создайте незабываемый романтический момент с помощью специалистов на Salooote.",
-    about: {
-      hy: "Salooote-ում կարող եք գտնել ռոմանտիկ ձևավորումների և սիրո խոստովանությունների կազմակերպման մասնագետներ։\n\nԴուք ուզում եք, որ ամեն ինչ կատարյալ լինի։ Ուզում եք, որ Ձեր փոխարեն խոսեն գեղեցիկ իրերը՝ մոմերը, ծաղիկները, փուչիկները, ֆոտոզոնաները…\n\nՍտեղծե՛ք անմոռանալի պահ՝ ընտրելով պատրաստի սցենար կամ ձևակերպելով Ձեր սեփական գաղափարը մատակարարների հետ։",
-      en: "Find professionals for romantic setups and proposals on Salooote.\n\nYou want everything to be perfect. You want the flowers, candles, balloons, and photo zones to speak for you — and Salooote vendors are here to make that happen.\n\nCreate an unforgettable moment by choosing a ready-made concept or designing your own unique experience.",
-      ru: "Найдите на Salooote специалистов по романтическим оформлениям и предложениям руки и сердца.\n\nВы хотите, чтобы всё было идеально. Чтобы вместо вас говорили красивые вещи — свечи, цветы, шары, фотозоны.\n\nСоздайте незабываемый момент, выбрав готовый сценарий или разработав уникальную идею вместе с исполнителями.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է լինել ավելի լուսավոր ու հուզիչ, քան նոր կյանքի առաջին կարևոր օրվա նշումը։
+
+Մկրտությունը պարզապես արարողություն չէ․ դա օրհնության, հավատքի և նոր սկիզբի խորհրդանիշ է։ Այս օրը միավորում է ընտանիքին, հարազատներին ու մտերիմներին՝ կիսելու փոքրիկի կյանքի կարևորագույն պահերից մեկը։
+
+Յուրաքանչյուր մկրտություն առանձնահատուկ է իր ջերմությամբ ու հոգևոր խորությամբ։ Եկեղեցական արարողությունը լի է խորհրդանշական պահերով, իսկ դրանից հետո օրը հաճախ շարունակվում է ընտանեկան ջերմ հավաքույթով կամ փոքրիկ տոնակատարությամբ։
+
+Մկրտության օրը կարելի է ավելի գեղեցիկ դարձնել նուրբ {{balloons}}-ով, թեմատիկ {{decorations}}-ով, փոքրիկի համար ընտրված {{gifts}}-ով և, իհարկե, հատուկ պատրաստված {{cake}}-ով։
+
+Այս օրը հաճախ ուղեկցվում է գեղեցիկ ավանդույթներով՝ նվերներ փոքրիկին, բարեմաղթանքներ, ընտանեկան {{photography}} և ուրախ պահեր, որոնք դառնում են ընտանեկան պատմության մի մասը։
+
+Եթե ցանկանում եք, որ այս օրը անցնի խաղաղ և կազմակերպված, կարևոր է նախապես մտածել բոլոր մանրուքների մասին՝ եկեղեցու ընտրությունը, ժամանակացույցը, հյուրերի ցանկը և հետագա տոնակատարությունը։
+
+Պարզապես վստահեք այդ օրվա գեղեցկությանը — իսկ մնացածը կարելի է հեշտությամբ կազմակերպել Salooote-ի միջոցով։`,
+
+  en: `What could be brighter and more emotional than celebrating one of the first important days of a new life?
+
+A baptism is not just a ceremony; it is a symbol of blessing, faith, and a new beginning. This day brings family and loved ones together to share one of the child’s most meaningful moments.
+
+Every baptism is special with its warmth and spiritual meaning. After the church ceremony, the day often continues with a family gathering or a small celebration.
+
+You can make the baptism day even more beautiful with gentle {{balloons}}, themed {{decorations}}, thoughtful {{gifts}} for the child, and, of course, a custom {{cake}}.
+
+This day is often filled with beautiful traditions: gifts for the child, warm wishes, family {{photography}}, and joyful moments that become part of your family story.
+
+To make the day peaceful and well-organized, it is important to plan the details in advance: the church, schedule, guest list, and celebration after the ceremony.
+
+Simply trust the beauty of this day — and organize the rest easily with Salooote.`,
+
+  ru: `Что может быть светлее и трогательнее, чем один из первых важных дней в жизни ребёнка?
+
+Крещение — это не просто церемония, а символ благословения, веры и нового начала. В этот день семья и близкие собираются вместе, чтобы разделить один из самых значимых моментов в жизни малыша.
+
+Каждое крещение особенно своей теплотой и духовным смыслом. После церковной церемонии день часто продолжается семейной встречей или небольшим праздником.
+
+День крещения можно сделать ещё красивее с помощью нежных {{balloons}}, тематического {{decorations}}, памятных {{gifts}} для ребёнка и, конечно, особенного {{cake}}.
+
+Этот день часто сопровождается красивыми традициями: подарками малышу, тёплыми пожеланиями, семейной {{photography}} и радостными моментами, которые становятся частью семейной истории.
+
+Чтобы день прошёл спокойно и организованно, важно заранее продумать детали: церковь, расписание, список гостей и праздник после церемонии.
+
+Просто доверьтесь красоте этого дня — а остальное легко организовать с Salooote.`,
+},
     icon: Heart,
     image: "/images/flowers-roses.jpg",
     accent: "from-rose-600 to-red-500",
@@ -269,7 +726,24 @@ const EVENT_META = {
     descHy: "Կյանքի ամենակարևոր արարողություններից մեկը դարձրե՛ք անմոռանալի՝ Salooote-ի մատակարարների օգնությամբ։",
     descRu: "Сделайте одно из самых важных таинств жизни незабываемым с помощью специалистов Salooote.",
     about: {
-      hy: "Կնունքի արարողությունն ամենակարևոր ու հիշարժան պահերից է Ձեր ընտանիքի կյանքում։\n\nSalooote-ում կարող եք գտնել փորձառու մասնագետներ, ովքեր կօգնեն ձևավորել այս հատուկ օրը ամենագեղեցիկ ձևով։\n\nԸնտրե՛ք ձևավորման ոճ, պատվիրե՛ք տորթ, նվերներ կամ այլ անհրաժեշտ ծառայություններ։",
+
+  hy: `Ի՞նչը կարող է ավելի լավ միավորել թիմին, քան լավ կազմակերպված կորպորատիվ միջոցառումը։
+
+Կորպորատիվ տոները պարզապես հանգիստ կամ ժամանց չեն․ դրանք թիմային մշակույթի կարևոր մասն են։ Դրանք հնարավորություն են ստեղծում աշխատակիցներին դուրս գալ առօրյա աշխատանքային ռեժիմից, շփվել ավելի ազատ միջավայրում և ձևավորել ավելի ամուր կապեր միմյանց հետ։
+
+Անկախ նրանից՝ կազմակերպում եք տարեվերջյան միջոցառում, թիմբիլդինգ, ընկերության տարեդարձ կամ նոր նախագծի մեկնարկ, կարևոր է ստեղծել այնպիսի մթնոլորտ, որը կլինի միաժամանակ հաճելի, մոտիվացնող և հիշվող։
+
+Կորպորատիվ միջոցառումները կարող են լինել տարբեր ձևաչափերով՝ պաշտոնական ընթրիքներից մինչև ակտիվ թիմային խաղեր, բացօթյա միջոցառումներ կամ թեմատիկ երեկույթներ։ Ճիշտ ընտրված կոնցեպտը կարող է բարձրացնել թիմի տրամադրությունը, խթանել համագործակցությունը և ստեղծել դրական էներգիա ամբողջ կազմակերպությունում։
+
+Այսպիսի միջոցառումների ընթացքում կարևոր են մանրուքները՝ ճիշտ ընտրված {{venue}}, որակյալ {{catering}}, լավ {{music}}, հետաքրքիր {{entertainment}} և պրոֆեսիոնալ {{photography}}։ Երբ ամեն ինչ մտածված է, արդյունքը զգացվում է ոչ միայն այդ օրը, այլ նաև աշխատանքի արդյունավետության մեջ։
+
+Կորպորատիվ տոները նաև հիանալի հնարավորություն են գնահատելու թիմի աշխատանքը, նշելու ձեռքբերումները և ներշնչելու նոր նպատակների հասնելու համար։
+
+Եթե ցանկանում եք, որ միջոցառումը լինի հաջողված և օգտակար, կարևոր է ճիշտ պլանավորումը։ Պետք է հաշվի առնել թիմի չափը, նպատակները, ձևաչափը և բյուջեն։
+
+Salooote-ում կարող եք գտնել կորպորատիվ միջոցառումների կազմակերպման բոլոր ծառայությունները մեկ հարթակում՝ սկսած {{catering}}-ից և {{decorations}}-ից մինչև {{entertainment}} և {{photography}}։
+
+Պարզապես սահմանեք ձեր նպատակը — իսկ մնացածը կարելի է վստահել ճիշտ կազմակերպմանը։`,
       en: "A baptism is one of the most important and memorable moments in your family's life.\n\nOn Salooote, you can find experienced professionals who will help make this special day as beautiful as possible.\n\nChoose a decoration style, order a cake, gifts, or any other services you need.",
       ru: "Крещение — один из самых важных и памятных моментов в жизни вашей семьи.\n\nНа Salooote вы найдёте опытных специалистов, которые помогут сделать этот особый день максимально красивым.\n\nВыберите стиль оформления, закажите торт, подарки или другие необходимые услуги.",
     },
@@ -293,11 +767,55 @@ const EVENT_META = {
     desc: "Celebrate your little one's first tooth with a beautifully organized party.",
     descHy: "Ձեր փոքրիկի ատամհատիկն անմոռանալի դարձրե՛ք Salooote-ի մատակարարների օգնությամբ։",
     descRu: "Сделайте праздник первого зубика вашего малыша незабываемым с помощью Salooote.",
-    about: {
-      hy: "Ձեր փոքրիկն արդեն ատա՞մ է հանել։ Ատամհատիկը հատուկ առիթ է, որը արժե նշել գեղեցիկ և անմոռանալի ձևով։\n\nՇատերը կազմակերպում են ատամհատիկը ինքնուրույն, իսկ մյուսները նախընտրում են վստահել փորձառու մասնագետներին։\n\nSalooote-ում կարող եք գտնել ատամհատիկի ձևավորման մասնագետներ, պատվիրել տորթ և ընտրել անհրաժեշտ բոլոր պարագաները։",
-      en: "Has your little one cut their first tooth? A tooth party is a special occasion worth celebrating beautifully.\n\nSome parents organize it themselves, while others prefer to entrust the planning to experienced professionals.\n\nOn Salooote, you can find decoration specialists, order a cake, choose all the necessary supplies, and plan the entire celebration.",
-      ru: "Ваш малыш уже прорезал первый зубик? Праздник первого зубика — особый повод, который стоит отметить красиво и незабываемо.\n\nОдни родители организуют его самостоятельно, другие предпочитают доверить подготовку опытным специалистам.\n\nНа Salooote вы найдёте специалистов по оформлению, закажете торт, выберете нужные аксессуары.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է լինել ավելի քնքուշ ու հիշարժան, քան փոքրիկի առաջին ատամիկի տոնը։
+
+Ատամհատիկը հայկական ամենաջերմ ու գեղեցիկ ընտանեկան ավանդույթներից է։ Այն պարզապես փոքրիկ տոն չէ․ դա երեխայի աճի, ուրախության և նոր փուլի խորհրդանիշ է, որը ընտանիքը նշում է սիրով ու ժպիտներով։
+
+Այս օրը սովորաբար լի է գեղեցիկ մանրուքներով՝ ընտանեկան ջերմ հավաքույթ, փոքրիկի համար ընտրված թեմատիկ {{decorations}}, գունավոր {{balloons}}, գեղեցիկ {{cake}} և հիշարժան {{photography}}։
+
+Ատամհատիկի տոնը կարող է լինել շատ պարզ ու մտերմիկ կամ ավելի մեծ ու ձևավորված միջոցառում՝ կախված Ձեր ցանկությունից, հյուրերի քանակից և ընտրված ոճից։
+
+Շատ ծնողներ սիրում են այս օրը լրացնել նաև փոքրիկ {{gifts}}-ով, քաղցրավենիքով, գեղեցիկ սեղանի ձևավորմամբ և ընտանեկան խաղերով, որոնք տոնին տալիս են ավելի ջերմ ու ուրախ մթնոլորտ։
+
+Եթե ցանկանում եք, որ ամեն ինչ լինի գեղեցիկ և կազմակերպված, կարևոր է նախապես մտածել ձևավորման, տորթի, լուսանկարահանման և անհրաժեշտ պարագաների մասին։
+
+Salooote-ում կարող եք գտնել ատամհատիկի համար անհրաժեշտ ծառայություններն ու մասնագետներին մեկ հարթակում՝ արագ, հարմար և գեղեցիկ։
+
+Պարզապես ընտրեք տոնի ոճը — իսկ մնացածը կարելի է կազմակերպել ճիշտ մասնագետների օգնությամբ։`,
+
+  en: `What could be more tender and memorable than celebrating your little one’s first tooth?
+
+A first tooth celebration is one of the warmest family traditions. It is not just a small party; it is a symbol of your child’s growth, joy, and a new stage in life, celebrated with love and smiles.
+
+This day is usually filled with beautiful details: a warm family gathering, themed {{decorations}}, colorful {{balloons}}, a lovely {{cake}}, and memorable {{photography}}.
+
+The celebration can be simple and intimate or larger and more decorated, depending on your wishes, guest count, and chosen style.
+
+Many parents also like to add small {{gifts}}, sweets, a beautifully arranged table, and family activities that make the atmosphere even warmer and more joyful.
+
+To make everything beautiful and well-organized, it is important to plan the decorations, cake, photography, and necessary supplies in advance.
+
+On Salooote, you can find all the services and professionals you need for a first tooth celebration in one place — quickly, easily, and beautifully.
+
+Simply choose the style of the celebration — and organize the rest with the help of the right professionals.`,
+
+  ru: `Что может быть нежнее и памятнее, чем праздник первого зубика малыша?
+
+Праздник первого зубика — одна из самых тёплых семейных традиций. Это не просто маленькое торжество, а символ роста ребёнка, радости и нового этапа в жизни, который семья отмечает с любовью и улыбками.
+
+Этот день обычно наполнен красивыми деталями: тёплой семейной встречей, тематическим {{decorations}}, яркими {{balloons}}, красивым {{cake}} и памятной {{photography}}.
+
+Праздник может быть простым и уютным или более большим и оформленным — всё зависит от ваших пожеланий, количества гостей и выбранного стиля.
+
+Многие родители также добавляют небольшие {{gifts}}, сладости, красивое оформление стола и семейные активности, которые делают атмосферу ещё более тёплой и радостной.
+
+Чтобы всё прошло красиво и организованно, важно заранее продумать оформление, торт, фотосъёмку и необходимые аксессуары.
+
+На Salooote вы можете найти все услуги и специалистов для праздника первого зубика в одном месте — быстро, удобно и красиво.
+
+Просто выберите стиль праздника — а остальное организуйте с помощью подходящих специалистов.`,
+},
     icon: Baby,
     image: "/images/cookies-box2.jpg",
     accent: "from-emerald-500 to-teal-500",
@@ -318,11 +836,61 @@ const EVENT_META = {
     desc: "Create the perfect festive atmosphere for New Year and Christmas.",
     descHy: "Ամանորն ու Սուրբ Ծնունդն անմոռանալի դարձրե՛ք Salooote-ի լավագույն մատակարարների շնորհիվ։",
     descRu: "Сделайте Новый год и Рождество незабываемыми с лучшими поставщиками на Salooote.",
-    about: {
-      hy: "Ամանորը մոտենում է, և Salooote-ը կօգնի Ձեզ ստեղծել կատարյալ տոնական մթնոլորտ։\n\nՃիշտ նվերի ընտրությունը, տան և միջոցառման ձևավորումը, տոնական տորթի պատվիրումը՝ հարցեր են, որոնք կարևոր են բոլորի համար։\n\nՀարթակում կարող եք գտնել ամանորյա ձևավորման մատակարարներ, ընտրել օրիգինալ նվերներ և ձեռք բերել բոլոր անհրաժեշտ պարագաները։",
-      en: "The New Year is approaching, and Salooote is here to help you create the perfect festive atmosphere.\n\nChoosing the right gift, decorating your home, ordering a festive cake — these are questions that concern almost everyone.\n\nFind Christmas decoration vendors, choose original New Year gifts, gift boxes, and everything you need for a magical celebration.",
-      ru: "Новый год приближается, и Salooote поможет вам создать идеальную праздничную атмосферу.\n\nВыбрать правильный подарок, украсить дом, заказать праздничный торт — вопросы, которые волнуют почти каждого.\n\nНайдите поставщиков новогодних украшений, выберите оригинальные подарки, подарочные коробки и всё необходимое.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է լինել ավելի կախարդական, քան Ամանորի գիշերը և տոնական սպասումը։
+
+Ամանորը տարվա ամենասիրված և սպասված տոնն է, որը միավորում է ընտանիքին, ընկերներին և ստեղծում ջերմ ու ուրախ մթնոլորտ։ Այս օրերին յուրաքանչյուր մանրուք կարևոր է՝ սկսած տան ձևավորումից մինչև նվերների ընտրություն։
+
+Տոնական տրամադրությունը սկսվում է գեղեցիկ {{decorations}}-ից, փայլուն լույսերից և գունավոր {{balloons}}-ից, որոնք տունը լցնում են ուրախությամբ և կախարդանքով։
+
+Ամանորի սեղանը նույնպես կարևոր մասն է տոնի, որտեղ առանձնանում են համեղ {{catering}}-ը և գեղեցիկ պատրաստված {{cake}}-ը, որոնք դարձնում են երեկոն ավելի ամբողջական։
+
+Իհարկե, Ամանորը դժվար է պատկերացնել առանց յուրահատուկ {{gifts}}-ի, որոնք փոխանցում են ջերմություն և ուրախություն ձեր սիրելիներին։
+
+Շատերը նաև նախընտրում են ֆիքսել այդ գեղեցիկ պահերը պրոֆեսիոնալ {{photography}}-ով՝ հիշողությունները պահպանելու համար։
+
+Եթե ցանկանում եք ստեղծել իսկապես կախարդական տոն, կարևոր է նախապես պլանավորել ամեն ինչ՝ ձևավորումից մինչև նվերներ և տոնական մթնոլորտ։
+
+Salooote-ում կարող եք գտնել ամանորյա տոնի կազմակերպման համար անհրաժեշտ բոլոր ծառայությունները մեկ հարթակում։
+
+Պարզապես պատկերացրեք Ձեր իդեալական Ամանորը — իսկ մնացածը կարելի է վստահել ճիշտ մասնագետներին։`,
+
+  en: `What could be more magical than New Year’s Eve and the anticipation of the holiday?
+
+New Year is one of the most beloved and awaited celebrations, bringing family and friends together and creating a warm, joyful atmosphere. During this time, every detail matters — from decorating your home to choosing the perfect gifts.
+
+The festive mood begins with beautiful {{decorations}}, sparkling lights, and colorful {{balloons}} that fill your space with joy and magic.
+
+The holiday table is also an important part of the celebration, featuring delicious {{catering}} and a beautifully crafted {{cake}} that complete the evening.
+
+Of course, New Year wouldn’t be the same without thoughtful {{gifts}} that bring warmth and happiness to your loved ones.
+
+Many people also choose to capture these special moments with professional {{photography}} to preserve the memories.
+
+If you want to create a truly magical celebration, it’s important to plan everything in advance — from decorations to gifts and the overall atmosphere.
+
+On Salooote, you can find all the services you need to organize your perfect New Year celebration in one place.
+
+Simply imagine your ideal New Year — and let the rest be handled by the right professionals.`,
+
+  ru: `Что может быть более волшебным, чем новогодняя ночь и ожидание праздника?
+
+Новый год — один из самых любимых и долгожданных праздников, который объединяет семью и друзей, создавая тёплую и радостную атмосферу. В эти дни важна каждая деталь — от украшения дома до выбора подарков.
+
+Праздничное настроение начинается с красивого {{decorations}}, сияющих огней и ярких {{balloons}}, которые наполняют пространство радостью и магией。
+
+Новогодний стол также играет важную роль — вкусный {{catering}} и красиво оформленный {{cake}} делают вечер ещё более особенным।
+
+Конечно, Новый год невозможно представить без душевных {{gifts}}, которые дарят тепло и радость вашим близким。
+
+Многие также предпочитают сохранить эти моменты с помощью профессиональной {{photography}}, чтобы воспоминания остались на долгие годы。
+
+Чтобы создать по-настоящему волшебный праздник, важно заранее продумать всё — от оформления до подарков и общей атмосферы。
+
+На Salooote вы найдёте все услуги для организации идеального Нового года в одном месте。
+
+Просто представьте свой идеальный праздник — а остальное доверьте профессионалам։`,
+},
     icon: TreePine,
     image: "/images/wedding-dance.jpg",
     accent: "from-emerald-600 to-rose-500",
@@ -343,11 +911,61 @@ const EVENT_META = {
     desc: "Everything you need to make your wedding day absolutely perfect.",
     descHy: "Ձեր հարսանյաց օրն անմոռանալի դարձնելու համար անհրաժեշտ ամեն ինչ՝ Salooote-ում։",
     descRu: "Всё необходимое для того, чтобы ваш свадебный день был идеальным — на Salooote.",
-    about: {
-      hy: "Հարսանիքն Ձեր կյանքի ամենակարևոր ու հիշարժան օրերից է։ Salooote-ում կարող եք գտնել լավագույն մատակարարներ Ձեր հարսանյաց բոլոր կարիքների համար։\n\nԾաղիկներ, տորթ, սննդի մատուցում, ֆոտոգրաֆ, երաժշտություն — ամեն ինչ Salooote-ի հարթակում մեկ տեղում։\n\nՀամեմատե՛ք, ընտրե՛ք, կազմակերպե՛ք Ձեր կատարյալ հարսանիքը հեշտ ու արագ։",
-      en: "Your wedding day is one of the most important and memorable days of your life. On Salooote, you can find the best vendors for all your wedding needs.\n\nFlowers, cakes, catering, photography, music — all in one place on the Salooote platform.\n\nCompare, choose, and plan your perfect wedding easily and quickly.",
-      ru: "Свадьба — один из самых важных и незабываемых дней в вашей жизни. На Salooote вы найдёте лучших поставщиков для всех свадебных нужд.\n\nЦветы, торты, кейтеринг, фотография, музыка — всё в одном месте на платформе Salooote.\n\nСравнивайте, выбирайте и организовывайте идеальную свадьбу легко и быстро.",
-    },
+about: {
+  hy: `Անշուշտ կհամաձայնեք, որ յուրաքանչյուր տոն ունի իր յուրահատուկ մոգությունը, իսկ ճիշտ ընտրված դետալներն են այն դարձնում իսկապես հիշվող։
+
+Հատկապես հարսանիքը Ձեր կյանքի ամենակարևոր ու զգացմունքային օրերից է։ Այս օրը պետք է լինի կատարյալ՝ լի գեղեցկությամբ, սիրով և անմոռանալի պահերով։
+
+Հարսանեկան մթնոլորտը ստեղծվում է մանրուքներից՝ նուրբ {{flowers}}, ոճային {{decorations}}, ճաշակով ընտրված {{catering}}, գեղեցիկ {{cake}}, կենդանի {{music}} և պրոֆեսիոնալ {{photography}}։
+
+Յուրաքանչյուր այս բաղադրիչ իր տեղում ստեղծում է ներդաշնակ ամբողջություն, որը երկար ժամանակ կմնա Ձեր և Ձեր հյուրերի հիշողության մեջ։
+
+Ժամանակակից հարսանիքները կարող են լինել տարբեր ոճերի՝ դասականից մինչև ժամանակակից, բացօթյա արարողություններից մինչև շքեղ հանդիսություններ։ Կարևորն այն է, որ ամեն ինչ արտացոլի հենց Ձեր պատմությունն ու անհատականությունը։
+
+Ճիշտ կազմակերպման դեպքում նույնիսկ ամենափոքր դետալը կարող է դառնալ հիշարժան պահ, որը կհուզի և կուրախացնի բոլոր ներկաներին։
+
+Եթե ցանկանում եք, որ Ձեր հարսանիքը լինի կատարյալ, կարևոր է վստահել փորձառու մասնագետներին և նախապես մտածել բոլոր մանրուքների մասին։
+
+Salooote-ում կարող եք գտնել հարսանեկան միջոցառման համար անհրաժեշտ բոլոր ծառայությունները մեկ հարթակում՝ սկսած {{flowers}}-ից և {{decorations}}-ից մինչև {{catering}}, {{music}} և {{photography}}։
+
+Պարզապես պատկերացրեք Ձեր իդեալական օրը — իսկ մնացածը կարելի է վստահել ճիշտ մասնագետներին։`,
+
+  en: `Every celebration has its own magic, and it is the right details that make it truly unforgettable.
+
+A wedding, in particular, is one of the most important and emotional days of your life. It should be perfect — filled with beauty, love, and unforgettable moments.
+
+The wedding atmosphere is created through details: elegant {{flowers}}, stylish {{decorations}}, refined {{catering}}, a beautiful {{cake}}, live {{music}}, and professional {{photography}}.
+
+Each element plays its role in creating a harmonious experience that will stay in your and your guests’ memories for years.
+
+Modern weddings can take many forms — from classic to contemporary, from outdoor ceremonies to luxurious receptions. What matters most is that everything reflects your story and personality.
+
+With the right planning, even the smallest detail can become a meaningful and emotional moment.
+
+If you want your wedding to be truly perfect, it is important to trust experienced professionals and plan everything in advance.
+
+On Salooote, you can find all the services you need for your wedding in one place — from {{flowers}} and {{decorations}} to {{catering}}, {{music}}, and {{photography}}.
+
+Simply imagine your perfect day — and let the rest be handled by the right professionals.`,
+
+  ru: `Каждое торжество имеет свою магию, и именно детали делают его по-настоящему незабываемым.
+
+Свадьба — один из самых важных и эмоциональных дней в вашей жизни. Этот день должен быть идеальным — наполненным красотой, любовью и яркими моментами.
+
+Атмосфера свадьбы создаётся из деталей: изящные {{flowers}}, стильное {{decorations}}, качественный {{catering}}, красивый {{cake}}, живая {{music}} и профессиональная {{photography}}.
+
+Каждый элемент играет свою роль, создавая гармоничное впечатление, которое надолго останется в памяти вас и ваших гостей.
+
+Современные свадьбы могут быть разными — от классических до современных, от выездных церемоний до роскошных банкетов. Главное — чтобы всё отражало вашу историю и индивидуальность.
+
+При правильной организации даже самая маленькая деталь может стать особенным моментом.
+
+Если вы хотите, чтобы ваша свадьба была идеальной, важно довериться профессионалам и заранее продумать все детали.
+
+На Salooote вы найдёте все услуги для свадьбы в одном месте — от {{flowers}} и {{decorations}} до {{catering}}, {{music}} и {{photography}}.
+
+Просто представьте свой идеальный день — а остальное доверьте профессионалам.`,
+},
     icon: Heart,
     image: "/images/wedding-arch-beach.jpg",
     accent: "from-rose-500 to-fuchsia-500",
@@ -368,11 +986,73 @@ const EVENT_META = {
     desc: "Celebrate every birthday in style with the best vendors in Armenia.",
     descHy: "Ծննդյան տոնն ամենաանմոռանալի ձևով կազմակերպե՛ք Salooote-ի լավագույն մատակարարների հետ։",
     descRu: "Организуйте день рождения самым незабываемым образом с лучшими поставщиками на Salooote.",
-    about: {
-      hy: "Ծննդյան տոնը հատուկ օր է, որ արժե նշել հեքիաթային ձևով — թե՛ փոքրի, թե՛ մեծի համար։\n\nSalooote-ում կարող եք գտնել լավագույն մատակարարներ ծննդյան տոնի բոլոր կարիքների համար՝ գունագեղ փուչիկներ, թեմատիկ ձևավորում, մոմեր, լույսեր, տորթ, ժամանցային ծրագիր։\n\nԿազմակերպե՛ք Ձեր կամ Ձեր սիրելիի ծննդյան տոնը հեշտ ու արագ՝ մեկ հարթակում։",
-      en: "A birthday is a special day worth celebrating in the most magical way — for kids and adults alike.\n\nOn Salooote, you can find the best vendors for all birthday needs: colorful balloons, themed decorations, candles, lights, cakes, and entertainment.\n\nPlan your own or your loved one's birthday easily and quickly in one platform.",
-      ru: "День рождения — особый день, который стоит отмечать самым волшебным образом — и для детей, и для взрослых.\n\nНа Salooote вы найдёте лучших поставщиков для всех потребностей дня рождения: красочные шары, тематическое оформление, свечи, торты, развлечения.\n\nОрганизуйте свой или чужой день рождения легко и быстро на одной платформе.",
-    },
+about: {
+  hy: `Ուրիշ ի՞նչը կարող է ավելի ուրախացնել մարդուն, քան իր ծննդյան օրը՝ լի ժպիտներով, անակնկալներով ու սիրելի մարդկանց ներկայությամբ։
+
+Խոստովանենք՝ անկախ տարիքից, բոլորս էլ անհամբեր սպասում ենք մեր ծննդյան օրվան։ Դա այն օրն է, երբ ուզում ենք կտրվել առօրյայից, լինել ուշադրության կենտրոնում և պարզապես վայելել պահը։
+
+Ծննդյան տոնը յուրահատուկ է յուրաքանչյուրի համար։ Ոմանք նախընտրում են հանգիստ ընտանեկան հավաքույթ, մյուսները՝ մեծ ու շքեղ երեկույթ ընկերների հետ։
+
+Տոնական մթնոլորտը ստեղծվում է մանրուքներից՝ գունավոր {{balloons}}, գեղեցիկ {{decorations}}, համեղ {{catering}}, հաճելի {{music}} և հիշարժան {{photography}}։
+
+Փոքրիկների ծննդյան տոները լի են խաղով ու կախարդանքով, որտեղ կարևոր դեր ունեն նաև թեմատիկ {{entertainment}}-ը և անակնկալ {{gifts}}-ը։
+
+Երիտասարդների և մեծահասակների համար ծննդյան օրը հաճախ դառնում է հիշողություններով լի երեկո՝ ընկերների, երաժշտության և ուրախ մթնոլորտի մեջ։
+
+Իսկ ի՞նչ ծնունդ առանց գեղեցիկ ու համեղ {{cake}}-ի։ Դա այն պահն է, երբ բոլորի հայացքները միավորվում են, մոմերը վառվում են, և հոբելյարը պահ է գտնում իր ցանկությունը պահելու։
+
+Ինչ ձևաչափ էլ ընտրեք՝ փոքր, մեծ, ընտանեկան թե շքեղ, ծննդյան տոնը միշտ մնում է սիրով ու ժպիտներով լի օր։
+
+Եթե ցանկանում եք, որ այդ օրը լինի իսկապես առանձնահատուկ, կարևոր է ամեն ինչ ճիշտ պլանավորել։
+
+Salooote-ում կարող եք գտնել ծննդյան տոնի համար անհրաժեշտ բոլոր ծառայությունները մեկ հարթակում՝ սկսած {{balloons}}-ից և {{decorations}}-ից մինչև {{catering}}, {{music}}, {{entertainment}} և {{photography}}։
+
+Պարզապես պատկերացրեք Ձեր իդեալական օրը — իսկ մնացածը կարելի է հեշտությամբ իրականացնել ճիշտ մասնագետների օգնությամբ։`,
+
+  en: `What could make a person happier than their birthday — filled with smiles, surprises, and the presence of loved ones?
+
+Let’s admit it — regardless of age, we all look forward to our birthday. It’s a day to step away from routine, be in the spotlight, and simply enjoy the moment.
+
+Every birthday is unique. Some prefer a quiet family gathering, while others choose a big celebration with friends.
+
+The festive atmosphere is created through details: colorful {{balloons}}, beautiful {{decorations}}, delicious {{catering}}, enjoyable {{music}}, and memorable {{photography}}.
+
+Children’s birthday parties are full of magic and joy, often enhanced with themed {{entertainment}} and fun {{gifts}}.
+
+For adults, birthdays often become evenings full of memories, friends, music, and great conversations.
+
+And what is a birthday without a beautiful {{cake}}? It’s the moment when everyone gathers, candles are lit, and a wish is made.
+
+No matter the format — small or large, simple or luxurious — a birthday is always a day filled with joy and warmth.
+
+If you want your celebration to be truly special, proper planning is essential.
+
+On Salooote, you can find everything you need for a perfect birthday in one place — from {{balloons}} and {{decorations}} to {{catering}}, {{music}}, {{entertainment}}, and {{photography}}.
+
+Just imagine your perfect day — and let the rest be handled by the right professionals.`,
+
+  ru: `Что может сделать человека счастливее, чем его день рождения — полный улыбок, сюрпризов и любимых людей рядом?
+
+Признаемся — независимо от возраста, мы все с нетерпением ждём свой день рождения. Это день, когда хочется отвлечься от повседневности и просто наслаждаться моментом.
+
+Каждый день рождения уникален. Кто-то выбирает уютный семейный вечер, а кто-то — масштабную вечеринку с друзьями.
+
+Праздничная атмосфера создаётся деталями: яркие {{balloons}}, красивое {{decorations}}, вкусный {{catering}}, приятная {{music}} и памятная {{photography}}.
+
+Детские праздники наполнены магией и весельем, где важную роль играют тематические {{entertainment}} и сюрпризы {{gifts}}.
+
+Для взрослых это часто вечер воспоминаний, общения и хорошего настроения.
+
+И какой день рождения без красивого {{cake}}? Это момент, когда зажигаются свечи и загадываются желания.
+
+Независимо от формата — небольшой или большой праздник — день рождения всегда остаётся днём радости и тепла.
+
+Если вы хотите, чтобы праздник был действительно особенным, важно всё заранее продумать.
+
+На Salooote вы найдёте всё для идеального дня рождения в одном месте — от {{balloons}} и {{decorations}} до {{catering}}, {{music}}, {{entertainment}} и {{photography}}.
+
+Просто представьте свой идеальный день — а остальное доверьте профессионалам.`,
+},
     icon: PartyPopper,
     image: "/images/party-balloons.jpg",
     accent: "from-sky-500 to-cyan-500",
@@ -393,11 +1073,61 @@ const EVENT_META = {
     desc: "Impress your clients and team with a professionally organized corporate event.",
     descHy: "Կազմակերպե՛ք Ձեր կորպորատիվ միջոցառումն անթերի՝ Salooote-ի մատակարարների օգնությամբ։",
     descRu: "Организуйте безупречное корпоративное мероприятие с помощью поставщиков Salooote.",
-    about: {
-      hy: "Salooote-ում կարող եք գտնել կորպորատիվ միջոցառումների կազմակերպման բոլոր ծառայությունները մեկ հարթակում։\n\nՍննդի մատուցում, ձևավորում, ժամանցային ծրագրեր, ֆոտոգրաֆ — ամեն ինչ, ինչ անհրաժեշտ է Ձեր կամ Ձեր ընկերության միջոցառման համար։\n\nՀամեմատե՛ք, ընտրե՛ք, կազմակերպե՛ք։",
-      en: "On Salooote, you can find all the services for organizing corporate events in one platform.\n\nCatering, decoration, entertainment programs, photography — everything your company event needs.\n\nCompare vendors, choose the best, and organize effortlessly.",
-      ru: "На Salooote вы найдёте все услуги для организации корпоративных мероприятий на одной платформе.\n\nКейтеринг, оформление, развлекательные программы, фотография — всё необходимое для вашего корпоратива.\n\nСравнивайте поставщиков, выбирайте лучших и организовывайте без лишних хлопот.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է ավելի լավ միավորել թիմին, քան լավ կազմակերպված կորպորատիվ միջոցառումը։
+
+Կորպորատիվ տոները պարզապես հանգիստ կամ ժամանց չեն․ դրանք թիմային մշակույթի կարևոր մասն են։ Դրանք հնարավորություն են ստեղծում աշխատակիցներին դուրս գալ առօրյա աշխատանքային ռեժիմից, շփվել ավելի ազատ միջավայրում և ձևավորել ավելի ամուր կապեր միմյանց հետ։
+
+Անկախ նրանից՝ կազմակերպում եք տարեվերջյան միջոցառում, թիմբիլդինգ, ընկերության տարեդարձ կամ նոր նախագծի մեկնարկ, կարևոր է ստեղծել այնպիսի մթնոլորտ, որը կլինի միաժամանակ հաճելի, մոտիվացնող և հիշվող։
+
+Կորպորատիվ միջոցառումները կարող են լինել տարբեր ձևաչափերով՝ պաշտոնական ընթրիքներից մինչև ակտիվ թիմային խաղեր, բացօթյա միջոցառումներ կամ թեմատիկ երեկույթներ։ Ճիշտ ընտրված կոնցեպտը կարող է բարձրացնել թիմի տրամադրությունը, խթանել համագործակցությունը և ստեղծել դրական էներգիա ամբողջ կազմակերպությունում։
+
+Այսպիսի միջոցառումների ընթացքում կարևոր են մանրուքները՝ ճիշտ ընտրված {{venue}}, որակյալ {{catering}}, լավ {{music}}, հետաքրքիր {{entertainment}} և պրոֆեսիոնալ {{photography}}։
+
+Կորպորատիվ տոները նաև հիանալի հնարավորություն են գնահատելու թիմի աշխատանքը, նշելու ձեռքբերումները և ներշնչելու նոր նպատակների հասնելու համար։
+
+Եթե ցանկանում եք, որ միջոցառումը լինի հաջողված և օգտակար, կարևոր է ճիշտ պլանավորումը։
+
+Salooote-ում կարող եք գտնել կորպորատիվ միջոցառումների կազմակերպման բոլոր ծառայությունները մեկ հարթակում՝ սկսած {{catering}}-ից և {{decorations}}-ից մինչև {{entertainment}} և {{photography}}։
+
+Պարզապես սահմանեք ձեր նպատակը — իսկ մնացածը կարելի է վստահել ճիշտ կազմակերպմանը։`,
+
+  en: `What could bring a team together better than a well-organized corporate event?
+
+Corporate events are not just about отдых and entertainment — they are an essential part of company culture. They give employees the opportunity to step out of their daily routine, connect in a relaxed environment, and build stronger relationships.
+
+Whether you are planning a year-end party, team building, company anniversary, or a project launch, it is important to create an atmosphere that is enjoyable, motivating, and memorable.
+
+Corporate events can take many forms — from formal dinners to active team games, outdoor activities, or themed parties. The right concept can boost team morale, encourage collaboration, and create positive energy within the organization.
+
+During such events, details matter: the right {{venue}}, quality {{catering}}, good {{music}}, engaging {{entertainment}}, and professional {{photography}}.
+
+Corporate celebrations are also a great way to recognize your team’s efforts, celebrate achievements, and inspire future goals.
+
+If you want your event to be successful and impactful, proper planning is key.
+
+On Salooote, you can find all corporate event services in one place — from {{catering}} and {{decorations}} to {{entertainment}} and {{photography}}.
+
+Simply define your goal — and leave the rest to the right professionals.`,
+
+  ru: `Что может лучше объединить команду, чем хорошо организованное корпоративное мероприятие?
+
+Корпоративные события — это не просто отдых и развлечения, а важная часть корпоративной культуры. Они помогают сотрудникам выйти из повседневного рабочего режима, пообщаться в более свободной обстановке и укрепить отношения внутри команды.
+
+Независимо от того, организуете ли вы новогодний вечер, тимбилдинг, юбилей компании или запуск нового проекта, важно создать атмосферу, которая будет одновременно приятной, мотивирующей и запоминающейся.
+
+Корпоративные мероприятия могут быть разными по формату — от официальных ужинов до активных командных игр, выездных событий или тематических вечеринок. Правильно выбранная концепция повышает настроение команды, способствует сотрудничеству и создаёт позитивную энергию внутри компании.
+
+В таких мероприятиях важны детали: подходящее {{venue}}, качественный {{catering}}, хорошая {{music}}, интересные {{entertainment}} и профессиональная {{photography}}.
+
+Корпоративные события также дают отличную возможность оценить работу команды, отметить достижения и вдохновить на новые цели.
+
+Если вы хотите, чтобы мероприятие было успешным и полезным, важно заранее продумать все детали.
+
+На Salooote вы можете найти все услуги для корпоративных мероприятий в одном месте — от {{catering}} и {{decorations}} до {{entertainment}} и {{photography}}.
+
+Просто определите свою цель — а остальное доверьте профессионалам.`,
+},
     icon: Users,
     image: "/images/event-dinner.jpg",
     accent: "from-slate-700 to-slate-500",
@@ -418,11 +1148,61 @@ const EVENT_META = {
     desc: "Plan the perfect engagement — from the ring moment to the celebration.",
     descHy: "Կազմակերպե՛ք կատարյալ նշանդրեք՝ Salooote-ի մատակարարների օգնությամբ։",
     descRu: "Организуйте идеальную помолвку с помощью поставщиков Salooote.",
-    about: {
-      hy: "Նշանդրեքն անմոռանալի պահ է, որ պահանջում է կատարյալ կազմակերպում։\n\nSalooote-ում կարող եք գտնել ծաղիկներ, տորթ, ֆոտոգրաֆ, ռոմանտիկ ձևավորում — ամեն ինչ Ձեր կատարյալ նշանդրեքի համար։\n\nՊարզ ու հեշտ ճանապարհ՝ ամեն մանրուքը մեկ տեղում կազմակերպելու։",
-      en: "An engagement is an unforgettable moment that deserves perfect planning.\n\nOn Salooote, you can find flowers, cakes, photography, and romantic setups — everything for your perfect engagement.\n\nA simple way to organize every detail in one place.",
-      ru: "Помолвка — незабываемый момент, требующий идеальной организации.\n\nНа Salooote вы найдёте цветы, торты, фотографию и романтическое оформление — всё для идеальной помолвки.\n\nПростой способ организовать каждую деталь в одном месте.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է լինել ավելի հուզիչ, քան այն պահը, երբ երկու մարդ որոշում են միասին կերտել իրենց ապագան։
+
+Նշանադրությունը պարզապես արարողություն չէ․ դա սիրո խոստում է, նոր ճանապարհի սկիզբ և այն պահը, երբ երկու ընտանիքներ դառնում են մեկ։
+
+Յուրաքանչյուր նշանադրություն յուրահատուկ է։ Ոմանք նախընտրում են ինտիմ ընտանեկան միջավայր, իսկ մյուսները՝ ավելի մեծ և տպավորիչ միջոցառում։
+
+Նշանադրության մթնոլորտը ստեղծվում է ճիշտ մանրուքներից՝ նուրբ {{flowers}}, գեղեցիկ {{decorations}}, ռոմանտիկ {{music}}, հիշարժան {{photography}} և հատուկ ընտրված {{gifts}}։
+
+Այս օրը նաև հնարավորություն է գեղեցիկ կերպով ներկայացնելու ձեր սերը՝ ընտրված միջավայրի, լուսավորության և ընդհանուր ոճի միջոցով։
+
+Իհարկե, նշանադրությունը առաջին քայլն է դեպի {{wedding}}, և այն հաճախ դառնում է ձեր ապագա տոնակատարության ոճի նախաբանը։
+
+Եթե ցանկանում եք, որ այդ օրը լինի իսկապես յուրահատուկ, կարևոր է մտածել ամեն մանրուքի մասին՝ վայրը, մթնոլորտը, հյուրերի ցանկը և ընդհանուր ոճը։
+
+Salooote-ում կարող եք գտնել նշանադրության համար անհրաժեշտ ծառայությունները մեկ հարթակում՝ սկսած {{flowers}}-ից և {{decorations}}-ից մինչև {{photography}}, {{music}} և {{cake}}։
+
+Պարզապես պատկերացրեք ձեր իդեալական պահը — իսկ մնացածը կարելի է իրականացնել ճիշտ մասնագետների օգնությամբ։`,
+
+  en: `What could be more emotional than the moment when two people decide to build their future together?
+
+An engagement is not just a ceremony; it is a promise of love, the beginning of a new journey, and the moment when two families become one.
+
+Every engagement is unique. Some prefer an intimate family setting, while others choose a larger and more impressive celebration.
+
+The engagement atmosphere is created through the right details: elegant {{flowers}}, beautiful {{decorations}}, romantic {{music}}, memorable {{photography}}, and carefully chosen {{gifts}}.
+
+This day is also a chance to express your love beautifully through the venue, lighting, and overall style.
+
+Of course, an engagement is the first step toward the {{wedding}}, often setting the tone for your future celebration.
+
+If you want this day to be truly special, it is important to think through every detail: the venue, atmosphere, guest list, and overall style.
+
+On Salooote, you can find all the services you need for an engagement in one place — from {{flowers}} and {{decorations}} to {{photography}}, {{music}}, and {{cake}}.
+
+Simply imagine your ideal moment — and make the rest happen with the help of the right professionals.`,
+
+  ru: `Что может быть трогательнее момента, когда два человека решают вместе строить своё будущее?
+
+Помолвка — это не просто церемония, а обещание любви, начало нового пути и момент, когда две семьи становятся одной.
+
+Каждая помолвка уникальна. Кто-то выбирает тёплую семейную атмосферу, а кто-то — более масштабное и впечатляющее мероприятие.
+
+Атмосфера помолвки создаётся деталями: нежные {{flowers}}, красивое {{decorations}}, романтичная {{music}}, памятная {{photography}} и тщательно выбранные {{gifts}}.
+
+Этот день также даёт возможность красиво выразить вашу любовь через место, освещение и общий стиль.
+
+Конечно, помолвка — это первый шаг к {{wedding}}, и она часто задаёт настроение будущего торжества.
+
+Если вы хотите, чтобы этот день был действительно особенным, важно продумать каждую деталь: место, атмосферу, список гостей и общий стиль.
+
+На Salooote вы найдёте все услуги для помолвки в одном месте — от {{flowers}} и {{decorations}} до {{photography}}, {{music}} и {{cake}}.
+
+Просто представьте свой идеальный момент — а остальное реализуйте с помощью подходящих специалистов.`,
+},
     icon: Sparkles,
     image: "/images/flowers-roses.jpg",
     accent: "from-violet-500 to-rose-500",
@@ -443,11 +1223,61 @@ const EVENT_META = {
     desc: "Honor every milestone with a celebration your loved ones will treasure.",
     descHy: "Ամյակն անմոռանալի դարձրե՛ք Salooote-ի լավագույն մատակարարների հետ։",
     descRu: "Сделайте юбилей незабываемым с лучшими поставщиками Salooote.",
-    about: {
-      hy: "Ամյակներն ու հոբելյանները արժե նշել յուրահատուկ կերպով։\n\nSalooote-ում կարող եք գտնել ամեն ինչ, ինչ անհրաժեշտ է կատարյալ հոբելյանի համար՝ ձևավորում, տորթ, ծաղիկներ, ժամանցային ծրագիր և շատ ավելին։\n\nԴարձրեք յուրաքանչյուր տարեդարձ իսկապես հիշարժան։",
-      en: "An anniversary deserves a special celebration.\n\nOn Salooote, you can find everything needed for the perfect anniversary: decoration, cake, flowers, entertainment, and much more.\n\nMake every milestone truly memorable.",
-      ru: "Юбилей заслуживает особого праздника.\n\nНа Salooote вы найдёте всё необходимое: оформление, торт, цветы, развлекательную программу и многое другое.\n\nСделайте каждый юбилей по-настоящему запоминающимся.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է լինել ավելի ջերմ ու նշանակալի, քան տարիների ընթացքում կերտված սիրո և հիշողությունների նշումը։
+
+Հոբելյանը պարզապես տարեդարձ չէ․ դա անցած ճանապարհի գնահատում է, միասին հաղթահարված պահերի հիշեցում և նոր պատմությունների սկիզբ։
+
+Անկախ նրանից՝ նշում եք ամուսնության տարեդարձ, ծննդյան հոբելյան կամ ընկերության կարևոր փուլ, այս օրը հնարավորություն է կանգ առնելու, նայելու հետ և գնահատելու այն ամենը, ինչ արդեն ստեղծել եք։
+
+Հոբելյանական մթնոլորտը ստեղծվում է մանրուքներից՝ գեղեցիկ {{decorations}}, ջերմ {{music}}, համեղ {{catering}}, հիշարժան {{photography}} և, իհարկե, հատուկ պատրաստված {{cake}}։
+
+Այս օրը հաճախ դառնում է նաև անակնկալների օր՝ {{gifts}}, շնորհավորական խոսքեր, հիշողություններով լի տեսանյութեր և պահեր, որոնք հուզում ու միավորում են բոլոր ներկաներին։
+
+Հոբելյանական տոները կարող են լինել տարբեր՝ ջերմ ընտանեկան ընթրիքից մինչև մեծ ու շքեղ միջոցառում։ Կարևորն այն է, որ այդ օրը արտացոլի հենց ձեր պատմությունն ու արժեքները։
+
+Եթե ցանկանում եք, որ այս օրը լինի իսկապես առանձնահատուկ, կարևոր է մտածել յուրաքանչյուր մանրուքի մասին՝ վայրը, հյուրերի ցանկը, երաժշտությունը և ընդհանուր մթնոլորտը։
+
+Salooote-ում կարող եք գտնել հոբելյանական միջոցառման համար անհրաժեշտ ծառայությունները մեկ հարթակում՝ սկսած {{decorations}}-ից և {{catering}}-ից մինչև {{music}}, {{photography}} և {{cake}}։
+
+Պարզապես պատկերացրեք Ձեր իդեալական օրը — իսկ մնացածը կարելի է վստահել ճիշտ մասնագետներին։`,
+
+  en: `What could be warmer and more meaningful than celebrating love, memories, and the journey built over the years?
+
+An anniversary is not just a date; it is a celebration of the path you have taken, the moments you have overcome together, and the beginning of new memories.
+
+Whether you are celebrating a wedding anniversary, a birthday milestone, or an important company achievement, this day is a chance to pause, look back, and appreciate everything you have created.
+
+The anniversary atmosphere is created through thoughtful details: beautiful {{decorations}}, warm {{music}}, delicious {{catering}}, memorable {{photography}}, and, of course, a special {{cake}}.
+
+This day often becomes a day of surprises too — {{gifts}}, heartfelt speeches, memory-filled videos, and moments that touch and unite everyone present.
+
+Anniversary celebrations can be very different: from a warm family dinner to a large and elegant event. What matters most is that the day reflects your story and values.
+
+If you want this day to be truly special, it is important to think through every detail: the venue, guest list, music, and overall atmosphere.
+
+On Salooote, you can find all the services you need for an anniversary celebration in one place — from {{decorations}} and {{catering}} to {{music}}, {{photography}}, and {{cake}}.
+
+Simply imagine your ideal day — and leave the rest to the right professionals.`,
+
+  ru: `Что может быть теплее и значимее, чем отметить любовь, воспоминания и путь, пройденный за годы?
+
+Юбилей — это не просто дата, а возможность оценить пройденный путь, вспомнить моменты, пережитые вместе, и начать новую главу воспоминаний.
+
+Независимо от того, отмечаете ли вы годовщину свадьбы, день рождения или важный этап компании, этот день даёт возможность остановиться, оглянуться назад и оценить всё, что уже создано.
+
+Атмосфера юбилея создаётся деталями: красивое {{decorations}}, тёплая {{music}}, вкусный {{catering}}, памятная {{photography}} и, конечно, особенный {{cake}}.
+
+Этот день часто становится днём сюрпризов — {{gifts}}, трогательные слова, видео с воспоминаниями и моменты, которые объединяют всех присутствующих.
+
+Юбилейные праздники могут быть разными: от уютного семейного ужина до большого и элегантного мероприятия. Главное, чтобы этот день отражал вашу историю и ценности.
+
+Если вы хотите, чтобы этот день был действительно особенным, важно продумать каждую деталь: место, список гостей, музыку и общую атмосферу.
+
+На Salooote вы найдёте все услуги для юбилея в одном месте — от {{decorations}} и {{catering}} до {{music}}, {{photography}} и {{cake}}.
+
+Просто представьте свой идеальный день — а остальное доверьте профессионалам.`,
+},
     icon: Star,
     image: "/images/wedding-cake.jpg",
     accent: "from-amber-500 to-orange-500",
@@ -468,11 +1298,55 @@ const EVENT_META = {
     desc: "Create magical moments that little ones will remember forever.",
     descHy: "Երեխաների համար ստեղծե՛ք հեքիաթային հիշողություններ Salooote-ի մատակարարների հետ։",
     descRu: "Создайте сказочные воспоминания для детей с поставщиками Salooote.",
-    about: {
-      hy: "Մանկական տոները առանձնահատուկ են՝ փոքրիկ հոբելյարն ու հյուրերը կհիշեն յուրաքանչյուր մանրուք։\n\nSalooote-ում կարող եք գտնել ամեն ինչ կատարյալ մանկական տոնի համար՝ թեմատիկ ձևավորում, տորթեր, մուլտֆիլմերի հերոսներ, ժամանցային ծրագրեր և շատ ավելին։\n\nԴարձրեք Ձեր երեխայի տոնը իսկապես անմոռանալի։",
-      en: "Kids' parties are special — the little birthday star and guests will remember every detail.\n\nOn Salooote, you can find everything for a perfect children's party: themed decoration, cakes, cartoon characters, entertainment programs, and much more.\n\nMake your child's celebration truly unforgettable.",
-      ru: "Детские праздники особенные — именинник и гости запомнят каждую деталь.\n\nНа Salooote вы найдёте всё для идеального детского праздника: тематическое оформление, торты, героев мультфильмов, развлекательные программы и многое другое.\n\nСделайте праздник вашего ребёнка по-настоящему незабываемым.",
-    },
+about: {
+  hy: `Ի՞նչը կարող է լինել ավելի ուրախ ու կախարդական, քան երեխայի տոնը՝ լի ծիծաղով, խաղերով և անմոռանալի պահերով։
+
+Մանկական տոները առանձնահատուկ են, քանի որ յուրաքանչյուր մանրուք ստեղծված է փոքրիկի ուրախության համար։ Այս օրը պետք է լինի լի գույներով, հույզերով և անակնկալներով։
+
+Տոնական մթնոլորտը ձևավորվում է գեղեցիկ {{decorations}}, գունավոր {{balloons}}, թեմատիկ {{entertainment}} և սիրելի հերոսների մասնակցությամբ։
+
+Փոքրիկների համար տոնը դառնում է իրական հեքիաթ, որտեղ կարևոր դեր ունեն նաև համեղ {{cake}}-ը, քաղցրավենիքները և փոքրիկ {{gifts}}-ը։
+
+Ծնողները կարող են ընտրել տարբեր ձևաչափեր՝ փոքր ընտանեկան տոնից մինչև մեծ ու կազմակերպված միջոցառում՝ խաղերով, ծրագրերով և ակտիվություններով։
+
+Եթե ցանկանում եք, որ Ձեր երեխայի օրը լինի իսկապես հիշվող, կարևոր է նախապես պլանավորել ամեն ինչ՝ սկսած ձևավորումից մինչև ժամանցային ծրագիր։
+
+Salooote-ում կարող եք գտնել մանկական տոնի համար անհրաժեշտ բոլոր ծառայությունները մեկ հարթակում՝ սկսած {{decorations}}-ից և {{balloons}}-ից մինչև {{entertainment}}, {{cake}} և {{photography}}։
+
+Դարձրեք Ձեր երեխայի տոնը իսկապես անմոռանալի։`,
+
+  en: `What could be more joyful and magical than a child’s celebration filled with laughter, games, and unforgettable moments?
+
+Kids’ parties are truly special, where every detail is designed to bring happiness to the little one. This day should be full of color, эмоции, and surprises.
+
+The festive atmosphere is created through beautiful {{decorations}}, colorful {{balloons}}, themed {{entertainment}}, and beloved characters.
+
+For children, the celebration becomes a real fairy tale, where a delicious {{cake}}, sweets, and fun {{gifts}} play an important role.
+
+Parents can choose different formats — from a small family gathering to a larger, fully organized event with games and activities.
+
+If you want your child’s day to be truly memorable, it is important to plan everything in advance — from decorations to entertainment.
+
+On Salooote, you can find everything you need for a perfect kids’ party in one place — from {{decorations}} and {{balloons}} to {{entertainment}}, {{cake}}, and {{photography}}.
+
+Make your child’s celebration truly unforgettable.`,
+
+  ru: `Что может быть радостнее и волшебнее, чем детский праздник, наполненный смехом, играми и незабываемыми моментами?
+
+Детские праздники особенные, ведь каждая деталь создаётся для радости ребёнка. Этот день должен быть ярким, эмоциональным и полным сюрпризов.
+
+Праздничная атмосфера создаётся благодаря красивому {{decorations}}, ярким {{balloons}}, тематическим {{entertainment}} и любимым героям.
+
+Для детей праздник превращается в настоящую сказку, где важную роль играют вкусный {{cake}}, сладости и небольшие {{gifts}}.
+
+Родители могут выбрать разные форматы — от уютного семейного праздника до масштабного мероприятия с играми и активностями.
+
+Чтобы праздник был действительно запоминающимся, важно заранее продумать все детали — от оформления до развлекательной программы.
+
+На Salooote вы найдёте всё для идеального детского праздника в одном месте — от {{decorations}} и {{balloons}} до {{entertainment}}, {{cake}} и {{photography}}.
+
+Сделайте праздник вашего ребёнка по-настоящему незабываемым.`,
+},
     icon: Gift,
     image: "/images/party-balloons2.jpg",
     accent: "from-emerald-500 to-cyan-500",
