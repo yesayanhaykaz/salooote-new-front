@@ -1078,11 +1078,13 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
         </div>
       </section>
 
+            {/* Browse by Category */}
+      <BrowseByCategory lang={lang} />
+      
       {/* Trending Now */}
       <TrendingNow lang={lang} />
 
-      {/* Browse by Category */}
-      <BrowseByCategory lang={lang} />
+
 
       {/* Browse Moments (replaces Plan Any Occasion) */}
       <BrowseMoments
