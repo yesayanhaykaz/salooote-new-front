@@ -676,16 +676,13 @@ function VendorCard({ v, onOpen }) {
 function Block({ block, lang, onOpen, onAddToPlan }) {
   const items = block.data;
   if (!items || (Array.isArray(items) && !items.length)) return null;
-  // Limit to 4 items inline — show "see more" hint if there are more
-  const shown = items.slice(0, 4);
-  const hasMore = items.length > 4;
   return (
     <div>
       {block.title && (
         <p style={{
           margin: "0 0 9px 40px", fontSize: 10, fontWeight: 800,
           color: "#c8adb8", letterSpacing: 1, textTransform: "uppercase",
-        }}>{block.title}{hasMore ? ` (${items.length})` : ""}</p>
+        }}>{block.title}{items.length > 1 ? ` (${items.length})` : ""}</p>
       )}
       <div className="v2-cards" style={{
         display: "flex", gap: 12, overflowX: "auto", paddingBottom: 6,
@@ -693,13 +690,13 @@ function Block({ block, lang, onOpen, onAddToPlan }) {
         overscrollBehaviorX: "contain", WebkitOverflowScrolling: "touch",
         scrollSnapType: "x mandatory",
       }}>
-        {block.type === "products" && shown.map((p, i) => (
+        {block.type === "products" && items.map((p, i) => (
           <ProductCard
             key={p.id || i} p={p} lang={lang} onOpen={onOpen}
             onAddToPlan={onAddToPlan ? (item) => onAddToPlan(item, block.service_type) : null}
           />
         ))}
-        {block.type === "vendors" && shown.map((v, i) => (
+        {block.type === "vendors" && items.map((v, i) => (
           <VendorCard key={v.id || i} v={v} onOpen={onOpen} />
         ))}
       </div>
