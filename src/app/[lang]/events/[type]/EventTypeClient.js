@@ -166,7 +166,7 @@ const EVENT_META = {
     labelHy: "Տորթեր և Հրուշակեղեն",
     labelRu: "Торты и Десерты",
     desc: "Order beautiful custom cakes for any occasion from the best pastry vendors.",
-    descHy: "\"Պատվիրե՛ք գեղեցիկ տոնական տորթեր ցանկացած առիթի համար՝ Հայաստանի լավագույն հրուշակագործներից։\"",
+    descHy: "Պատվիրե՛ք գեղեցիկ տոնական տորթեր ցանկացած առիթի համար՝ Հայաստանի լավագույն հրուշակագործներից։",
     descRu: "Заказывайте красивые праздничные торты для любого повода у лучших кондитеров Армении.",
     about: {
       hy: "Salooote-ում կարող եք պատվիրել տոնական տորթեր լավագույն հրուշակագործներից՝ ըստ Ձեր նախասիրությունների։\n\nՀարթակում ներկայացված են մանկական, մրգային, թեմատիկ և անհատական դիզայնով տորթեր տարբեր առիթների համար՝ լինի ծննդյան տոն, մկրտություն, ատամհատիկ թե հոբելյան։\n\nՊատվերներն ընդունվում են 2-3 օր առաջ և առաքվում են Երևանում և ամբողջ Հայաստանում։",
@@ -294,7 +294,7 @@ const EVENT_META = {
     descHy: "Ձեր փոքրիկի ատամհատիկն անմոռանալի դարձրե՛ք Salooote-ի մատակարարների օգնությամբ։",
     descRu: "Сделайте праздник первого зубика вашего малыша незабываемым с помощью Salooote.",
     about: {
-      hy:"Ձեր փոքրիկն արդեն ատա՞մ է հանել։ Ատամհատիկը հատուկ առիթ է, որը արժե նշել գեղեցիկ և անմոռանալի ձևով։\n\nՇատերը կազմակերպում են ատամհատիկը ինքնուրույն, իսկ մյուսները նախընտրում են վստահել փորձառու մասնագետներին։\n\nSalooote-ում կարող եք գտնել ատամհատիկի ձևավորման մասնագետներ, պատվիրել տորթ և ընտրել անհրաժեշտ բոլոր պարագաները։",
+      hy: "Ձեր փոքրիկն արդեն ատա՞մ է հանել։ Ատամհատիկը հատուկ առիթ է, որը արժե նշել գեղեցիկ և անմոռանալի ձևով։\n\nՇատերը կազմակերպում են ատամհատիկը ինքնուրույն, իսկ մյուսները նախընտրում են վստահել փորձառու մասնագետներին։\n\nSalooote-ում կարող եք գտնել ատամհատիկի ձևավորման մասնագետներ, պատվիրել տորթ և ընտրել անհրաժեշտ բոլոր պարագաները։",
       en: "Has your little one cut their first tooth? A tooth party is a special occasion worth celebrating beautifully.\n\nSome parents organize it themselves, while others prefer to entrust the planning to experienced professionals.\n\nOn Salooote, you can find decoration specialists, order a cake, choose all the necessary supplies, and plan the entire celebration.",
       ru: "Ваш малыш уже прорезал первый зубик? Праздник первого зубика — особый повод, который стоит отметить красиво и незабываемо.\n\nОдни родители организуют его самостоятельно, другие предпочитают доверить подготовку опытным специалистам.\n\nНа Salooote вы найдёте специалистов по оформлению, закажете торт, выберете нужные аксессуары.",
     },
@@ -319,7 +319,7 @@ const EVENT_META = {
     descHy: "Ամանորն ու Սուրբ Ծնունդն անմոռանալի դարձրե՛ք Salooote-ի լավագույն մատակարարների շնորհիվ։",
     descRu: "Сделайте Новый год и Рождество незабываемыми с лучшими поставщиками на Salooote.",
     about: {
-hy: "Ամանորը մոտենում է, և Salooote-ը կօգնի Ձեզ ստեղծել կատարյալ տոնական մթնոլորտ։\n\nՃիշտ նվերի ընտրությունը, տան և միջոցառման ձևավորումը, տոնական տորթի պատվիրումը՝ հարցեր են, որոնք կարևոր են բոլորի համար։\n\nՀարթակում կարող եք գտնել ամանորյա ձևավորման մատակարարներ, ընտրել օրիգինալ նվերներ և ձեռք բերել բոլոր անհրաժեշտ պարագաները։",
+      hy: "Ամանորը մոտենում է, և Salooote-ը կօգնի Ձեզ ստեղծել կատարյալ տոնական մթնոլորտ։\n\nՃիշտ նվերի ընտրությունը, տան և միջոցառման ձևավորումը, տոնական տորթի պատվիրումը՝ հարցեր են, որոնք կարևոր են բոլորի համար։\n\nՀարթակում կարող եք գտնել ամանորյա ձևավորման մատակարարներ, ընտրել օրիգինալ նվերներ և ձեռք բերել բոլոր անհրաժեշտ պարագաները։",
       en: "The New Year is approaching, and Salooote is here to help you create the perfect festive atmosphere.\n\nChoosing the right gift, decorating your home, ordering a festive cake — these are questions that concern almost everyone.\n\nFind Christmas decoration vendors, choose original New Year gifts, gift boxes, and everything you need for a magical celebration.",
       ru: "Новый год приближается, и Salooote поможет вам создать идеальную праздничную атмосферу.\n\nВыбрать правильный подарок, украсить дом, заказать праздничный торт — вопросы, которые волнуют почти каждого.\n\nНайдите поставщиков новогодних украшений, выберите оригинальные подарки, подарочные коробки и всё необходимое.",
     },
@@ -469,7 +469,7 @@ hy: "Ամանորը մոտենում է, և Salooote-ը կօգնի Ձեզ ստե
     descHy: "Երեխաների համար ստեղծե՛ք հեքիաթային հիշողություններ Salooote-ի մատակարարների հետ։",
     descRu: "Создайте сказочные воспоминания для детей с поставщиками Salooote.",
     about: {
-      hy:"Մանկական տոները առանձնահատուկ են՝ փոքրիկ հոբելյարն ու հյուրերը կհիշեն յուրաքանչյուր մանրուք։\n\nSalooote-ում կարող եք գտնել ամեն ինչ կատարյալ մանկական տոնի համար՝ թեմատիկ ձևավորում, տորթեր, մուլտֆիլմերի հերոսներ, ժամանցային ծրագրեր և շատ ավելին։\n\nԴարձրեք Ձեր երեխայի տոնը իսկապես անմոռանալի։",
+      hy: "Մանկական տոները առանձնահատուկ են՝ փոքրիկ հոբելյարն ու հյուրերը կհիշեն յուրաքանչյուր մանրուք։\n\nSalooote-ում կարող եք գտնել ամեն ինչ կատարյալ մանկական տոնի համար՝ թեմատիկ ձևավորում, տորթեր, մուլտֆիլմերի հերոսներ, ժամանցային ծրագրեր և շատ ավելին։\n\nԴարձրեք Ձեր երեխայի տոնը իսկապես անմոռանալի։",
       en: "Kids' parties are special — the little birthday star and guests will remember every detail.\n\nOn Salooote, you can find everything for a perfect children's party: themed decoration, cakes, cartoon characters, entertainment programs, and much more.\n\nMake your child's celebration truly unforgettable.",
       ru: "Детские праздники особенные — именинник и гости запомнят каждую деталь.\n\nНа Salooote вы найдёте всё для идеального детского праздника: тематическое оформление, торты, героев мультфильмов, развлекательные программы и многое другое.\n\nСделайте праздник вашего ребёнка по-настоящему незабываемым.",
     },
@@ -942,15 +942,27 @@ export default function EventTypeClient({ lang, type, dict }) {
               <div className="bg-surface-50 rounded-3xl border border-surface-100 p-5">
                 <h3 className="font-bold text-surface-900 text-sm mb-3">{t.suggestedTitle}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {(SUGGESTED_VENDORS[type] || []).map((v, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-1 text-xs bg-white text-surface-700 border border-surface-200 px-3 py-1.5 rounded-full font-medium hover:border-rose-300 hover:text-rose-600 transition-colors"
-                    >
-                      <CheckCircle2 size={11} className="text-rose-400" />
-                      {v}
-                    </span>
-                  ))}
+                  {(SUGGESTED_VENDORS[type] || []).map((v, i) => {
+                    const slug = (meta.suggestedCats || [])[i];
+                    return slug ? (
+                      <Link
+                        key={i}
+                        href={`/${lang}/category/${slug}`}
+                        className="inline-flex items-center gap-1 text-xs bg-white text-surface-700 border border-surface-200 px-3 py-1.5 rounded-full font-medium hover:border-rose-300 hover:text-rose-600 transition-colors no-underline"
+                      >
+                        <CheckCircle2 size={11} className="text-rose-400" />
+                        {v}
+                      </Link>
+                    ) : (
+                      <span
+                        key={i}
+                        className="inline-flex items-center gap-1 text-xs bg-white text-surface-700 border border-surface-200 px-3 py-1.5 rounded-full font-medium"
+                      >
+                        <CheckCircle2 size={11} className="text-rose-400" />
+                        {v}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             </aside>
