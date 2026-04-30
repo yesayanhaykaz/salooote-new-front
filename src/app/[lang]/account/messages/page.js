@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
-import { userAPI, publicAPI } from "@/lib/api";
+import { userAPI, vendorsAPI } from "@/lib/api";
 import { MessageSquare, Plus, X, Send, Clock, AlertCircle, Search, Store, ChevronLeft } from "lucide-react";
 
 const T = {
@@ -149,7 +149,7 @@ function NewMessageModal({ lang, onClose, onCreated }) {
   const searchRef = useRef(null);
 
   useEffect(() => {
-    publicAPI.vendors({ limit: 50 })
+    vendorsAPI.list({ limit: 50 })
       .then(res => setVendors(res?.data || []))
       .catch(() => {})
       .finally(() => setVendLoad(false));
