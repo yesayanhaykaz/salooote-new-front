@@ -212,16 +212,13 @@ export default function EventDetailPage() {
 
   useEffect(() => {
     if (!sessionId) return;
-    Promise.all([
-      plannerAPI.getById(sessionId),
-      plannerAPI.getInquiries(sessionId),
-    ])
-      .then(([sessRes, inqRes]) => {
-        setSession(sessRes?.data || sessRes);
-        setInquiries(inqRes?.data || inqRes || []);
-      })
+    plannerAPI.getById(sessionId)
+      .then(res => setSession(res?.data || res))
       .catch(() => {})
       .finally(() => setLoading(false));
+    plannerAPI.getInquiries(sessionId)
+      .then(res => setInquiries(res?.data || res || []))
+      .catch(() => setInquiries([]));
   }, [sessionId]);
 
   if (loading) {
