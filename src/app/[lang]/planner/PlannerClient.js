@@ -66,7 +66,11 @@ const T = {
     eventLabels: {
       christening: "Christening", wedding: "Wedding", birthday: "Birthday",
       kids_party: "Kids Party", corporate: "Corporate", baby_shower: "Baby Shower",
-      engagement: "Engagement", graduation: "Graduation",
+      engagement: "Engagement", graduation: "Graduation", anniversary: "Anniversary",
+      atamhatik: "Atamhatik", gender_reveal: "Gender Reveal", proposal: "Proposal",
+      romantic_dinner: "Romantic Dinner", store_opening: "Store Opening",
+      product_launch: "Product Launch", new_year_party: "New Year Party",
+      house_party: "House Party", prom: "Prom", school_event: "School Event",
     },
     catLabels: { religious: "Religious", roles: "Key Roles", clothing: "Attire", ceremony: "Ceremony", reception: "Reception", celebration: "Celebration", food: "Food & Cake", decoration: "Decorations", media: "Photo & Video", entertainment: "Entertainment", attire: "Attire", venue: "Venue", tech: "Tech & AV", other: "Other" },
     planningInProgress: "Planning in progress",
@@ -167,14 +171,13 @@ hy: {
   ],
 
   eventLabels: {
-    christening: "Մկրտություն",
-    wedding: "Հարսանիք",
-    birthday: "Ծննդյան օր",
-    kids_party: "Մանկական տոն",
-    corporate: "Կորպորատիվ միջոցառում",
-    baby_shower: "Baby Shower (մայրության տոն)",
-    engagement: "Նշանադրություն",
-    graduation: "Ավարտական երեկո",
+    christening: "Մկртут'yun", wedding: "Harsanik", birthday: "Tsnndyan or",
+    kids_party: "Mankakan ton", corporate: "Korporativ", baby_shower: "Baby Shower",
+    engagement: "Nshanadrutyun", graduation: "Avartakan", anniversary: "Tarelicord",
+    atamhatik: "Atamhatik", gender_reveal: "Seki batsahaytyum",
+    proposal: "Ambashnyum", romantic_dinner: "Romantik", store_opening: "Batsatyum",
+    product_launch: "Launch", new_year_party: "Nor tari", house_party: "Tnain kapuyt",
+    prom: "Avartakan ereko", school_event: "Dproci dzernakhumb",
   },
 
   catLabels: {
@@ -299,14 +302,14 @@ hy: {
     pickSub: "или просто опиши свою идею,\\nи я составлю полный план",
     suggestions: ["Планировать свадьбу", "День рождения", "Крещение", "Корпоратив"],
     eventLabels: {
-      christening: "Крещение",
-      wedding: "Свадьба",
-      birthday: "День рождения",
-      kids_party: "Детский праздник",
-      corporate: "Корпоратив",
-      baby_shower: "Baby Shower",
-      engagement: "Помолвка",
-      graduation: "Выпускной",
+      christening: "Крещение", wedding: "Свадьба", birthday: "День рождения",
+      kids_party: "Детский праздник", corporate: "Корпоратив", baby_shower: "Baby Shower",
+      engagement: "Помолвка", graduation: "Выпускной", anniversary: "Юбилей",
+      atamhatik: "Атамhатик", gender_reveal: "Гендер-пати",
+      proposal: "Предложение руки", romantic_dinner: "Романтик",
+      store_opening: "Открытие магазина", product_launch: "Запуск продукта",
+      new_year_party: "Новый год", house_party: "Домашняя вечеринка",
+      prom: "Выпускной вечер", school_event: "Школьное мероприятие",
     },
     catLabels: { religious: "Религиозное", roles: "Ключевые роли", clothing: "Одежда", ceremony: "Церемония", reception: "Приём", celebration: "Торжество", food: "Еда и торт", decoration: "Украшения", media: "Фото и видео", entertainment: "Развлечения", attire: "Наряды", venue: "Площадка", tech: "Техника и AV", other: "Прочее" },
     planningInProgress: "Планирование в процессе",
@@ -394,6 +397,10 @@ const EVENT_ICON_MAP = {
   christening: Building, wedding: Gem, birthday: Cake,
   kids_party: Smile, corporate: Briefcase, engagement: Heart,
   anniversary: Star, baby_shower: Baby, graduation: GraduationCap,
+  atamhatik: Building, gender_reveal: Baby, proposal: Gem,
+  romantic_dinner: Heart, store_opening: Building2, product_launch: Zap,
+  new_year_party: Sparkles, house_party: Smile, prom: GraduationCap,
+  school_event: GraduationCap,
 };
 const getEventIcon = (type, props = {}) => {
   const Icon = EVENT_ICON_MAP[type] || Star;
@@ -530,23 +537,266 @@ const EVENT_TEMPLATES = {
 };
 
 /* ─────────────────────────────────────────
+   SERVICE CATALOG  — single source of truth
+───────────────────────────────────────── */
+const SERVICE_CATALOG = {
+  // Food & Cake
+  cake:               { title: { en: "Cake",                  hy: "Տորթ",                       ru: "Торт" },                          category: "food",          canSearch: true  },
+  wedding_cake:       { title: { en: "Wedding Cake",          hy: "Հարսանեկան տորթ",             ru: "Свадебный торт" },                category: "food",          canSearch: true  },
+  catering:           { title: { en: "Catering",              hy: "Կերակուր",                    ru: "Кейтеринг" },                     category: "food",          canSearch: true  },
+  kids_menu:          { title: { en: "Kids Menu",             hy: "Մանկական մենյու",             ru: "Детское меню" },                  category: "food",          canSearch: true  },
+  dessert_table:      { title: { en: "Dessert Table",         hy: "Հյուրասիրություն",            ru: "Десертный стол" },                category: "food",          canSearch: true  },
+  // Decoration
+  balloon_decoration: { title: { en: "Balloon Decoration",   hy: "Փուչիկների դեկոր",           ru: "Оформление шарами" },             category: "decoration",    canSearch: true  },
+  decoration:         { title: { en: "Decorations",           hy: "Դեկոր",                       ru: "Украшения" },                     category: "decoration",    canSearch: true  },
+  flowers:            { title: { en: "Flowers",               hy: "Ծաղիկներ",                    ru: "Цветы" },                         category: "decoration",    canSearch: true  },
+  theme_decoration:   { title: { en: "Theme Decorations",    hy: "Թեմատիկ դեկոր",              ru: "Тематический декор" },            category: "decoration",    canSearch: true  },
+  // Entertainment
+  animator:           { title: { en: "Kids Animator",        hy: "Մանկական անիմատոր",          ru: "Детский аниматор" },              category: "entertainment", canSearch: true  },
+  music:              { title: { en: "Music / DJ",           hy: "Երաժշտություն / DJ",           ru: "Музыка / DJ" },                   category: "entertainment", canSearch: true  },
+  tamada:             { title: { en: "Tamada (MC)",          hy: "Թամադա",                       ru: "Тамада" },                        category: "entertainment", canSearch: true  },
+  entertainment:      { title: { en: "Entertainment",         hy: "Ժամանց",                      ru: "Развлечения" },                   category: "entertainment", canSearch: true  },
+  magician:           { title: { en: "Magician",              hy: "Կախարդ",                      ru: "Фокусник" },                      category: "entertainment", canSearch: true  },
+  face_painting:      { title: { en: "Face Painting",        hy: "Դիմածաղկում",                 ru: "Аквагрим" },                      category: "entertainment", canSearch: true  },
+  mascot_character:   { title: { en: "Mascot Character",     hy: "Մուլտheros",                  ru: "Ростовая кукла" },                category: "entertainment", canSearch: true  },
+  bubble_show:        { title: { en: "Bubble Show",          hy: "Փուչիկների շոու",             ru: "Шоу мыльных пузырей" },          category: "entertainment", canSearch: true  },
+  play_zone:          { title: { en: "Play Zone",            hy: "Խաղահրապարակ",                ru: "Игровая зона" },                  category: "entertainment", canSearch: true  },
+  photo_booth:        { title: { en: "Photo Booth",          hy: "Ֆոտո կրպակ",                  ru: "Фотобудка" },                     category: "entertainment", canSearch: true  },
+  // Media
+  photographer:       { title: { en: "Photographer",          hy: "Լուսանկարիչ",                 ru: "Фотограф" },                      category: "media",         canSearch: true  },
+  videographer:       { title: { en: "Videographer",          hy: "Վիդեո օperate",              ru: "Видеограф" },                     category: "media",         canSearch: true  },
+  // Venue
+  venue:              { title: { en: "Venue",                  hy: "Վայр",                        ru: "Площадка" },                      category: "venue",         canSearch: true  },
+  reception_venue:    { title: { en: "Reception Hall",        hy: "Ընդunelution սرahel",         ru: "Банкетный зал" },                category: "venue",         canSearch: true  },
+  ceremony_venue:     { title: { en: "Ceremony Venue",        hy: "Արaroğel Venue",              ru: "Место церемонии" },               category: "ceremony",      canSearch: false },
+  // Religious / Roles
+  church:             { title: { en: "Church Booking",        hy: "Եkleghetsio amsagroom",       ru: "Бронирование церкви" },           category: "religious",     canSearch: false },
+  baptism_candle:     { title: { en: "Baptism Candle",        hy: "Mkrtутюн mom",               ru: "Крестильная свеча" },             category: "religious",     canSearch: false },
+  cross:              { title: { en: "Cross for Baby",        hy: "Khach yerekhayi hamar",       ru: "Крестик для малыша" },            category: "religious",     canSearch: false },
+  kavor:              { title: { en: "Godfather (Kavor)",     hy: "Կavор",                       ru: "Крёстный отец" },                 category: "roles",         canSearch: false },
+  kavork:             { title: { en: "Godmother (Kavork)",    hy: "Կavork",                      ru: "Крёстная мать" },                 category: "roles",         canSearch: false },
+  baby_outfit:        { title: { en: "White Baby Outfit",     hy: "Spitakaguyni yerekhayi",      ru: "Белый наряд малыша" },            category: "clothing",      canSearch: false },
+  // Attire / Ceremony
+  wedding_rings:      { title: { en: "Wedding Rings",         hy: "Harsanaknagan mataniNER",     ru: "Обручальные кольца" },            category: "ceremony",      canSearch: false },
+  bridal_dress:       { title: { en: "Bridal Gown",           hy: "Harsnazkest",                 ru: "Свадебное платье" },              category: "attire",        canSearch: true  },
+  ring:               { title: { en: "Engagement Ring",       hy: "Nshanadrik matani",           ru: "Помолвочное кольцо" },            category: "ceremony",      canSearch: false },
+  av_tech:            { title: { en: "AV & Tech Setup",       hy: "AV tekhnika",                 ru: "AV-техника" },                   category: "tech",          canSearch: true  },
+  gift_boxes:         { title: { en: "Gift Boxes",            hy: "Nver tufner",                 ru: "Подарочные коробки" },            category: "other",         canSearch: true  },
+};
+
+/* Helper: get localised title from SERVICE_CATALOG */
+function getSvcTitle(serviceType, lang) {
+  const entry = SERVICE_CATALOG[serviceType];
+  if (!entry) return serviceType.replace(/_/g, " ");
+  return entry.title[lang] || entry.title.en || serviceType.replace(/_/g, " ");
+}
+
+/* Helper: build a service object merging EVENT_TEMPLATES data with SERVICE_CATALOG */
+function buildService(serviceType, overrides = {}, lang = "en") {
+  const cat = SERVICE_CATALOG[serviceType];
+  return {
+    service_type: serviceType,
+    title: getSvcTitle(serviceType, lang),
+    category: cat?.category || "other",
+    canSearch: cat?.canSearch ?? false,
+    required: false,
+    status: "pending",
+    ...overrides,
+  };
+}
+
+/* ─────────────────────────────────────────
+   EVENT TEMPLATES V2  — references SERVICE_CATALOG
+───────────────────────────────────────── */
+const EVENT_TEMPLATES_V2 = {
+  christening: {
+    accent: "#e11d5c", gradient: "linear-gradient(135deg,#e11d5c,#f43f5e)",
+    defaultServices:  ["church","baptism_candle","cross","kavor","kavork","baby_outfit","venue","catering","cake","photographer","decoration"],
+    optionalServices: ["videographer","balloon_decoration","flowers"],
+    requiredInfo:     ["guest_count","date","location"],
+  },
+  wedding: {
+    accent: "#e11d5c", gradient: "linear-gradient(135deg,#e11d5c,#f97316)",
+    defaultServices:  ["ceremony_venue","reception_venue","tamada","wedding_rings","bridal_dress","wedding_cake","catering","photographer","videographer","flowers","music"],
+    optionalServices: ["decoration","balloon_decoration","dessert_table","entertainment","av_tech"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  birthday: {
+    accent: "#3b82f6", gradient: "linear-gradient(135deg,#3b82f6,#06b6d4)",
+    defaultServices:  ["cake","venue","catering","balloon_decoration","decoration"],
+    optionalServices: ["photographer","music","entertainment","photo_booth","dessert_table"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  kids_party: {
+    accent: "#10b981", gradient: "linear-gradient(135deg,#10b981,#059669)",
+    defaultServices:  ["cake","balloon_decoration","animator","kids_menu","theme_decoration","photographer"],
+    optionalServices: ["mascot_character","face_painting","bubble_show","photo_booth","gift_boxes","magician","play_zone"],
+    requiredInfo:     ["child_age","guest_count","date","location","budget"],
+  },
+  corporate: {
+    accent: "#475569", gradient: "linear-gradient(135deg,#475569,#1e293b)",
+    defaultServices:  ["venue","catering","av_tech","photographer"],
+    optionalServices: ["entertainment","music","decoration","videographer","tamada"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  engagement: {
+    accent: "#8b5cf6", gradient: "linear-gradient(135deg,#8b5cf6,#6d28d9)",
+    defaultServices:  ["ring","flowers","photographer","venue","cake","catering"],
+    optionalServices: ["videographer","balloon_decoration","decoration","music","dessert_table"],
+    requiredInfo:     ["date","location","budget"],
+  },
+  anniversary: {
+    accent: "#d97706", gradient: "linear-gradient(135deg,#f59e0b,#d97706)",
+    defaultServices:  ["flowers","venue","cake","catering"],
+    optionalServices: ["photographer","videographer","decoration","music","dessert_table"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  baby_shower: {
+    accent: "#0ea5e9", gradient: "linear-gradient(135deg,#38bdf8,#0ea5e9)",
+    defaultServices:  ["balloon_decoration","cake","catering","decoration"],
+    optionalServices: ["photographer","dessert_table","gift_boxes","photo_booth"],
+    requiredInfo:     ["guest_count","date","location"],
+  },
+  graduation: {
+    accent: "#ea580c", gradient: "linear-gradient(135deg,#f59e0b,#ea580c)",
+    defaultServices:  ["venue","cake","catering"],
+    optionalServices: ["balloon_decoration","photographer","music","entertainment","dessert_table"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  atamhatik: {
+    accent: "#e11d5c", gradient: "linear-gradient(135deg,#e11d5c,#f97316)",
+    defaultServices:  ["church","venue","catering","cake","photographer","decoration"],
+    optionalServices: ["videographer","flowers","balloon_decoration","entertainment"],
+    requiredInfo:     ["guest_count","date","location"],
+  },
+  gender_reveal: {
+    accent: "#ec4899", gradient: "linear-gradient(135deg,#ec4899,#3b82f6)",
+    defaultServices:  ["balloon_decoration","cake","decoration","catering"],
+    optionalServices: ["photographer","dessert_table","gift_boxes","photo_booth"],
+    requiredInfo:     ["guest_count","date","location"],
+  },
+  proposal: {
+    accent: "#e11d5c", gradient: "linear-gradient(135deg,#e11d5c,#9333ea)",
+    defaultServices:  ["flowers","ring","venue"],
+    optionalServices: ["photographer","dessert_table","music","decoration"],
+    requiredInfo:     ["date","location","budget"],
+  },
+  romantic_dinner: {
+    accent: "#dc2626", gradient: "linear-gradient(135deg,#dc2626,#e11d5c)",
+    defaultServices:  ["venue","flowers","catering"],
+    optionalServices: ["photographer","music","decoration","dessert_table"],
+    requiredInfo:     ["date","location","budget"],
+  },
+  store_opening: {
+    accent: "#f97316", gradient: "linear-gradient(135deg,#f97316,#eab308)",
+    defaultServices:  ["decoration","catering","photographer"],
+    optionalServices: ["balloon_decoration","music","entertainment","flowers","av_tech","videographer"],
+    requiredInfo:     ["date","location"],
+  },
+  product_launch: {
+    accent: "#6366f1", gradient: "linear-gradient(135deg,#6366f1,#8b5cf6)",
+    defaultServices:  ["venue","decoration","catering","av_tech","photographer"],
+    optionalServices: ["videographer","entertainment","balloon_decoration","tamada"],
+    requiredInfo:     ["guest_count","date","location"],
+  },
+  new_year_party: {
+    accent: "#1d4ed8", gradient: "linear-gradient(135deg,#1d4ed8,#7c3aed)",
+    defaultServices:  ["venue","catering","decoration","music","photographer"],
+    optionalServices: ["cake","balloon_decoration","entertainment","photo_booth","dessert_table","tamada"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  house_party: {
+    accent: "#16a34a", gradient: "linear-gradient(135deg,#16a34a,#15803d)",
+    defaultServices:  ["catering","decoration","music"],
+    optionalServices: ["cake","balloon_decoration","photographer","entertainment","dessert_table"],
+    requiredInfo:     ["guest_count","date","budget"],
+  },
+  prom: {
+    accent: "#7c3aed", gradient: "linear-gradient(135deg,#7c3aed,#db2777)",
+    defaultServices:  ["venue","catering","decoration","music","photographer"],
+    optionalServices: ["cake","balloon_decoration","entertainment","photo_booth","videographer","tamada"],
+    requiredInfo:     ["guest_count","date","location","budget"],
+  },
+  school_event: {
+    accent: "#0284c7", gradient: "linear-gradient(135deg,#0284c7,#0ea5e9)",
+    defaultServices:  ["venue","catering","decoration","photographer"],
+    optionalServices: ["cake","balloon_decoration","entertainment","music","av_tech"],
+    requiredInfo:     ["guest_count","date","location"],
+  },
+};
+
+/* Build full services array for an event type from V2 template */
+function buildServicesFromTemplate(eventKey, lang = "en") {
+  const tpl = EVENT_TEMPLATES_V2[eventKey];
+  if (!tpl) return [];
+  return [
+    ...(tpl.defaultServices || []).map(key => buildService(key, { required: true,  status: "pending" }, lang)),
+    ...(tpl.optionalServices || []).map(key => buildService(key, { required: false, status: "suggested" }, lang)),
+  ];
+}
+
+/* ─────────────────────────────────────────
+   SERVICE RULES  — smart dependency logic
+───────────────────────────────────────── */
+const SERVICE_RULES = [
+  // Food-triggered suggestions
+  { if: { service: "cake",    event_type: "kids_party" },  suggest: ["balloon_decoration","kids_menu","photographer"] },
+  { if: { service: "cake",    event_type: "birthday" },    suggest: ["balloon_decoration","photographer"] },
+  { if: { service: "catering" },                           suggest: ["decoration","photographer"] },
+  { if: { service: "wedding_cake" },                       suggest: ["catering","flowers","decoration"] },
+  // Venue-triggered suggestions
+  { if: { service: "venue" },                              suggest: ["decoration","catering","music"] },
+  { if: { service: "reception_venue" },                    suggest: ["catering","decoration","tamada","music"] },
+  // Guest count rules
+  { if: { guest_count_gt: 50 },                            suggest: ["catering","tamada","photographer","av_tech"] },
+  { if: { guest_count_gt: 20 },                            suggest: ["catering","photographer"] },
+  // Urgency rules
+  { if: { event_date_within_days: 3 },                     priority: "urgent", suggest: ["available_today_vendors"] },
+  { if: { event_date_within_days: 7 },                     priority: "high",   suggest: ["photographer","catering","cake"] },
+  // Armenian cultural additions
+  { if: { event_type: "christening" },                     suggest: ["kavor","kavork","church","baptism_candle"] },
+  { if: { event_type: "wedding" },                         suggest: ["tamada","flowers","wedding_rings"] },
+];
+
+/* ─────────────────────────────────────────
+   BUDGET PRESETS
+───────────────────────────────────────── */
+const BUDGET_TIERS = {
+  low:     { max: 100000,  label: { en: "Budget-friendly",  hy: "Խnayamատ",       ru: "Эконом" } },
+  medium:  { max: 300000,  label: { en: "Mid-range",        hy: "Mittler",         ru: "Средний" } },
+  premium: { max: 800000,  label: { en: "Premium",          hy: "Բарձ",            ru: "Премиум" } },
+  luxury:  { max: Infinity, label: { en: "Luxury",           hy: "Luxe",            ru: "Люкс" } },
+};
+
+const BUDGET_SERVICE_FILTER = {
+  low:     (s) => ["cake","balloon_decoration","decoration","catering","photographer"].includes(s.service_type),
+  medium:  () => true,
+  premium: () => true,
+  luxury:  () => true,
+};
+
+/* ─────────────────────────────────────────
    ACTION PROCESSOR
 ───────────────────────────────────────── */
-function applyActions(actions, prev) {
+function applyActions(actions, prev, lang = "en") {
   let state = { ...prev };
   const searches = [];
   for (const a of actions) {
     switch (a.type) {
       case "set_event_type": {
         if (state.event_type === a.event_type) break;
-        const tpl = EVENT_TEMPLATES[a.event_type];
-        state = {
-          ...state, event_type: a.event_type,
-          event_type_label: tpl?.label || a.event_type,
-          accent: tpl?.accent || C.brand,
-          gradient: tpl?.gradient,
-          services: state.services?.length ? state.services : (tpl?.services || []).map(s => ({ ...s, status: "pending" })),
-        };
+        // Try V2 template first, fall back to legacy
+        const tplV2 = EVENT_TEMPLATES_V2[a.event_type];
+        const tplLegacy = EVENT_TEMPLATES[a.event_type];
+        const accent   = tplV2?.accent   || tplLegacy?.accent   || C.brand;
+        const gradient = tplV2?.gradient || tplLegacy?.gradient || null;
+        const label    = tplLegacy?.label || a.event_type_label || a.event_type.replace(/_/g, " ");
+        const services = state.services?.length
+          ? state.services
+          : tplV2
+            ? buildServicesFromTemplate(a.event_type, lang)
+            : (tplLegacy?.services || []).map(s => ({ ...s, status: "pending" }));
+        state = { ...state, event_type: a.event_type, event_type_label: label, accent, gradient, services };
         break;
       }
       case "set_guest_count": state = { ...state, guest_count: a.guest_count }; break;
@@ -556,16 +806,44 @@ function applyActions(actions, prev) {
       case "set_style":       state = { ...state, style: a.style }; break;
       case "set_notes":       state = { ...state, notes: a.notes }; break;
       case "add_service": {
-        if (!state.services?.find(s => s.service_type === a.service_type))
-          state = { ...state, services: [...(state.services || []), { service_type: a.service_type, title: a.title || a.service_type.replace(/_/g, " "), category: a.category || "other", required: a.priority === "required", status: "pending", canSearch: true }] };
+        if (state.services?.find(s => s.service_type === a.service_type)) break;
+        const catalogEntry = SERVICE_CATALOG[a.service_type];
+        const newSvc = {
+          service_type: a.service_type,
+          title: a.title || getSvcTitle(a.service_type, lang),
+          category: a.category || catalogEntry?.category || "other",
+          required: a.priority === "required",
+          status: "pending",
+          canSearch: a.canSearch ?? catalogEntry?.canSearch ?? true,
+        };
+        state = { ...state, services: [...(state.services || []), newSvc] };
+        break;
+      }
+      // suggest_service: adds to list as optional/suggested (not required)
+      case "suggest_service": {
+        if (state.services?.find(s => s.service_type === a.service_type)) break;
+        const catalogEntry = SERVICE_CATALOG[a.service_type];
+        if (!catalogEntry) break; // only suggest known catalog services
+        const sugSvc = buildService(a.service_type, { required: false, status: "suggested" }, lang);
+        state = { ...state, services: [...(state.services || []), sugSvc] };
         break;
       }
       case "remove_service":
         state = { ...state, services: (state.services || []).filter(s => s.service_type !== a.service_type) }; break;
       case "mark_required_item":
       case "mark_optional_item": {
-        if (!state.services?.find(s => s.service_type === a.item_type))
-          state = { ...state, services: [...(state.services || []), { service_type: a.item_type, title: a.title || a.item_type.replace(/_/g, " "), category: a.category || "other", required: a.type === "mark_required_item", status: "pending" }] };
+        const itType = a.item_type || a.service_type;
+        if (!state.services?.find(s => s.service_type === itType)) {
+          const catalogEntry = SERVICE_CATALOG[itType];
+          state = { ...state, services: [...(state.services || []), {
+            service_type: itType,
+            title: a.title || getSvcTitle(itType, lang),
+            category: a.category || catalogEntry?.category || "other",
+            required: a.type === "mark_required_item",
+            status: "pending",
+            canSearch: catalogEntry?.canSearch ?? false,
+          }]};
+        }
         break;
       }
       case "search_vendors":
@@ -591,19 +869,85 @@ function applyActions(actions, prev) {
 }
 
 /* ─────────────────────────────────────────
+   SERVICE RULES EVALUATOR
+───────────────────────────────────────── */
+function applyServiceRules(state, lang = "en") {
+  const currentTypes = new Set((state.services || []).map(s => s.service_type));
+  const toAdd = [];
+
+  // Parse event date to compute urgency
+  let daysUntilEvent = Infinity;
+  if (state.date) {
+    const diff = new Date(state.date) - Date.now();
+    daysUntilEvent = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+
+  for (const rule of SERVICE_RULES) {
+    const cond = rule.if;
+    let matches = true;
+
+    if (cond.service && !currentTypes.has(cond.service)) matches = false;
+    if (cond.event_type && state.event_type !== cond.event_type) matches = false;
+    if (cond.guest_count_gt && (!(state.guest_count > cond.guest_count_gt))) matches = false;
+    if (cond.event_date_within_days && daysUntilEvent > cond.event_date_within_days) matches = false;
+
+    if (!matches) continue;
+
+    for (const svcKey of (rule.suggest || [])) {
+      if (svcKey === "available_today_vendors") continue; // handled separately
+      if (!currentTypes.has(svcKey) && !toAdd.find(s => s.service_type === svcKey)) {
+        const catalogEntry = SERVICE_CATALOG[svcKey];
+        if (catalogEntry) {
+          toAdd.push(buildService(svcKey, { required: false, status: "suggested" }, lang));
+          currentTypes.add(svcKey);
+        }
+      }
+    }
+  }
+
+  if (!toAdd.length) return state;
+  return { ...state, services: [...(state.services || []), ...toAdd] };
+}
+
+/* Compute missing required info for the current event type */
+function getMissingInfo(state) {
+  const tpl = EVENT_TEMPLATES_V2[state.event_type];
+  if (!tpl) return [];
+  const required = tpl.requiredInfo || [];
+  const missing = [];
+  if (required.includes("guest_count") && !state.guest_count) missing.push("guest_count");
+  if (required.includes("date") && !state.date) missing.push("date");
+  if (required.includes("location") && !state.city) missing.push("location");
+  if (required.includes("budget") && !state.budget) missing.push("budget");
+  if (required.includes("child_age") && !state.age) missing.push("child_age");
+  return missing;
+}
+
+/* ─────────────────────────────────────────
    SUGGESTION GENERATOR
 ───────────────────────────────────────── */
-function getContextSuggestions(eventState) {
+function getContextSuggestions(eventState, lang = "en") {
   if (!eventState.event_type) {
-    const t = tx("en"); return t.suggestions;
+    return tx(lang).suggestions;
   }
-  if (!eventState.date && !eventState.city) {
-    return ["Set date & city", "How many guests?", "What's my budget?"];
+  const missing = getMissingInfo(eventState);
+  if (missing.includes("guest_count") && missing.includes("date")) {
+    return ["How many guests?", "When is the event?", "What's my budget?"];
   }
-  if (!eventState.city) return ["Event is in Yerevan", "Set location", "Show checklist"];
-  if (!eventState.date) return ["Set a date", "Tell me the budget", "What do I need?"];
+  if (missing.includes("date")) return ["When is the event?", "Set the location", "What do I need?"];
+  if (missing.includes("location")) return ["Event is in Yerevan", "Set location", "Show checklist"];
+  if (missing.includes("guest_count")) return ["About 20 guests", "About 50 guests", "Over 100 guests"];
+  if (missing.includes("budget")) return ["Budget-friendly plan", "Mid-range", "Premium options"];
+  // Urgent — event within 7 days
+  if (eventState.date) {
+    const daysLeft = Math.ceil((new Date(eventState.date) - Date.now()) / 86400000);
+    if (daysLeft <= 7 && daysLeft > 0) {
+      const needed = (eventState.services || []).filter(s => s.canSearch && !eventState.selected_vendors?.[s.service_type] && !s.searching);
+      if (needed.length) return [`Find ${needed[0].title} urgently`, "Who's available this week?", "What's still missing?"];
+    }
+  }
   const needed = (eventState.services || []).filter(
-    s => s.canSearch && !eventState.selected_vendors?.[s.service_type] && !s.searching
+    s => s.canSearch && !eventState.selected_vendors?.[s.service_type] && !s.searching && s.status !== "suggested"
   );
   if (needed.length > 0) {
     const chips = [`Find ${needed[0].title}`];
@@ -611,6 +955,8 @@ function getContextSuggestions(eventState) {
     chips.push("What's left to book?");
     return chips;
   }
+  const suggested = (eventState.services || []).filter(s => s.status === "suggested" && s.canSearch);
+  if (suggested.length > 0) return [`Add ${suggested[0].title}?`, "Budget breakdown?", "Share my plan"];
   return ["Add more services", "Budget breakdown?", "Share my plan"];
 }
 
@@ -2087,7 +2433,7 @@ function PlannerClientInner({ lang }) {
           setMessages(prev => [...prev, {
             id: Date.now(), role: "bot",
             text: `Welcome back! 🎉 I loaded your **${savedState.event_type_label || savedState.event_type}** plan. You have ${Object.keys(savedState.selected_vendors || {}).length} vendors confirmed. What would you like to work on?`,
-            suggestions: getContextSuggestions(savedState),
+            suggestions: getContextSuggestions(savedState, lang),
           }]);
         }
       })
@@ -2096,9 +2442,9 @@ function PlannerClientInner({ lang }) {
   }, [resumeSessionId, authed]);
 
   const pushBot = useCallback((text, currentState) => {
-    const suggestions = getContextSuggestions(currentState || eventState);
+    const suggestions = getContextSuggestions(currentState || eventState, lang);
     setMessages(prev => [...prev, { id: Date.now() + Math.random(), role: "bot", text, suggestions }]);
-  }, [eventState]);
+  }, [eventState, lang]);
 
   const searchVendors = useCallback(async (service_type, search_term, filters = {}) => {
     try {
@@ -2125,15 +2471,52 @@ function PlannerClientInner({ lang }) {
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
     try {
+      // Build richer planner state context for the AI
+      const missingInfo = getMissingInfo(eventState);
+      const plannerMode = !eventState.event_type ? "general"
+        : missingInfo.length > 0 ? "planning_event"
+        : "searching_product";
+
+      const plannerState = {
+        mode: plannerMode,
+        event: {
+          type: eventState.event_type,
+          date: eventState.date,
+          location: eventState.city,
+          guestCount: eventState.guest_count,
+          budget: eventState.budget,
+          age: eventState.age,
+          theme: eventState.style,
+        },
+        services: (eventState.services || []).map(s => ({
+          service_type: s.service_type,
+          status: eventState.selected_vendors?.[s.service_type] ? "selected" : s.status || "pending",
+          required: s.required,
+          selectedVendorId: eventState.selected_vendors?.[s.service_type]?.id,
+        })),
+        missingInfo,
+        language: lang,
+      };
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/planner/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.text })), event_state: eventState }),
+        body: JSON.stringify({
+          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.text })),
+          event_state: eventState,
+          planner_state: plannerState,
+        }),
       });
       const json = await res.json();
       const data = json.data || json;
       if (data.error) { pushBot(`${data.error}`, eventState); return; }
-      const { state: newState, searches } = applyActions(data.actions || [], eventState);
+
+      // Apply AI actions
+      let { state: newState, searches } = applyActions(data.actions || [], eventState, lang);
+
+      // Apply frontend service rules on top of AI output
+      newState = applyServiceRules(newState, lang);
+
       setEventState(newState);
       if (data.assistant_message) pushBot(data.assistant_message, newState);
       for (const s of searches) searchVendors(s.service_type, s.search_term, s.filters || {});
@@ -2142,7 +2525,7 @@ function PlannerClientInner({ lang }) {
     } finally {
       setLoading(false);
     }
-  }, [messages, eventState, loading, searchVendors, pushBot]);
+  }, [messages, eventState, loading, searchVendors, pushBot, lang]);
 
   const handleSelectVendor = useCallback((service_type, vendor) => {
     const name = vendor.business_name || vendor.name || "Vendor";
@@ -2154,7 +2537,7 @@ function PlannerClientInner({ lang }) {
     setVendorResults(prev => { const n = { ...prev }; delete n[service_type]; return n; });
     setMessages(prev => {
       const newState = { ...eventState, selected_vendors: { ...eventState.selected_vendors, [service_type]: { id: vendor.id, name } } };
-      return [...prev, { id: Date.now() + Math.random(), role: "bot", text: `**${name}** added for **${service_type.replace(/_/g, " ")}**. What's next?`, suggestions: getContextSuggestions(newState) }];
+      return [...prev, { id: Date.now() + Math.random(), role: "bot", text: `**${name}** added for **${service_type.replace(/_/g, " ")}**. What's next?`, suggestions: getContextSuggestions(newState, lang) }];
     });
   }, [eventState]);
 
