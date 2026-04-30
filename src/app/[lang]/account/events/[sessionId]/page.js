@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   ArrowLeft, Loader2, Calendar, MapPin, Users, DollarSign,
-  CheckCircle2, Clock, XCircle, Send, MessageCircle, ChevronDown,
-  ChevronUp, Building2, Camera, Cake, UtensilsCrossed, Flower2,
-  Music, Gem, Star, Smile, Briefcase, GraduationCap, Baby,
-  Monitor, Package, Flame, Plus, User, Mic, X,
+  CheckCircle2, Clock, XCircle, Send, MessageCircle,
+  Building2, Camera, Cake, UtensilsCrossed, Flower2,
+  Music, Gem, Star, Smile, Monitor, Package, Flame, Plus, User, Mic, X,
+  ExternalLink,
 } from "lucide-react";
 import { plannerAPI, inquiriesAPI } from "@/lib/api";
 
@@ -138,32 +138,72 @@ function MessageThread({ inquiry, onClose }) {
   );
 }
 
+// ─── Vendor avatar (64×64) ────────────────────────────────────────────────────
+const AVATAR_COLORS = ["#7c3aed","#e11d5c","#059669","#d97706","#0891b2","#6366f1"];
+function VendorAvatar({ vendor, size = 64 }) {
+  const img   = vendor?.logo || vendor?.thumbnail || null;
+  const name  = vendor?.name || vendor?.business_name || "V";
+  const color = AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
+  return (
+    <div style={{ width: size, height: size, borderRadius: 12, overflow: "hidden", flexShrink: 0, border: "1px solid rgba(15,23,42,0.08)", background: img ? "#f8fafc" : `${color}1a`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      {img
+        ? <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        : <span style={{ fontWeight: 800, fontSize: size * 0.34, color }}>{name[0]?.toUpperCase()}</span>
+      }
+    </div>
+  );
+}
+
+function vendorLink(vendor, lang) {
+  if (!vendor) return null;
+  if (vendor.is_product && vendor.vendor_slug) return `/${lang}/${vendor.vendor_slug}`;
+  if (vendor.is_product) return `/${lang}/product/${vendor.id}`;
+  if (vendor.slug) return `/${lang}/vendor/${vendor.slug}`;
+  return null;
+}
+
 // ─── Vendor Service Row ───────────────────────────────────────────────────────
-function VendorRow({ service, vendor, inquiry, accent, onOpenThread }) {
+function VendorRow({ service, vendor, inquiry, accent, onOpenThread, lang }) {
   const Icon = getServiceIcon(service.service_type);
   const status = inquiry ? STATUS_CONFIG[inquiry.status] || STATUS_CONFIG.pending : null;
   const StatusIcon = status?.icon || Clock;
+  const link = vendorLink(vendor, lang);
 
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#fff", borderRadius: 14, border: "1px solid rgba(15,23,42,0.07)", marginBottom: 8 }}>
-      {/* Icon */}
-      <div style={{ width: 38, height: 38, borderRadius: 10, background: `${accent}14`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <Icon size={16} color={accent} />
-      </div>
-
-      {/* Info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
+  const vendorBlock = vendor ? (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
+      <VendorAvatar vendor={vendor} size={48} />
+      <div style={{ minWidth: 0 }}>
         <p style={{ margin: 0, fontWeight: 600, fontSize: "0.82rem", color: "#0f172a" }}>{service.title}</p>
-        {vendor ? (
+        {link ? (
+          <a href={link} target="_blank" rel="noreferrer"
+            style={{ margin: "2px 0 0", fontSize: "0.72rem", color: accent, textDecoration: "none", fontWeight: 600, display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {vendor.name || vendor.business_name}
+            {vendor.city ? ` · ${vendor.city}` : ""}
+            <ExternalLink size={10} style={{ marginLeft: 3, verticalAlign: "middle", opacity: 0.7 }} />
+          </a>
+        ) : (
           <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#64748b" }}>
             {vendor.name || vendor.business_name}
             {vendor.city ? ` · ${vendor.city}` : ""}
-            {vendor.rating ? ` · ★ ${vendor.rating}` : ""}
           </p>
-        ) : (
-          <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#94a3b8" }}>No vendor selected</p>
         )}
       </div>
+    </div>
+  ) : (
+    <div style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ width: 48, height: 48, borderRadius: 12, background: `${accent}14`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <Icon size={18} color={accent} />
+      </div>
+      <div style={{ minWidth: 0 }}>
+        <p style={{ margin: 0, fontWeight: 600, fontSize: "0.82rem", color: "#0f172a" }}>{service.title}</p>
+        <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#94a3b8" }}>No vendor selected</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#fff", borderRadius: 14, border: "1px solid rgba(15,23,42,0.07)", marginBottom: 8 }}>
+      {vendorBlock}
 
       {/* Status & action */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
@@ -202,6 +242,7 @@ function ProgressBar({ selected, total, accent }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function EventDetailPage() {
   const params    = useParams();
+  const router    = useRouter();
   const lang      = params?.lang || "en";
   const sessionId = params?.sessionId;
 
@@ -300,11 +341,24 @@ export default function EventDetailPage() {
                 {session.event_type?.replace(/_/g, " ")}
               </p>
             </div>
-            <Link href={`/${lang}/planner?session=${session.id}`} style={{ textDecoration: "none", flexShrink: 0 }}>
-              <button style={{ background: `linear-gradient(135deg,${accent},${accent}cc)`, border: "none", borderRadius: 12, padding: "9px 16px", color: "#fff", fontSize: "0.8rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>
-                Continue Planning
-              </button>
-            </Link>
+            <button
+              onClick={() => {
+                try {
+                  localStorage.setItem("salooote_resume_session", JSON.stringify({
+                    plannerSessionId: session.id,
+                    event_type: session.event_type,
+                    event_type_label: session.title || session.event_type?.replace(/_/g, " "),
+                    location: session.location,
+                    guest_count: session.guest_count,
+                    event_date: session.event_date,
+                    event_data: data,
+                  }));
+                } catch {}
+                router.push(`/${lang}`);
+              }}
+              style={{ background: `linear-gradient(135deg,${accent},${accent}cc)`, border: "none", borderRadius: 12, padding: "9px 16px", color: "#fff", fontSize: "0.8rem", fontWeight: 700, cursor: "pointer", fontFamily: "inherit", flexShrink: 0 }}>
+              Continue Planning
+            </button>
           </div>
 
           {/* Meta chips */}
@@ -354,6 +408,7 @@ export default function EventDetailPage() {
                 vendor={vendor}
                 inquiry={inquiry}
                 accent={accent}
+                lang={lang}
                 onOpenThread={setActiveThread}
               />
             );
