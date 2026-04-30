@@ -19,7 +19,8 @@ const EVENT_COLORS = {
 function SessionCard({ session, lang, onDelete }) {
   const [deleting, setDeleting] = useState(false);
   const color = EVENT_COLORS[session.event_type] || "#e11d5c";
-  const data  = session.event_data || {};
+  let data = {};
+  try { data = typeof session.event_data === "string" ? JSON.parse(session.event_data) : session.event_data || {}; } catch {}
 
   const selectedCount  = Object.keys(data.selected_vendors || {}).length;
   const totalSearchable = (data.services || []).filter(s => s.canSearch).length;

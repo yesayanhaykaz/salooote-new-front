@@ -217,7 +217,7 @@ export default function EventDetailPage() {
       .catch(() => {})
       .finally(() => setLoading(false));
     plannerAPI.getInquiries(sessionId)
-      .then(res => setInquiries(res?.data || res || []))
+      .then(res => { const arr = res?.data ?? res; setInquiries(Array.isArray(arr) ? arr : []); })
       .catch(() => setInquiries([]));
   }, [sessionId]);
 
@@ -242,9 +242,10 @@ export default function EventDetailPage() {
     );
   }
 
-  const data   = session.event_data || {};
+  let data = {};
+  try { data = typeof session.event_data === "string" ? JSON.parse(session.event_data) : session.event_data || {}; } catch {}
   const accent = EVENT_COLORS[session.event_type] || "#e11d5c";
-  const services = data.services || [];
+  const services = Array.isArray(data.services) ? data.services : [];
   const selectedVendors = data.selected_vendors || {};
   const searchable = services.filter(s => s.canSearch);
   const selectedCount = Object.keys(selectedVendors).length;
@@ -255,7 +256,7 @@ export default function EventDetailPage() {
 
   // Build a lookup: vendor_id → inquiry
   const inquiryByVendorId = {};
-  for (const inq of inquiries) {
+  for (const inq of (Array.isArray(inquiries) ? inquiries : [])) {
     if (inq.vendor_id) inquiryByVendorId[inq.vendor_id] = inq;
   }
 
