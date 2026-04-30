@@ -1769,33 +1769,6 @@ export default function AIAssistantV2Client({ lang }) {
       const sb = localStorage.getItem("salooote_v2_sidebar_collapsed");
       if (sb === "1") setSidebarCollapsed(true);
     } catch {}
-
-    // Resume a planner session from the "Continue Planning" button on the events page
-    try {
-      const resumeRaw = localStorage.getItem("salooote_resume_session");
-      if (resumeRaw) {
-        localStorage.removeItem("salooote_resume_session");
-        const resume = JSON.parse(resumeRaw);
-        if (resume.plannerSessionId) {
-          const ed = resume.event_data || {};
-          setEventState(s => ({
-            ...s,
-            event_type: resume.event_type || s.event_type,
-            event_type_label: resume.event_type_label || s.event_type_label,
-            services: Array.isArray(ed.services) ? ed.services : s.services,
-            selected_vendors: ed.selected_vendors && typeof ed.selected_vendors === "object" ? ed.selected_vendors : s.selected_vendors,
-            style: ed.style || s.style,
-            budget: ed.budget || s.budget,
-            city: resume.location || s.city,
-            guest_count: resume.guest_count ? String(resume.guest_count) : s.guest_count,
-            date: resume.event_date || s.date,
-          }));
-          setPlannerSessionId(resume.plannerSessionId);
-          setPhase("chat");
-        }
-      }
-    } catch {}
-
     setHydrated(true);
   }, []);
 
@@ -1940,15 +1913,7 @@ export default function AIAssistantV2Client({ lang }) {
   const handleSelectVendor = useCallback((serviceType, vendor) => {
     setEventState(prev => ({
       ...prev,
-      selected_vendors: {
-        ...prev.selected_vendors,
-        [serviceType]: {
-          id: vendor.id,
-          name: vendor.business_name || vendor.name,
-          slug: vendor.slug || null,
-          logo: vendor.cover_image || vendor.logo_url || null,
-        },
-      },
+      selected_vendors: { ...prev.selected_vendors, [serviceType]: { id: vendor.id, name: vendor.business_name || vendor.name } },
       services: prev.services.map(s => s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s),
     }));
   }, []);
@@ -1974,15 +1939,7 @@ export default function AIAssistantV2Client({ lang }) {
         ...prev,
         selected_vendors: {
           ...prev.selected_vendors,
-          [serviceType]: {
-            id: product.id,
-            name,
-            vendor_name: vendorName,
-            thumbnail: product.thumbnail_url,
-            price: product.price,
-            vendor_slug: product.vendor_slug || null,
-            is_product: true,
-          },
+          [serviceType]: { id: product.id, name, vendor_name: vendorName, thumbnail: product.thumbnail_url, price: product.price },
         },
         services: prev.services.map(s =>
           s.service_type === serviceType ? { ...s, status: "selected", searching: false } : s
