@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { productsAPI, vendorsAPI, categoriesAPI } from "@/lib/api";
-import { Star, LayoutGrid, List, ChevronRight, MapPin, Package, X, Search, Filter, ChevronDown, Check } from "lucide-react";
+import { productsAPI, vendorsAPI, categoriesAPI, venuesAPI } from "@/lib/api";
+import { Star, LayoutGrid, List, ChevronRight, MapPin, Package, X, Search, Filter, ChevronDown, Check, MessageCircle, Building2, Users, BadgeCheck } from "lucide-react";
 
 const T = {
   en: {
@@ -30,6 +30,18 @@ const T = {
     loadingMore: "Loading more…",
     allLoaded: (n) => `All ${n} products loaded`,
     allCategories: "All Categories",
+    // venue mode
+    venuesCount: "venues",
+    noVenues: "No venues found",
+    noVenuesDesc: "Check back soon for venue listings.",
+    chatVenue: "Chat with Venue",
+    quoteOnRequest: "Quote on request",
+    upToGuests: (n) => `Up to ${n} guests`,
+    // service mode
+    serviceProviders: "service providers",
+    noServiceProviders: "No providers found",
+    noServiceProvidersDesc: "Check back soon.",
+    getQuote: "Get Quote",
   },
   hy: {
     home: "Գլխավոր",
@@ -54,6 +66,16 @@ const T = {
     loadingMore: "Բեռնվում է…",
     allLoaded: (n) => `Բոլոր ${n} ապրանքները բեռնված են`,
     allCategories: "Բոլոր կատեգորիաները",
+    venuesCount: "վայր",
+    noVenues: "Վայրեր չեն գտնվել",
+    noVenuesDesc: "Ստուգեք ավելի ուշ:",
+    chatVenue: "Կապ հաստատել",
+    quoteOnRequest: "Գնի հարցում",
+    upToGuests: (n) => `Մինչև ${n} հյուր`,
+    serviceProviders: "ծառայություն մատուցողներ",
+    noServiceProviders: "Ծառայություններ չեն գտնվել",
+    noServiceProvidersDesc: "Ստուգեք ավելի ուշ:",
+    getQuote: "Ստանալ Գնացուցակ",
   },
   ru: {
     home: "Главная",
@@ -78,7 +100,35 @@ const T = {
     loadingMore: "Загрузка…",
     allLoaded: (n) => `Все ${n} товаров загружены`,
     allCategories: "Все категории",
+    venuesCount: "площадок",
+    noVenues: "Площадки не найдены",
+    noVenuesDesc: "Загляните позже.",
+    chatVenue: "Написать",
+    quoteOnRequest: "Цена по запросу",
+    upToGuests: (n) => `До ${n} гостей`,
+    serviceProviders: "исполнителей",
+    noServiceProviders: "Исполнители не найдены",
+    noServiceProvidersDesc: "Загляните позже.",
+    getQuote: "Узнать стоимость",
   },
+};
+
+// ── Listing-type detection ─────────────────────────────────────────────────────
+const VENUE_SLUGS = new Set(["venues-locations"]);
+const SERVICE_SLUGS = new Set([
+  "photography-videography", "animators-entertainment", "catering-food",
+  "music-djs", "event-planning", "beauty-styling", "transport-cars",
+  "event-photography", "videography", "drone-shooting", "photo-booth",
+  "superheroes", "princess-characters", "mascots", "clowns", "kids-shows",
+  "buffet-catering", "full-service-catering", "drinks-bar", "kids-catering",
+  "dj-services", "live-bands", "singers",
+  "makeup-artists", "hair-styling", "bridal-styling",
+  "luxury-cars", "limousines", "guest-transport",
+]);
+const VENUE_TYPE_LABEL = {
+  wedding_hall: "Wedding Hall", restaurant: "Restaurant", cafe: "Café",
+  church: "Church", outdoor: "Outdoor", rooftop: "Rooftop",
+  conference: "Conference", other: "Venue",
 };
 
 function buildPriceRanges(min, max) {
@@ -102,6 +152,110 @@ function buildPriceRanges(min, max) {
     lo = hi;
   }
   return ranges;
+}
+
+// ── Venue card (used in venue listing mode) ────────────────────────────────────
+function VenueCard({ venue, lang = "en", t }) {
+  const vendorSlug = venue.vendor?.slug || venue.vendor_id;
+  const imageUrl = venue.thumbnail_url || venue.vendor?.banner_url || venue.vendor?.logo_url;
+  const typeLabel = VENUE_TYPE_LABEL[venue.venue_type] || "Venue";
+  return (
+    <Link href={`/${lang}/vendor/${vendorSlug}`} className="no-underline">
+      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden hover:border-brand-200 hover:-translate-y-1 transition-all cursor-pointer group shadow-sm flex flex-col h-full">
+        <div className="relative h-[180px] flex-shrink-0 overflow-hidden bg-surface-100">
+          {imageUrl ? (
+            <Image src={imageUrl} alt={venue.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+          ) : (
+            <div className="h-full bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center">
+              <Building2 size={32} className="text-brand-300" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+          <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-0.5 text-[11px] font-semibold text-surface-700">
+            {typeLabel}
+          </div>
+          {venue.rating > 0 && (
+            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
+              <Star size={10} className="fill-warm-400 text-warm-400" />
+              <span className="text-xs font-bold text-surface-700">{venue.rating.toFixed(1)}</span>
+            </div>
+          )}
+          {venue.capacity_max && (
+            <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-black/40 backdrop-blur-sm rounded-full px-2.5 py-0.5">
+              <Users size={10} className="text-white/90" />
+              <span className="text-[11px] text-white font-medium">{t.upToGuests(venue.capacity_max)}</span>
+            </div>
+          )}
+        </div>
+        <div className="p-4 flex flex-col flex-1">
+          <p className="font-semibold text-surface-900 text-sm mb-1 truncate">{venue.name}</p>
+          {venue.short_description && (
+            <p className="text-xs text-surface-400 mb-3 line-clamp-2 leading-relaxed flex-1">{venue.short_description}</p>
+          )}
+          <div className="flex items-center justify-between mb-3">
+            {venue.base_price ? (
+              <span className="text-xs font-semibold text-brand-600">
+                {t.quoteOnRequest === "Quote on request" ? `From ֏${Math.round(venue.base_price).toLocaleString()}` : `֏${Math.round(venue.base_price).toLocaleString()}-ից`}
+              </span>
+            ) : (
+              <span className="text-xs text-surface-400">{t.quoteOnRequest}</span>
+            )}
+            <span className="flex items-center gap-1 text-xs text-surface-400">
+              <MapPin size={10} />{venue.vendor?.city || "Yerevan"}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5 bg-brand-50 text-brand-600 rounded-xl px-3 py-2 text-xs font-semibold justify-center">
+            <MessageCircle size={12} />
+            {t.chatVenue}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+// ── Service-provider card (used in service listing mode) ──────────────────────
+function ServiceProviderCard({ vendor, lang = "en", t }) {
+  const slug = vendor.slug || vendor.id;
+  const imageUrl = vendor.cover_image || vendor.banner_url || vendor.logo_url;
+  return (
+    <Link href={`/${lang}/vendor/${slug}`} className="no-underline">
+      <div className="bg-white rounded-2xl border border-surface-200 overflow-hidden hover:border-brand-200 hover:-translate-y-1 transition-all cursor-pointer group shadow-sm flex flex-col h-full">
+        <div className="relative h-[160px] flex-shrink-0 overflow-hidden bg-surface-100">
+          {imageUrl ? (
+            <Image src={imageUrl} alt={vendor.business_name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+          ) : (
+            <div className="h-full bg-gradient-to-br from-brand-50 to-brand-100 flex items-center justify-center">
+              <BadgeCheck size={32} className="text-brand-300" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />
+          {(vendor.avg_rating ?? vendor.rating ?? 0) > 0 && (
+            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center gap-1">
+              <Star size={10} className="fill-warm-400 text-warm-400" />
+              <span className="text-xs font-bold text-surface-700">
+                {(vendor.avg_rating ?? vendor.rating).toFixed(1)}
+              </span>
+            </div>
+          )}
+          <div className="absolute bottom-3 left-3">
+            <p className="text-white font-semibold text-sm leading-tight truncate max-w-[180px]">
+              {vendor.business_name || vendor.name}
+            </p>
+          </div>
+        </div>
+        <div className="p-4 flex flex-col flex-1">
+          <div className="flex items-center gap-1 text-xs text-surface-400 mb-3">
+            <MapPin size={10} />{vendor.city || "Yerevan"}
+          </div>
+          <div className="mt-auto flex items-center gap-1.5 bg-brand-600 text-white rounded-xl px-3 py-2 text-xs font-semibold justify-center">
+            <MessageCircle size={12} />
+            {t.getQuote}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 function VendorCard({ vendor, lang = "en" }) {
@@ -220,8 +374,15 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [search, setSearch]             = useState("");
 
+  // Derived: what kind of listing this category shows
+  const listingType =
+    VENUE_SLUGS.has(slug) || VENUE_SLUGS.has(parentSlug || "") ? "venue"
+    : SERVICE_SLUGS.has(slug) || SERVICE_SLUGS.has(parentSlug || "") ? "service"
+    : "product";
+
   const [products, setProducts]         = useState([]);
   const [vendors, setVendors]           = useState([]);
+  const [venues, setVenues]             = useState([]);
   const [total, setTotal]               = useState(0);
   const [filters, setFilters]           = useState({ min_price: 0, max_price: 0, tags: [] });
   const [priceRanges, setPriceRanges]   = useState(buildPriceRanges(0, 0));
@@ -272,8 +433,9 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
     });
   }, [slug, parentSlug, lang]);
 
-  // Step 2: fetch products — supports pagination
+  // Step 2: fetch products — supports pagination (skipped for venue/service modes)
   const fetchProducts = useCallback(async (pageNum = 1) => {
+    if (listingType !== "product") { setLoading(false); return; }
     if (slug && !categoryID) return;
 
     const myKey = ++fetchKeyRef.current;
@@ -316,7 +478,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [slug, categoryID, sort, priceIdx, priceRanges, search, lang]);
+  }, [slug, categoryID, sort, priceIdx, priceRanges, search, lang, listingType]);
 
   // Reset + re-fetch when filters change
   useEffect(() => { setPage(1); fetchProducts(1); }, [fetchProducts]);
@@ -339,13 +501,23 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
 
   // Step 3: fetch vendors for this category
   useEffect(() => {
-    if (slug && !categoryID) return; // wait for slug→ID resolution
-    const params = { limit: 20 };
+    if (slug && !categoryID) return;
+    const params = { limit: 40 };
     if (categoryID) params.category_id = categoryID;
+    if (listingType === "venue") params.vendor_type = "venue";
     vendorsAPI.list(params).then(res => {
       setVendors(res?.data || []);
     }).catch(() => setVendors([]));
-  }, [categoryID, slug]);
+  }, [categoryID, slug, listingType]);
+
+  // Step 4: fetch venues (venue listing mode only)
+  useEffect(() => {
+    if (listingType !== "venue") return;
+    setLoading(true);
+    venuesAPI.list({ limit: 60, locale: lang }).then(res => {
+      setVenues(res?.data || []);
+    }).catch(() => setVenues([])).finally(() => setLoading(false));
+  }, [listingType, lang]);
 
   const toggleTag = (t) =>
     setSelectedTags(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
@@ -421,9 +593,19 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
 
               {/* Stats */}
               <div className="flex items-center gap-3 mb-5 text-surface-400">
-                <span className="text-sm font-medium text-surface-600">{total} {t.productsAvailable}</span>
-                {vendors.length > 0 && (
-                  <span className="text-sm">· {vendors.length} {t.vendorsCount}</span>
+                {listingType === "venue" && (
+                  <span className="text-sm font-medium text-surface-600">{venues.length} {t.venuesCount}</span>
+                )}
+                {listingType === "service" && (
+                  <span className="text-sm font-medium text-surface-600">{vendors.length} {t.serviceProviders}</span>
+                )}
+                {listingType === "product" && (
+                  <>
+                    <span className="text-sm font-medium text-surface-600">{total} {t.productsAvailable}</span>
+                    {vendors.length > 0 && (
+                      <span className="text-sm">· {vendors.length} {t.vendorsCount}</span>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -500,234 +682,225 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
 
       <div className="max-w-container mx-auto px-6 md:px-8 py-8">
 
-        {/* ── Tabs + toolbar ── */}
-        <div className="flex items-center gap-3 mb-6 flex-wrap">
-
-          {/* Products / Vendors tab switcher */}
-          <div className="flex bg-surface-100 rounded-xl p-1 flex-shrink-0">
-            <button
-              onClick={() => setMainTab("products")}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "products" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
-            >
-              {t.products}
-              {total > 0 && <span className="ml-1.5 text-xs text-surface-400">({total})</span>}
-            </button>
-            <button
-              onClick={() => setMainTab("vendors")}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "vendors" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
-            >
-              {t.vendors}
-              {vendors.length > 0 && <span className="ml-1.5 text-xs text-surface-400">({vendors.length})</span>}
-            </button>
-          </div>
-
-          {/* Spacer pushes sort + view controls to the right on desktop */}
-          <div className="flex-1 hidden sm:block" />
-
-          {/* Mobile filters button */}
-          {mainTab === "products" && (
-            <button
-              onClick={() => setShowMobileFilters(true)}
-              className="lg:hidden relative flex items-center gap-1.5 border border-surface-200 rounded-xl px-3 py-2 text-sm font-medium text-surface-600 bg-white cursor-pointer hover:border-brand-300 hover:text-brand-600 transition-colors flex-shrink-0"
-            >
-              <Filter size={14} />
-              {t.filters}
-              {activeFilterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-          )}
-
-          {/* Sort + view toggle */}
-          {mainTab === "products" && (
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
-              <div className="flex border border-surface-200 rounded-xl overflow-hidden bg-white">
-                <button onClick={() => setView("grid")} className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "grid" ? "bg-brand-50 text-brand-600" : "bg-white text-surface-400"}`}>
-                  <LayoutGrid size={15} />
+        {/* ── PRODUCT MODE: tabs + sidebar filters + product/vendor grid ── */}
+        {listingType === "product" && (
+          <>
+            <div className="flex items-center gap-3 mb-6 flex-wrap">
+              <div className="flex bg-surface-100 rounded-xl p-1 flex-shrink-0">
+                <button
+                  onClick={() => setMainTab("products")}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "products" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
+                >
+                  {t.products}
+                  {total > 0 && <span className="ml-1.5 text-xs text-surface-400">({total})</span>}
                 </button>
-                <button onClick={() => setView("list")} className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "list" ? "bg-brand-50 text-brand-600" : "bg-white text-surface-400"}`}>
-                  <List size={15} />
+                <button
+                  onClick={() => setMainTab("vendors")}
+                  className={`px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "vendors" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
+                >
+                  {t.vendors}
+                  {vendors.length > 0 && <span className="ml-1.5 text-xs text-surface-400">({vendors.length})</span>}
                 </button>
               </div>
-            </div>
-          )}
-
-        </div>
-
-        <div className="flex gap-8">
-
-          {/* ── Sidebar filters ── */}
-          {mainTab === "products" && (
-            <aside className="w-[220px] flex-shrink-0 hidden lg:block">
-              <div className="bg-white rounded-xl border border-surface-200 p-5 sticky top-24">
-                <div className="flex items-center justify-between mb-5">
-                  <p className="font-semibold text-surface-900">{t.filters}</p>
+              <div className="flex-1 hidden sm:block" />
+              {mainTab === "products" && (
+                <button
+                  onClick={() => setShowMobileFilters(true)}
+                  className="lg:hidden relative flex items-center gap-1.5 border border-surface-200 rounded-xl px-3 py-2 text-sm font-medium text-surface-600 bg-white cursor-pointer hover:border-brand-300 hover:text-brand-600 transition-colors flex-shrink-0"
+                >
+                  <Filter size={14} />
+                  {t.filters}
                   {activeFilterCount > 0 && (
-                    <button
-                      onClick={clearFilters}
-                      className="text-xs text-brand-600 font-medium border-none bg-transparent cursor-pointer hover:text-brand-700"
-                    >
-                      {t.clearAll}
-                    </button>
+                    <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
+                      {activeFilterCount}
+                    </span>
                   )}
+                </button>
+              )}
+              {mainTab === "products" && (
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
+                  <div className="flex border border-surface-200 rounded-xl overflow-hidden bg-white">
+                    <button onClick={() => setView("grid")} className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "grid" ? "bg-brand-50 text-brand-600" : "bg-white text-surface-400"}`}><LayoutGrid size={15} /></button>
+                    <button onClick={() => setView("list")} className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "list" ? "bg-brand-50 text-brand-600" : "bg-white text-surface-400"}`}><List size={15} /></button>
+                  </div>
                 </div>
+              )}
+            </div>
 
-                {/* Price range */}
-                <div className="mb-5 pb-5 border-b border-surface-100">
-                  <p className="text-sm font-semibold text-surface-800 mb-3">{t.priceRange}</p>
-                  {priceRanges.map((p, i) => (
-                    <label key={p.label} className="flex items-center gap-2.5 py-1.5 cursor-pointer group" onClick={() => setPriceIdx(i)}>
-                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${priceIdx === i ? "border-brand-600 bg-brand-600" : "border-surface-300 group-hover:border-brand-400"}`}>
-                        {priceIdx === i && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                      </div>
-                      <span className={`text-sm transition-colors ${priceIdx === i ? "text-surface-900 font-medium" : "text-surface-500 group-hover:text-surface-700"}`}>{p.label}</span>
-                    </label>
-                  ))}
-                </div>
+            <div className="flex gap-8">
+              {mainTab === "products" && (
+                <aside className="w-[220px] flex-shrink-0 hidden lg:block">
+                  <div className="bg-white rounded-xl border border-surface-200 p-5 sticky top-24">
+                    <div className="flex items-center justify-between mb-5">
+                      <p className="font-semibold text-surface-900">{t.filters}</p>
+                      {activeFilterCount > 0 && (
+                        <button onClick={clearFilters} className="text-xs text-brand-600 font-medium border-none bg-transparent cursor-pointer hover:text-brand-700">{t.clearAll}</button>
+                      )}
+                    </div>
+                    <div className="mb-5 pb-5 border-b border-surface-100">
+                      <p className="text-sm font-semibold text-surface-800 mb-3">{t.priceRange}</p>
+                      {priceRanges.map((p, i) => (
+                        <label key={p.label} className="flex items-center gap-2.5 py-1.5 cursor-pointer group" onClick={() => setPriceIdx(i)}>
+                          <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0 ${priceIdx === i ? "border-brand-600 bg-brand-600" : "border-surface-300 group-hover:border-brand-400"}`}>
+                            {priceIdx === i && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                          </div>
+                          <span className={`text-sm transition-colors ${priceIdx === i ? "text-surface-900 font-medium" : "text-surface-500 group-hover:text-surface-700"}`}>{p.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                    {filters.tags.length === 0 && !loading && priceRanges.length <= 1 && (
+                      <p className="text-xs text-surface-400 italic">{t.noFilters}</p>
+                    )}
+                  </div>
+                </aside>
+              )}
 
-                {filters.tags.length === 0 && !loading && priceRanges.length <= 1 && (
-                  <p className="text-xs text-surface-400 italic">{t.noFilters}</p>
-                )}
-              </div>
-            </aside>
-          )}
-
-          {/* ── Main content ── */}
-          <div className="flex-1 min-w-0">
-
-            {/* Active filter chips */}
-            {activeFilterCount > 0 && mainTab === "products" && (
-              <div className="flex flex-wrap gap-2 mb-5">
-                {priceIdx > 0 && (
-                  <span className="flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-100 rounded-full px-3 py-1 text-xs font-medium">
-                    {priceRanges[priceIdx].label}
-                    <button onClick={() => setPriceIdx(0)} className="border-none bg-transparent cursor-pointer p-0"><X size={12} /></button>
-                  </span>
-                )}
-                {selectedTags.map(t => (
-                  <span key={t} className="flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-100 rounded-full px-3 py-1 text-xs font-medium">
-                    {t}
-                    <button onClick={() => toggleTag(t)} className="border-none bg-transparent cursor-pointer p-0"><X size={12} /></button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {mainTab === "products" && (
-              <>
-                {loading ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {Array.from({ length: 8 }).map((_, i) => (
-                      <div key={i} className="bg-surface-100 rounded-xl h-[280px] animate-pulse" />
+              <div className="flex-1 min-w-0">
+                {activeFilterCount > 0 && mainTab === "products" && (
+                  <div className="flex flex-wrap gap-2 mb-5">
+                    {priceIdx > 0 && (
+                      <span className="flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-100 rounded-full px-3 py-1 text-xs font-medium">
+                        {priceRanges[priceIdx].label}
+                        <button onClick={() => setPriceIdx(0)} className="border-none bg-transparent cursor-pointer p-0"><X size={12} /></button>
+                      </span>
+                    )}
+                    {selectedTags.map(tg => (
+                      <span key={tg} className="flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-100 rounded-full px-3 py-1 text-xs font-medium">
+                        {tg}
+                        <button onClick={() => toggleTag(tg)} className="border-none bg-transparent cursor-pointer p-0"><X size={12} /></button>
+                      </span>
                     ))}
                   </div>
-                ) : filtered.length === 0 ? (
-                  <div className="py-10 text-center">
-                    <Search size={40} className="text-surface-300 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-surface-700 mb-2">{t.noProducts}</p>
-                    <p className="text-sm text-surface-400">{t.noProductsDesc}</p>
-                    {activeFilterCount > 0 && (
-                      <button
-                        onClick={clearFilters}
-                        className="mt-4 text-sm text-brand-600 font-medium border-none bg-transparent cursor-pointer hover:text-brand-700"
-                      >
-                        {t.clearFilters}
-                      </button>
-                    )}
-                  </div>
-                ) : view === "grid" ? (
+                )}
+
+                {mainTab === "products" && (
                   <>
-                    {/* When only 1-2 products, grid-cols-2 stretches them awkwardly.
-                        Use auto-rows + fixed-width columns so single items stay compact. */}
-                    <div
-                      className={
-                        filtered.length === 1
-                          ? "grid grid-cols-1 sm:grid-cols-[minmax(0,260px)] gap-4"
-                          : filtered.length === 2
-                          ? "grid grid-cols-2 md:grid-cols-[repeat(2,minmax(0,260px))] gap-4"
-                          : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
-                      }
-                    >
-                      {filtered.map((p, i) => <ProductCard key={p.id || i} product={p} lang={lang} />)}
-                    </div>
-                    {/* Infinite scroll sentinel */}
-                    <div ref={sentinelRef} className="h-10 mt-4" />
-                    {loadingMore && (
-                      <div className="flex justify-center py-4">
-                        <div className="flex items-center gap-2 text-sm text-surface-400">
-                          <div className="w-4 h-4 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
-                          {t.loadingMore}
-                        </div>
+                    {loading ? (
+                      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {Array.from({ length: 8 }).map((_, i) => <div key={i} className="bg-surface-100 rounded-xl h-[280px] animate-pulse" />)}
                       </div>
-                    )}
-                    {!hasMore && filtered.length > 0 && (
-                      <p className="text-center text-xs text-surface-300 py-4">
-                        {t.allLoaded(total)}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    {filtered.map((p, i) => {
-                      const href = p.vendor_slug && p.slug
-                        ? `/${lang}/${p.vendor_slug}/${p.slug}`
-                        : `/${lang}/product/${p.id}`;
-                      return (
-                        <Link key={p.id || i} href={href} className="no-underline">
-                          <div className="bg-white rounded-xl border border-surface-200 flex items-center gap-4 p-4 hover:border-brand-200 transition-all group">
-                            <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-100 relative">
-                              {p.image ? (
-                                <Image src={p.image} alt={p.name} fill className="object-cover" />
-                              ) : (
-                                <div className="h-full bg-gradient-to-br from-brand-50 to-brand-100" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-semibold text-surface-800 mb-0.5 group-hover:text-brand-600 transition-colors truncate">{p.name}</p>
-                              <p className="text-xs text-surface-400 mb-1.5 truncate">{p.vendor}</p>
-                              <div className="flex items-center gap-1">
-                                <Star size={11} className="fill-warm-400 text-warm-400" />
-                                <span className="text-xs font-semibold text-surface-600">{p.rating?.toFixed(1)}</span>
-                              </div>
-                            </div>
-                            <div className="flex-shrink-0 text-right">
-                              <span className="font-bold text-lg text-surface-900">${p.price.toFixed(2)}</span>
-                              {p.originalPrice && (
-                                <p className="text-xs text-surface-400 line-through">${p.originalPrice.toFixed(2)}</p>
-                              )}
+                    ) : filtered.length === 0 ? (
+                      <div className="py-10 text-center">
+                        <Search size={40} className="text-surface-300 mx-auto mb-4" />
+                        <p className="text-lg font-semibold text-surface-700 mb-2">{t.noProducts}</p>
+                        <p className="text-sm text-surface-400">{t.noProductsDesc}</p>
+                        {activeFilterCount > 0 && (
+                          <button onClick={clearFilters} className="mt-4 text-sm text-brand-600 font-medium border-none bg-transparent cursor-pointer hover:text-brand-700">{t.clearFilters}</button>
+                        )}
+                      </div>
+                    ) : view === "grid" ? (
+                      <>
+                        <div className={filtered.length === 1 ? "grid grid-cols-1 sm:grid-cols-[minmax(0,260px)] gap-4" : filtered.length === 2 ? "grid grid-cols-2 md:grid-cols-[repeat(2,minmax(0,260px))] gap-4" : "grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"}>
+                          {filtered.map((p, i) => <ProductCard key={p.id || i} product={p} lang={lang} />)}
+                        </div>
+                        <div ref={sentinelRef} className="h-10 mt-4" />
+                        {loadingMore && (
+                          <div className="flex justify-center py-4">
+                            <div className="flex items-center gap-2 text-sm text-surface-400">
+                              <div className="w-4 h-4 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
+                              {t.loadingMore}
                             </div>
                           </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
+                        )}
+                        {!hasMore && filtered.length > 0 && (
+                          <p className="text-center text-xs text-surface-300 py-4">{t.allLoaded(total)}</p>
+                        )}
+                      </>
+                    ) : (
+                      <div className="flex flex-col gap-3">
+                        {filtered.map((p, i) => {
+                          const href = p.vendor_slug && p.slug ? `/${lang}/${p.vendor_slug}/${p.slug}` : `/${lang}/product/${p.id}`;
+                          return (
+                            <Link key={p.id || i} href={href} className="no-underline">
+                              <div className="bg-white rounded-xl border border-surface-200 flex items-center gap-4 p-4 hover:border-brand-200 transition-all group">
+                                <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-100 relative">
+                                  {p.image ? <Image src={p.image} alt={p.name} fill className="object-cover" /> : <div className="h-full bg-gradient-to-br from-brand-50 to-brand-100" />}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-semibold text-surface-800 mb-0.5 group-hover:text-brand-600 transition-colors truncate">{p.name}</p>
+                                  <p className="text-xs text-surface-400 mb-1.5 truncate">{p.vendor}</p>
+                                  <div className="flex items-center gap-1">
+                                    <Star size={11} className="fill-warm-400 text-warm-400" />
+                                    <span className="text-xs font-semibold text-surface-600">{p.rating?.toFixed(1)}</span>
+                                  </div>
+                                </div>
+                                <div className="flex-shrink-0 text-right">
+                                  <span className="font-bold text-lg text-surface-900">${p.price.toFixed(2)}</span>
+                                  {p.originalPrice && <p className="text-xs text-surface-400 line-through">${p.originalPrice.toFixed(2)}</p>}
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
 
-            {mainTab === "vendors" && (
-              <>
-                {vendors.length === 0 && !loading ? (
-                  <div className="py-10 text-center">
-                    <Package size={40} className="text-surface-300 mx-auto mb-4" />
-                    <p className="text-lg font-semibold text-surface-700 mb-2">{t.noVendors}</p>
-                    <p className="text-sm text-surface-400">{t.noVendorsDesc}</p>
-                    <Link href={`/${lang}/apply`} className="inline-block mt-4 bg-brand-600 text-white rounded-xl px-6 py-2.5 text-sm font-semibold no-underline hover:bg-brand-700 transition-colors">
-                      {t.applyAsVendor}
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {vendors.map((v, i) => <VendorCard key={v.id || i} vendor={v} lang={lang} />)}
-                  </div>
+                {mainTab === "vendors" && (
+                  <>
+                    {vendors.length === 0 && !loading ? (
+                      <div className="py-10 text-center">
+                        <Package size={40} className="text-surface-300 mx-auto mb-4" />
+                        <p className="text-lg font-semibold text-surface-700 mb-2">{t.noVendors}</p>
+                        <p className="text-sm text-surface-400">{t.noVendorsDesc}</p>
+                        <Link href={`/${lang}/apply`} className="inline-block mt-4 bg-brand-600 text-white rounded-xl px-6 py-2.5 text-sm font-semibold no-underline hover:bg-brand-700 transition-colors">{t.applyAsVendor}</Link>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {vendors.map((v, i) => <VendorCard key={v.id || i} vendor={v} lang={lang} />)}
+                      </div>
+                    )}
+                  </>
                 )}
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* ── VENUE MODE: venue cards with chat CTA, no tabs/filters ── */}
+        {listingType === "venue" && (
+          loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {Array.from({ length: 8 }).map((_, i) => <div key={i} className="bg-surface-100 rounded-2xl h-[320px] animate-pulse" />)}
+            </div>
+          ) : venues.length === 0 ? (
+            <div className="py-16 text-center">
+              <Building2 size={40} className="text-surface-300 mx-auto mb-4" />
+              <p className="text-lg font-semibold text-surface-700 mb-2">{t.noVenues}</p>
+              <p className="text-sm text-surface-400">{t.noVenuesDesc}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {venues
+                .filter(v => !search || v.name.toLowerCase().includes(search.toLowerCase()))
+                .map(v => <VenueCard key={v.id} venue={v} lang={lang} t={t} />)}
+            </div>
+          )
+        )}
+
+        {/* ── SERVICE MODE: service-provider cards with Get Quote CTA, no tabs/filters ── */}
+        {listingType === "service" && (
+          loading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+              {Array.from({ length: 8 }).map((_, i) => <div key={i} className="bg-surface-100 rounded-2xl h-[280px] animate-pulse" />)}
+            </div>
+          ) : vendors.length === 0 ? (
+            <div className="py-16 text-center">
+              <BadgeCheck size={40} className="text-surface-300 mx-auto mb-4" />
+              <p className="text-lg font-semibold text-surface-700 mb-2">{t.noServiceProviders}</p>
+              <p className="text-sm text-surface-400">{t.noServiceProvidersDesc}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5">
+              {vendors
+                .filter(v => !search || (v.business_name || v.name || "").toLowerCase().includes(search.toLowerCase()))
+                .map(v => <ServiceProviderCard key={v.id} vendor={v} lang={lang} t={t} />)}
+            </div>
+          )
+        )}
+
       </div>
 
       {/* ── Mobile filter drawer ── */}
