@@ -305,27 +305,28 @@ export default function ProductsPageClient({ dict, lang }) {
 
       {/* ── Sticky filter bar ── */}
       <div className="sticky top-0 z-20 bg-white border-b border-surface-200 shadow-sm">
-        <div className="max-w-container mx-auto px-4 sm:px-6 md:px-8 py-3 flex items-center gap-3 flex-wrap md:flex-nowrap">
-          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 flex-1 min-w-0">
-            {/* Rating quick filters */}
+        <div className="max-w-container mx-auto px-4 sm:px-6 md:px-8 py-2.5 flex items-center gap-2">
+
+          {/* Rating chips — always fit on any phone (3 small pills) */}
+          <div className="flex items-center gap-1.5 flex-1 min-w-0">
             {[0, 4, 4.5].map((r) => (
               <motion.button
                 key={r}
                 onClick={() => setMinRating(minRating === r ? 0 : r)}
                 whileTap={{ scale: 0.95 }}
-                className={`flex-shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer whitespace-nowrap ${
+                className={`flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-semibold border transition-all cursor-pointer whitespace-nowrap ${
                   minRating === r
                     ? "bg-brand-600 text-white border-brand-600"
                     : "bg-white text-surface-600 border-surface-200 hover:border-brand-300"
                 }`}
               >
-                <Star size={11} className={minRating === r ? "fill-white" : "fill-warm-400 text-warm-400"} />
+                <Star size={10} className={minRating === r ? "fill-white" : "fill-warm-400 text-warm-400"} />
                 {r === 0 ? t.quickFilterAll : `${r}${t.quickFilterPrefix}`}
               </motion.button>
             ))}
 
-            {/* Price filter (AMD-aware) */}
-            <div className="flex items-center gap-2 flex-shrink-0 ml-1">
+            {/* Price filter — inline only on md+, moves to expanded panel on mobile */}
+            <div className="hidden md:flex items-center gap-2 flex-shrink-0 ml-2 pl-2 border-l border-surface-100">
               <span className="text-xs text-surface-500 whitespace-nowrap">
                 {t.maxPriceLabel} {fmtAMD(maxPrice)} ֏
               </span>
@@ -336,55 +337,92 @@ export default function ProductsPageClient({ dict, lang }) {
                 step={PRICE_STEP}
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(Number(e.target.value))}
-                className="w-24 sm:w-28 accent-brand-600 cursor-pointer"
+                className="w-28 accent-brand-600 cursor-pointer"
               />
             </div>
           </div>
 
+          {/* Filters button */}
           <motion.button
             onClick={() => setFiltersOpen(!filtersOpen)}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-surface-200 text-xs font-semibold text-surface-600 hover:border-brand-400 hover:text-brand-600 transition-all bg-white cursor-pointer flex-shrink-0 whitespace-nowrap"
+            className={`relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all bg-white cursor-pointer flex-shrink-0 whitespace-nowrap ${
+              filtersOpen || hasActiveFilters
+                ? "border-brand-400 text-brand-600"
+                : "border-surface-200 text-surface-600 hover:border-brand-300 hover:text-brand-600"
+            }`}
           >
-            <SlidersHorizontal size={13} /> {t.filtersBtn}
+            <SlidersHorizontal size={13} />
+            <span className="hidden sm:inline">{t.filtersBtn}</span>
+            {hasActiveFilters && (
+              <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
+                {(minRating > 0 ? 1 : 0) + (maxPrice < PRICE_MAX ? 1 : 0) + (selectedCat ? 1 : 0)}
+              </span>
+            )}
           </motion.button>
         </div>
 
-        {/* Expanded filters */}
+        {/* Expanded filters panel */}
         <AnimatePresence>
           {filtersOpen && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.2 }}
               className="overflow-hidden border-t border-surface-100"
             >
-              <div className="max-w-container mx-auto px-6 md:px-8 py-4">
-                <p className="text-xs font-semibold text-surface-700 mb-3">{t.filterByCat}</p>
-                <div className="flex gap-2 flex-wrap">
-                  <motion.button
-                    onClick={() => setSelectedCat(null)}
-                    whileTap={{ scale: 0.95 }}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer ${
-                      !selectedCat ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200"
-                    }`}
-                  >
-                    {t.catAll}
-                  </motion.button>
-                  {categories.map((cat) => (
+              <div className="max-w-container mx-auto px-4 sm:px-6 md:px-8 py-4 space-y-4">
+
+                {/* Price filter — mobile only (desktop shows it inline above) */}
+                <div className="md:hidden">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold text-surface-700">{t.maxPriceLabel}</p>
+                    <span className="text-xs font-bold text-surface-900">{fmtAMD(maxPrice)} ֏</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={PRICE_MIN}
+                    max={PRICE_MAX}
+                    step={PRICE_STEP}
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(Number(e.target.value))}
+                    className="w-full accent-brand-600 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-surface-400 mt-1">
+                    <span>0 ֏</span>
+                    <span>{fmtAMD(PRICE_MAX)} ֏</span>
+                  </div>
+                </div>
+
+                {/* Category filters */}
+                <div>
+                  <p className="text-xs font-semibold text-surface-700 mb-2.5">{t.filterByCat}</p>
+                  <div className="flex gap-2 flex-wrap">
                     <motion.button
-                      key={cat.slug}
-                      onClick={() => setSelectedCat(selectedCat === cat.slug ? null : cat.slug)}
+                      onClick={() => setSelectedCat(null)}
                       whileTap={{ scale: 0.95 }}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer ${
-                        selectedCat === cat.slug ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200"
+                        !selectedCat ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200"
                       }`}
                     >
-                      {cat.name}
+                      {t.catAll}
                     </motion.button>
-                  ))}
+                    {categories.map((cat) => (
+                      <motion.button
+                        key={cat.slug}
+                        onClick={() => setSelectedCat(selectedCat === cat.slug ? null : cat.slug)}
+                        whileTap={{ scale: 0.95 }}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer ${
+                          selectedCat === cat.slug ? "bg-brand-600 text-white border-brand-600" : "bg-white text-surface-600 border-surface-200"
+                        }`}
+                      >
+                        {cat.name}
+                      </motion.button>
+                    ))}
+                  </div>
                 </div>
+
               </div>
             </motion.div>
           )}

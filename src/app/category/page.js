@@ -501,43 +501,48 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
       <div className="max-w-container mx-auto px-6 md:px-8 py-8">
 
         {/* ── Tabs + toolbar ── */}
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex bg-surface-100 rounded-xl p-1">
-              <button
-                onClick={() => setMainTab("products")}
-                className={`px-5 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "products" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
-              >
-                {t.products}
-                {total > 0 && <span className="ml-1.5 text-xs text-surface-400">({total})</span>}
-              </button>
-              <button
-                onClick={() => setMainTab("vendors")}
-                className={`px-5 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "vendors" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
-              >
-                {t.vendors}
-                {vendors.length > 0 && <span className="ml-1.5 text-xs text-surface-400">({vendors.length})</span>}
-              </button>
-            </div>
+        <div className="flex items-center gap-3 mb-6 flex-wrap">
 
-            {mainTab === "products" && (
-              <button
-                onClick={() => setShowMobileFilters(true)}
-                className="lg:hidden flex items-center gap-1.5 border border-surface-200 rounded-xl px-4 py-2 text-sm font-medium text-surface-600 bg-white cursor-pointer hover:border-surface-300 transition-colors relative"
-              >
-                <Filter size={14} />
-                {t.filters}
-                {activeFilterCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                    {activeFilterCount}
-                  </span>
-                )}
-              </button>
-            )}
+          {/* Products / Vendors tab switcher */}
+          <div className="flex bg-surface-100 rounded-xl p-1 flex-shrink-0">
+            <button
+              onClick={() => setMainTab("products")}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "products" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
+            >
+              {t.products}
+              {total > 0 && <span className="ml-1.5 text-xs text-surface-400">({total})</span>}
+            </button>
+            <button
+              onClick={() => setMainTab("vendors")}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold border-none cursor-pointer transition-all ${mainTab === "vendors" ? "bg-white text-surface-900 shadow-sm" : "bg-transparent text-surface-500 hover:text-surface-700"}`}
+            >
+              {t.vendors}
+              {vendors.length > 0 && <span className="ml-1.5 text-xs text-surface-400">({vendors.length})</span>}
+            </button>
           </div>
 
+          {/* Spacer pushes sort + view controls to the right on desktop */}
+          <div className="flex-1 hidden sm:block" />
+
+          {/* Mobile filters button */}
           {mainTab === "products" && (
-            <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowMobileFilters(true)}
+              className="lg:hidden relative flex items-center gap-1.5 border border-surface-200 rounded-xl px-3 py-2 text-sm font-medium text-surface-600 bg-white cursor-pointer hover:border-brand-300 hover:text-brand-600 transition-colors flex-shrink-0"
+            >
+              <Filter size={14} />
+              {t.filters}
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-brand-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold leading-none">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* Sort + view toggle */}
+          {mainTab === "products" && (
+            <div className="flex items-center gap-2 flex-shrink-0">
               <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
               <div className="flex border border-surface-200 rounded-xl overflow-hidden bg-white">
                 <button onClick={() => setView("grid")} className={`px-3 py-2 border-none cursor-pointer transition-colors ${view === "grid" ? "bg-brand-50 text-brand-600" : "bg-white text-surface-400"}`}>
@@ -549,6 +554,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
               </div>
             </div>
           )}
+
         </div>
 
         <div className="flex gap-8">
