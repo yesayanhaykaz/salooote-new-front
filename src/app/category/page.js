@@ -116,10 +116,9 @@ const T = {
 // ── Listing-type detection ─────────────────────────────────────────────────────
 const VENUE_SLUGS = new Set(["venues-locations"]);
 const SERVICE_SLUGS = new Set([
-  "photography-videography", "animators-entertainment", "catering-food",
+  "photography-videography", "catering-food",
   "music-djs", "event-planning", "beauty-styling", "transport-cars",
   "event-photography", "videography", "drone-shooting", "photo-booth",
-  "superheroes", "princess-characters", "mascots", "clowns", "kids-shows",
   "buffet-catering", "full-service-catering", "drinks-bar", "kids-catering",
   "dj-services", "live-bands", "singers",
   "makeup-artists", "hair-styling", "bridal-styling",
