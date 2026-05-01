@@ -40,16 +40,29 @@ const STATUS_CONFIG = {
 
 // ─── Vendor avatar ────────────────────────────────────────────────────────────
 const AVATAR_COLORS = ["#7c3aed","#e11d5c","#059669","#d97706","#0891b2","#6366f1"];
+
+function pickVendorImg(vendor) {
+  if (!vendor) return null;
+  // Products store image under thumbnail, cover_image, images[0].url, image_url, or image
+  // Vendors store it under logo, logo_url, cover_image_url, banner_url, thumbnail
+  return (
+    vendor.logo       || vendor.thumbnail    || vendor.logo_url    ||
+    vendor.image_url  || vendor.cover_image  || vendor.cover_image_url ||
+    vendor.banner_url || vendor.images?.[0]?.url || vendor.image || null
+  );
+}
+
 function VendorAvatar({ vendor }) {
-  const img  = vendor?.logo || vendor?.thumbnail || null;
+  const img  = pickVendorImg(vendor);
   const name = vendor?.name || vendor?.business_name || "V";
   const col  = AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
+  const [imgError, setImgError] = useState(false);
   return (
     <div style={{ width: 48, height: 48, borderRadius: 10, overflow: "hidden", flexShrink: 0,
-      border: "1px solid rgba(15,23,42,0.08)", background: img ? "#f8fafc" : `${col}18`,
+      border: "1px solid rgba(15,23,42,0.08)", background: (img && !imgError) ? "#f8fafc" : `${col}18`,
       display: "flex", alignItems: "center", justifyContent: "center" }}>
-      {img
-        ? <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      {img && !imgError
+        ? <img src={img} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgError(true)} />
         : <span style={{ fontWeight: 800, fontSize: 18, color: col }}>{name[0]?.toUpperCase()}</span>
       }
     </div>
@@ -76,7 +89,8 @@ function MessageThread({ inquiry, onClose }) {
   const fetchMessages = useCallback(async () => {
     try {
       const res = await inquiriesAPI.getMessages(inquiry.id);
-      setMessages(res?.data || res || []);
+      const arr = res?.data || res;
+      setMessages(Array.isArray(arr) ? arr : []);
     } catch {}
     setLoading(false);
   }, [inquiry.id]);
@@ -123,18 +137,18 @@ function MessageThread({ inquiry, onClose }) {
             <div style={{ display: "flex", justifyContent: "center", padding: 24 }}><Loader2 size={20} color="#94a3b8" className="animate-spin" /></div>
           ) : messages.length === 0 ? (
             <p style={{ textAlign: "center", color: "#94a3b8", fontSize: "0.8rem", margin: "auto 0" }}>No messages yet. The vendor will reply soon.</p>
-          ) : messages.map(msg => {
-            const isUser = msg.sender_role === "user";
+          ) : messages.map((msg, i) => {
+            const isUser = msg.sender_role === "user" || msg.sender_type === "user";
             return (
-              <div key={msg.id} style={{ display: "flex", justifyContent: isUser ? "flex-end" : "flex-start" }}>
+              <div key={msg.id || i} style={{ display: "flex", justifyContent: isUser ? "flex-end" : "flex-start" }}>
                 <div style={{
                   maxWidth: "80%", padding: "8px 12px", borderRadius: isUser ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                   background: isUser ? "linear-gradient(135deg,#e11d5c,#7c3aed)" : "#f1f5f9",
                   color: isUser ? "#fff" : "#0f172a", fontSize: "0.82rem", lineHeight: 1.5,
                 }}>
-                  {msg.body}
+                  {msg.body || msg.content || msg.text || ""}
                   <p style={{ margin: "4px 0 0", fontSize: "0.65rem", opacity: 0.7, textAlign: "right" }}>
-                    {new Date(msg.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+                    {msg.created_at ? new Date(msg.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : ""}
                   </p>
                 </div>
               </div>
@@ -325,7 +339,7 @@ export default function EventDetailPage() {
         event_data:       data,
       }));
     } catch {}
-    router.push(`/${lang}`);
+    router.push(`/${lang}/planner`);
   };
 
   return (

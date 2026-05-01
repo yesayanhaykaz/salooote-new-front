@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSaved } from "@/lib/saved-context";
-import { Heart, X, Store, Package, Briefcase } from "lucide-react";
+import { productsAPI, vendorsAPI } from "@/lib/api";
+import { Heart, X, Store, Package, Briefcase, Loader2 } from "lucide-react";
 
 // ─── Translations ─────────────────────────────────────────────────────────────
 const T = {
@@ -19,35 +20,32 @@ const T = {
     vendor: "Vendor",
     product: "Product",
     service: "Service",
-    unnamed: "Unnamed item",
   },
   hy: {
     title: "Պահված նյութեր",
-    countOne: "1 պահված նյութ",
-    countMany: (n) => `${n} պահված նյութ`,
+    countOne: "1 պահված",
+    countMany: (n) => `${n} պահված`,
     emptyTagline: "Ձեր նախընտրածները մեկ տեղում",
     nothingSaved: "Դեռ ոչինչ չի պահվել",
-    nothingDesc: "Ծննդյան կամ հարսանիքի ծառայությունները դիտելիս սրտի կոճակով պահեք",
+    nothingDesc: "Ծառայությունները դիտելիս սրտի կոճակով պահեք",
     browse: "Դիտել ապրանքները",
     savedOn: "Պահված",
     vendor: "Վաճառող",
     product: "Ապրանք",
     service: "Ծառայություն",
-    unnamed: "Անանուն",
   },
   ru: {
     title: "Сохранённое",
-    countOne: "1 сохранённый элемент",
-    countMany: (n) => `${n} сохранённых элементов`,
+    countOne: "1 элемент",
+    countMany: (n) => `${n} элементов`,
     emptyTagline: "Ваши избранные — в одном месте",
     nothingSaved: "Ничего не сохранено",
-    nothingDesc: "Просматривайте поставщиков и продукты, чтобы добавлять в избранное.",
+    nothingDesc: "Добавляйте поставщиков и продукты в избранное.",
     browse: "Смотреть продукты",
     savedOn: "Сохранено",
     vendor: "Поставщик",
     product: "Продукт",
     service: "Услуга",
-    unnamed: "Без названия",
   },
 };
 
@@ -58,12 +56,35 @@ const TYPE_STYLES = {
   service: { bg: "bg-emerald-50", icon: "text-emerald-400", badge: "bg-emerald-50 text-emerald-700 border-emerald-200" },
 };
 
-function SavedCard({ item, t, onRemove, removing }) {
+// Pick the best image url from a product or vendor object
+function pickImage(obj) {
+  if (!obj) return null;
+  return (
+    obj.image_url ||
+    obj.thumbnail_url ||
+    obj.images?.[0]?.url ||
+    obj.cover_image_url ||
+    obj.logo_url ||
+    obj.avatar_url ||
+    obj.image ||
+    null
+  );
+}
+
+function pickName(obj) {
+  if (!obj) return null;
+  return obj.name || obj.business_name || obj.title || null;
+}
+
+function SavedCard({ item, details, t, onRemove, removing }) {
   const type  = item.target_type || "product";
   const Icon  = TYPE_ICONS[type] || Package;
   const style = TYPE_STYLES[type] || TYPE_STYLES.product;
-  const name  = item.name || item.target_name || null;
   const label = t[type] || type;
+
+  const name  = pickName(details) || pickName(item) || null;
+  const image = pickImage(details) || pickImage(item) || null;
+
   const dateStr = item.created_at
     ? new Date(item.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
     : null;
@@ -72,23 +93,21 @@ function SavedCard({ item, t, onRemove, removing }) {
     <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden hover:shadow-md hover:border-surface-300 transition-all flex flex-col group">
       {/* Image / placeholder header */}
       <div className={`relative h-36 ${style.bg} flex items-center justify-center overflow-hidden`}>
-        {item.image_url ? (
-          <img src={item.image_url} alt={name || label}
+        {image ? (
+          <img src={image} alt={name || label}
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
         ) : (
           <Icon size={44} className={`${style.icon} opacity-25`} />
         )}
-        {/* Remove button */}
         <button
           onClick={() => onRemove(item.target_id)}
           disabled={removing}
           className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center hover:bg-red-50 hover:text-red-500 text-surface-400 transition-colors cursor-pointer border-none shadow-sm"
           aria-label="Remove">
-          {removing ? (
-            <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-          ) : (
-            <X size={13} />
-          )}
+          {removing
+            ? <span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            : <X size={13} />
+          }
         </button>
       </div>
 
@@ -101,7 +120,10 @@ function SavedCard({ item, t, onRemove, removing }) {
         {name ? (
           <p className="text-sm font-semibold text-surface-900 truncate leading-snug">{name}</p>
         ) : (
-          <p className="text-sm text-surface-400 italic truncate">{t.unnamed}</p>
+          <div className="flex items-center gap-1.5">
+            <Loader2 size={12} className="animate-spin text-surface-300" />
+            <p className="text-xs text-surface-400">Loading…</p>
+          </div>
         )}
 
         {dateStr && (
@@ -116,10 +138,36 @@ export default function AccountSavedPage() {
   const { lang } = useParams();
   const t = T[lang] || T.en;
   const { savedMap, unsaveItem: ctxUnsave, hydrated } = useSaved();
-  const [removing, setRemoving] = useState({});
+  const [removing,    setRemoving]    = useState({});
+  // Map of target_id → enriched detail object (product or vendor)
+  const [detailsMap,  setDetailsMap]  = useState({});
 
   const saved   = Object.values(savedMap);
   const loading = !hydrated;
+
+  // Enrich saved items with actual product/vendor data
+  useEffect(() => {
+    if (!hydrated || saved.length === 0) return;
+
+    saved.forEach(async (item) => {
+      if (detailsMap[item.target_id]) return; // already fetched
+      try {
+        let obj = null;
+        if (item.target_type === "vendor") {
+          const res = await vendorsAPI.getById(item.target_id);
+          obj = res?.data || res;
+        } else {
+          // product or service
+          const res = await productsAPI.getById(item.target_id, lang);
+          obj = res?.data || res;
+        }
+        if (obj) {
+          setDetailsMap(prev => ({ ...prev, [item.target_id]: obj }));
+        }
+      } catch {}
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, savedMap]);
 
   const unsave = async (targetId) => {
     setRemoving(p => ({ ...p, [targetId]: true }));
@@ -129,9 +177,7 @@ export default function AccountSavedPage() {
 
   const subtitle = saved.length === 0
     ? t.emptyTagline
-    : saved.length === 1
-      ? t.countOne
-      : t.countMany(saved.length);
+    : saved.length === 1 ? t.countOne : t.countMany(saved.length);
 
   return (
     <div className="space-y-6">
@@ -162,6 +208,7 @@ export default function AccountSavedPage() {
             <SavedCard
               key={item.id}
               item={item}
+              details={detailsMap[item.target_id] || null}
               t={t}
               onRemove={unsave}
               removing={!!removing[item.target_id]}

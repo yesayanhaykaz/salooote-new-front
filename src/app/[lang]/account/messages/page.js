@@ -128,7 +128,6 @@ const STATUS_STYLES = {
 };
 
 const TABS = ["All", "New", "Replied", "Confirmed", "Cancelled", "Closed"];
-
 const AVATAR_PALETTE = ["#e11d5c","#7c3aed","#0891b2","#059669","#d97706","#6366f1","#0284c7","#16a34a"];
 
 function vendorInitials(name) {
@@ -145,16 +144,23 @@ function avatarColor(name) {
   return AVATAR_PALETTE[Math.abs(h)];
 }
 
+// Vendor objects can use various image field names — try them all
+function pickVendorImage(v) {
+  if (!v) return null;
+  return v.logo_url || v.cover_image_url || v.avatar_url || v.image_url || v.banner_url || v.thumbnail || v.logo || null;
+}
+
 function VendorAvatar({ name, image, size = 40 }) {
   const col = avatarColor(name);
-  const initials = vendorInitials(name);
+  const [imgError, setImgError] = useState(false);
   return (
     <div style={{ width: size, height: size, borderRadius: size * 0.28, flexShrink: 0, overflow: "hidden",
-      background: image ? "#f8fafc" : `${col}18`, border: "1px solid rgba(15,23,42,0.07)",
+      background: (image && !imgError) ? "#f8fafc" : `${col}18`,
+      border: "1px solid rgba(15,23,42,0.07)",
       display: "flex", alignItems: "center", justifyContent: "center" }}>
-      {image
-        ? <img src={image} alt={name || "Vendor"} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        : <span style={{ fontWeight: 800, fontSize: size * 0.38, color: col, fontFamily: "inherit" }}>{initials}</span>
+      {image && !imgError
+        ? <img src={image} alt={name || "Vendor"} style={{ width: "100%", height: "100%", objectFit: "cover" }} onError={() => setImgError(true)} />
+        : <span style={{ fontWeight: 800, fontSize: size * 0.38, color: col, fontFamily: "inherit" }}>{vendorInitials(name)}</span>
       }
     </div>
   );
@@ -194,7 +200,7 @@ function NewMessageModal({ lang, onClose, onCreated }) {
   const searchRef = useRef(null);
 
   useEffect(() => {
-    vendorsAPI.list({ limit: 50 })
+    vendorsAPI.list({ limit: 100 })
       .then(r => setVends(r?.data || []))
       .catch(() => {})
       .finally(() => setVLoad(false));
@@ -272,8 +278,8 @@ function NewMessageModal({ lang, onClose, onCreated }) {
                 <p className="text-center text-sm text-surface-400 py-10">{m.noVendors}</p>
               ) : list.map(v => (
                 <button key={v.id} onClick={() => { setSel(v); setStep(2); }}
-                  className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-surface-50 transition-colors text-left border-none bg-transparent cursor-pointer">
-                  <VendorAvatar name={v.business_name || v.name} image={v.cover_image_url || v.avatar_url} size={40} />
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-surface-50 transition-colors text-left border-none bg-transparent cursor-pointer">
+                  <VendorAvatar name={v.business_name || v.name} image={pickVendorImage(v)} size={44} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-surface-900 truncate">{v.business_name || v.name || "Vendor"}</p>
                     <p className="text-xs text-surface-400 truncate">{[v.city, v.category].filter(Boolean).join(" · ")}</p>
@@ -359,7 +365,8 @@ function ChatPanel({ inquiry, lang, onBack }) {
   const fetchMessages = useCallback(async () => {
     try {
       const res = await inquiriesAPI.getMessages(inquiry.id);
-      setMessages(res?.data || res || []);
+      const arr = res?.data || res;
+      setMessages(Array.isArray(arr) ? arr : []);
     } catch {}
     setLoading(false);
   }, [inquiry.id]);
@@ -388,14 +395,13 @@ function ChatPanel({ inquiry, lang, onBack }) {
     setSending(false);
   };
 
-  const vendorName = inquiry.vendor_name || inquiry.subject?.split(" ")[0] || "Vendor";
-  const vendorImage = inquiry.vendor_logo || inquiry.vendor_image || null;
+  const vendorName  = inquiry.vendor_name || inquiry.vendor_business_name || "Vendor";
+  const vendorImage = pickVendorImage(inquiry) || null;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-0">
       {/* Chat header */}
       <div className="flex-shrink-0 px-5 py-3.5 border-b border-surface-100 bg-white flex items-center gap-3">
-        {/* Back button on mobile */}
         <button onClick={onBack}
           className="md:hidden w-8 h-8 rounded-full hover:bg-surface-100 flex items-center justify-center cursor-pointer border-none bg-transparent flex-shrink-0">
           <ChevronLeft size={18} className="text-surface-500" />
@@ -410,7 +416,7 @@ function ChatPanel({ inquiry, lang, onBack }) {
         <Badge status={inquiry.status} />
       </div>
 
-      {/* Event chips (if any) */}
+      {/* Event detail chips */}
       {(inquiry.event_type || inquiry.event_date || inquiry.guest_count || inquiry.budget) && (
         <div className="flex-shrink-0 px-5 py-2.5 border-b border-surface-100 bg-surface-50 flex flex-wrap gap-2">
           {inquiry.event_type  && <span className="text-xs bg-white border border-surface-200 rounded-full px-3 py-1 text-surface-600">📅 {inquiry.event_type}</span>}
@@ -420,8 +426,8 @@ function ChatPanel({ inquiry, lang, onBack }) {
         </div>
       )}
 
-      {/* Message bubbles */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-surface-50">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-surface-50 min-h-0">
         {loading ? (
           <div className="flex justify-center py-12">
             <Loader2 size={22} className="animate-spin text-surface-300" />
@@ -434,10 +440,10 @@ function ChatPanel({ inquiry, lang, onBack }) {
             <p className="text-sm text-surface-400">{t.vendorWillReply}</p>
           </div>
         ) : (
-          messages.map(msg => {
-            const isUser = msg.sender_role === "user";
+          messages.map((msg, i) => {
+            const isUser = msg.sender_role === "user" || msg.sender_type === "user";
             return (
-              <div key={msg.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+              <div key={msg.id || i} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
                 {!isUser && (
                   <div className="mr-2 flex-shrink-0 self-end mb-1">
                     <VendorAvatar name={vendorName} image={vendorImage} size={28} />
@@ -449,10 +455,10 @@ function ChatPanel({ inquiry, lang, onBack }) {
                       ? "bg-brand-600 text-white rounded-tr-sm"
                       : "bg-white text-surface-800 rounded-tl-sm border border-surface-200 shadow-sm"
                   }`}>
-                    {msg.body}
+                    {msg.body || msg.content || msg.text || ""}
                   </div>
                   <span className="text-[10px] text-surface-400 mt-1 px-1">
-                    {new Date(msg.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}
+                    {msg.created_at ? new Date(msg.created_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : ""}
                   </span>
                 </div>
               </div>
@@ -490,16 +496,19 @@ export default function AccountMessagesPage() {
   const { lang } = useParams();
   const t = T[lang] || T.en;
 
-  const [inquiries,  setInquiries] = useState([]);
-  const [loading,    setLoading]   = useState(true);
-  const [activeTab,  setTab]       = useState("All");
-  const [search,     setSearch]    = useState("");
-  const [selected,   setSelected]  = useState(null);
-  const [showModal,  setModal]     = useState(false);
+  const [inquiries, setInquiries] = useState([]);
+  const [loading,   setLoading]   = useState(true);
+  const [activeTab, setTab]       = useState("All");
+  const [search,    setSearch]    = useState("");
+  const [selected,  setSelected]  = useState(null);
+  const [showModal, setModal]     = useState(false);
 
   useEffect(() => {
     userAPI.inquiries({ limit: 100 })
-      .then(r => setInquiries(r?.data || []))
+      .then(r => {
+        const arr = r?.data || r;
+        setInquiries(Array.isArray(arr) ? arr : []);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -509,7 +518,7 @@ export default function AccountMessagesPage() {
     .filter(i => {
       if (!search.trim()) return true;
       const q = search.toLowerCase();
-      return (i.vendor_name || "").toLowerCase().includes(q) ||
+      return (i.vendor_name || i.vendor_business_name || "").toLowerCase().includes(q) ||
              (i.subject || "").toLowerCase().includes(q);
     });
 
@@ -518,13 +527,12 @@ export default function AccountMessagesPage() {
     setModal(false);
   };
 
-  // Mobile: show list if no selection
   const mobileShowChat = !!selected;
 
   return (
-    <div className="flex flex-col" style={{ height: "calc(100vh - 120px)", minHeight: 480 }}>
-      {/* Page title (visible above the two-panel on desktop, hidden on mobile when chat is open) */}
-      <div className={`flex items-center justify-between mb-4 flex-shrink-0 ${mobileShowChat ? "hidden md:flex" : "flex"}`}>
+    <div className="flex flex-col gap-4">
+      {/* Page header — hidden on mobile when chat is open */}
+      <div className={`flex items-center justify-between flex-shrink-0 ${mobileShowChat ? "hidden md:flex" : "flex"}`}>
         <div>
           <h1 className="text-xl font-bold text-surface-900">{t.title}</h1>
           <p className="text-sm text-surface-400 mt-0.5">{t.subtitle}</p>
@@ -535,13 +543,12 @@ export default function AccountMessagesPage() {
         </button>
       </div>
 
-      {/* Two-panel container */}
-      <div className="flex flex-1 bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden min-h-0">
+      {/* Two-panel container — fixed height so inner panels scroll independently */}
+      <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden flex"
+        style={{ height: "min(70vh, 680px)", minHeight: 480 }}>
 
-        {/* ── Left panel: conversation list ── */}
-        <div className={`flex flex-col border-r border-surface-100 flex-shrink-0 ${
-          mobileShowChat ? "hidden md:flex md:w-80" : "flex w-full md:w-80"
-        }`}>
+        {/* ── Left panel ── */}
+        <div className={`flex flex-col border-r border-surface-100 flex-shrink-0 w-full md:w-80 ${mobileShowChat ? "hidden md:flex" : "flex"}`}>
           {/* Search + tabs */}
           <div className="flex-shrink-0 p-3 border-b border-surface-100 space-y-2.5">
             <div className="relative">
@@ -583,24 +590,25 @@ export default function AccountMessagesPage() {
                   {activeTab === "All" && !search ? t.noMessages : t.noFiltered}
                 </p>
                 {activeTab === "All" && !search && (
-                  <p className="text-xs text-surface-400 mb-4">{t.noMessagesDesc}</p>
-                )}
-                {activeTab === "All" && !search && (
-                  <button onClick={() => setModal(true)}
-                    className="flex items-center gap-1.5 bg-brand-600 text-white border-none rounded-xl px-4 py-2 text-xs font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
-                    <Plus size={13} /> {t.startFirst}
-                  </button>
+                  <>
+                    <p className="text-xs text-surface-400 mb-4">{t.noMessagesDesc}</p>
+                    <button onClick={() => setModal(true)}
+                      className="flex items-center gap-1.5 bg-brand-600 text-white border-none rounded-xl px-4 py-2 text-xs font-semibold cursor-pointer hover:bg-brand-700 transition-colors">
+                      <Plus size={13} /> {t.startFirst}
+                    </button>
+                  </>
                 )}
               </div>
             ) : filtered.map(inq => {
-              const isActive = selected?.id === inq.id;
-              const vendorName = inq.vendor_name || inq.subject?.split(" ")[0] || "Vendor";
+              const isActive   = selected?.id === inq.id;
+              const vendorName = inq.vendor_name || inq.vendor_business_name || "Vendor";
+              const vendorImg  = pickVendorImage(inq);
               return (
                 <button key={inq.id} onClick={() => setSelected(inq)}
                   className={`w-full flex items-center gap-3 px-4 py-3.5 text-left border-none cursor-pointer transition-colors border-b border-surface-50 ${
-                    isActive ? "bg-brand-50 border-l-2 border-l-brand-600" : "bg-transparent hover:bg-surface-50"
+                    isActive ? "bg-brand-50 border-l-[3px] border-l-brand-600" : "bg-transparent hover:bg-surface-50"
                   }`}>
-                  <VendorAvatar name={vendorName} image={inq.vendor_logo || inq.vendor_image} size={42} />
+                  <VendorAvatar name={vendorName} image={vendorImg} size={42} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2 mb-0.5">
                       <p className={`text-sm font-semibold truncate ${isActive ? "text-brand-700" : "text-surface-900"}`}>
@@ -619,8 +627,8 @@ export default function AccountMessagesPage() {
           </div>
         </div>
 
-        {/* ── Right panel: chat view ── */}
-        <div className={`flex-1 min-w-0 ${mobileShowChat ? "flex" : "hidden md:flex"} flex-col`}>
+        {/* ── Right panel ── */}
+        <div className={`flex-1 min-w-0 flex-col min-h-0 ${mobileShowChat ? "flex" : "hidden md:flex"}`}>
           {selected ? (
             <ChatPanel key={selected.id} inquiry={selected} lang={lang} onBack={() => setSelected(null)} />
           ) : (

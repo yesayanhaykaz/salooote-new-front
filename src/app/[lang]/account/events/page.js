@@ -1,8 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Loader2, MapPin, Calendar, Users, Trash2, Sparkles, ArrowRight, ExternalLink } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import {
+  Loader2, MapPin, Calendar, Users, Trash2, Sparkles, ArrowRight, ExternalLink,
+  Heart, Briefcase, GraduationCap, Baby, Building2, Star, Music, Gem, Smile,
+} from "lucide-react";
 import { plannerAPI, isLoggedIn } from "@/lib/api";
 
 // ─── Translations ─────────────────────────────────────────────────────────────
@@ -12,7 +15,7 @@ const T = {
     subtitle: "All your AI-planned events in one place",
     vendorsBooked: "Vendors booked",
     continuePlanning: "Continue Planning",
-    viewDetails: "View Details",
+    viewDetails: "View",
     guests: "guests",
     emptyTitle: "No events planned yet",
     emptyDesc: "Start chatting with the AI planner. It will build your event checklist, find vendors, and save everything here.",
@@ -23,7 +26,7 @@ const T = {
     title: "Իմ միջոցառումները",
     subtitle: "Ձեր AI-ով պլանավորած բոլոր միջոցառումները",
     vendorsBooked: "Ամրագրված",
-    continuePlanning: "Շարունակել պլանավորումը",
+    continuePlanning: "Շարունակել",
     viewDetails: "Դիտել",
     guests: "հյուր",
     emptyTitle: "Դեռ ոչ մի միջոցառում չկա",
@@ -36,7 +39,7 @@ const T = {
     subtitle: "Все ваши мероприятия, спланированные ИИ",
     vendorsBooked: "Подрядчики",
     continuePlanning: "Продолжить",
-    viewDetails: "Подробнее",
+    viewDetails: "Детали",
     guests: "гостей",
     emptyTitle: "Событий пока нет",
     emptyDesc: "Начните чат с AI-планировщиком — он составит чеклист и найдёт поставщиков.",
@@ -45,27 +48,33 @@ const T = {
   },
 };
 
-// ─── Event type config ────────────────────────────────────────────────────────
+// ─── Event type config — Lucide icons only, no emojis ─────────────────────────
 const EVENT_CONFIG = {
-  wedding:     { color: "#e11d5c", emoji: "💍", gradient: "from-rose-400 to-pink-600" },
-  birthday:    { color: "#3b82f6", emoji: "🎂", gradient: "from-blue-400 to-indigo-500" },
-  engagement:  { color: "#8b5cf6", emoji: "💜", gradient: "from-violet-400 to-purple-600" },
-  christening: { color: "#7c3aed", emoji: "✝️",  gradient: "from-purple-500 to-indigo-600" },
-  kids_party:  { color: "#10b981", emoji: "🎈", gradient: "from-emerald-400 to-teal-500" },
-  corporate:   { color: "#475569", emoji: "🏢", gradient: "from-slate-500 to-slate-700" },
-  baby_shower: { color: "#0ea5e9", emoji: "🍼", gradient: "from-sky-400 to-cyan-500" },
-  graduation:  { color: "#ea580c", emoji: "🎓", gradient: "from-orange-400 to-amber-500" },
-  anniversary: { color: "#d97706", emoji: "🌹", gradient: "from-amber-400 to-orange-500" },
+  wedding:     { color: "#e11d5c", Icon: Gem,          gradient: "from-rose-400 to-pink-600"      },
+  birthday:    { color: "#3b82f6", Icon: Sparkles,     gradient: "from-blue-400 to-indigo-500"    },
+  engagement:  { color: "#8b5cf6", Icon: Heart,        gradient: "from-violet-400 to-purple-600"  },
+  christening: { color: "#7c3aed", Icon: Star,         gradient: "from-purple-500 to-indigo-600"  },
+  kids_party:  { color: "#10b981", Icon: Smile,        gradient: "from-emerald-400 to-teal-500"   },
+  corporate:   { color: "#475569", Icon: Briefcase,    gradient: "from-slate-500 to-slate-700"    },
+  baby_shower: { color: "#0ea5e9", Icon: Baby,         gradient: "from-sky-400 to-cyan-500"       },
+  graduation:  { color: "#ea580c", Icon: GraduationCap, gradient: "from-orange-400 to-amber-500" },
+  anniversary: { color: "#d97706", Icon: Heart,        gradient: "from-amber-400 to-orange-500"   },
+  atamhatik:   { color: "#7c3aed", Icon: Star,         gradient: "from-purple-400 to-indigo-500"  },
+  kids:        { color: "#10b981", Icon: Smile,        gradient: "from-emerald-400 to-teal-500"   },
+  music:       { color: "#e11d5c", Icon: Music,        gradient: "from-rose-400 to-pink-600"      },
+  venue:       { color: "#0891b2", Icon: Building2,    gradient: "from-cyan-500 to-sky-600"       },
 };
 
 function getConfig(type) {
-  return EVENT_CONFIG[type] || { color: "#e11d5c", emoji: "🎉", gradient: "from-brand-500 to-pink-600" };
+  return EVENT_CONFIG[type] || { color: "#e11d5c", Icon: Sparkles, gradient: "from-brand-500 to-pink-600" };
 }
 
 // ─── Session Card ─────────────────────────────────────────────────────────────
 function SessionCard({ session, lang, t, onDelete }) {
+  const router = useRouter();
   const [deleting, setDeleting] = useState(false);
   const cfg = getConfig(session.event_type);
+  const { Icon } = cfg;
 
   let data = {};
   try { data = typeof session.event_data === "string" ? JSON.parse(session.event_data) : session.event_data || {}; } catch {}
@@ -89,20 +98,33 @@ function SessionCard({ session, lang, t, onDelete }) {
     } catch { setDeleting(false); }
   };
 
+  const handleContinue = (e) => {
+    e.preventDefault();
+    try {
+      localStorage.setItem("salooote_resume_session", JSON.stringify({
+        plannerSessionId: session.id,
+        event_type:       session.event_type,
+        event_type_label: session.title || session.event_type?.replace(/_/g, " "),
+        location:         session.location || "",
+        guest_count:      session.guest_count,
+        event_date:       session.event_date,
+        event_data:       data,
+      }));
+    } catch {}
+    router.push(`/${lang}/planner`);
+  };
+
   const eventLabel = (session.title || session.event_type?.replace(/_/g, " ") || "").trim();
 
   return (
     <div className="bg-white rounded-2xl border border-surface-200 shadow-sm hover:shadow-lg transition-all group overflow-hidden flex flex-col">
 
-      {/* Visual banner header */}
+      {/* Visual banner — gradient + icon, no emojis */}
       <div className={`relative h-28 bg-gradient-to-br ${cfg.gradient} flex items-center justify-center overflow-hidden`}>
-        {/* Decorative circles */}
         <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white/10" />
         <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-white/10" />
+        <Icon size={44} className="text-white/90 relative z-10" strokeWidth={1.5} />
 
-        <span className="text-5xl select-none relative z-10">{cfg.emoji}</span>
-
-        {/* Delete button */}
         <button onClick={handleDelete} disabled={deleting}
           className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-black/20 hover:bg-red-500/80 flex items-center justify-center transition-colors cursor-pointer border-none backdrop-blur-sm opacity-0 group-hover:opacity-100">
           {deleting
@@ -114,7 +136,6 @@ function SessionCard({ session, lang, t, onDelete }) {
 
       {/* Card body */}
       <div className="p-4 flex flex-col flex-1">
-        {/* Title & type */}
         <p className="text-sm font-bold text-surface-900 truncate capitalize leading-tight mb-0.5">{eventLabel}</p>
         <p className="text-xs text-surface-400 capitalize mb-3">{session.event_type?.replace(/_/g, " ")}</p>
 
@@ -153,12 +174,11 @@ function SessionCard({ session, lang, t, onDelete }) {
 
         {/* Actions */}
         <div className="flex gap-2 mt-auto">
-          <Link href={`/${lang}/planner?session=${session.id}`} className="no-underline flex-1">
-            <button className="w-full flex items-center justify-center gap-1.5 py-2 text-xs font-semibold rounded-xl border cursor-pointer transition-all"
-              style={{ background: `${cfg.color}0e`, borderColor: `${cfg.color}28`, color: cfg.color }}>
-              {t.continuePlanning} <ArrowRight size={11} />
-            </button>
-          </Link>
+          <button onClick={handleContinue}
+            className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-semibold rounded-xl border cursor-pointer transition-all"
+            style={{ background: `${cfg.color}0e`, borderColor: `${cfg.color}28`, color: cfg.color }}>
+            {t.continuePlanning} <ArrowRight size={11} />
+          </button>
           <Link href={`/${lang}/account/events/${session.id}`} className="no-underline">
             <button className="flex items-center justify-center gap-1 py-2 px-3 text-xs font-semibold rounded-xl border border-surface-200 text-surface-500 hover:border-surface-300 cursor-pointer bg-transparent transition-all">
               <ExternalLink size={11} /> {t.viewDetails}
