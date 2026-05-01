@@ -155,8 +155,8 @@ function buildPriceRanges(min, max) {
 
 // ── Venue card (used in venue listing mode) ────────────────────────────────────
 function VenueCard({ venue, lang = "en", t }) {
-  const vendorSlug = venue.vendor?.slug || venue.vendor_id;
-  const imageUrl = venue.thumbnail_url || venue.vendor?.banner_url || venue.vendor?.logo_url;
+  const vendorSlug = venue.slug || venue.vendor?.slug || venue.vendor_id;
+  const imageUrl = venue.thumbnail_url || venue.banner_url || venue.logo_url || venue.vendor?.banner_url || venue.vendor?.logo_url;
   const typeLabel = VENUE_TYPE_LABEL[venue.venue_type] || "Venue";
   return (
     <Link href={`/${lang}/vendor/${vendorSlug}`} className="no-underline">
