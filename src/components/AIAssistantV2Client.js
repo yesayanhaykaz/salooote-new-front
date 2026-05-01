@@ -204,31 +204,31 @@ const T = {
 
   quickChips: {
     en: [
-      { icon: "cake",     name: "Cakes" },
-      { icon: "flower",   name: "Flowers" },
-      { icon: "balloon",  name: "Balloons" },
-      { icon: "camera",   name: "Photography" },
-      { icon: "music",    name: "DJ & Music" },
-      { icon: "utensils", name: "Catering" },
-      { icon: "gift",     name: "Gifts" },
+      { icon: "cake",     name: "Cakes",       service_type: "cake" },
+      { icon: "flower",   name: "Flowers",     service_type: "flowers" },
+      { icon: "balloon",  name: "Balloons",    service_type: "balloon_decoration" },
+      { icon: "camera",   name: "Photography", service_type: "photographer" },
+      { icon: "music",    name: "DJ & Music",  service_type: "music" },
+      { icon: "utensils", name: "Catering",    service_type: "catering" },
+      { icon: "gift",     name: "Gifts",       service_type: "gifts" },
     ],
     hy: [
-      { icon: "cake",     name: "Տորթեր" },
-      { icon: "flower",   name: "Ծաղիկներ" },
-      { icon: "balloon",  name: "Փուչիկներ" },
-      { icon: "camera",   name: "Ֆոտո" },
-      { icon: "music",    name: "DJ" },
-      { icon: "utensils", name: "Քեյթերինգ" },
-      { icon: "gift",     name: "Նվերներ" },
+      { icon: "cake",     name: "Տորթեր",      service_type: "cake" },
+      { icon: "flower",   name: "Ծաղիկներ",   service_type: "flowers" },
+      { icon: "balloon",  name: "Փուչիկներ",  service_type: "balloon_decoration" },
+      { icon: "camera",   name: "Ֆոտո",       service_type: "photographer" },
+      { icon: "music",    name: "DJ",          service_type: "music" },
+      { icon: "utensils", name: "Քեյթերինգ",  service_type: "catering" },
+      { icon: "gift",     name: "Նվերներ",     service_type: "gifts" },
     ],
     ru: [
-      { icon: "cake",     name: "Торты" },
-      { icon: "flower",   name: "Цветы" },
-      { icon: "balloon",  name: "Шары" },
-      { icon: "camera",   name: "Фото" },
-      { icon: "music",    name: "DJ" },
-      { icon: "utensils", name: "Кейтеринг" },
-      { icon: "gift",     name: "Подарки" },
+      { icon: "cake",     name: "Торты",       service_type: "cake" },
+      { icon: "flower",   name: "Цветы",       service_type: "flowers" },
+      { icon: "balloon",  name: "Шары",        service_type: "balloon_decoration" },
+      { icon: "camera",   name: "Фото",        service_type: "photographer" },
+      { icon: "music",    name: "DJ",          service_type: "music" },
+      { icon: "utensils", name: "Кейтеринг",  service_type: "catering" },
+      { icon: "gift",     name: "Подарки",     service_type: "gifts" },
     ],
   },
 
@@ -352,7 +352,15 @@ const fmt = (p) => { const n = parseFloat(p); return isNaN(n) ? "" : n.toLocaleS
 // in LLM output when an uppercase letter gets separated from the rest of the word.
 function fixArmenianText(text) {
   if (!text) return text;
-  return text.replace(/([Ա-Ֆ])\.\s([ա-ֆ])/g, "$1$2");
+  // Remove period before lowercase Armenian letter (broken mid-word split)
+  text = text.replace(/([Ա-Ֆա-ֆ])\.\s([ա-ֆ])/g, "$1$2");
+  // Remove period before question/exclamation mark
+  text = text.replace(/\.\s*([?!])/g, "$1");
+  // Remove double punctuation
+  text = text.replace(/([?!])\s*[.،,]\s*/g, "$1 ");
+  // Remove trailing dots before closing quotes
+  text = text.replace(/\.\s*(»)/g, "$1");
+  return text;
 }
 
 function BoldText({ text }) {
@@ -949,7 +957,7 @@ function OrbVisual({ lang }) {
   );
 }
 
-function Landing({ lang, onSend, input, setInput, inputRef }) {
+function Landing({ lang, onSend, onQuickAction, input, setInput, inputRef }) {
   const quickChips = tx(T.quickChips, lang);
   const heroPart1 = tx(T.heroPart1, lang);
   const heroPart2 = tx(T.heroPart2, lang);
@@ -1039,7 +1047,7 @@ function Landing({ lang, onSend, input, setInput, inputRef }) {
               <button
                 key={i}
                 type="button"
-                onClick={() => onSend(c.name)}
+                onClick={() => onQuickAction ? onQuickAction(c) : onSend(c.name)}
                 className="v2-hero2-chip-btn"
               >
                 <Icon name={c.icon} size={13} style={{ color: PINK }} />
@@ -1640,6 +1648,8 @@ export default function AIAssistantV2Client({ lang }) {
   const [showBulkModal, setShowBulkModal] = useState(false);
   const [showMobilePlan, setShowMobilePlan] = useState(false);
   const inPlanMode = !!eventState.event_type;
+  // Right panel visibility — separate from plan state so closing the panel doesn't wipe the plan
+  const [panelOpen, setPanelOpen] = useState(true);
   // FAB UX state
   const [fabDismissed, setFabDismissed] = useState(false);
   const [fabPos, setFabPos] = useState(null);     // { right, bottom } in px, or null = default
@@ -1907,6 +1917,7 @@ export default function AIAssistantV2Client({ lang }) {
     setVendorResults({});
     setPlannerSessionId(null);
     setShowMobilePlan(false);
+    setPanelOpen(true);
     try { localStorage.removeItem("salooote_v2_current_id"); } catch {}
     setSidebarOpen(false);
     setTimeout(() => inputRef.current?.focus(), 50);
@@ -2081,8 +2092,8 @@ export default function AIAssistantV2Client({ lang }) {
     timersRef.current = [];
     setTyping(false);
 
-    const isFirstMessage = phase === "landing";
-    if (isFirstMessage) setPhase("chat");
+    const isFirstMessage = messages.length === 0;
+    if (phase === "landing") setPhase("chat");
 
     const welcomeEntry = isFirstMessage
       ? [{ id: "w", role: "bot", type: "text", text: tx(T.welcome, lang) }]
@@ -2171,6 +2182,7 @@ export default function AIAssistantV2Client({ lang }) {
             gradient: tpl.gradient,
             services: tpl.services.map(s => ({ ...s, status: "pending" })),
           });
+          setPanelOpen(true);
         }
         if (d.message) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(d.message) });
       } else {
@@ -2194,6 +2206,132 @@ export default function AIAssistantV2Client({ lang }) {
       }]);
     }
   }, [input, typing, phase, messages, chatState, lang, revealItems, eventState, plannerSessionId, handleSearchVendors]);
+
+  // Handles quick chip clicks as structured UI actions — never treated as raw typed text.
+  // Sends action metadata to backend so it can route correctly (chip vs. free text).
+  const sendQuickAction = useCallback(async (chip) => {
+    if (typing) return;
+
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setTyping(false);
+
+    const isFirstEver = messages.length === 0;
+    if (phase === "landing") setPhase("chat");
+
+    const welcomeEntry = isFirstEver
+      ? [{ id: "w", role: "bot", type: "text", text: tx(T.welcome, lang) }]
+      : [];
+
+    const userEntry = { id: Date.now(), role: "user", type: "text", text: chip.name };
+    setMessages(prev => [...prev, ...welcomeEntry, userEntry]);
+    setInput("");
+    setTyping(true);
+
+    const allMsgs = [...messages, ...welcomeEntry, userEntry];
+    const hist = allMsgs
+      .filter(m => (m.role === "user" || (m.role === "bot" && m.type === "text")) && m.id !== "w")
+      .slice(-10)
+      .map(m => ({ role: m.role === "user" ? "user" : "assistant", content: m.text }));
+
+    // Structured action — backend can distinguish chip click from free text
+    const action = {
+      type: "quick_service_select",
+      service_type: chip.service_type || chip.name.toLowerCase(),
+      source: "ui_button",
+    };
+
+    try {
+      const inPlan = !!eventState.event_type;
+      let d = {};
+
+      if (inPlan) {
+        const res = await fetch(`${API}/smart-assistant/plan-chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: chip.name,
+            lang,
+            action,
+            messages: hist,
+            event_state: {
+              event_type: eventState.event_type,
+              event_type_label: eventState.event_type_label,
+              city: eventState.city,
+              date: eventState.date,
+              guest_count: eventState.guest_count,
+              budget: eventState.budget,
+              style: eventState.style,
+              services: (eventState.services || []).map(s => ({
+                service_type: s.service_type,
+                title: s.title,
+                category: s.category,
+                required: s.required,
+                can_search: s.canSearch,
+                status: s.status,
+              })),
+              selected_vendors: eventState.selected_vendors || {},
+            },
+          }),
+        });
+        const json = await res.json();
+        d = json?.data || {};
+        if (d.actions?.length) {
+          const { state: nextState, searches } = applyActions(d.actions, eventState);
+          setEventState(nextState);
+          for (const s of searches) {
+            handleSearchVendors(s.service_type, s.query || s.service_type.replace(/_/g, " "));
+          }
+        }
+      } else {
+        const res = await fetch(`${API}/smart-assistant/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: hist, state: chatState, lang, action }),
+        });
+        const json = await res.json();
+        d = json?.data || {};
+        if (d.state) setChatState(d.state);
+      }
+
+      setTyping(false);
+
+      const base = Date.now() + 1;
+      const seq = [];
+
+      if (!inPlan && d.action === "plan_event" && d.event_type) {
+        const tpl = EVENT_TEMPLATES[d.event_type];
+        if (tpl) {
+          setEventState({
+            ...INITIAL_EVENT_STATE,
+            event_type: d.event_type,
+            event_type_label: tpl.label,
+            accent: tpl.accent,
+            gradient: tpl.gradient,
+            services: tpl.services.map(s => ({ ...s, status: "pending" })),
+          });
+          setPanelOpen(true);
+        }
+        if (d.message) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(d.message) });
+      } else {
+        (d.blocks || []).forEach((block, i) => {
+          if (block.data?.length) seq.push({ id: base + i, role: "bot", type: "block", block });
+        });
+        if (d.message) seq.push({ id: base + 100, role: "bot", type: "text", text: fixArmenianText(d.message) });
+      }
+
+      if (seq.length) revealItems(seq);
+
+    } catch {
+      setTyping(false);
+      setMessages(prev => [...prev, {
+        id: Date.now(), role: "bot", type: "text",
+        text: lang === "hy" ? "Ինչ-որ բան սխալ գնաց։ Կրկին փորձեք։"
+            : lang === "ru" ? "Что-то пошло не так. Попробуйте снова."
+            : "Something went wrong. Please try again!",
+      }]);
+    }
+  }, [typing, phase, messages, chatState, lang, revealItems, eventState, handleSearchVendors]);
 
   const saliTriggerFiredRef = useRef(false);
   useEffect(() => {
@@ -2223,6 +2361,7 @@ export default function AIAssistantV2Client({ lang }) {
       gradient: tpl.gradient,
       services: tpl.services.map(s => ({ ...s, status: "pending" })),
     });
+    setPanelOpen(true);
   }, []);
 
   const openPopup = useCallback((item, type) => setPopup({ item, type }), []);
@@ -3023,6 +3162,18 @@ export default function AIAssistantV2Client({ lang }) {
           position:fixed;bottom:88px;right:18px;z-index:10000;
           display:none;
         }
+        .v2-plan-reopen-tab{
+          position:fixed;right:0;top:50%;transform:translateY(-50%);
+          z-index:10000;display:flex;flex-direction:column;align-items:center;
+          gap:6px;background:#e11d5c;color:#fff;border:none;cursor:pointer;
+          padding:14px 7px;border-radius:10px 0 0 10px;
+          font-size:0.7rem;font-weight:700;font-family:inherit;
+          writing-mode:vertical-rl;text-orientation:mixed;
+          box-shadow:-3px 0 16px rgba(225,29,92,.28);
+          transition:background .15s;
+        }
+        .v2-plan-reopen-tab:hover{background:#be1850}
+        .v2-plan-reopen-tab svg{writing-mode:horizontal-tb;flex-shrink:0;margin-bottom:6px}
         .v2-plan-sheet{
           position:fixed;inset:0;z-index:10001;
           background:rgba(15,23,42,.45);
@@ -3363,6 +3514,7 @@ export default function AIAssistantV2Client({ lang }) {
           <Landing
             lang={lang}
             onSend={send}
+            onQuickAction={sendQuickAction}
             input={input}
             setInput={setInput}
             inputRef={inputRef}
@@ -3372,7 +3524,7 @@ export default function AIAssistantV2Client({ lang }) {
 
       {/* Fullscreen chat overlay — covers site header/footer */}
       {phase === "chat" && (
-        <div lang={lang} className={`v2-overlay ${sidebarCollapsed ? "is-collapsed" : ""} ${inPlanMode ? "has-plan" : ""}`}>
+        <div lang={lang} className={`v2-overlay ${sidebarCollapsed ? "is-collapsed" : ""} ${inPlanMode && panelOpen ? "has-plan" : ""}`}>
           <ChatSidebar
             lang={lang}
             history={history}
@@ -3431,9 +3583,21 @@ export default function AIAssistantV2Client({ lang }) {
             />
           </div>
 
-          {/* Plan panel — desktop right column */}
-          {inPlanMode && (
+          {/* Plan panel — desktop right column. panelOpen controls visibility only;
+              eventState is never cleared when the panel is closed. */}
+          {inPlanMode && panelOpen && (
             <div className="v2-plan-panel">
+              {/* Panel close button — hides the panel without clearing the plan */}
+              <div style={{ padding: "8px 10px 0", display: "flex", justifyContent: "flex-end", flexShrink: 0 }}>
+                <button
+                  onClick={() => setPanelOpen(false)}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: "4px 6px", borderRadius: 6, display: "flex", alignItems: "center", gap: 4, fontSize: "0.72rem", fontWeight: 600, fontFamily: "inherit" }}
+                  title={lang === "hy" ? "Թաքցնել պլանը" : lang === "ru" ? "Скрыть план" : "Hide plan"}
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></svg>
+                  {lang === "hy" ? "Փակել" : lang === "ru" ? "Скрыть" : "Hide"}
+                </button>
+              </div>
               <EventPlanPanel
                 eventState={eventState}
                 vendorResults={vendorResults}
@@ -3447,6 +3611,18 @@ export default function AIAssistantV2Client({ lang }) {
                 lang={lang}
               />
             </div>
+          )}
+
+          {/* Reopen tab — shown when plan exists but panel is hidden */}
+          {inPlanMode && !panelOpen && (
+            <button
+              className="v2-plan-reopen-tab"
+              onClick={() => setPanelOpen(true)}
+              title={lang === "hy" ? "Բացել պլանը" : lang === "ru" ? "Открыть план" : "Show plan"}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>{lang === "hy" ? "Պլան" : lang === "ru" ? "План" : "Plan"}</span>
+            </button>
           )}
 
           {/* Mobile plan FAB — only shown when in plan mode on narrow screens */}
