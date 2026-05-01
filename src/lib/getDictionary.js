@@ -14,7 +14,7 @@ export const DEFAULT_LOCALE = "en";
 
 export const LOCALE_NAMES = {
   en: "English",
-  hy: "Հայerеn",
+  hy: "Հայերեն",
   ru: "Русский",
 };
 
