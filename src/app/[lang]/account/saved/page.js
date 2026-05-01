@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useSaved } from "@/lib/saved-context";
 import { productsAPI, vendorsAPI } from "@/lib/api";
-import { Heart, X, Store, Package, Briefcase, Loader2 } from "lucide-react";
+import { Heart, X, Store, Package, Briefcase, Loader2, ExternalLink } from "lucide-react";
 
 // ─── Translations ─────────────────────────────────────────────────────────────
 const T = {
@@ -76,7 +76,23 @@ function pickName(obj) {
   return obj.name || obj.business_name || obj.title || null;
 }
 
-function SavedCard({ item, details, t, onRemove, removing }) {
+// Build a browse URL for a saved item given the fetched details object
+function buildItemHref(item, details, lang) {
+  const type = item.target_type || "product";
+  if (type === "vendor") {
+    const slug = details?.slug;
+    if (slug) return `/${lang}/vendor/${slug}`;
+    return null;
+  }
+  // product or service
+  const vendorSlug = details?.vendor_slug || details?.vendor?.slug;
+  const productSlug = details?.slug;
+  if (vendorSlug && productSlug) return `/${lang}/${vendorSlug}/${productSlug}`;
+  if (details?.id) return `/${lang}/product/${details.id}`;
+  return null;
+}
+
+function SavedCard({ item, details, lang, t, onRemove, removing }) {
   const type  = item.target_type || "product";
   const Icon  = TYPE_ICONS[type] || Package;
   const style = TYPE_STYLES[type] || TYPE_STYLES.product;
@@ -84,13 +100,18 @@ function SavedCard({ item, details, t, onRemove, removing }) {
 
   const name  = pickName(details) || pickName(item) || null;
   const image = pickImage(details) || pickImage(item) || null;
+  const href  = buildItemHref(item, details, lang);
 
   const dateStr = item.created_at
     ? new Date(item.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
     : null;
 
-  return (
-    <div className="bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden hover:shadow-md hover:border-surface-300 transition-all flex flex-col group">
+  const cardCls = href
+    ? "bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden hover:shadow-md hover:border-brand-300 transition-all flex flex-col group no-underline"
+    : "bg-white rounded-2xl border border-surface-200 shadow-sm overflow-hidden hover:shadow-md hover:border-surface-300 transition-all flex flex-col group";
+
+  const inner = (
+    <>
       {/* Image / placeholder header */}
       <div className={`relative h-36 ${style.bg} flex items-center justify-center overflow-hidden`}>
         {image ? (
@@ -100,7 +121,7 @@ function SavedCard({ item, details, t, onRemove, removing }) {
           <Icon size={44} className={`${style.icon} opacity-25`} />
         )}
         <button
-          onClick={() => onRemove(item.target_id)}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); onRemove(item.target_id); }}
           disabled={removing}
           className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center hover:bg-red-50 hover:text-red-500 text-surface-400 transition-colors cursor-pointer border-none shadow-sm"
           aria-label="Remove">
@@ -109,6 +130,11 @@ function SavedCard({ item, details, t, onRemove, removing }) {
             : <X size={13} />
           }
         </button>
+        {href && (
+          <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            <ExternalLink size={11} className="text-surface-600" />
+          </div>
+        )}
       </div>
 
       {/* Card body */}
@@ -130,8 +156,12 @@ function SavedCard({ item, details, t, onRemove, removing }) {
           <p className="text-[11px] text-surface-400">{t.savedOn} {dateStr}</p>
         )}
       </div>
-    </div>
+    </>
   );
+
+  return href
+    ? <a href={href} target="_blank" rel="noreferrer" className={cardCls}>{inner}</a>
+    : <div className={cardCls}>{inner}</div>;
 }
 
 export default function AccountSavedPage() {
@@ -209,6 +239,7 @@ export default function AccountSavedPage() {
               key={item.id}
               item={item}
               details={detailsMap[item.target_id] || null}
+              lang={lang}
               t={t}
               onRemove={unsave}
               removing={!!removing[item.target_id]}

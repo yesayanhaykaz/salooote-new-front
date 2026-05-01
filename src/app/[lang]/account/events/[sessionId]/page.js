@@ -182,10 +182,9 @@ function VendorRow({ service, vendor, inquiry, accent, lang, onOpenThread }) {
   const StatusIcon = status?.icon || Clock;
   const href = vendorHref(vendor, lang);
 
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#fff", borderRadius: 14, border: "1px solid rgba(15,23,42,0.07)", marginBottom: 8 }}>
-
-      {/* Left: icon or vendor avatar */}
+  const rowInner = (
+    <>
+      {/* Left: vendor avatar or service icon */}
       {vendor ? (
         <VendorAvatar vendor={vendor} />
       ) : (
@@ -198,17 +197,11 @@ function VendorRow({ service, vendor, inquiry, accent, lang, onOpenThread }) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ margin: 0, fontWeight: 600, fontSize: "0.82rem", color: "#0f172a" }}>{service.title}</p>
         {vendor ? (
-          href ? (
-            <a href={href} target="_blank" rel="noreferrer"
-              style={{ margin: "2px 0 0", fontSize: "0.72rem", color: accent, fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 3, maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {vendor.name || vendor.business_name}
-              <ExternalLink size={10} style={{ flexShrink: 0, opacity: 0.7 }} />
-            </a>
-          ) : (
-            <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#64748b" }}>
-              {vendor.name || vendor.business_name}
-            </p>
-          )
+          <p style={{ margin: "2px 0 0", fontSize: "0.72rem", fontWeight: 600, color: href ? accent : "#64748b",
+            display: "flex", alignItems: "center", gap: 3, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+            {vendor.name || vendor.business_name}
+            {href && <ExternalLink size={10} style={{ flexShrink: 0, opacity: 0.7 }} />}
+          </p>
         ) : (
           <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#94a3b8" }}>No vendor selected</p>
         )}
@@ -222,14 +215,28 @@ function VendorRow({ service, vendor, inquiry, accent, lang, onOpenThread }) {
           </span>
         )}
         {inquiry && (
-          <button onClick={() => onOpenThread(inquiry)}
+          <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); onOpenThread(inquiry); }}
             style={{ background: "transparent", border: "1px solid rgba(15,23,42,0.12)", borderRadius: 8, padding: "5px 10px", fontSize: "0.72rem", color: "#64748b", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontFamily: "inherit" }}>
             <MessageCircle size={11} /> Chat
           </button>
         )}
       </div>
-    </div>
+    </>
   );
+
+  const rowStyle = { display: "flex", alignItems: "center", gap: 12, padding: "12px 16px", background: "#fff", borderRadius: 14, border: "1px solid rgba(15,23,42,0.07)", marginBottom: 8, transition: "box-shadow 0.15s, border-color 0.15s" };
+
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" style={{ ...rowStyle, textDecoration: "none", cursor: "pointer" }}
+        onMouseEnter={e => { e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.08)"; e.currentTarget.style.borderColor = "rgba(15,23,42,0.14)"; }}
+        onMouseLeave={e => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderColor = "rgba(15,23,42,0.07)"; }}>
+        {rowInner}
+      </a>
+    );
+  }
+
+  return <div style={rowStyle}>{rowInner}</div>;
 }
 
 // ─── Progress Bar ─────────────────────────────────────────────────────────────

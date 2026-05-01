@@ -359,7 +359,7 @@ function ChatPanel({ inquiry, lang, onBack }) {
   const [loading,  setLoading]  = useState(true);
   const [input,    setInput]    = useState("");
   const [sending,  setSending]  = useState(false);
-  const bottomRef = useRef(null);
+  const scrollRef = useRef(null);
   const pollRef   = useRef(null);
 
   const fetchMessages = useCallback(async () => {
@@ -380,7 +380,9 @@ function ChatPanel({ inquiry, lang, onBack }) {
   }, [fetchMessages]);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const handleSend = async () => {
@@ -427,7 +429,7 @@ function ChatPanel({ inquiry, lang, onBack }) {
       )}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-surface-50 min-h-0">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-surface-50 min-h-0">
         {loading ? (
           <div className="flex justify-center py-12">
             <Loader2 size={22} className="animate-spin text-surface-300" />
@@ -465,7 +467,6 @@ function ChatPanel({ inquiry, lang, onBack }) {
             );
           })
         )}
-        <div ref={bottomRef} />
       </div>
 
       {/* Input bar */}
