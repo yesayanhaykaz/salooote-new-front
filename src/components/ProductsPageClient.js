@@ -306,7 +306,7 @@ export default function ProductsPageClient({ dict, lang }) {
       {/* ── Sticky filter bar ── */}
       <div className="sticky top-0 z-20 bg-white border-b border-surface-200 shadow-sm">
         <div className="max-w-container mx-auto px-4 sm:px-6 md:px-8 py-3 flex items-center gap-3 flex-wrap md:flex-nowrap">
-          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 -mx-1 px-1 flex-1 min-w-0">
+          <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1 md:pb-0 flex-1 min-w-0">
             {/* Rating quick filters */}
             {[0, 4, 4.5].map((r) => (
               <motion.button

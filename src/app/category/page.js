@@ -360,7 +360,7 @@ export default function CategoryPage({ lang = "en", slug, parentSlug = null }) {
   const clearFilters = () => { setPriceIdx(0); setSelectedTags([]); };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white overflow-x-clip">
 
       {/* ── Hero ── */}
       <section className="border-b border-surface-200 bg-white overflow-hidden">
