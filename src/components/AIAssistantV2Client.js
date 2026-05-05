@@ -6,9 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import EventPlanPanel, { BulkInquiryModal, applyActions, EVENT_TEMPLATES, INITIAL_EVENT_STATE } from "@/components/PlanPanel";
 import { sendShoppingMessage, sendPlanMessage } from "@/services/assistantApi";
-import ProductCard from "@/components/ai/ProductCard";
-import VendorCard from "@/components/ai/VendorCard";
-import VenueCard from "@/components/ai/VenueCard";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
