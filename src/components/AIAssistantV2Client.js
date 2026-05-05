@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
 import EventPlanPanel, { BulkInquiryModal, applyActions, EVENT_TEMPLATES, INITIAL_EVENT_STATE } from "@/components/PlanPanel";
+import { sendShoppingMessage, sendPlanMessage } from "@/services/assistantApi";
+import ProductCard from "@/components/ai/ProductCard";
+import VendorCard from "@/components/ai/VendorCard";
+import VenueCard from "@/components/ai/VenueCard";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
 const PINK = "#e11d5c";
@@ -2116,36 +2120,34 @@ export default function AIAssistantV2Client({ lang }) {
       let d = {};
 
       if (inPlan) {
-        // Dedicated plan-chat endpoint: returns message + actions + blocks
-        const res = await fetch(`${API}/smart-assistant/plan-chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: text,
-            lang,
-            messages: history,
-            event_state: {
-              event_type: eventState.event_type,
-              event_type_label: eventState.event_type_label,
-              city: eventState.city,
-              date: eventState.date,
-              guest_count: eventState.guest_count,
-              budget: eventState.budget,
-              style: eventState.style,
-              services: (eventState.services || []).map(s => ({
-                service_type: s.service_type,
-                title: s.title,
-                category: s.category,
-                required: s.required,
-                can_search: s.canSearch,
-                status: s.status,
-              })),
-              selected_vendors: eventState.selected_vendors || {},
-            },
-          }),
+        // Dedicated plan-chat endpoint via centralized service
+        d = await sendPlanMessage({
+          message: text,
+          messages: history,
+          eventState: {
+            event_type: eventState.event_type,
+            event_type_label: eventState.event_type_label,
+            city: eventState.city,
+            date: eventState.date,
+            guest_count: eventState.guest_count,
+            budget: eventState.budget,
+            style: eventState.style,
+            services: (eventState.services || []).map(s => ({
+              service_type: s.service_type,
+              title: s.title,
+              category: s.category,
+              required: s.required,
+              can_search: s.canSearch,
+              status: s.status,
+            })),
+            selected_vendors: eventState.selected_vendors || {},
+          },
+          lang,
         });
-        const json = await res.json();
-        d = json?.data || {};
+        // Apply updated_state from new response contract if available
+        if (d.updated_state) {
+          setEventState(prev => ({ ...prev, ...d.updated_state }));
+        }
         // Apply plan actions returned from backend
         if (d.actions?.length) {
           const { state: nextState, searches } = applyActions(d.actions, eventState);
@@ -2155,13 +2157,8 @@ export default function AIAssistantV2Client({ lang }) {
           }
         }
       } else {
-        const res = await fetch(`${API}/smart-assistant/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: history, state: chatState, lang }),
-        });
-        const json = await res.json();
-        d = json?.data || {};
+        // Use centralized service — handles /smart-assistant/chat
+        d = await sendShoppingMessage({ messages: history, state: chatState, lang });
         if (d.state) setChatState(d.state);
       }
 
@@ -2170,8 +2167,10 @@ export default function AIAssistantV2Client({ lang }) {
       const base = Date.now() + 1;
       const seq = [];
 
-      if (!inPlan && d.action === "plan_event" && d.event_type) {
-        // Auto-activate plan panel — no button needed
+      // Support both old "action: plan_event" and new "intent: planning_requested"
+      const isPlanRedirect = !inPlan && (d.action === "plan_event" || d.intent === "planning_requested") && d.event_type;
+      if (isPlanRedirect) {
+        // Auto-activate plan panel
         const tpl = EVENT_TEMPLATES[d.event_type];
         if (tpl) {
           setEventState({
@@ -2184,15 +2183,25 @@ export default function AIAssistantV2Client({ lang }) {
           });
           setPanelOpen(true);
         }
-        if (d.message) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(d.message) });
+        const msg = d.reply || d.message;
+        if (msg) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(msg) });
+      } else if (d.intent === "website_help" && (d.reply || d.message)) {
+        // Website help — show answer with optional page link
+        const msg = (d.reply || d.message) + (d.page_link ? `\n\n[Open page](${d.page_link})` : "");
+        seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(msg) });
+      } else if (d.intent === "gift_delivery") {
+        // Gift delivery flow
+        const msg = d.reply || d.message;
+        if (msg) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(msg) });
       } else {
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) {
             seq.push({ id: base + i, role: "bot", type: "block", block });
           }
         });
-        if (d.message) {
-          seq.push({ id: base + 100, role: "bot", type: "text", text: fixArmenianText(d.message) });
+        const msg = d.reply || d.message;
+        if (msg) {
+          seq.push({ id: base + 100, role: "bot", type: "text", text: fixArmenianText(msg) });
         }
       }
 
@@ -2246,36 +2255,30 @@ export default function AIAssistantV2Client({ lang }) {
       let d = {};
 
       if (inPlan) {
-        const res = await fetch(`${API}/smart-assistant/plan-chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: chip.name,
-            lang,
-            action,
-            messages: hist,
-            event_state: {
-              event_type: eventState.event_type,
-              event_type_label: eventState.event_type_label,
-              city: eventState.city,
-              date: eventState.date,
-              guest_count: eventState.guest_count,
-              budget: eventState.budget,
-              style: eventState.style,
-              services: (eventState.services || []).map(s => ({
-                service_type: s.service_type,
-                title: s.title,
-                category: s.category,
-                required: s.required,
-                can_search: s.canSearch,
-                status: s.status,
-              })),
-              selected_vendors: eventState.selected_vendors || {},
-            },
-          }),
+        d = await sendPlanMessage({
+          message: chip.name,
+          messages: hist,
+          eventState: {
+            event_type: eventState.event_type,
+            event_type_label: eventState.event_type_label,
+            city: eventState.city,
+            date: eventState.date,
+            guest_count: eventState.guest_count,
+            budget: eventState.budget,
+            style: eventState.style,
+            services: (eventState.services || []).map(s => ({
+              service_type: s.service_type,
+              title: s.title,
+              category: s.category,
+              required: s.required,
+              can_search: s.canSearch,
+              status: s.status,
+            })),
+            selected_vendors: eventState.selected_vendors || {},
+          },
+          lang,
         });
-        const json = await res.json();
-        d = json?.data || {};
+        if (d.updated_state) setEventState(prev => ({ ...prev, ...d.updated_state }));
         if (d.actions?.length) {
           const { state: nextState, searches } = applyActions(d.actions, eventState);
           setEventState(nextState);
@@ -2284,13 +2287,7 @@ export default function AIAssistantV2Client({ lang }) {
           }
         }
       } else {
-        const res = await fetch(`${API}/smart-assistant/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: hist, state: chatState, lang, action }),
-        });
-        const json = await res.json();
-        d = json?.data || {};
+        d = await sendShoppingMessage({ messages: hist, state: chatState, lang });
         if (d.state) setChatState(d.state);
       }
 
@@ -2299,7 +2296,8 @@ export default function AIAssistantV2Client({ lang }) {
       const base = Date.now() + 1;
       const seq = [];
 
-      if (!inPlan && d.action === "plan_event" && d.event_type) {
+      const isPlanRedirect2 = !inPlan && (d.action === "plan_event" || d.intent === "planning_requested") && d.event_type;
+      if (isPlanRedirect2) {
         const tpl = EVENT_TEMPLATES[d.event_type];
         if (tpl) {
           setEventState({
@@ -2312,12 +2310,14 @@ export default function AIAssistantV2Client({ lang }) {
           });
           setPanelOpen(true);
         }
-        if (d.message) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(d.message) });
+        const msg = d.reply || d.message;
+        if (msg) seq.push({ id: base, role: "bot", type: "text", text: fixArmenianText(msg) });
       } else {
         (d.blocks || []).forEach((block, i) => {
           if (block.data?.length) seq.push({ id: base + i, role: "bot", type: "block", block });
         });
-        if (d.message) seq.push({ id: base + 100, role: "bot", type: "text", text: fixArmenianText(d.message) });
+        const msg = d.reply || d.message;
+        if (msg) seq.push({ id: base + 100, role: "bot", type: "text", text: fixArmenianText(msg) });
       }
 
       if (seq.length) revealItems(seq);

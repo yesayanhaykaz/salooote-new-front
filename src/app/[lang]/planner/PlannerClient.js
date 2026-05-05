@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { sendLegacyPlanMessage } from "@/services/assistantApi";
+import ServiceChecklist from "@/components/ai/ServiceChecklist";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Send, Sparkles, Check, Search, X, Star,
@@ -2498,27 +2500,27 @@ function PlannerClientInner({ lang }) {
         language: lang,
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/planner/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.text })),
-          event_state: eventState,
-          planner_state: plannerState,
-        }),
+      const data = await sendLegacyPlanMessage({
+        messages: [...messages, userMsg].map(m => ({ role: m.role, content: m.text })),
+        eventState,
+        lang,
       });
-      const json = await res.json();
-      const data = json.data || json;
       if (data.error) { pushBot(`${data.error}`, eventState); return; }
 
       // Apply AI actions
       let { state: newState, searches } = applyActions(data.actions || [], eventState, lang);
 
+      // Merge updated_state from new response contract if present
+      if (data.updated_state) {
+        newState = { ...newState, ...data.updated_state };
+      }
+
       // Apply frontend service rules on top of AI output
       newState = applyServiceRules(newState, lang);
 
       setEventState(newState);
-      if (data.assistant_message) pushBot(data.assistant_message, newState);
+      const botText = data.assistant_message || data.reply || data.message;
+      if (botText) pushBot(botText, newState);
       for (const s of searches) searchVendors(s.service_type, s.search_term, s.filters || {});
     } catch {
       pushBot("Something went wrong. Please try again.", eventState);
